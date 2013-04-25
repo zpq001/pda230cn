@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "pid1", "pid1\pid1.cproj", "{B120EB59-043F-4ED1-AEE0-AF478F952411}"
+EndProject
+Project("{18226A42-8477-4023-8AD2-40C49DA407C9}") = "Boot_ATMEGA8", "..\Boot_ATMEGA8\Boot_ATMEGA8.asmproj", "{CF5A2963-BE1D-40EF-AE46-FC04F12F55E0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B120EB59-043F-4ED1-AEE0-AF478F952411}.Debug|AVR.ActiveCfg = Debug|AVR
+		{B120EB59-043F-4ED1-AEE0-AF478F952411}.Debug|AVR.Build.0 = Debug|AVR
+		{B120EB59-043F-4ED1-AEE0-AF478F952411}.Release|AVR.ActiveCfg = Release|AVR
+		{B120EB59-043F-4ED1-AEE0-AF478F952411}.Release|AVR.Build.0 = Release|AVR
+		{CF5A2963-BE1D-40EF-AE46-FC04F12F55E0}.Debug|AVR.ActiveCfg = Debug|AVR
+		{CF5A2963-BE1D-40EF-AE46-FC04F12F55E0}.Debug|AVR.Build.0 = Debug|AVR
+		{CF5A2963-BE1D-40EF-AE46-FC04F12F55E0}.Release|AVR.ActiveCfg = Release|AVR
+		{CF5A2963-BE1D-40EF-AE46-FC04F12F55E0}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
