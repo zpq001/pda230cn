@@ -1,0 +1,63 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.1.52</VERSION>
+ <DEVICE>"ATmega8"</DEVICE>
+ <WORKING_DIR>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRAssembler\2.1.51.64\AvrAssembler/Include</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:\Program Files (x86)\Atmel\Atmel Studio 6.0\extensions\Atmel\AVRAssembler\2.1.51.64\AvrAssembler/Include\m8def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Debug/Boot_ATMEGA8.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Debug/Boot_ATMEGA8.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Debug\Boot_ATMEGA8.map</FILE>
+  <FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Debug\Boot_ATMEGA8.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <Wait><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>110</LINE></Wait>
+  <GetByte><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>433</LINE></GetByte>
+  <NC0><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>116</LINE></NC0>
+  <NC1><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>122</LINE></NC1>
+  <SendSigVers><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>198</LINE></SendSigVers>
+  <NC2><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>130</LINE></NC2>
+  <StoreAddrNum><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>212</LINE></StoreAddrNum>
+  <SendByte><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>442</LINE></SendByte>
+  <NC3><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>138</LINE></NC3>
+  <FillPageBuffer><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>226</LINE></FillPageBuffer>
+  <NC4><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>146</LINE></NC4>
+  <PageBufferWriteToFLASH><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>245</LINE></PageBufferWriteToFLASH>
+  <NC5><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>153</LINE></NC5>
+  <ReadSendFlashPage><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>310</LINE></ReadSendFlashPage>
+  <NC6><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>160</LINE></NC6>
+  <PageBufferWriteToEEPROM><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>325</LINE></PageBufferWriteToEEPROM>
+  <NC7><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>166</LINE></NC7>
+  <ReadSendEEPROMData><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>358</LINE></ReadSendEEPROMData>
+  <NC8><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>172</LINE></NC8>
+  <ReadFusesLockBits><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>373</LINE></ReadFusesLockBits>
+  <NC9><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>181</LINE></NC9>
+  <NC10><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>189</LINE></NC10>
+  <PageErase><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>298</LINE></PageErase>
+  <Fill_0><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>230</LINE></Fill_0>
+  <Check_0><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>252</LINE></Check_0>
+  <Check_1><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>263</LINE></Check_1>
+  <Check_2><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>261</LINE></Check_2>
+  <Check_Failed><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>273</LINE></Check_Failed>
+  <Fill_FLASH_Buffer><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>279</LINE></Fill_FLASH_Buffer>
+  <Do_spm><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>407</LINE></Do_spm>
+  <EnableRWW><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>421</LINE></EnableRWW>
+  <Read_0><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>316</LINE></Read_0>
+  <EE_write><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>335</LINE></EE_write>
+  <EE_equal><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>347</LINE></EE_equal>
+  <EE_next><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>352</LINE></EE_next>
+  <Inc_EEPROM_addr><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>395</LINE></Inc_EEPROM_addr>
+  <EE_read><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>362</LINE></EE_read>
+  <GetFuseLock><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>386</LINE></GetFuseLock>
+  <Wait_spm><FILE>E:\EXlam\AVR Projects\PDA230CN\Boot_ATMEGA8\Boot_ATMEGA8.asm</FILE><LINE>411</LINE></Wait_spm>
+ </LABELS>
+</ASSEMBLER_INFO>
