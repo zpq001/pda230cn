@@ -17,7 +17,7 @@ src/control.d src/control.o: ../src/control.c ../inc/compilers.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/../../../../avr/include/avr/pgmspace.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/include/stddef.h \
  ../inc/control.h ../inc/buttons.h ../inc/power_control.h \
- ../inc/led_indic.h ../inc/leds.h ../inc/led_indic.h
+ ../inc/led_indic.h ../inc/leds.h ../inc/led_indic.h ../inc/systimer.h
 
 ../inc/compilers.h:
 
@@ -66,3 +66,5 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-
 ../inc/leds.h:
 
 ../inc/led_indic.h:
+
+../inc/systimer.h:

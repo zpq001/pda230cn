@@ -14,13 +14,14 @@
 #include "power_control.h"
 #include "led_indic.h"
 #include "leds.h"
+#include "systimer.h"	
 
 
 
 
 // Global variables - main system control
 uint16_t setup_temp_value = 65;		// reference temperature
-uint8_t roll_cycles = 10;			// number of rolling cycles
+uint8_t rollCycleSet = 10;			// number of rolling cycles
 uint8_t sound_enable = 1;			// Global sound enable
 uint8_t power_off_timeout = 30;		// Auto power OFF timeout, minutes
 uint8_t cpoint1 = 25;				// Calibration point 1
@@ -38,6 +39,27 @@ void processRollControl(void)
 		setMotorDirection(ROTATE_FORWARD);
 	else if (button_state & BD_ROTREV)
 		setMotorDirection(ROTATE_REVERSE);
+		
+	if (button_action_down & 0x80)
+	{
+		if (rollState & ROLL_CYCLE)
+		{
+			stopCycleRolling();
+			SetBeeperFreq(1000);
+			StartBeep(50);
+		}
+		else if (startCycleRolling())
+		{
+			SetBeeperFreq(1000);
+			StartBeep(100);
+		}
+		else
+		{
+			SetBeeperFreq(500);
+			StartBeep(50);
+		}
+	}
+		
 		
 	// Indicate direction by LEDs
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);
