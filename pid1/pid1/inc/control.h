@@ -25,7 +25,7 @@
 
 // Global variables - main system control
 extern uint16_t setup_temp_value;			// reference temperature
-extern uint8_t roll_cycles;					// number of rolling cycles
+extern uint8_t rollCycleSet;				// number of rolling cycles
 extern uint8_t sound_enable;				// Global sound enable
 extern uint8_t power_off_timeout;			// Auto power OFF timeout
 extern uint8_t cpoint1;						// Calibration point 1

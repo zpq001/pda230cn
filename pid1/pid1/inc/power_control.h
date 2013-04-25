@@ -41,7 +41,7 @@ MOTOR	________________________________________________|*************************
 #define HEATER_ENABLED			0x40
 #define ROTATING_FORWARD		0x01		
 #define ROTATING_REVERSE		0x02		
-#define ROLL_CYCLIC				0x04
+
 
 
 //---------------------------------//
@@ -56,24 +56,23 @@ MOTOR	________________________________________________|*************************
 #define CTRL_FORWARD				0x01
 #define CTRL_REVERSE				0x02
 
-
-
-
-typedef struct {
-	uint16_t Pos;
-	uint8_t Valid : 1;
-} RollPoint_t;
+#define ROLL_FWD					0x01
+#define ROLL_REV					0x02
+#define ROLL_CYCLE					0x04
 
 
 
 extern uint8_t p_flags;					// Module status
+extern uint8_t rollState;
+extern uint8_t activeRollCycle;
 
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir);
 // User function to control heater intensity
 void setHeaterControl(uint8_t value);
 
-
+uint8_t startCycleRolling(void);
+void stopCycleRolling(void);
 
 
 

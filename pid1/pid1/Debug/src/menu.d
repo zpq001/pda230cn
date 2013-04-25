@@ -18,7 +18,7 @@ src/menu.d src/menu.o: ../src/menu.c ../inc/compilers.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/include/stddef.h \
  ../inc/menu.h ../inc/leds.h ../inc/led_indic.h ../inc/buttons.h \
  ../inc/adc.h ../inc/systimer.h ../inc/control.h ../inc/my_string.h \
- ../inc/soft_timer.h ../inc/led_indic.h
+ ../inc/soft_timer.h ../inc/led_indic.h ../inc/power_control.h
 
 ../inc/compilers.h:
 
@@ -75,3 +75,5 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-
 ../inc/soft_timer.h:
 
 ../inc/led_indic.h:
+
+../inc/power_control.h:

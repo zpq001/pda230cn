@@ -16,6 +16,7 @@
 #include "my_string.h"
 #include "soft_timer.h"
 #include "led_indic.h"
+#include "power_control.h"
 
 
 static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCond);
@@ -389,16 +390,22 @@ void mf_rollDo(void)
 		
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (roll_cycles < MAX_ROLL_CYCLES)
-		roll_cycles += 1;
+		if (rollCycleSet < MAX_ROLL_CYCLES)
+		rollCycleSet += 1;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (roll_cycles > MIN_ROLL_CYCLES)
-		roll_cycles -= 1;
+		if (rollCycleSet > MIN_ROLL_CYCLES)
+		rollCycleSet -= 1;
 	}	
 		
-	u16toa_align_right(roll_cycles,str + 4,0x80 | 2,' ');
+	u16toa_align_right(rollCycleSet,str + 4,0x80 | 2,' ');
+	
+	if (rollState & ROLL_CYCLE)
+	{
+		u16toa_align_right(activeRollCycle,str + 1,0x80 | 2,' ');
+	}
+	
 	printLedBuffer(0,str);
 }
 

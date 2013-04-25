@@ -10,6 +10,7 @@
 #include "compilers.h"
 #include "port_defs.h"
 #include "power_control.h"
+#include "control.h"
 
 // Heater controls
 static uint8_t ctrl_heater = 0;			// Heater duty value
@@ -17,51 +18,27 @@ static uint8_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulat
 static uint8_t heater_cnt = 0;			// Counter used to provide heater PWM
 
 // Motor controls
-static uint16_t rollCnt = 32768;		// Motor period counter used for rolling
 static uint8_t ctrl_motor = 0;			// Motor control bits
 
-static RollPoint_t	point_high = {0};
-static RollPoint_t	point_low = {0};
 
 // p_state bits:
 //	[7] <- half-period toggling flag
 // [3:0] <- state
 static uint8_t p_state = 0x0F;			// default error state - if AC line sync is present, 
 										// it will be cleared at first comparator ISR
-										
-
-
-
+	
 // Globals and externs
 uint8_t p_flags = 0;					// Module status
 
-	
-	
-// User function to control motor rotation
-void setMotorDirection(uint8_t dir)
-{
-	uint8_t ctrl_motor_prev;
-	// Disable interrupts from timer0
-	TIMSK &= ~(1<<TOIE0);
-	// Save previous control state
-	ctrl_motor_prev = ctrl_motor;
-	// Modify motor control bits
-	ctrl_motor &= ~(CTRL_FORWARD | CTRL_REVERSE);	// clear rotation control bits
-	if (dir == ROTATE_FORWARD)
-	{
-		ctrl_motor |= (CTRL_FORWARD);
-	}
-	else if (dir == ROTATE_REVERSE)
-	{
-		ctrl_motor |= (CTRL_REVERSE);
-	}
-	
-	// If control changed, provide one period for TRIAC to close
-	if ((ctrl_motor_prev ^ ctrl_motor) & (CTRL_FORWARD | CTRL_REVERSE))
-		ctrl_motor |= SKIP_CURRENT_MOTOR_REG;
-	// Enable interrupts from timer 0
-	TIMSK |= (1<<TOIE0);	
-}	
+uint8_t rollState = 0;
+uint8_t borderState = 0;
+uint16_t rollCycleCounter = 0;
+uint16_t prevRollCounter = 0;
+uint8_t activeRollCycle;
+
+static void setDirectionUnsafe(uint8_t dir);
+
+
 
 // User function to control heater intensity
 inline void setHeaterControl(uint8_t value)
@@ -69,103 +46,139 @@ inline void setHeaterControl(uint8_t value)
 	ctrl_heater = value;
 	p_flags &= ~READY_TO_UPDATE_HEATER;
 	if (value)
-		p_flags |= HEATER_ENABLED;
+	p_flags |= HEATER_ENABLED;
 	else
-		p_flags &= ~HEATER_ENABLED;
+	p_flags &= ~HEATER_ENABLED;
 }
+
+
+
 	
-	/*
-uint8_t startRepeatRolling(void)
+	
+// User function to control motor rotation
+void setMotorDirection(uint8_t dir)
 {
-	if ((point_high.Valid) && (point_low.Valid))
+	// Disable interrupts from timer0
+	TIMSK &= ~(1<<TOIE0);
+	if (dir == ROTATE_FORWARD)
 	{
-		if (point_high.Pos > point_low.Pos)
-		{
-			// Points valid	
-		
-		}
-	}
-	
-	
-	
-	return 0;
-}
-
-void stopRepeatRolling(void)
-{
-	// TODO
-}
-*/
-
-
-
-void processRollControl(int8_t inc)
-{
-	if ( (rollState & (ROLL_FWD | ROLL_REV)) == ROLL_FWD )
-		fwdCounter += inc;
-	else if ( (rollState & 0x03) == ROLL_REV )
-		revCounter += inc;
-
-
-	
-
-				
-}
-			
-			
-void setDirection(uint8_t dir)
-{
-	if (dir == FORWARD)
+		setDirectionUnsafe(CTRL_FORWARD);
+		rollState &= ~(ROLL_FWD | ROLL_REV);
+		rollState |= ROLL_FWD;
+	}		
+	else
 	{
-			
+		setDirectionUnsafe(CTRL_REVERSE);
+		rollState &= ~(ROLL_FWD | ROLL_REV);
+		rollState |= ROLL_REV;
+	}		
+	
+	// Store previous roll counter value
+	prevRollCounter = rollCycleCounter;
+	// Reset roll counter
+	rollCycleCounter = 0;
 		
+	// Enable interrupts from timer 0
+	TIMSK |= (1<<TOIE0);	
+}	
+
+
+
+uint8_t startCycleRolling(void)
+{
+	if ((prevRollCounter != 0) && (prevRollCounter > rollCycleCounter))
+	{
+		borderState = ( (rollState & (ROLL_FWD | ROLL_REV)) == ROLL_FWD ) ? ROLL_REV : ROLL_FWD;
+		rollState |= ROLL_CYCLE;
+		activeRollCycle = 1;	
+		return 1;
 	}
 	else
 	{
-		
+		return 0;	
 	}
-	
-	prevRollCounter = rollCounter;
-	rollCounter = 0;
-		
 }
 
-void startCycleRolling(void)
+void stopCycleRolling(void)
 {
-	
-	borderState = ( (rollState & (ROLL_FWD | ROLL_REV)) == ROLL_FWD ) ? ROLL_REV : ROLL_FWD;
-	rollState |= ROLL_CYCLE;
+	rollState &= ~ROLL_CYCLE;
 }
+
+
+//---------------------------------------------//
+//---------------------------------------------//
+//---------------------------------------------//
+
+		
+static void setDirectionUnsafe(uint8_t dir)
+{
+	// Save previous control state
+	uint8_t ctrl_motor_prev = ctrl_motor;
+	// Modify motor control bits
+	ctrl_motor &= ~(CTRL_FORWARD | CTRL_REVERSE);	
+	ctrl_motor |= (dir & (CTRL_FORWARD | CTRL_REVERSE));
+	// If control changed, provide one period for TRIAC to close
+	if ((ctrl_motor_prev ^ ctrl_motor) & (CTRL_FORWARD | CTRL_REVERSE))
+		ctrl_motor |= SKIP_CURRENT_MOTOR_REG;
+}
+
+
+	
 
 	
 // Function to process rolling - sets rotation direction for next period
 // Call once per each AC line period
-static inline void controlRolling()
+static inline void controllRolling()
 {
-	rollCounter++;
+	rollCycleCounter++;
+	uint8_t changeDir = 0;
 	// Check overflow!
 	
 	if (rollState & ROLL_CYCLE)							// if cycle rolling
 	{
-		if (rollCounter == prevRollCounter)				// if reached a border
+		if (rollCycleCounter == prevRollCounter)				// if reached a border
 		{
-			if (rollState & (ROLL_FWD | ROLL_REV) == borderState)	// if reached border == finish border
+			if ((rollState & (ROLL_FWD | ROLL_REV)) == borderState)	// if reached border == finish border (set in startCycleRoll)
 			{ 
-				if (rollCycleCounter >= rollCycleMax)	// if done desired number of cycles
+				// Reached border is finish. Special processing required.
+				if (activeRollCycle >= rollCycleSet)	
 				{
+					// Done desired number of cycles
 					rollState &= ~ROLL_CYCLE;			// stop cycle rolling
 					// Done!
 				}
-				else
+				else		
 				{
-					rollCycleCounter++;	
-					ChangeDirection();	
+					// Do more cycles!
+					activeRollCycle++;	
+					changeDir = 1;
 				}
 			}
 			else
 			{
-				ChangeDirection();	
+				// Reached border is not finish. Simply change direction.
+				changeDir = 1;
 			}
+			
+			//---- Change direction ----//
+			if (changeDir)
+			{
+				if (rollState & ROLL_FWD)
+				{
+					rollState &= ~ROLL_FWD;
+					rollState |= ROLL_REV;
+					setDirectionUnsafe(CTRL_REVERSE);
+				}
+				else
+				{
+					rollState &= ~ROLL_REV;
+					rollState |= ROLL_FWD;
+					setDirectionUnsafe(CTRL_FORWARD);
+				}
+				rollCycleCounter = 0;	// Reset roll counter
+			}
+			//--------------------------//
+			
 		}
 	}
 	
@@ -174,14 +187,14 @@ static inline void controlRolling()
 	
 	
 		
-/*	
+	
 	// Set flags - actual rotate direction
 	p_flags &= ~(ROTATE_FORWARD | ROTATE_REVERSE);
-	if (cnt_inc > 0)
+	if (rollState & ROLL_FWD)
 		p_flags |= ROTATE_FORWARD;
-	else if (cnt_inc < 0)
+	else if (rollState & ROLL_REV)
 		p_flags |= ROTATE_REVERSE;
-*/
+
 }
 
 
@@ -255,13 +268,13 @@ ISR(TIMER0_OVF_vect)
 				temp |= (1<<PD_M1);
 				PORTD = temp;
 			//	controlRolling(1);	// inc counter
-				controlRolling();	
+				controllRolling();	
 				break;
 			case CTRL_REVERSE:		// Rotating reverse
 				temp |= (1<<PD_M2);	
 				PORTD = temp;
 			//	controlRolling(-1);	// dec counter
-				controlRolling();	
+				controllRolling();	
 				break;
 			default:				// Skip current period to allow TRIACs fully close
 				PORTD = temp;
