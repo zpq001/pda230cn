@@ -55,12 +55,12 @@ void setMotorDirection(uint8_t dir)
 	{
 		ctrl_motor |= (CTRL_REVERSE);
 	}
+	
 	// If control changed, provide one period for TRIAC to close
 	if ((ctrl_motor_prev ^ ctrl_motor) & (CTRL_FORWARD | CTRL_REVERSE))
 		ctrl_motor |= SKIP_CURRENT_MOTOR_REG;
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);	
-	
 }	
 
 // User function to control heater intensity
@@ -96,65 +96,92 @@ void stopRepeatRolling(void)
 	// TODO
 }
 */
-/*
+
+
+
 void processRollControl(int8_t inc)
 {
-	switch(rollState)
+	if ( (rollState & (ROLL_FWD | ROLL_REV)) == ROLL_FWD )
+		fwdCounter += inc;
+	else if ( (rollState & 0x03) == ROLL_REV )
+		revCounter += inc;
+
+
+	
+
+				
+}
+			
+			
+void setDirection(uint8_t dir)
+{
+	if (dir == FORWARD)
 	{
-		case ROLL_FWD:
-			if (inc < 0)
-			{
-				revCounter = 0;
-				rollState = ROLL_REV;	
-			}	
-			else
-			{
-				fwdCounter += inc;	
-			}
-			break;
-		case ROLL_REV:
-			if (inc > 0)
-			{
-				fwdCounter = 0;
-				rollState = ROLL_FWD;	
-			}
-			else
-			{
-				revCounter += inc;	
-			}
+			
+		
 	}
+	else
+	{
+		
+	}
+	
+	prevRollCounter = rollCounter;
+	rollCounter = 0;
+		
 }
 
-uint8_t startRoller(void)
+void startCycleRolling(void)
 {
 	
-	
-	switch(rollState)
-	{
-	
-		
-		case ROLL_CYCLE:	
-		
-		
-	}
-	
+	borderState = ( (rollState & (ROLL_FWD | ROLL_REV)) == ROLL_FWD ) ? ROLL_REV : ROLL_FWD;
+	rollState |= ROLL_CYCLE;
 }
-	*/
 
 	
 // Function to process rolling - sets rotation direction for next period
 // Call once per each AC line period
-static inline void controlRolling(int8_t cnt_inc)
+static inline void controlRolling()
 {
-	rollCnt += cnt_inc;
-	// Currently does not change direction - TODO
+	rollCounter++;
+	// Check overflow!
 	
+	if (rollState & ROLL_CYCLE)							// if cycle rolling
+	{
+		if (rollCounter == prevRollCounter)				// if reached a border
+		{
+			if (rollState & (ROLL_FWD | ROLL_REV) == borderState)	// if reached border == finish border
+			{ 
+				if (rollCycleCounter >= rollCycleMax)	// if done desired number of cycles
+				{
+					rollState &= ~ROLL_CYCLE;			// stop cycle rolling
+					// Done!
+				}
+				else
+				{
+					rollCycleCounter++;	
+					ChangeDirection();	
+				}
+			}
+			else
+			{
+				ChangeDirection();	
+			}
+		}
+	}
+	
+	
+	
+	
+	
+		
+/*	
 	// Set flags - actual rotate direction
 	p_flags &= ~(ROTATE_FORWARD | ROTATE_REVERSE);
 	if (cnt_inc > 0)
 		p_flags |= ROTATE_FORWARD;
 	else if (cnt_inc < 0)
 		p_flags |= ROTATE_REVERSE;
+*/
 }
 
 
@@ -227,17 +254,19 @@ ISR(TIMER0_OVF_vect)
 			case CTRL_FORWARD:		// Rotating forward
 				temp |= (1<<PD_M1);
 				PORTD = temp;
-				controlRolling(1);	// inc counter
+			//	controlRolling(1);	// inc counter
+				controlRolling();	
 				break;
 			case CTRL_REVERSE:		// Rotating reverse
 				temp |= (1<<PD_M2);	
 				PORTD = temp;
-				controlRolling(-1);	// dec counter
+			//	controlRolling(-1);	// dec counter
+				controlRolling();	
 				break;
 			default:				// Skip current period to allow TRIACs fully close
 				PORTD = temp;
 				ctrl_motor &= ~SKIP_CURRENT_MOTOR_REG;
-				controlRolling(0);	// do not update counter - motor is disabled for current period
+			//	controlRolling(0);	// do not update counter - motor is disabled for current period
 		}
 		
 
