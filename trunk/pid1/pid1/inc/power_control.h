@@ -59,7 +59,9 @@ MOTOR	________________________________________________|*************************
 #define READY_TO_UPDATE_HEATER	0x80
 #define HEATER_ENABLED			0x40
 //#define ROTATING_FORWARD		0x01		
-//#define ROTATING_REVERSE		0x02		
+//#define ROTATING_REVERSE		0x02
+
+#define CYCLE_SAFE_MARGIN		10		// in units of 20ms
 
 
 

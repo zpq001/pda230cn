@@ -42,7 +42,8 @@ uint8_t activeRollCycle;
 
 
 uint16_t rollPoint = 32768;
-
+uint16_t topPoint = 32768;
+uint16_t bottomPoint = 32768;
 
 // User function to control heater intensity
 inline void setHeaterControl(uint8_t value)
@@ -62,8 +63,7 @@ inline void setHeaterControl(uint8_t value)
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir)
 {
-	// Disable interrupts from timer0 - the only 
-	//	possible modifier of rollState excluding this function
+	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 		
 	if (!(rollState & ROLL_CYCLE))
@@ -86,35 +86,42 @@ void setMotorDirection(uint8_t dir)
 
 uint8_t startCycleRolling(void)
 {
-	// Disable interrupts from timer0 - the only 
-	//	possible modifier of rollState excluding this function
+	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 	
-
+	if ( ((rollPoint + CYCLE_SAFE_MARGIN) <= topPoint) && ((rollPoint - CYCLE_SAFE_MARGIN) >= bottomPoint))
+	{
+		rollState |= ROLL_CYCLE;
+		activeRollCycle = 1;
+	}
+	
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);
 	
-	return 0;
+	return (rollState & ROLL_CYCLE);
 }
 
 void stopCycleRolling(void)
 {
-	// Disable interrupts from timer0 - the only 
-	//	possible modifier of rollState excluding this function
+	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 	
-
+	rollState &= ~ROLL_CYCLE;
 	
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);
 }
 
 
-uint8_t canCycleRoll(void)
+// Used for indication
+uint8_t isTopPointValid(void)
 {
-	
-	
-	return 0;
+	return (	rollPoint <= topPoint	);	
+}
+
+uint8_t isBollomPointValid(void)
+{
+	return (	rollPoint >= bottomPoint	);	
 }
 
 
@@ -122,6 +129,22 @@ uint8_t canCycleRoll(void)
 //---------------------------------------------//
 //---------------------------------------------//
 
+static void updateRollPoint(void)
+{
+	uint16_t diff;
+	
+	if (rollState & ROLL_FWD)
+		rollPoint++;
+	else if (rollState & ROLL_REV)
+		rollPoint--;	
+		
+	if (rollPoint == 65535)
+	{
+		diff = rollPoint - topPoint;
+		
+		
+	}
+}
 		
 
 	
@@ -129,18 +152,11 @@ uint8_t canCycleRoll(void)
 // Call once per each AC line period
 static inline void controllRolling()
 {
+	__label__ done;
 	
 	switch(rollState & (ROLL_FWD | ROLL_REV | ROLL_CYCLE))
 	{
-		case ROLL_FWD:
-			rollPoint++;
-			break;
-		case ROLL_REV:
-			rollPoint--;
-			break;
-			
 		case (ROLL_FWD | ROLL_CYCLE):
-			rollPoint++;
 			if (rollPoint >=  topPoint)
 			{
 				if (activeRollCycle >= rollCycleSet)	
@@ -156,10 +172,11 @@ static inline void controllRolling()
 					rollState |= ROLL_REV;		
 				}
 			}
-			break;
+			//updateRollPoint();
+			goto done;
+			//break;
 		
 		case (ROLL_REV | ROLL_CYCLE):	
-			rollPoint--;
 			if (rollPoint <=  bottomPoint)
 			{
 				if (activeRollCycle >= rollCycleSet)	
@@ -175,8 +192,14 @@ static inline void controllRolling()
 					rollState |= ROLL_REV;		
 				}
 			}
-			break;
+			//updateRollPoint();
+			goto done;
+			//break;
 			
+		default:
+		done:
+			updateRollPoint();
+			//break;	
 		
 	}
 	
