@@ -29,19 +29,6 @@ MOTOR	________________________________________________|*************************
 #define SYNC_LOST_TIMEOUT			32		// in units of 64 us
 
 
-//---------------------------------//
-// User definitions
-
-// setMotorDirection() param
-#define ROTATE_FORWARD			0x01		
-#define ROTATE_REVERSE			0x02		
-
-// p_flags	bits
-#define READY_TO_UPDATE_HEATER	0x80
-#define HEATER_ENABLED			0x40
-#define ROTATING_FORWARD		0x01		
-#define ROTATING_REVERSE		0x02		
-
 
 
 //---------------------------------//
@@ -59,6 +46,21 @@ MOTOR	________________________________________________|*************************
 #define ROLL_FWD					0x01
 #define ROLL_REV					0x02
 #define ROLL_CYCLE					0x04
+
+
+//---------------------------------//
+// User definitions
+
+// setMotorDirection() param
+#define ROTATE_FORWARD			ROLL_FWD		
+#define ROTATE_REVERSE			ROLL_REV		
+
+// p_flags	bits
+#define READY_TO_UPDATE_HEATER	0x80
+#define HEATER_ENABLED			0x40
+//#define ROTATING_FORWARD		0x01		
+//#define ROTATING_REVERSE		0x02		
+
 
 
 
