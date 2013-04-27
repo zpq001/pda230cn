@@ -22,7 +22,7 @@
 // Global variables - main system control
 uint16_t setup_temp_value = 65;		// reference temperature
 uint8_t rollCycleSet = 10;			// number of rolling cycles
-uint8_t sound_enable = 0;			// Global sound enable
+uint8_t sound_enable = 1;			// Global sound enable
 uint8_t power_off_timeout = 30;		// Auto power OFF timeout, minutes
 uint8_t cpoint1 = 25;				// Calibration point 1
 uint8_t cpoint2 = 180;				// Calibration point 2
@@ -32,14 +32,22 @@ uint8_t cpoint2 = 180;				// Calibration point 2
 // Function to control motor rotation
 void processRollControl(void)
 {	
-	
+	static uint8_t nextBeepDelay = 0;
 	// Control direction by buttons
 	if (button_state & BD_ROTFWD)
-		setMotorDirection(ROLL_FWD);
+		setMotorDirection(ROLL_FWD);	
 	else if (button_state & BD_ROTREV)
 		setMotorDirection(ROLL_REV);
 		
 	// TODO: add reset of points by long pressing of ROLL button
+	
+	if (button_action_down & (BD_ROTFWD | BD_ROTREV) )	
+	{
+		SetBeeperFreq(1000);
+		StartBeep(50);	
+		nextBeepDelay = 2;
+	}		
+		
 		
 	if (button_action_down & 0x80)
 	{
@@ -60,7 +68,28 @@ void processRollControl(void)
 			StartBeep(50);
 		}
 	}
-		
+	
+	if (nextBeepDelay == 0)
+	{
+		if (rollState & CYCLE_ROLL_DONE)
+		{
+			rollState &= ~CYCLE_ROLL_DONE;
+			SetBeeperFreq(1000);
+			StartBeep(200);
+		}
+		else if (rollState & ROLL_DIR_CHANGED)
+		{
+			rollState &= ~ROLL_DIR_CHANGED;
+			SetBeeperFreq(1000);
+			StartBeep(50);
+		}	
+	}
+	else
+	{
+		nextBeepDelay--;	
+	}		
+			
+	
 		
 	// Indicate direction by LEDs
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);

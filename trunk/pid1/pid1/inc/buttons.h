@@ -26,6 +26,7 @@
 #define BD_ROTFWD	0x10
 #define BD_ROTREV	0x20
 #define BD_HEATCTRL	0x40
+#define BD_CYCLE	0x80
 
 #define BS_MENU		0x0100	// short menu button press
 #define BL_MENU		0x0200	// long menu button press 

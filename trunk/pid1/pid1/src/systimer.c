@@ -57,9 +57,9 @@ void SetBeeperFreq(uint16_t freq_hz)
 {
 	uint16_t period_us = 1000000 / freq_hz;
 	if (period_us & 0xFFF8)
-	OCR1A = (period_us>>3) - 1;
-		else
-	OCR1A = 0x1;
+		OCR1A = (period_us>>3) - 1;
+	else
+		OCR1A = 0x1;
 	TCNT1 = 0;
 }
 
@@ -79,6 +79,7 @@ void StopBeep()
 	beep_cnt = 0;
 	SetBeepOutput(0);
 }
+
 
 
 ISR(TIMER2_COMP_vect)

@@ -23,5 +23,4 @@ void SetBeeperFreq(uint16_t freq_hz);
 
 
 
-
 #endif /* SYSTIMER_H_ */

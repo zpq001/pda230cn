@@ -55,9 +55,10 @@ MOTOR	________________________________________________|*************************
 #define ROLL_FWD					0x01
 #define ROLL_REV					0x02
 #define ROLL_CYCLE					0x04	
+#define SKIP_CURRENT_MOTOR_CTRL		0x08
 // Event bits:
-
-
+#define CYCLE_ROLL_DONE				0x10
+#define ROLL_DIR_CHANGED			0x20
 
 
 extern uint8_t heaterState;
