@@ -125,8 +125,8 @@ int main(void)
 	sei();
 	
 	// Beep
-	SetBeeperFreq(1000);
-	StartBeep(100);
+	//SetBeeperFreq(1000);
+	//StartBeep(200);
 	
 	InitMenu();
 
@@ -154,7 +154,7 @@ int main(void)
 				SetBeeperFreq(800);
 				StartBeep(40);
 			}
-			else if (button_action_down)
+			else if (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_HEATCTRL))
 			{
 				SetBeeperFreq(1000);
 				StartBeep(40);

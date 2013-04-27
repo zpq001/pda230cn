@@ -137,11 +137,12 @@ static inline void updateRollPoint(void)
 }
 		
 
-	
+
 // Function to process rolling - sets rotation direction for next period
 // Call once per each AC line period
 static inline void controllRolling()
 {
+	// Process cycle rolling
 	switch(rollState & (ROLL_FWD | ROLL_REV | ROLL_CYCLE))
 	{
 		case (ROLL_FWD | ROLL_CYCLE):
@@ -151,6 +152,7 @@ static inline void controllRolling()
 				{
 					// DONE!
 					rollState &= ~ROLL_CYCLE;
+					rollState |= CYCLE_ROLL_DONE;
 				}
 				else
 				{
@@ -168,6 +170,7 @@ static inline void controllRolling()
 				{
 					// DONE!
 					rollState &= ~ROLL_CYCLE;
+					rollState |= CYCLE_ROLL_DONE;
 				}
 				else
 				{
@@ -182,7 +185,11 @@ static inline void controllRolling()
 			break;
 	}
 	
-	// Process direction
+	// Process direction change
+	if ((rollState ^ newDirReq) & (ROLL_FWD | ROLL_REV))
+	{
+		rollState |= (SKIP_CURRENT_MOTOR_CTRL | ROLL_DIR_CHANGED);
+	}
 	rollState &= ~(ROLL_FWD | ROLL_REV);
 	rollState |= newDirReq;
 	
@@ -198,9 +205,9 @@ ISR(ANA_COMP_vect)
 	ACSR &= ~(1<<ACIE);
 	// Turn on heater TRIAC
 	if (heater_cnt < ctrl_heater_sync)
-		PORTD |= (1<<PD_HEATER | 1<<PD_HEAT_INDIC);	// Direct heater indication
-	else
-		PORTD &= ~(1<<PD_HEAT_INDIC);
+		PORTD |= (1<<PD_HEATER);// | 1<<PD_HEAT_INDIC);	// Direct heater indication
+	//else
+	//	PORTD &= ~(1<<PD_HEAT_INDIC);
 	// Reprogram timer0
 	TCNT0 = 256 - TRIAC_IMPULSE_TIME;		// Triac gate impulse time
 	// Modify state	
@@ -214,7 +221,6 @@ ISR(ANA_COMP_vect)
 ISR(TIMER0_OVF_vect)
 {
 	uint8_t temp;
-	static uint8_t rollStatePrev = 0;
 	
 	switch(p_state & STATE_MASK)
 	{
@@ -256,10 +262,10 @@ ISR(TIMER0_OVF_vect)
 		
 		temp = PORTD;
 		temp &= ~(1<<PD_M1 | 1<<PD_M2);
-		if ( (rollStatePrev ^ rollState) & (ROLL_FWD | ROLL_REV) )
+		if ( rollState & SKIP_CURRENT_MOTOR_CTRL )
 		{
 			// Direction control changed. Skip current period to allow TRIACs fully close
-			rollStatePrev = rollState;
+			rollState &= ~SKIP_CURRENT_MOTOR_CTRL;
 			PORTD = temp; 	
 		}
 		else
