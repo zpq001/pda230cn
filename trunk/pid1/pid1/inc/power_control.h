@@ -38,37 +38,32 @@ MOTOR	________________________________________________|*************************
 #define HALF_PERIOD_FLAG			0x80
 #define STATE_MASK					0x0F
 
-// ctrl_motor bits
-#define SKIP_CURRENT_MOTOR_REG		0x40
-#define CTRL_FORWARD				0x01
-#define CTRL_REVERSE				0x02
-
-#define ROLL_FWD					0x01
-#define ROLL_REV					0x02
-#define ROLL_CYCLE					0x04
-
 
 //---------------------------------//
 // User definitions
 
-// setMotorDirection() param
-#define ROTATE_FORWARD			ROLL_FWD		
-#define ROTATE_REVERSE			ROLL_REV		
-
-// p_flags	bits
+// Heater:
+// heaterState	bits
 #define READY_TO_UPDATE_HEATER	0x80
 #define HEATER_ENABLED			0x40
-//#define ROTATING_FORWARD		0x01		
-//#define ROTATING_REVERSE		0x02
 
+// Roll:
 #define CYCLE_SAFE_MARGIN		10		// in units of 20ms
 
+// rollState bits:
+// Flags:
+#define ROLL_FWD					0x01
+#define ROLL_REV					0x02
+#define ROLL_CYCLE					0x04	
+// Event bits:
 
 
 
-extern uint8_t p_flags;					// Module status
+
+extern uint8_t heaterState;
 extern uint8_t rollState;
 extern uint8_t activeRollCycle;
+
 
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir);
@@ -78,7 +73,8 @@ void setHeaterControl(uint8_t value);
 uint8_t startCycleRolling(void);
 void stopCycleRolling(void);
 
-
+uint8_t isTopPointValid(void);
+uint8_t isBottomPointValid(void);
 
 
 #endif /* POWER_CONTROL_H_ */

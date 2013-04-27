@@ -45,7 +45,7 @@ void init_system()
 {
 	// Setup Port D
 	PORTD = 0; //(1<<PD_SYNCA | 1<<PD_SYNCB);
-	DDRD = (1<<PD5 | 1<<PD_TXD | 1<<PD_M1 | 1<<PD_M2 | 1<<PD_HEATER );
+	DDRD = (1<<PD_TXD | 1<<PD_M1 | 1<<PD_M2 | 1<<PD_HEATER | 1<<PD_HEAT_INDIC );
 	
 	// Setup Port B
 	PORTB = 0;
@@ -130,7 +130,7 @@ int main(void)
 	
 	InitMenu();
 
-	setMotorDirection(ROTATE_FORWARD);
+	setMotorDirection(ROLL_FWD);
 	
 	//button_state = BD_UP;
 	//processMenu();
@@ -149,29 +149,16 @@ int main(void)
 			process_buttons();
 			
 			// Give audio feedback
-			if (sound_enable)
+			if (button_state & BL_MENU)
 			{
-				/*
-				if (button_signal & LONG_PRESS_EVENT)
-				{
-					if (raw_button_state & BD_MENU)
-					{
-						SetBeeperFreq(800);
-						StartBeep(50);
-					}
-				}
-				*/
-				if (button_state & BL_MENU)
-				{
-					SetBeeperFreq(800);
-					StartBeep(40);
-				}
-				else if (button_action_down)
-				{
-					SetBeeperFreq(1000);
-					StartBeep(40);
-				}	
+				SetBeeperFreq(800);
+				StartBeep(40);
 			}
+			else if (button_action_down)
+			{
+				SetBeeperFreq(1000);
+				StartBeep(40);
+			}	
 			
 
 			// Process user menu states, settings and indication
@@ -205,7 +192,7 @@ int main(void)
 					USART_sendstr(str);
 					USART_sendstr("     ");
 					
-					if (p_flags & HEATER_ENABLED)
+					if (heaterState & HEATER_ENABLED)
 					USART_send('1');
 					else
 					USART_send('0');
