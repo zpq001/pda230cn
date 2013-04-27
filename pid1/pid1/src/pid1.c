@@ -119,6 +119,10 @@ int main(void)
 	
 	// Initialize IO
 	init_system();
+	
+	// Restore params
+	restoreGlobalParams();
+	
 	// Initialize LED indicator
 	initLedIndicator();
 	// Enable interrupts

@@ -59,6 +59,7 @@ MOTOR	________________________________________________|*************************
 // Event bits:
 #define CYCLE_ROLL_DONE				0x10
 #define ROLL_DIR_CHANGED			0x20
+//#define CYCLE_DIR_CHANGED			0x40
 
 
 extern uint8_t heaterState;

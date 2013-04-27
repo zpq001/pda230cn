@@ -10,6 +10,17 @@
 #define CONTROL_H_
 
 
+typedef struct  
+{
+	uint8_t setup_temp_value;
+	uint8_t rollCycleSet;
+	uint8_t sound_enable;
+	uint8_t power_off_timeout;
+	uint8_t cpoint1;
+	uint8_t cpoint2;
+} gParams_t;
+
+
 #define MAX_SET_TEMP	210
 #define MIN_SET_TEMP	30
 
@@ -33,6 +44,10 @@ extern uint8_t cpoint2;						// Calibration point 2
 
 void processRollControl(void);
 void processHeaterControl(void);
+
+void restoreGlobalParams(void);
+void exitPowerOff(void);
+void processAutoPowerOff(void);
 
 
 #endif /* CONTROL_H_ */

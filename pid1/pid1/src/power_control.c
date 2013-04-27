@@ -140,7 +140,7 @@ static inline void updateRollPoint(void)
 
 // Function to process rolling - sets rotation direction for next period
 // Call once per each AC line period
-static inline void controllRolling()
+static inline void controlRolling()
 {
 	// Process cycle rolling
 	switch(rollState & (ROLL_FWD | ROLL_REV | ROLL_CYCLE))
@@ -159,6 +159,7 @@ static inline void controllRolling()
 					activeRollCycle++;
 					// Change dir	
 					newDirReq = ROLL_REV;
+					//rollState |= CYCLE_DIR_CHANGED;
 				}
 			}
 			break;
@@ -177,6 +178,7 @@ static inline void controllRolling()
 					activeRollCycle++;
 					// Change dir	
 					newDirReq = ROLL_FWD;
+					//rollState |= CYCLE_DIR_CHANGED;
 				}
 			}
 			break;
@@ -205,9 +207,9 @@ ISR(ANA_COMP_vect)
 	ACSR &= ~(1<<ACIE);
 	// Turn on heater TRIAC
 	if (heater_cnt < ctrl_heater_sync)
-		PORTD |= (1<<PD_HEATER);// | 1<<PD_HEAT_INDIC);	// Direct heater indication
-	//else
-	//	PORTD &= ~(1<<PD_HEAT_INDIC);
+		PORTD |= (1<<PD_HEATER | 1<<PD_HEAT_INDIC);	// Direct heater indication
+	else
+		PORTD &= ~(1<<PD_HEAT_INDIC);
 	// Reprogram timer0
 	TCNT0 = 256 - TRIAC_IMPULSE_TIME;		// Triac gate impulse time
 	// Modify state	
@@ -245,9 +247,7 @@ ISR(TIMER0_OVF_vect)
 		case 0x03:
 			// Error - sync is lost. It means that device has been disconnected from AC line.
 			// Disable all power-consuming devices like LEDs and save user settings to EEPROM.
-			PORTD &= ~(1<<PD_HEATER | 1<<PD_M1 | 1<<PD_M2);
-			heater_cnt = 0;
-			// TODO
+			exitPowerOff();
 			break;
 		
 		default:
@@ -276,7 +276,7 @@ ISR(TIMER0_OVF_vect)
 			else if (rollState & ROLL_REV)
 				temp |= (1<<PD_M2);
 			PORTD = temp; 
-			controllRolling();
+			controlRolling();
 		}
 			
 
