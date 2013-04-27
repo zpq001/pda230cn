@@ -16,9 +16,15 @@
 static uint8_t ctrl_heater = 0;			// Heater duty value
 static uint8_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulation period
 static uint8_t heater_cnt = 0;			// Counter used to provide heater PWM
+uint8_t heaterState = 0;				// Global heater flags
 
 // Motor controls
-//static uint8_t ctrl_motor = 0;			// Motor control bits
+uint8_t rollState = 0;					// Roll controller state. Use as read-only
+uint8_t activeRollCycle;				// Indicates currently active roll cycle
+static uint8_t newDirReq;
+static uint16_t rollPoint = 32768;
+static uint16_t topPoint = 32768;
+static uint16_t bottomPoint = 32768;
 
 
 // p_state bits:
@@ -26,16 +32,6 @@ static uint8_t heater_cnt = 0;			// Counter used to provide heater PWM
 // [3:0] <- state
 static uint8_t p_state = 0x0F;			// default error state - if AC line sync is present, 
 										// it will be cleared at first comparator ISR
-	
-// Globals and externs
-uint8_t p_flags = 0;					// Module status
-
-uint8_t rollState = 0;
-uint8_t borderState = 0;
-uint16_t rollCounter = 0;
-uint16_t prevRollCounter = 0;
-uint8_t activeRollCycle;
-
 
 
 
@@ -43,11 +39,13 @@ uint8_t activeRollCycle;
 inline void setHeaterControl(uint8_t value)
 {
 	ctrl_heater = value;
-	p_flags &= ~READY_TO_UPDATE_HEATER;
-	if (value)
-		p_flags |= HEATER_ENABLED;
+	heaterState &= ~READY_TO_UPDATE_HEATER;
+	
+	if (ctrl_heater)
+		heaterState |= HEATER_ENABLED;
 	else
-		p_flags &= ~HEATER_ENABLED;
+		heaterState &= ~HEATER_ENABLED;	
+	
 }
 
 
@@ -57,44 +55,17 @@ inline void setHeaterControl(uint8_t value)
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir)
 {
-	// Disable interrupts from timer0 - the only 
-	//	possible modifier of rollState excluding this function
+	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 		
-	// Check if new direction specified
-	if ( (rollState ^ dir) & (ROLL_FWD | ROLL_REV) )
-	{
-		// Direction changed, save cycle roll distance
-		prevRollCounter = rollCounter;	
-		
-		// If cycle rolling, direction will be changed 
-		//	and counter will be reset at controllRolling()
-		if (!(rollState & ROLL_CYCLE))
-		{
-			rollCounter = 0;
-			rollState &= ~(ROLL_FWD | ROLL_REV);
-			rollState |= dir;
-		}
-	}
-	else 
-	{
-		// Direction is not changed.
-		if (rollState & ROLL_CYCLE)
-		{
-			if (canCycleRoll())
-			{
-				// Shrink cycle roll distance
-				prevRollCounter -= rollCounter;
-				rollCounter = 0;
-			}
-		}
-		else
-		{
-			rollCounter = 0;
-		}
-	}
+	newDirReq = dir;	// save new direction request
 	
+	if (dir & ROLL_FWD)
+		bottomPoint = rollPoint;
+	else if (dir & ROLL_REV)
+		topPoint = rollPoint;
 		
+
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);	
 }	
@@ -103,30 +74,25 @@ void setMotorDirection(uint8_t dir)
 
 uint8_t startCycleRolling(void)
 {
-	// Disable interrupts from timer0 - the only 
-	//	possible modifier of rollState excluding this function
+	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 	
-	if (canCycleRoll())
+	if ( ((rollPoint + CYCLE_SAFE_MARGIN) <= topPoint) && 
+		 ((rollPoint - CYCLE_SAFE_MARGIN) >= bottomPoint) )
 	{
-		borderState = ( (rollState & (ROLL_FWD | ROLL_REV)) == ROLL_FWD ) ? ROLL_REV : ROLL_FWD;
 		rollState |= ROLL_CYCLE;
-		activeRollCycle = 1;	
+		activeRollCycle = 1;
 	}
 	
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);
 	
-	if (rollState & ROLL_CYCLE)
-		return 1;
-	else
-		return 0;
+	return (rollState & ROLL_CYCLE);
 }
 
 void stopCycleRolling(void)
 {
-	// Disable interrupts from timer0 - the only 
-	//	possible modifier of rollState excluding this function
+	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 	
 	rollState &= ~ROLL_CYCLE;
@@ -136,13 +102,15 @@ void stopCycleRolling(void)
 }
 
 
-uint8_t canCycleRoll(void)
+// Used for indication
+uint8_t isTopPointValid(void)
 {
-	// Add some safe interval
-	if ((prevRollCounter != 0) && ((rollCounter + 10) < prevRollCounter))
-		return 1;
-	else
-		return 0;
+	return (	rollPoint <= topPoint	);	
+}
+
+uint8_t isBottomPointValid(void)
+{
+	return (	rollPoint >= bottomPoint	);	
 }
 
 
@@ -150,6 +118,23 @@ uint8_t canCycleRoll(void)
 //---------------------------------------------//
 //---------------------------------------------//
 
+static inline void updateRollPoint(void)
+{
+	uint16_t diff;
+	
+	if (rollState & ROLL_FWD)
+		rollPoint++;
+	else if (rollState & ROLL_REV)
+		rollPoint--;	
+	/*	
+	if (rollPoint == 65535)
+	{
+		diff = rollPoint - topPoint;
+		
+		
+	}
+	*/
+}
 		
 
 	
@@ -157,69 +142,51 @@ uint8_t canCycleRoll(void)
 // Call once per each AC line period
 static inline void controllRolling()
 {
-	rollCounter++;
-	uint8_t changeDir = 0;
-	// Check overflow!
-	
-	if (rollState & ROLL_CYCLE)							// if cycle rolling
+	switch(rollState & (ROLL_FWD | ROLL_REV | ROLL_CYCLE))
 	{
-		if (rollCounter >= prevRollCounter)				// if reached a border
-		{
-			if ((rollState & (ROLL_FWD | ROLL_REV)) == borderState)	// if reached border == finish border (set in startCycleRoll)
-			{ 
-				// Reached border is finish. Special processing required.
+		case (ROLL_FWD | ROLL_CYCLE):
+			if (rollPoint >=  topPoint)
+			{
 				if (activeRollCycle >= rollCycleSet)	
 				{
-					// Done desired number of cycles
-					rollState &= ~ROLL_CYCLE;			// stop cycle rolling
-					// Done!
-				}
-				else		
-				{
-					// Do more cycles!
-					activeRollCycle++;	
-					changeDir = 1;
-				}
-			}
-			else
-			{
-				// Reached border is not finish. Simply change direction.
-				changeDir = 1;
-			}
-			
-			//---- Change direction ----//
-			if (changeDir)
-			{
-				if (rollState & ROLL_FWD)
-				{
-					rollState &= ~ROLL_FWD;
-					rollState |= ROLL_REV;
+					// DONE!
+					rollState &= ~ROLL_CYCLE;
 				}
 				else
 				{
-					rollState &= ~ROLL_REV;
-					rollState |= ROLL_FWD;
+					activeRollCycle++;
+					// Change dir	
+					newDirReq = ROLL_REV;
 				}
-				rollCounter = 0;	// Reset roll counter
 			}
-			//--------------------------//
+			break;
+		
+		case (ROLL_REV | ROLL_CYCLE):	
+			if (rollPoint <=  bottomPoint)
+			{
+				if (activeRollCycle >= rollCycleSet)	
+				{
+					// DONE!
+					rollState &= ~ROLL_CYCLE;
+				}
+				else
+				{
+					activeRollCycle++;
+					// Change dir	
+					newDirReq = ROLL_FWD;
+				}
+			}
+			break;
 			
-		}
+		default:
+			break;
 	}
 	
+	// Process direction
+	rollState &= ~(ROLL_FWD | ROLL_REV);
+	rollState |= newDirReq;
 	
-	
-	
-	
-		
-	
-	// Set flags - actual rotate direction
-	p_flags &= ~(ROTATE_FORWARD | ROTATE_REVERSE);
-	if (rollState & ROLL_FWD)
-		p_flags |= ROTATE_FORWARD;
-	else if (rollState & ROLL_REV)
-		p_flags |= ROTATE_REVERSE;
-
+	updateRollPoint();
 }
 
 
@@ -231,7 +198,9 @@ ISR(ANA_COMP_vect)
 	ACSR &= ~(1<<ACIE);
 	// Turn on heater TRIAC
 	if (heater_cnt < ctrl_heater_sync)
-		PORTD |= (1<<PD_HEATER);
+		PORTD |= (1<<PD_HEATER | 1<<PD_HEAT_INDIC);	// Direct heater indication
+	else
+		PORTD &= ~(1<<PD_HEAT_INDIC);
 	// Reprogram timer0
 	TCNT0 = 256 - TRIAC_IMPULSE_TIME;		// Triac gate impulse time
 	// Modify state	
@@ -245,7 +214,7 @@ ISR(ANA_COMP_vect)
 ISR(TIMER0_OVF_vect)
 {
 	uint8_t temp;
-	static rollStatePrev = 0;
+	static uint8_t rollStatePrev = 0;
 	
 	switch(p_state & STATE_MASK)
 	{
@@ -297,44 +266,20 @@ ISR(TIMER0_OVF_vect)
 		{
 			// Apply direction control 
 			if (rollState & ROLL_FWD)
-				temp |= PD_M1;
+				temp |= (1<<PD_M1);
 			else if (rollState & ROLL_REV)
-				temp |= PD_M2;
+				temp |= (1<<PD_M2);
 			PORTD = temp; 
 			controllRolling();
 		}
-		
-/*
-		// Output power control - inductive load only
-		temp = PORTD;
-		temp &= ~(1<<PD_M1 | 1<<PD_M2);
-		switch (ctrl_motor & (SKIP_CURRENT_MOTOR_REG | CTRL_FORWARD | CTRL_REVERSE))
-		{
-			case CTRL_FORWARD:		// Rotating forward
-				temp |= (1<<PD_M1);
-				PORTD = temp;
-			//	controlRolling(1);	// inc counter
-				controllRolling();	
-				break;
-			case CTRL_REVERSE:		// Rotating reverse
-				temp |= (1<<PD_M2);	
-				PORTD = temp;
-			//	controlRolling(-1);	// dec counter
-				controllRolling();	
-				break;
-			default:				// Skip current period to allow TRIACs fully close
-				PORTD = temp;
-				ctrl_motor &= ~SKIP_CURRENT_MOTOR_REG;
-			//	controlRolling(0);	// do not update counter - motor is disabled for current period
-		}
-*/		
+			
 
 		// Process heater control counter
 		if (heater_cnt == HEATER_REGULATION_PERIODS - 1)
 		{
 			heater_cnt = 0;
 			ctrl_heater_sync = ctrl_heater;
-			p_flags |= READY_TO_UPDATE_HEATER;
+			heaterState |= READY_TO_UPDATE_HEATER;
 		}
 		else
 		{
@@ -350,4 +295,17 @@ ISR(TIMER0_OVF_vect)
 		p_state++;
 
 }	
+
+
+
+
+
+
+
+
+
+
+
+
+
 

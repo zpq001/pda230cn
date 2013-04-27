@@ -11,6 +11,7 @@
 #include "systimer.h"
 #include "led_indic.h"
 #include "adc.h"
+#include "control.h"
 
 
 
@@ -65,8 +66,11 @@ void SetBeeperFreq(uint16_t freq_hz)
 // Beep for some time in ms
 void StartBeep(uint16_t time_ms)
 {
-	beep_cnt = time_ms;
-	SetBeepOutput(1);
+	if (sound_enable)
+	{
+		beep_cnt = time_ms;
+		SetBeepOutput(1);		
+	}
 }
 
 // Stop beeper

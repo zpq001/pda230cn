@@ -32,6 +32,7 @@
 #define PD_M1		PD2
 #define PD_M2		PD3
 #define PD_HEATER	PD4
+#define PD_HEAT_INDIC	PD5
 #define PD_SYNCA	PD6
 #define PD_SYNCB	PD7	
 

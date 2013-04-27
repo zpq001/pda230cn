@@ -57,15 +57,16 @@ static uint8_t decode_led_char(char c)
 		case '.': return (SEGH);
 		case ',': return (SEGH);
 		case '-': return (SEGG);
+		case '_': return (SEGD);
 		case ' ': return 0;
-		case 0xB0:	return (SEGA | SEGB | SEGF | SEGG);
+		case 0xB0:	return (SEGA | SEGB | SEGF | SEGG);		// Degree sin
 		case 'C':	return (SEGA | SEGD | SEGE | SEGF);
 		case 'F':	return (SEGA | SEGE | SEGF | SEGG);
 		case 'N':	return (SEGC | SEGE | SEGG);
 		case 'D': return (SEGB | SEGC | SEGD | SEGE | SEGG);
 		case 'P': return (SEGA | SEGB | SEGE | SEGF | SEGG);
 		case 'E': return (SEGA | SEGD | SEGE | SEGF | SEGG);
-		default:  return (SEGD);	// return '_' if char code is not found
+		default:  return c;	
 	}
 }
 

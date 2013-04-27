@@ -382,6 +382,7 @@ void mf_setTempLeave(void)
 void mf_rollSelect(void)
 {
 	setExtraLeds(LED_ROLL);
+	mf_leafSelectAct();		// setup and start timer
 }
 
 void mf_rollDo(void)
@@ -401,17 +402,26 @@ void mf_rollDo(void)
 		
 	u16toa_align_right(rollCycleSet,str + 4,0x80 | 2,' ');
 	
-	if (rollState & ROLL_CYCLE)
+	if ((!(rollState & ROLL_CYCLE)) || (userTimer.FA_GE))
 	{
 		u16toa_align_right(activeRollCycle,str + 1,0x80 | 2,' ');
 	}
 	
+	str[0] = 0;
+	if (isTopPointValid())
+		str[0] |= SEGA;
+	if (isBottomPointValid())
+		str[0] |= SEGD;
+	if (str[0] == 0)
+		str[0] = ' ';
+		
 	printLedBuffer(0,str);
 }
 
 void mf_rollLeave(void)
 {
 	clearExtraLeds(LED_ROLL);
+	userTimer.Enabled = 0;
 }
 
 //---------------------------------------------//

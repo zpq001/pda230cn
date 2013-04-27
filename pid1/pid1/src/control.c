@@ -22,7 +22,7 @@
 // Global variables - main system control
 uint16_t setup_temp_value = 65;		// reference temperature
 uint8_t rollCycleSet = 10;			// number of rolling cycles
-uint8_t sound_enable = 1;			// Global sound enable
+uint8_t sound_enable = 0;			// Global sound enable
 uint8_t power_off_timeout = 30;		// Auto power OFF timeout, minutes
 uint8_t cpoint1 = 25;				// Calibration point 1
 uint8_t cpoint2 = 180;				// Calibration point 2
@@ -31,14 +31,15 @@ uint8_t cpoint2 = 180;				// Calibration point 2
 
 // Function to control motor rotation
 void processRollControl(void)
-{
-	// p_flags & ROLL_CYCLIC
+{	
 	
 	// Control direction by buttons
 	if (button_state & BD_ROTFWD)
-		setMotorDirection(ROTATE_FORWARD);
+		setMotorDirection(ROLL_FWD);
 	else if (button_state & BD_ROTREV)
-		setMotorDirection(ROTATE_REVERSE);
+		setMotorDirection(ROLL_REV);
+		
+	// TODO: add reset of points by long pressing of ROLL button
 		
 	if (button_action_down & 0x80)
 	{
@@ -63,9 +64,9 @@ void processRollControl(void)
 		
 	// Indicate direction by LEDs
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);
-	if (p_flags & ROTATING_FORWARD)
+	if (rollState & ROLL_FWD)
 		setExtraLeds(LED_ROTFWD);
-	else if (p_flags & ROTATING_REVERSE)
+	else if (rollState & ROLL_REV)
 		setExtraLeds(LED_ROTREV);
 	
 		
