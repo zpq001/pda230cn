@@ -11,6 +11,10 @@
 #include "adc.h"
 
 
+static float k_norm;
+static float offset_norm;
+
+
 uint16_t adc_filtered_value;
 
 static uint16_t adc_sample_buffer[ADC_BUFFER_LENGTH];
@@ -18,12 +22,15 @@ static int8_t adc_buffer_pos = -1;
 
 
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
-{
-	float k_norm = -0.4454;
-	float offset_norm = 408.2037;
-	
-	
+{	
 	return (uint16_t)((float)adc_value * k_norm + offset_norm);
+}
+
+
+void calculateCoeffs(uint16_t deg_a, uint16_t adc_a, uint16_t deg_b, uint16_t adc_b)
+{
+	k_norm = ((int16_t)(deg_a - deg_b)) / ((int16_t)(adc_a - adc_b));
+	offset_norm = (float)deg_a - (float)adc_a * k_norm;
 }
 
 

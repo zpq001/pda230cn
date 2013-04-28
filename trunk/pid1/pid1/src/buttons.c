@@ -78,13 +78,6 @@ void process_buttons()
 		button_state |= BR_UP;	
 	if (button_action_rep & BD_DOWN)
 		button_state |= BR_DOWN;
-/*		
-	// Process signals and flags
-	button_signal = 0;
-	if (press_timer == LONG_PRESS_DELAY)
-		button_signal |= LONG_PRESS_EVENT;
-	if (press_timer > LONG_PRESS_DELAY)
-		button_signal |= LONG_PRESS_FLAG;
-*/
+
 }
 

@@ -1,5 +1,5 @@
 /*
- * menu_func.c
+ * menu.c
  *
  * Created: 12.04.2013 16:51:32
  *  Author: Avega
@@ -582,6 +582,7 @@ void mf_calib2Do(void)
 void mf_cdone1Select(void)
 {
 	// Calculate new coefficient for temperature conversion
+	calculateCoeffs(cpoint1,adc_filtered_value,cpoint2,0);
 }
 
 void mf_cdone2Select(void)

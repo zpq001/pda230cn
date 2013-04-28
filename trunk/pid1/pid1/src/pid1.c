@@ -41,6 +41,9 @@
 extern volatile SoftTimer8b_t menuUpdateTimer;
 
 
+////// debug ///////
+//extern void powTest(void);
+
 void init_system()
 {
 	// Setup Port D
@@ -117,11 +120,16 @@ int main(void)
 	uint8_t uart_log_timeout_counter = 0;
 	uint16_t uart_log_counter = 0;
 	
+	//powTest();
+	
 	// Initialize IO
 	init_system();
 	
 	// Restore params
 	restoreGlobalParams();
+	
+	// Calibrate ADC coefficients using restored params
+	
 	
 	// Initialize LED indicator
 	initLedIndicator();
@@ -129,8 +137,8 @@ int main(void)
 	sei();
 	
 	// Beep
-	//SetBeeperFreq(1000);
-	//StartBeep(200);
+	SetBeeperFreq(1000);
+	StartBeep(200);
 	
 	InitMenu();
 

@@ -30,41 +30,51 @@ EEMEM gParams_t nvParams =
 	.power_off_timeout = 30,
 	.cpoint1 = 25,
 	.cpoint2 = 180,
+	.cpoint1_adc = 
+	.cpoint2_adc = 
+	//.k_norm = -0.4454,
+	//.offset_norm = 408.2037
 };
 
 uint16_t setup_temp_value;		// reference temperature
 uint8_t rollCycleSet;			// number of rolling cycles
 uint8_t sound_enable;			// Global sound enable
 uint8_t power_off_timeout;		// Auto power OFF timeout, minutes
-uint8_t cpoint1;				// Calibration point 1
-uint8_t cpoint2;				// Calibration point 2
-
+uint8_t cpoint1;				// Calibration point 1, Celsius degree
+uint8_t cpoint2;				// Calibration point 2, Celsius degree
+uint16_t cpoint1_adc;			// Calibration point 1, ADC value
+uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
 
 // Function to control motor rotation
 void processRollControl(void)
 {	
 	uint8_t beepState = 0;
+	static uint8_t beepMask = 0x00;
 	
 	// Control direction by buttons
-	if (button_state & BD_ROTFWD)
+	if (button_action_down & BD_ROTFWD)
 	{
 		setMotorDirection(ROLL_FWD);	
 		beepState |= 0x01;			// pressed FWD button
 	}		
-	else if (button_state & BD_ROTREV)
+	else if (button_action_down & BD_ROTREV)
 	{
 		setMotorDirection(ROLL_REV);
 		beepState |= 0x02;			// pressed REV button
 	}		
+	else if (button_action_long & BD_CYCLE)
+	{
+		stopCycleRolling(1);		// Reset points and disabled CYCLE mode (if was enabled)
+		beepState |= 0x08;			// reset of points by long pressing of ROLL button
+	}
 	
-	// TODO: add reset of points by long pressing of ROLL button
 	
-	if (button_action_down & BD_CYCLE)
+	if (button_action_up_short & BD_CYCLE)
 	{
 		if (rollState & ROLL_CYCLE)
 		{
-			stopCycleRolling();
+			stopCycleRolling(0);
 			beepState |= 0x20;		// stopped cycle
 		}
 		else if (startCycleRolling())
@@ -89,24 +99,34 @@ void processRollControl(void)
 		beepState |= 0x80;	
 	}		
 	
-	if (beepState & 0x80)
+	beepState &= beepMask;
+	
+	if (beepState & 0x80)		// Roll cycle done
 	{
 		SetBeeperFreq(1000);
 		StartBeep(200);
 	}		
-	else if (beepState & 0x40)
+	else if (beepState & 0x40)	// Roll cycle start fail
 	{
 		SetBeeperFreq(500);
 		StartBeep(50);
-	}	
-	if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
+	} 
+	else if (beepState & 0x08)	// Reset points
+	{
+		SetBeeperFreq(800);
+		StartBeep(50);
+	}							// Other
+	else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
 	{
 		SetBeeperFreq(1000);
 		StartBeep(50);	
 	}			
 	
-		
-		
+	// Apply mask to next sound events
+	beepMask = 0xFF;
+	// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
+	if (beepState & 0x03)	
+		beepMask &= ~0x04;	
 		
 	
 		
@@ -163,6 +183,8 @@ void restoreGlobalParams(void)
 	 power_off_timeout = gParams.power_off_timeout;	// Auto power OFF timeout, minutes
 	 cpoint1 = gParams.cpoint1;						// Calibration point 1
 	 cpoint2 = gParams.cpoint2;						// Calibration point 2
+	 cpoint1_adc = gParams.cpoint1_adc;
+	 cpoint2_adc = gParams.cpoint2_adc;
 }
 
 void exitPowerOff(void)

@@ -47,8 +47,6 @@ MOTOR	________________________________________________|*************************
 #define READY_TO_UPDATE_HEATER	0x80
 #define HEATER_ENABLED			0x40
 
-// Roll:
-#define CYCLE_SAFE_MARGIN		10		// in units of 20ms
 
 // rollState bits:
 // Flags:
@@ -59,7 +57,6 @@ MOTOR	________________________________________________|*************************
 // Event bits:
 #define CYCLE_ROLL_DONE				0x10
 #define ROLL_DIR_CHANGED			0x20
-//#define CYCLE_DIR_CHANGED			0x40
 
 
 extern uint8_t heaterState;
@@ -73,8 +70,7 @@ void setMotorDirection(uint8_t dir);
 void setHeaterControl(uint8_t value);
 
 uint8_t startCycleRolling(void);
-void stopCycleRolling(void);
-
+void stopCycleRolling(uint8_t doResetPoints);
 uint8_t isTopPointValid(void);
 uint8_t isBottomPointValid(void);
 
