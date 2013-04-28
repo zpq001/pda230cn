@@ -44,7 +44,8 @@ extern uint16_t button_state;
 extern uint8_t button_action_down;
 extern uint8_t button_action_rep;
 extern uint8_t button_action_up_short;
-extern uint8_t button_action_up_long;
+//extern uint8_t button_action_up_long;
+extern uint8_t button_action_long;
 
 //extern uint8_t button_signal;
 

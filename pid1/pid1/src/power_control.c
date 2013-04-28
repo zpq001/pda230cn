@@ -22,9 +22,9 @@ uint8_t heaterState = 0;				// Global heater flags
 uint8_t rollState = 0;					// Roll controller state. Use as read-only
 uint8_t activeRollCycle;				// Indicates currently active roll cycle
 static uint8_t newDirReq;
-static uint16_t rollPoint = 32768;
-static uint16_t topPoint = 32768;
-static uint16_t bottomPoint = 32768;
+static uint16_t rollPoint = 0;
+static uint16_t topPoint = 0;
+static uint16_t bottomPoint = 0;
 
 
 // p_state bits:
@@ -36,7 +36,7 @@ static uint8_t p_state = 0x0F;			// default error state - if AC line sync is pre
 
 
 // User function to control heater intensity
-inline void setHeaterControl(uint8_t value)
+void setHeaterControl(uint8_t value)
 {
 	ctrl_heater = value;
 	heaterState &= ~READY_TO_UPDATE_HEATER;
@@ -45,7 +45,6 @@ inline void setHeaterControl(uint8_t value)
 		heaterState |= HEATER_ENABLED;
 	else
 		heaterState &= ~HEATER_ENABLED;	
-	
 }
 
 
@@ -77,8 +76,7 @@ uint8_t startCycleRolling(void)
 	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 	
-	if ( ((rollPoint + CYCLE_SAFE_MARGIN) <= topPoint) && 
-		 ((rollPoint - CYCLE_SAFE_MARGIN) >= bottomPoint) )
+	if ( isTopPointValid() && isBottomPointValid() )
 	{
 		rollState |= ROLL_CYCLE;
 		activeRollCycle = 1;
@@ -90,50 +88,72 @@ uint8_t startCycleRolling(void)
 	return (rollState & ROLL_CYCLE);
 }
 
-void stopCycleRolling(void)
+void stopCycleRolling(uint8_t doResetPoints)
 {
 	// Disable interrupts from timer0 
 	TIMSK &= ~(1<<TOIE0);
 	
 	rollState &= ~ROLL_CYCLE;
+	if (doResetPoints)
+	{
+		topPoint = bottomPoint = rollPoint;
+		activeRollCycle = 0;	
+	}		
 	
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);
 }
 
 
-// Used for indication
+/*
+uint8_t powTest(void)
+{
+	volatile uint8_t result = 0;
+	rollPoint = 65530;
+	topPoint = 40010;
+	bottomPoint = 65520;
+	if ( isTopPointValid() )
+	{
+		result = 1;
+	}
+	if (isBottomPointValid())
+	{
+		result = 2;
+	}
+	return result;
+}
+*/
+
 uint8_t isTopPointValid(void)
 {
-	return (	rollPoint <= topPoint	);	
+	return (	(int16_t)(topPoint - rollPoint) >= 0 );
 }
 
 uint8_t isBottomPointValid(void)
 {
-	return (	rollPoint >= bottomPoint	);	
+	return (	(int16_t)(rollPoint - bottomPoint) >= 0	);
 }
 
+//---------------------------------------------//
+//---------------------------------------------//
+//---------------------------------------------//
 
-//---------------------------------------------//
-//---------------------------------------------//
-//---------------------------------------------//
+static inline uint8_t reachedTopPoint(void)
+{
+	return (	(int16_t)(topPoint - rollPoint) <= 0 );
+}
+
+static inline uint8_t reachedBottomPoint(void)
+{
+	return (	(int16_t)(rollPoint - bottomPoint) <= 0 );
+}
 
 static inline void updateRollPoint(void)
-{
-	uint16_t diff;
-	
+{	
 	if (rollState & ROLL_FWD)
 		rollPoint++;
 	else if (rollState & ROLL_REV)
 		rollPoint--;	
-	/*	
-	if (rollPoint == 65535)
-	{
-		diff = rollPoint - topPoint;
-		
-		
-	}
-	*/
 }
 		
 
@@ -146,7 +166,7 @@ static inline void controlRolling()
 	switch(rollState & (ROLL_FWD | ROLL_REV | ROLL_CYCLE))
 	{
 		case (ROLL_FWD | ROLL_CYCLE):
-			if (rollPoint >=  topPoint)
+			if (reachedTopPoint())
 			{
 				if (activeRollCycle >= rollCycleSet)	
 				{
@@ -158,14 +178,13 @@ static inline void controlRolling()
 				{
 					activeRollCycle++;
 					// Change dir	
-					newDirReq = ROLL_REV;
-					//rollState |= CYCLE_DIR_CHANGED;
+					newDirReq = ROLL_REV;				
 				}
 			}
 			break;
 		
 		case (ROLL_REV | ROLL_CYCLE):	
-			if (rollPoint <=  bottomPoint)
+			if (reachedBottomPoint())
 			{
 				if (activeRollCycle >= rollCycleSet)	
 				{
@@ -178,7 +197,6 @@ static inline void controlRolling()
 					activeRollCycle++;
 					// Change dir	
 					newDirReq = ROLL_FWD;
-					//rollState |= CYCLE_DIR_CHANGED;
 				}
 			}
 			break;

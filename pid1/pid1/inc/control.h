@@ -18,6 +18,8 @@ typedef struct
 	uint8_t power_off_timeout;
 	uint8_t cpoint1;
 	uint8_t cpoint2;
+	uint16_t cpoint1_adc;
+	uint16_t cpoint2_adc;
 } gParams_t;
 
 
