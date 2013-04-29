@@ -129,7 +129,7 @@ int main(void)
 	restoreGlobalParams();
 	
 	// Calibrate ADC coefficients using restored params
-	
+	calculateCoeffs();
 	
 	// Initialize LED indicator
 	initLedIndicator();

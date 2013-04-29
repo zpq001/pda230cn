@@ -14,8 +14,9 @@
 
 extern uint16_t adc_filtered_value;
 
-void calculateCoeffs(uint16_t deg_a, uint16_t adc_a, uint16_t deg_b, uint16_t adc_b);
+void calculateCoeffs(void);
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value);
+uint16_t conv_Celsius_to_ADC(uint16_t degree_value);
 void update_filtered_adc();
 
 
