@@ -30,6 +30,8 @@ static void restartMenuTimer(void);
 uint8_t selectedMenuItemID;
 MenuFunctionRecord selectedMenuFunctionRecord;
 
+uint8_t cpoint1_copy;
+uint8_t cpoint2_copy;
 
 SoftTimer8b_t menuTimer;		// used for menu state jumps
 SoftTimer8b_t userTimer;		// used for display blinking
@@ -522,8 +524,9 @@ void mf_autopoffDo(void)
 
 void mf_calibSelect(void)
 {
-	// restore cpoint1, cpoint2
 	mf_leafSelect();
+	cpoint1_copy = cpoint1;
+	cpoint2_copy = cpoint2;
 }
 
 void mf_calib1Do(void)
@@ -533,18 +536,18 @@ void mf_calib1Do(void)
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (cpoint1 < MAX_CALIB_TEMP)
-			cpoint1 += 1;
+		if (cpoint1_copy < MAX_CALIB_TEMP)
+			cpoint1_copy += 1;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (cpoint1 > MIN_CALIB_TEMP)
-			cpoint1 -= 1;
+		if (cpoint1_copy > MIN_CALIB_TEMP)
+			cpoint1_copy -= 1;
 	}
 	
 	if (userTimer.FA_GE)
 	{
-		u16toa_align_right(cpoint1,str + 3,0x80 | 3,' ');
+		u16toa_align_right(cpoint1_copy,str + 3,0x80 | 3,' ');
 	}
 	
 	printLedBuffer(0,str);
@@ -559,18 +562,18 @@ void mf_calib2Do(void)
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (cpoint2 < MAX_CALIB_TEMP)
-		cpoint2 += 1;
+		if (cpoint2_copy < MAX_CALIB_TEMP)
+		cpoint2_copy += 1;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (cpoint2 > MIN_CALIB_TEMP)
-		cpoint2 -= 1;
+		if (cpoint2_copy > MIN_CALIB_TEMP)
+		cpoint2_copy -= 1;
 	}
 	
 	if (userTimer.FA_GE)
 	{
-		u16toa_align_right(cpoint2,str + 3,0x80 | 3,' ');
+		u16toa_align_right(cpoint2_copy,str + 3,0x80 | 3,' ');
 	}
 	
 	printLedBuffer(0,str);
@@ -581,13 +584,22 @@ void mf_calib2Do(void)
 
 void mf_cdone1Select(void)
 {
+	// Save current ADC as calibrating point
+	cpoint1_adc = adc_filtered_value;
+	// Save current Celsius degree
+	cpoint1 = cpoint1_copy;
 	// Calculate new coefficient for temperature conversion
-	calculateCoeffs(cpoint1,adc_filtered_value,cpoint2,0);
+	calculateCoeffs();
 }
 
 void mf_cdone2Select(void)
 {
+	// Save current ADC as calibrating point
+	cpoint2_adc = adc_filtered_value;
+	// Save current Celsius degree
+	cpoint2 = cpoint2_copy;
 	// Calculate new coefficient for temperature conversion
+	calculateCoeffs();
 }
 
 void mf_cdoneDo(void)

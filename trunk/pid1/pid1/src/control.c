@@ -28,12 +28,10 @@ EEMEM gParams_t nvParams =
 	.rollCycleSet = 10,
 	.sound_enable = 1,
 	.power_off_timeout = 30,
-	.cpoint1 = 25,
-	.cpoint2 = 180,
-	.cpoint1_adc = 
-	.cpoint2_adc = 
-	//.k_norm = -0.4454,
-	//.offset_norm = 408.2037
+	.cpoint1 		= 25,
+	.cpoint1_adc 	= 860,
+	.cpoint2 		= 145,
+	.cpoint2_adc 	= 591
 };
 
 uint16_t setup_temp_value;		// reference temperature
@@ -140,10 +138,14 @@ void processRollControl(void)
 }
 
 
+
+
+
 void processHeaterControl(void)
 {
 	// p_flags & HEATER_ENABLED
 	static uint8_t heater_ctrl = 0;
+	uint16_t set_value_adc;
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
@@ -158,8 +160,17 @@ void processHeaterControl(void)
 
 		//-----------------//
 		// Process PID
-		//// TODO!!!!
-		setHeaterControl(10);
+		
+		if (heaterState & READY_TO_UPDATE_HEATER)
+		{
+			
+			// Convert temperature setup to equal ADC value
+			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
+			
+			setHeaterControl(10);	
+			
+			heaterState &= ~READY_TO_UPDATE_HEATER;
+		}
 		//-----------------//
 		
 		setExtraLeds(LED_HEATER);
@@ -171,6 +182,9 @@ void processHeaterControl(void)
 		clearExtraLeds(LED_HEATER);
 	}
 }
+
+
+
 
 
 void restoreGlobalParams(void)
@@ -186,6 +200,9 @@ void restoreGlobalParams(void)
 	 cpoint1_adc = gParams.cpoint1_adc;
 	 cpoint2_adc = gParams.cpoint2_adc;
 }
+
+
+
 
 void exitPowerOff(void)
 {
@@ -207,6 +224,8 @@ void exitPowerOff(void)
 	gParams.power_off_timeout = power_off_timeout;
 	gParams.cpoint1 = cpoint1;
 	gParams.cpoint2 = cpoint2;
+	gParams.cpoint1_adc = cpoint1_adc;
+	gParams.cpoint2_adc = cpoint2_adc;
 	eeprom_update_block(&gParams,&nvParams,sizeof(nvParams));	
 
 	while(1);

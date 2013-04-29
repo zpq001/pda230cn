@@ -26,11 +26,17 @@ uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
 	return (uint16_t)((float)adc_value * k_norm + offset_norm);
 }
 
+uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
+{	
+	return (uint16_t)( ((float)degree_value - offset_norm) / k_norm );
+}
 
-void calculateCoeffs(uint16_t deg_a, uint16_t adc_a, uint16_t deg_b, uint16_t adc_b)
+
+
+void calculateCoeffs(void)
 {
-	k_norm = ((int16_t)(deg_a - deg_b)) / ((int16_t)(adc_a - adc_b));
-	offset_norm = (float)deg_a - (float)adc_a * k_norm;
+	k_norm = ((float)(cpoint1 - cpoint2)) / ((float)(cpoint1_adc - cpoint2_adc));
+	offset_norm = (float)cpoint1 - (float)cpoint1_adc * k_norm;
 }
 
 
