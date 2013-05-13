@@ -133,6 +133,7 @@ int main(void)
 	
 	// Initialize LED indicator
 	initLedIndicator();
+	
 	// Enable interrupts
 	sei();
 	
@@ -154,7 +155,8 @@ int main(void)
 		
 		if (menuUpdateTimer.FOvfl)
 		{
-			// Get new temperature measurement
+			// Get new temperature measurement - new value is pushed into ring buffer
+			// once every AC line period
 			update_filtered_adc();
 			
 			// Get new button state
@@ -189,39 +191,38 @@ int main(void)
 				//---------------------------------//
 				// Log to UART
 				//---------------------------------//
-				// Function is called every 100ms
-				// UART message is sent every second
-				if (uart_log_timeout_counter == 9)
-				{
-					uart_log_timeout_counter = 0;
-					
-					
-					u16toa_align_right(uart_log_counter,str,5,' ');
-					USART_sendstr(str);
-					USART_sendstr("     ");
-					
-					u16toa_align_right(adc_filtered_value,str,5,' ');
-					USART_sendstr(str);
-					USART_sendstr("     ");
-					
-					if (heaterState & HEATER_ENABLED)
-					USART_send('1');
-					else
-					USART_send('0');
-					
-					USART_sendstr("\n\r");
-					
-					uart_log_counter++;
-					
-				}
-				else
-				{
-					uart_log_timeout_counter++;
-				}
+				// Function is called every 50ms
+				// UART message is sent every second call
+				
+										
+				u16toa_align_right(uart_log_counter,str,5,' ');			// log message counter
+				USART_sendstr(str);
+				USART_sendstr("     ");
+				
+				u16toa_align_right(adc_filtered_value,str,5,' ');		// ADC filtered value
+				USART_sendstr(str);
+				USART_sendstr("     ");
+				
+				u16toa_align_right(adc_filtered_celsius,str,5,' ');		// Celsius degree
+				USART_sendstr(str);
+				USART_sendstr("     ");
+				
+				u16toa_align_right(ctrl_heater,str,2,' ');				// Heater control (0 to 10)
+				USART_sendstr(str);
+				USART_sendstr("     ");
+				
+				
+				USART_sendstr("\n\r");
+				
+				uart_log_counter++;
+				
+
 				//---------------------------------//
 				
 			}
 			
+			
+			processAutoPowerOff();	// TODO
 			
 			
 			

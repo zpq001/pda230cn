@@ -253,6 +253,9 @@ ISR(TIMER0_OVF_vect)
 		// QUATER_PERIOD_TIME finished	
 		case 0x01:	
 			TCNT0 = 256 - (SYNC_IGNORE_TIME - QUATER_PERIOD_TIME);
+			// Start ADC conversion once every AC line period
+			if (!(p_state & HALF_PERIOD_FLAG))
+				ADCSRA |= (1<<ADSC);
 			break;	
 		// SYNC_IGNORE_TIME finished	
 		case 0x02:
