@@ -323,8 +323,7 @@ void mf_realTempDo(void)
 {
 	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
 	// Output ADC result to LED
-	uint16_t temp_celsius = conv_ADC_to_Celsius(adc_filtered_value);
-	u16toa_align_right(temp_celsius,str,0x80 | 4,' ');
+	u16toa_align_right(adc_filtered_celsius,str,0x80 | 4,' ');
 	printLedBuffer(0,str);
 }
 

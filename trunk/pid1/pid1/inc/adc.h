@@ -10,9 +10,11 @@
 #define ADC_H_
 
 #define ADC_BUFFER_LENGTH 8
+#define COEFF_SCALE	1000
 
 
 extern uint16_t adc_filtered_value;
+extern uint16_t adc_filtered_celsius;
 
 void calculateCoeffs(void);
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value);

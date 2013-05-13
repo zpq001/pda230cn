@@ -143,7 +143,6 @@ void processRollControl(void)
 
 void processHeaterControl(void)
 {
-	// p_flags & HEATER_ENABLED
 	static uint8_t heater_ctrl = 0;
 	uint16_t set_value_adc;
 	
@@ -167,6 +166,7 @@ void processHeaterControl(void)
 			// Convert temperature setup to equal ADC value
 			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
 			
+			// PID !!!
 			setHeaterControl(10);	
 			
 			heaterState &= ~READY_TO_UPDATE_HEATER;
@@ -237,3 +237,5 @@ void processAutoPowerOff(void)
 {
 	//TODO
 }
+
+
