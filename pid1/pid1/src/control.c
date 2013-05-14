@@ -146,6 +146,7 @@ void processHeaterControl(void)
 {
 	static uint8_t heater_ctrl = 0;
 	uint16_t set_value_adc;
+	uint16_t pid_output;
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
@@ -168,7 +169,9 @@ void processHeaterControl(void)
 			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
 			
 			// PID !!!
-			setHeaterControl(10);	
+			pid_output = processPID(set_value_adc,adc_filtered_value);
+			//setHeaterControl(10);	
+			setHeaterControl(pid_output);	
 			
 			heaterState &= ~READY_TO_UPDATE_HEATER;
 		}
@@ -192,17 +195,51 @@ void processHeaterControl(void)
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
 	
-	int16_t error, p_term;
+	int16_t error, p_term, i_term, temp;
+	static int16_t integAcc = 0;
 	
-	error = setPoint - processValue;
+	error = - setPoint + processValue;
 	
 	
 	//------ Calculate P term --------//
-	if (error > 
+	if (error > 100)
+	{
+		p_term = 10000;
+	}
+	else if (error < -100)
+	{
+		p_term = -10000;
+	}
+	else
+	{
+		p_term = error * Kp;
+	}
 	
+	//------ Calculate I term --------//
+	integAcc += error;
+	if (integAcc > 10)
+	{
+		integAcc = 10;
+	}
+	else if (integAcc < -10)
+	{
+		integAcc = -10;
+	}
+	i_term = integAcc * Ki;
 	
+	//--------- Summ terms -----------//
+	temp = (p_term + i_term) / SCALING_FACTOR;
 	
+	if (temp > 10)
+	{
+		temp = 10;	
+	}		
+	else if (temp < 0)
+	{
+		temp = 0;
+	}
 	
+	return temp;
 	
 }
 

@@ -36,6 +36,12 @@ typedef struct
 #define MIN_CALIB_TEMP		10
 
 
+// PID regulator
+#define Kp	40
+#define Ki	30
+#define SCALING_FACTOR	50
+
+
 // Global variables - main system control
 extern uint16_t setup_temp_value;			// reference temperature
 extern uint8_t rollCycleSet;				// number of rolling cycles
@@ -52,6 +58,8 @@ void processHeaterControl(void);
 void restoreGlobalParams(void);
 void exitPowerOff(void);
 void processAutoPowerOff(void);
+
+uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 
 
 #endif /* CONTROL_H_ */
