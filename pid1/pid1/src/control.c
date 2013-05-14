@@ -188,6 +188,27 @@ void processHeaterControl(void)
 
 
 
+
+uint8_t processPID(uint16_t setPoint, uint16_t processValue)
+{
+	
+	int16_t error, p_term;
+	
+	error = setPoint - processValue;
+	
+	
+	//------ Calculate P term --------//
+	if (error > 
+	
+	
+	
+	
+	
+}
+
+
+
+
 void restoreGlobalParams(void)
 {
 	 gParams_t gParams;
