@@ -58,7 +58,7 @@ MOTOR	________________________________________________|*************************
 #define CYCLE_ROLL_DONE				0x10
 #define ROLL_DIR_CHANGED			0x20
 
-
+extern uint8_t ctrl_heater;			// for read-only
 extern uint8_t heaterState;
 extern uint8_t rollState;
 extern uint8_t activeRollCycle;

@@ -9,6 +9,7 @@
 #include "compilers.h"
 #include "port_defs.h"
 #include "adc.h"
+#include "control.h"
 
 
 
@@ -26,12 +27,12 @@ static int8_t adc_buffer_pos = -1;
 
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
 {	
-	return (uint16_t)((int32_t)(adc_value * k_norm + offset_norm) / (COEFF_SCALE));
+	return (uint16_t)(((int32_t)adc_value * k_norm + offset_norm) / (COEFF_SCALE));
 }
 
 uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
 {	
-	return (uint16_t)((int32_t)(degree_value * COEFF_SCALE - offset_norm) / k_norm);
+	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm) / k_norm);
 }
 
 void calculateCoeffs(void)

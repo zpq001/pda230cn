@@ -1,12 +1,12 @@
 Model {
-  Name			  "pid_model_disc"
+  Name			  "pid_model_disc2"
   Version		  8.1
   MdlSubVersion		  0
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.10"
+    ComputedModelVersion    "1.27"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -18,7 +18,7 @@ Model {
       Type		      "Cell"
       Dimension		      2
       Cell		      "HDLSubsystem"
-      Cell		      "pid_model_disc"
+      Cell		      "pid_model_disc2"
       PropName		      "mdlProps"
     }
   }
@@ -41,7 +41,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [-8.0, -8.0, 1296.0, 786.0]
+      Location		      [-75.0, 0.0, 1296.0, 786.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -50,7 +50,7 @@ Model {
 	DockPosition		"Left"
 	Width			[50]
 	Height			[50]
-	Filter			[8]
+	Filter			[9]
       }
       Object {
 	$PropName		"ExplorerBarInfo"
@@ -66,8 +66,8 @@ Model {
 	ViewObjType		"SimulinkTopLevel"
 	LoadSaveID		"0"
 	Extents			[1053.0, 642.0]
-	ZoomFactor		[1.0]
-	Offset			[0.0, 0.0]
+	ZoomFactor		[1.25]
+	Offset			[292.71506252073289, 86.9509614242613]
       }
     }
   }
@@ -77,9 +77,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Avega"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 01 12:14:55 2013"
-  RTWModifiedTimeStamp	  289311268
-  ModelVersionFormat	  "1.%<AutoIncrement:10>"
+  LastModifiedDate	  "Wed May 01 20:03:14 2013"
+  RTWModifiedTimeStamp	  289339322
+  ModelVersionFormat	  "1.%<AutoIncrement:27>"
   ConfigurationManager	  "None"
   SampleTimeColors	  on
   SampleTimeAnnotations	  on
@@ -700,7 +700,7 @@ Model {
       }
       Name		      "Configuration"
       CurrentDlgPage	      "Solver"
-      ConfigPrmDlgPosition     [ 190, 29, 1091, 676 ] 
+      ConfigPrmDlgPosition     [ 206, 89, 1075, 660 ] 
     }
     PropName		    "ConfigurationSets"
   }
@@ -771,50 +771,17 @@ Model {
   }
   BlockParameterDefaults {
     Block {
-      BlockType		      DataTypeConversion
+      BlockType		      Constant
+      Value		      "1"
+      VectorParams1D	      on
+      SamplingMode	      "Sample based"
       OutMin		      "[]"
       OutMax		      "[]"
-      OutDataTypeStr	      "Inherit: Inherit via back propagation"
+      OutDataTypeStr	      "Inherit: Inherit from 'Constant value'"
       LockScale		      off
-      ConvertRealWorld	      "Real World Value (RWV)"
-      RndMeth		      "Zero"
-      SaturateOnIntegerOverflow	on
-      SampleTime	      "-1"
-    }
-    Block {
-      BlockType		      DiscreteTransferFcn
-      NumeratorSource	      "Dialog"
-      Numerator		      "[1]"
-      DenominatorSource	      "Dialog"
-      Denominator	      "[1 0.5]"
-      InitialStatesSource     "Dialog"
-      InitialStates	      "0"
-      InputProcessing	      "Elements as channels (sample based)"
-      ExternalReset	      "None"
-      InitialDenominatorStates "0"
-      FilterStructure	      "Direct form II"
-      SampleTime	      "-1"
-      a0EqualsOne	      off
-      NumCoefMin	      "[]"
-      NumCoefMax	      "[]"
-      DenCoefMin	      "[]"
-      DenCoefMax	      "[]"
-      OutMin		      "[]"
-      OutMax		      "[]"
-      StateDataTypeStr	      "Inherit: Same as input"
-      MultiplicandDataTypeStr "Inherit: Same as input"
-      NumCoefDataTypeStr      "Inherit: Inherit via internal rule"
-      DenCoefDataTypeStr      "Inherit: Inherit via internal rule"
-      NumProductDataTypeStr   "Inherit: Inherit via internal rule"
-      DenProductDataTypeStr   "Inherit: Inherit via internal rule"
-      NumAccumDataTypeStr     "Inherit: Inherit via internal rule"
-      DenAccumDataTypeStr     "Inherit: Inherit via internal rule"
-      OutDataTypeStr	      "Inherit: Inherit via internal rule"
-      LockScale		      off
-      RndMeth		      "Floor"
-      SaturateOnIntegerOverflow	off
-      StateMustResolveToSignalObject off
-      RTWStateStorageClass    "Auto"
+      SampleTime	      "inf"
+      FramePeriod	      "inf"
+      PreserveConstantTs      off
     }
     Block {
       BlockType		      Gain
@@ -832,6 +799,21 @@ Model {
       SampleTime	      "-1"
     }
     Block {
+      BlockType		      Integrator
+      ExternalReset	      "none"
+      InitialConditionSource  "internal"
+      InitialCondition	      "0"
+      LimitOutput	      off
+      UpperSaturationLimit    "inf"
+      LowerSaturationLimit    "-inf"
+      ShowSaturationPort      off
+      ShowStatePort	      off
+      AbsoluteTolerance	      "auto"
+      IgnoreLimit	      off
+      ZeroCross		      on
+      ContinuousStateAttributes	"''"
+    }
+    Block {
       BlockType		      Mux
       Inputs		      "4"
       DisplayOption	      "none"
@@ -844,6 +826,21 @@ Model {
       QuantizationInterval    "0.5"
       LinearizeAsGain	      on
       SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Saturate
+      UpperLimitSource	      "Dialog"
+      UpperLimit	      "0.5"
+      LowerLimitSource	      "Dialog"
+      LowerLimit	      "-0.5"
+      LinearizeAsGain	      on
+      ZeroCross		      on
+      SampleTime	      "-1"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Same as input"
+      LockScale		      off
+      RndMeth		      "Floor"
     }
     Block {
       BlockType		      Scope
@@ -898,8 +895,8 @@ Model {
     }
   }
   System {
-    Name		    "pid_model_disc"
-    Location		    [-8, -8, 1288, 778]
+    Name		    "pid_model_disc2"
+    Location		    [-75, 0, 1221, 786]
     Open		    on
     ModelBrowserVisibility  on
     ModelBrowserWidth	    200
@@ -911,37 +908,50 @@ Model {
     TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "100"
+    ZoomFactor		    "125"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "17"
+    SIDHighWatermark	    "58"
     Block {
-      BlockType		      DataTypeConversion
-      Name		      "Data Type Conversion"
-      SID		      "16"
-      Position		      [190, 83, 265, 117]
-      ZOrder		      -1
-      OutDataTypeStr	      "double"
-      RndMeth		      "Floor"
+      BlockType		      Gain
+      Name		      "1/k_norm"
+      SID		      "19"
+      Position		      [240, 315, 270, 345]
+      ZOrder		      10
+      Gain		      "-2.2454"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
     }
     Block {
-      BlockType		      DiscreteTransferFcn
-      Name		      "Discrete\nTransfer Fcn"
-      SID		      "8"
-      Ports		      [1, 1]
-      Position		      [770, 39, 880, 101]
-      ZOrder		      8
-      InputPortMap	      "u0"
-      Numerator		      "[-0.0142 0.03051 -0.0163]"
-      Denominator	      "[1 -2.989 2.979 -0.9895]"
+      BlockType		      Gain
+      Name		      "1/k_norm2"
+      SID		      "32"
+      Position		      [1065, 555, 1095, 585]
+      ZOrder		      21
+      BlockMirror	      on
+      Gain		      "-2.2454"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Com"
+      SID		      "48"
+      Position		      [780, 312, 825, 348]
+      ZOrder		      44
+      Gain		      "0.02"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
     }
     Block {
       BlockType		      Gain
       Name		      "Gain"
       SID		      "10"
-      Position		      [580, 130, 610, 160]
+      Position		      [1075, 245, 1105, 275]
       ZOrder		      -3
-      Gain		      "100"
+      Gain		      "10"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
@@ -950,9 +960,87 @@ Model {
       BlockType		      Gain
       Name		      "Gain1"
       SID		      "13"
-      Position		      [585, 325, 615, 355]
+      Position		      [1075, 195, 1105, 225]
       ZOrder		      -4
-      Gain		      "100"
+      ForegroundColor	      "[0.901961, 0.000000, 0.000000]"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Gain2"
+      SID		      "37"
+      Position		      [1000, 315, 1030, 345]
+      ZOrder		      32
+      Gain		      "0.1"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Integrator
+      Name		      "Integrator"
+      SID		      "40"
+      Ports		      [1, 1]
+      Position		      [530, 230, 560, 260]
+      ZOrder		      35
+      LimitOutput	      on
+      UpperSaturationLimit    "10"
+      LowerSaturationLimit    "-10"
+    }
+    Block {
+      BlockType		      Integrator
+      Name		      "Integrator1"
+      SID		      "52"
+      Ports		      [1, 1]
+      Position		      [575, 460, 605, 490]
+      ZOrder		      48
+      BlockMirror	      on
+      LimitOutput	      on
+      UpperSaturationLimit    "100"
+      LowerSaturationLimit    "-100"
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Ki"
+      SID		      "39"
+      Position		      [600, 230, 630, 260]
+      ZOrder		      43
+      Gain		      "30"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Ki1"
+      SID		      "58"
+      Position		      [680, 410, 710, 440]
+      ZOrder		      54
+      Gain		      "20"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Ki2"
+      SID		      "53"
+      Position		      [575, 410, 605, 440]
+      ZOrder		      49
+      Gain		      "10"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Kp"
+      SID		      "38"
+      Position		      [530, 315, 560, 345]
+      ZOrder		      33
+      Gain		      "40"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
@@ -961,11 +1049,12 @@ Model {
       BlockType		      Mux
       Name		      "Mux"
       SID		      "9"
-      Ports		      [3, 1]
-      Position		      [770, 186, 775, 224]
+      Ports		      [8, 1]
+      Position		      [1265, 292, 1270, 413]
       ZOrder		      -5
+      ForegroundColor	      "[0.909804, 0.819608, 0.321569]"
       ShowName		      off
-      Inputs		      "3"
+      Inputs		      "8"
       DisplayOption	      "bar"
     }
     Block {
@@ -973,8 +1062,9 @@ Model {
       Name		      "PID Controller"
       SID		      "1"
       Ports		      [1, 1]
-      Position		      [235, 177, 360, 253]
-      ZOrder		      6
+      Position		      [315, 17, 440, 93]
+      ZOrder		      29
+      ForegroundColor	      "[0.901961, 0.000000, 0.000000]"
       LibraryVersion	      "1.274"
       SourceBlock	      "simulink/Continuous/PID Controller"
       SourceType	      "PID 1dof"
@@ -984,10 +1074,10 @@ Model {
       IntegratorMethod	      "Forward Euler"
       FilterMethod	      "Forward Euler"
       Form		      "Parallel"
-      P			      "0.185969402279145"
-      I			      "9.43792899681384e-05"
-      D			      "26.5437321466882"
-      N			      "0.293126936672462"
+      P			      "0.167429214907763"
+      I			      "0.000126480289546085"
+      D			      "16.0468346075827"
+      N			      "5.17110660582003"
       InitialConditionSource  "internal"
       InitialConditionForIntegrator "0"
       InitialConditionForFilter	"0"
@@ -1079,9 +1169,9 @@ Model {
     }
     Block {
       BlockType		      TransferFcn
-      Name		      "Plant"
+      Name		      "Plant  in: 0 to 1"
       SID		      "2"
-      Position		      [565, 180, 670, 250]
+      Position		      [1060, 295, 1165, 365]
       ZOrder		      9
       Numerator		      "[-0.01533 0.00212 4.827e-6]"
       Denominator	      "[1 0.01056 3.654e-5 1.49e-8]"
@@ -1090,21 +1180,73 @@ Model {
       BlockType		      Quantizer
       Name		      "Quantizer"
       SID		      "17"
-      Position		      [440, 195, 480, 235]
-      ZOrder		      -8
+      Position		      [540, 35, 580, 75]
+      ZOrder		      17
       QuantizationInterval    "0.1"
       LinearizeAsGain	      off
+    }
+    Block {
+      BlockType		      Quantizer
+      Name		      "Quantizer1"
+      SID		      "54"
+      Position		      [865, 310, 905, 350]
+      ZOrder		      50
+      QuantizationInterval    "1"
+      LinearizeAsGain	      off
+    }
+    Block {
+      BlockType		      Quantizer
+      Name		      "Quantizer3"
+      SID		      "46"
+      Position		      [675, 550, 715, 590]
+      ZOrder		      41
+      BlockMirror	      on
+      QuantizationInterval    "1"
+      LinearizeAsGain	      off
+    }
+    Block {
+      BlockType		      Quantizer
+      Name		      "Quantizer4"
+      SID		      "47"
+      Position		      [320, 310, 360, 350]
+      ZOrder		      42
+      QuantizationInterval    "1"
+      LinearizeAsGain	      off
+    }
+    Block {
+      BlockType		      Saturate
+      Name		      "Saturation"
+      SID		      "34"
+      Ports		      [1, 1]
+      Position		      [600, 315, 630, 345]
+      ZOrder		      28
+      InputPortMap	      "u0"
+      UpperLimit	      "8191"
+      LowerLimit	      "-8192"
+    }
+    Block {
+      BlockType		      Saturate
+      Name		      "Saturation1"
+      SID		      "45"
+      Ports		      [1, 1]
+      Position		      [930, 315, 960, 345]
+      ZOrder		      40
+      InputPortMap	      "u0"
+      UpperLimit	      "10"
+      LowerLimit	      "0"
     }
     Block {
       BlockType		      Scope
       Name		      "Scope"
       SID		      "3"
       Ports		      [1]
-      Position		      [820, 189, 850, 221]
+      Position		      [895, 99, 925, 131]
       ZOrder		      7
+      BlockMirror	      on
+      ForegroundColor	      "[0.901961, 0.000000, 0.000000]"
       Floating		      off
-      Location		      [389, 176, 1063, 657]
-      Open		      off
+      Location		      [621, 247, 1294, 728]
+      Open		      on
       NumInputPorts	      "1"
       ZoomMode		      "yonly"
       List {
@@ -1133,7 +1275,7 @@ Model {
       BlockType		      Step
       Name		      "Step"
       SID		      "4"
-      Position		      [45, 200, 75, 230]
+      Position		      [20, 315, 50, 345]
       ZOrder		      4
       Time		      "2500"
       Before		      "150"
@@ -1144,8 +1286,22 @@ Model {
       Name		      "Sum"
       SID		      "5"
       Ports		      [2, 1]
-      Position		      [170, 205, 190, 225]
+      Position		      [420, 320, 440, 340]
       ZOrder		      3
+      ShowName		      off
+      IconShape		      "round"
+      Inputs		      "|-+"
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Sum
+      Name		      "Sum1"
+      SID		      "20"
+      Ports		      [2, 1]
+      Position		      [175, 320, 195, 340]
+      ZOrder		      11
       ShowName		      off
       IconShape		      "round"
       Inputs		      "|+-"
@@ -1153,80 +1309,356 @@ Model {
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
     }
-    Line {
-      SrcBlock		      "Sum"
-      SrcPort		      1
-      DstBlock		      "PID Controller"
-      DstPort		      1
+    Block {
+      BlockType		      Sum
+      Name		      "Sum2"
+      SID		      "29"
+      Ports		      [2, 1]
+      Position		      [1140, 560, 1160, 580]
+      ZOrder		      15
+      BlockMirror	      on
+      ShowName		      off
+      IconShape		      "round"
+      Inputs		      "|+-"
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Sum
+      Name		      "Sum3"
+      SID		      "43"
+      Ports		      [3, 1]
+      Position		      [710, 315, 740, 345]
+      ZOrder		      38
+      ShowName		      off
+      IconShape		      "round"
+      Inputs		      "+|+|+"
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Sum
+      Name		      "Sum4"
+      SID		      "57"
+      Ports		      [2, 1]
+      Position		      [525, 415, 545, 435]
+      ZOrder		      53
+      ShowName		      off
+      IconShape		      "round"
+      Inputs		      "|+-"
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Sum
+      Name		      "Sum5"
+      SID		      "56"
+      Ports		      [2, 1]
+      Position		      [490, 235, 510, 255]
+      ZOrder		      52
+      ShowName		      off
+      IconShape		      "round"
+      Inputs		      "|++"
+      InputSameDT	      off
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "offset_norm"
+      SID		      "21"
+      Position		      [140, 360, 170, 390]
+      ZOrder		      12
+      Value		      "408.2037"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "offset_norm1"
+      SID		      "30"
+      Position		      [1170, 605, 1200, 635]
+      ZOrder		      16
+      BlockMirror	      on
+      ForegroundColor	      "[0.901961, 0.000000, 0.000000]"
+      Value		      "408.2037"
     }
     Line {
-      SrcBlock		      "Plant"
+      SrcBlock		      "offset_norm"
       SrcPort		      1
-      Points		      [30, 0]
-      Branch {
-	Points			[0, 80; -525, 0]
-	DstBlock		"Sum"
-	DstPort			2
-      }
-      Branch {
-	Points			[0, -10]
-	DstBlock		"Mux"
-	DstPort			2
-      }
-    }
-    Line {
-      SrcBlock		      "Mux"
-      SrcPort		      1
-      DstBlock		      "Scope"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Gain"
-      SrcPort		      1
-      Points		      [70, 0; 0, 50]
-      DstBlock		      "Mux"
-      DstPort		      1
+      Points		      [10, 0]
+      DstBlock		      "Sum1"
+      DstPort		      2
     }
     Line {
       SrcBlock		      "Step"
       SrcPort		      1
-      DstBlock		      "Sum"
+      Points		      [43, 0]
+      Branch {
+	Points			[0, 346; 1144, 0; 0, -301]
+	DstBlock		"Mux"
+	DstPort			6
+      }
+      Branch {
+	DstBlock		"Sum1"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Sum1"
+      SrcPort		      1
+      DstBlock		      "1/k_norm"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "offset_norm1"
+      SrcPort		      1
+      Points		      [-15, 0]
+      DstBlock		      "Sum2"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Sum2"
+      SrcPort		      1
+      DstBlock		      "1/k_norm2"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Plant  in: 0 to 1"
+      SrcPort		      1
+      Points		      [10, 0; 0, 15]
+      Branch {
+	Points			[0, 225]
+	DstBlock		"Sum2"
+	DstPort			1
+      }
+      Branch {
+	DstBlock		"Mux"
+	DstPort			4
+      }
+    }
+    Line {
+      SrcBlock		      "1/k_norm"
+      SrcPort		      1
+      DstBlock		      "Quantizer4"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "1/k_norm2"
+      SrcPort		      1
+      Points		      [-297, 0]
+      Branch {
+	Points			[0, 92; 464, 0; 0, -302]
+	DstBlock		"Mux"
+	DstPort			5
+      }
+      Branch {
+	DstBlock		"Quantizer3"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Gain"
+      SrcPort		      1
+      Points		      [89, 0; 0, 70]
+      DstBlock		      "Mux"
+      DstPort		      3
+    }
+    Line {
+      SrcBlock		      "Gain1"
+      SrcPort		      1
+      Points		      [117, 0; 0, 105]
+      DstBlock		      "Mux"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Kp"
+      SrcPort		      1
+      DstBlock		      "Saturation"
       DstPort		      1
     }
     Line {
       SrcBlock		      "PID Controller"
       SrcPort		      1
-      Points		      [40, 0]
-      Branch {
-	Points			[0, 125]
-	DstBlock		"Gain1"
-	DstPort			1
-      }
-      Branch {
-	DstBlock		"Quantizer"
-	DstPort			1
-      }
+      DstBlock		      "Quantizer"
+      DstPort		      1
     }
     Line {
-      SrcBlock		      "Gain1"
+      SrcBlock		      "Gain2"
       SrcPort		      1
-      Points		      [135, 0]
-      DstBlock		      "Mux"
-      DstPort		      3
+      DstBlock		      "Plant  in: 0 to 1"
+      DstPort		      1
     }
     Line {
-      SrcBlock		      "Quantizer"
+      SrcBlock		      "Saturation"
       SrcPort		      1
-      Points		      [40, 0]
-      Branch {
-	DstBlock		"Plant"
-	DstPort			1
-      }
+      DstBlock		      "Sum3"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Integrator"
+      SrcPort		      1
+      DstBlock		      "Ki"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Sum3"
+      SrcPort		      1
+      DstBlock		      "Com"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Saturation1"
+      SrcPort		      1
+      Points		      [15, 0]
       Branch {
 	Points			[0, -70]
 	DstBlock		"Gain"
 	DstPort			1
       }
+      Branch {
+	DstBlock		"Gain2"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Quantizer4"
+      SrcPort		      1
+      Points		      [33, 0]
+      Branch {
+	Points			[0, -172; 840, 0; 0, 142]
+	DstBlock		"Mux"
+	DstPort			1
+      }
+      Branch {
+	DstBlock		"Sum"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Com"
+      SrcPort		      1
+      DstBlock		      "Quantizer1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Mux"
+      SrcPort		      1
+      Points		      [25, 0; 0, -240]
+      DstBlock		      "Scope"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Ki"
+      SrcPort		      1
+      Points		      [90, 0]
+      DstBlock		      "Sum3"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Quantizer1"
+      SrcPort		      1
+      DstBlock		      "Saturation1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Quantizer3"
+      SrcPort		      1
+      Points		      [-240, 0]
+      DstBlock		      "Sum"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Sum5"
+      SrcPort		      1
+      DstBlock		      "Integrator"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Sum"
+      SrcPort		      1
+      Points		      [22, 0]
+      Branch {
+	Points			[0, -85]
+	DstBlock		"Sum5"
+	DstPort			1
+      }
+      Branch {
+	Points			[18, 0]
+	Branch {
+	  Points		  [0, 95]
+	  DstBlock		  "Sum4"
+	  DstPort		  1
+	}
+	Branch {
+	  DstBlock		  "Kp"
+	  DstPort		  1
+	}
+      }
+    }
+    Line {
+      SrcBlock		      "Sum4"
+      SrcPort		      1
+      DstBlock		      "Ki2"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Integrator1"
+      SrcPort		      1
+      Points		      [-35, 0]
+      DstBlock		      "Sum4"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Ki2"
+      SrcPort		      1
+      Points		      [53, 0]
+      Branch {
+	Points			[0, 50]
+	DstBlock		"Integrator1"
+	DstPort			1
+      }
+      Branch {
+	DstBlock		"Ki1"
+	DstPort			1
+      }
+    }
+    Annotation {
+      SID		      "27"
+      Name		      "1 / k_norm = -2.2454"
+      Position		      [303, 206]
+      ZOrder		      -1
+    }
+    Annotation {
+      SID		      "26"
+      Name		      "k_norm = -0.4454"
+      Position		      [296, 191]
+      ZOrder		      -2
+    }
+    Annotation {
+      SID		      "24"
+      Name		      "offset_norm = 408.2037"
+      Position		      [310, 175]
+      ZOrder		      -3
+    }
+    Annotation {
+      SID		      "23"
+      Name		      "adc = (Celsius - offset_norm) / k_norm"
+      Position		      [124, 195]
+      ZOrder		      -4
+    }
+    Annotation {
+      SID		      "22"
+      Name		      "Celsius = adc * k_norm + offset_norm"
+      Position		      [124, 179]
+      ZOrder		      -5
+    }
+    Annotation {
+      SID		      "18"
+      Name		      "Input: 25-200 Celsius degree\n"
+      Position		      [88, 296]
+      ZOrder		      -6
     }
   }
 }

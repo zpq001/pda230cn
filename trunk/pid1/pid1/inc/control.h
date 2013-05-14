@@ -43,6 +43,8 @@ extern uint8_t sound_enable;				// Global sound enable
 extern uint8_t power_off_timeout;			// Auto power OFF timeout
 extern uint8_t cpoint1;						// Calibration point 1
 extern uint8_t cpoint2;						// Calibration point 2
+extern uint16_t cpoint1_adc;
+extern uint16_t cpoint2_adc;
 
 void processRollControl(void);
 void processHeaterControl(void);
