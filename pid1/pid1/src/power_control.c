@@ -13,7 +13,7 @@
 #include "control.h"
 
 // Heater controls
-static uint8_t ctrl_heater = 0;			// Heater duty value
+uint8_t ctrl_heater = 0;				// Heater duty value
 static uint8_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulation period
 static uint8_t heater_cnt = 0;			// Counter used to provide heater PWM
 uint8_t heaterState = 0;				// Global heater flags
@@ -254,8 +254,8 @@ ISR(TIMER0_OVF_vect)
 		case 0x01:	
 			TCNT0 = 256 - (SYNC_IGNORE_TIME - QUATER_PERIOD_TIME);
 			// Start ADC conversion once every AC line period
-			if (!(p_state & HALF_PERIOD_FLAG))
-				ADCSRA |= (1<<ADSC);
+	////		if (!(p_state & HALF_PERIOD_FLAG))
+	////			ADCSRA |= (1<<ADSC);
 			break;	
 		// SYNC_IGNORE_TIME finished	
 		case 0x02:

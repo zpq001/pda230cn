@@ -15,6 +15,7 @@
 #include "led_indic.h"
 #include "leds.h"
 #include "systimer.h"	
+#include "adc.h"
 
 
 
@@ -199,6 +200,12 @@ void restoreGlobalParams(void)
 	 cpoint2 = gParams.cpoint2;						// Calibration point 2
 	 cpoint1_adc = gParams.cpoint1_adc;
 	 cpoint2_adc = gParams.cpoint2_adc;
+	 
+	 cpoint1 		= 25;
+	 cpoint1_adc 	= 860;
+	 cpoint2 		= 145;
+	 cpoint2_adc 	= 591;
+	 
 }
 
 

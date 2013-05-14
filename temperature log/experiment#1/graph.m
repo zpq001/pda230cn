@@ -73,6 +73,7 @@ offset_norm = X(2);
 %plot(timestamp(1:3000),sensor_data_filtered(1:3000),'m');
 
 z = iddata(sensor_data_norm(1:3000)',control(1:3000)',1);
+%z = iddata(sensor_data(1:3000)',control(1:3000)',1);
 nb=[3]; % Model order
 nf=[3]; % Model order
 nk=[1]; 

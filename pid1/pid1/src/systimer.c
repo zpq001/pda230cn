@@ -96,7 +96,7 @@ ISR(TIMER2_COMP_vect)
 	// Process menu update timer
 	processSoftTimer8b(&menuUpdateTimer);	
 	
-		
+		ADCSRA |= (1<<ADSC);
 }
 
 
