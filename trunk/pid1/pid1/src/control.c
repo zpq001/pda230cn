@@ -44,6 +44,7 @@ uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
+uint8_t setTempDbg;				// For UART log only
 
 // Function to control motor rotation
 void processRollControl(void)
@@ -158,7 +159,8 @@ void processHeaterControl(void)
 	if (heater_ctrl)
 	{
 		// Heater enabled
-
+		setTempDbg = setup_temp_value;
+		
 		//-----------------//
 		// Process PID
 		
@@ -182,6 +184,7 @@ void processHeaterControl(void)
 	else
 	{
 		// Heater disabled
+		setTempDbg = 0;
 		setHeaterControl(0);
 		clearExtraLeds(LED_HEATER);
 	}
@@ -216,7 +219,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	
 	//------ Calculate I term --------//
-	integAcc += error;
+/*	integAcc += error;
 	if (integAcc > 10)
 	{
 		integAcc = 10;
@@ -226,9 +229,10 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 		integAcc = -10;
 	}
 	i_term = integAcc * Ki;
-	
+*/	
 	//--------- Summ terms -----------//
-	temp = (p_term + i_term) / SCALING_FACTOR;
+	//temp = (p_term + i_term) / SCALING_FACTOR;
+	temp = (p_term) / SCALING_FACTOR;
 	
 	if (temp > 10)
 	{
@@ -259,7 +263,7 @@ void restoreGlobalParams(void)
 	 cpoint1_adc = gParams.cpoint1_adc;
 	 cpoint2_adc = gParams.cpoint2_adc;
 	 
-	 cpoint1 		= 25;
+	 cpoint1 		= 25;		// TODO: check and remove
 	 cpoint1_adc 	= 860;
 	 cpoint2 		= 145;
 	 cpoint2_adc 	= 591;

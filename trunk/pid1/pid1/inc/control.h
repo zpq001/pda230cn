@@ -37,7 +37,7 @@ typedef struct
 
 
 // PID regulator
-#define Kp	40
+#define Kp	20		// experiment#3 = 40
 #define Ki	30
 #define SCALING_FACTOR	50
 
@@ -51,6 +51,8 @@ extern uint8_t cpoint1;						// Calibration point 1
 extern uint8_t cpoint2;						// Calibration point 2
 extern uint16_t cpoint1_adc;
 extern uint16_t cpoint2_adc;
+
+extern uint8_t setTempDbg;				// For UART log only
 
 void processRollControl(void);
 void processHeaterControl(void);
