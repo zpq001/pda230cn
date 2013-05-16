@@ -197,19 +197,18 @@ int main(void)
 										
 				u16toa_align_right(uart_log_counter,str,5,' ');			// log message counter
 				USART_sendstr(str);
-				USART_sendstr("     ");
 				
-				u16toa_align_right(adc_filtered_value,str,5,' ');		// ADC filtered value
+				u16toa_align_right(setTempDbg,str,6,' ');				// Temp setting
 				USART_sendstr(str);
-				USART_sendstr("     ");
 				
-				u16toa_align_right(adc_filtered_celsius,str,5,' ');		// Celsius degree
+				u16toa_align_right(adc_filtered_value,str,8,' ');		// ADC filtered value
 				USART_sendstr(str);
-				USART_sendstr("     ");
 				
-				u16toa_align_right(ctrl_heater,str,2,' ');				// Heater control (0 to 10)
+				u16toa_align_right(adc_filtered_celsius,str,6,' ');		// Celsius degree
 				USART_sendstr(str);
-				USART_sendstr("     ");
+				
+				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (0 to 10)
+				USART_sendstr(str);
 				
 				
 				USART_sendstr("\n\r");

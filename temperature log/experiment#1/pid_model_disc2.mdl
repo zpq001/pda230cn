@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.27"
+    ComputedModelVersion    "1.28"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -67,7 +67,7 @@ Model {
 	LoadSaveID		"0"
 	Extents			[1053.0, 642.0]
 	ZoomFactor		[1.25]
-	Offset			[292.71506252073289, 86.9509614242613]
+	Offset			[292.71506252073294, 86.950961424261322]
       }
     }
   }
@@ -77,9 +77,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Avega"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 01 20:03:14 2013"
-  RTWModifiedTimeStamp	  289339322
-  ModelVersionFormat	  "1.%<AutoIncrement:27>"
+  LastModifiedDate	  "Thu May 16 21:10:29 2013"
+  RTWModifiedTimeStamp	  290635289
+  ModelVersionFormat	  "1.%<AutoIncrement:28>"
   ConfigurationManager	  "None"
   SampleTimeColors	  on
   SampleTimeAnnotations	  on
@@ -1245,8 +1245,8 @@ Model {
       BlockMirror	      on
       ForegroundColor	      "[0.901961, 0.000000, 0.000000]"
       Floating		      off
-      Location		      [621, 247, 1294, 728]
-      Open		      on
+      Location		      [571, 248, 1244, 729]
+      Open		      off
       NumInputPorts	      "1"
       ZoomMode		      "yonly"
       List {
@@ -1547,13 +1547,6 @@ Model {
       SrcPort		      1
       Points		      [25, 0; 0, -240]
       DstBlock		      "Scope"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Ki"
-      SrcPort		      1
-      Points		      [90, 0]
-      DstBlock		      "Sum3"
       DstPort		      1
     }
     Line {
