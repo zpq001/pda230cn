@@ -21,6 +21,13 @@ if file ~= -1
     fclose(file);
 end
 
+% ADC 
+file = fopen('adc.txt','r');
+if file ~= -1
+    ADC_data = fscanf(file, '%d');
+    fclose(file);
+end
+
 plot(temp_actual,'r');
 hold on;
 plot(temp_set,'b');
@@ -32,25 +39,32 @@ xlabel('ms');
 ylabel('degrees Celsius');
 legend('Actual','Desired','PID effort');
 
+%--------------------------
+% Derivative calculus
+
+Nw = 50;
+filtered = (1:length(ADC_data));
+for  i = 1:1:length(ADC_data)
+    if (i <= Nw)
+        filtered(i) = ADC_data(1) * Nw;
+    else
+        filtered(i) = 0;
+        for k = i-Nw : i-1
+            filtered(i) = filtered(i) + ADC_data(k);
+        end
+    end
+end
+filtered_scaled = filtered / Nw;
+hold on;
+plot(filtered_scaled,'r');
 
 
-% file = fopen('setting.txt','w');
-% if file ~= -1
-%     a = 0;
-%     while a < 12446
-%        fprintf(file,'%d\r',120);
-%        a = a + 1;
-%     end
-%     while a < 22840
-%        fprintf(file,'%d\r',150);
-%        a = a + 1;
-%     end
-%     while a < 36673
-%        fprintf(file,'%d\r',0);
-%        a = a + 1;
-%     end
-%     fclose(file);
-% end
+
+
+
+
+
+
 
 
 
