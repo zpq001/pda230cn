@@ -44,7 +44,11 @@ uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
+// ----- debug only ------ //
 uint8_t setTempDbg;				// For UART log only
+uint8_t pidOutputUpdate;
+
+
 
 // Function to control motor rotation
 void processRollControl(void)
@@ -145,47 +149,70 @@ void processRollControl(void)
 
 void processHeaterControl(void)
 {
-	static uint8_t heater_ctrl = 0;
+	static uint8_t heaterEnabled = 0;
 	uint16_t set_value_adc;
-	uint16_t pid_output;
+	static uint16_t pid_output;
+	static uint8_t pidEnableCnt;
+	uint8_t getNewPidOutput;
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
 	{
-		heater_ctrl ^= 0x01;
+		heaterEnabled ^= 0x01;
 	}
 	
 	
-	if (heater_ctrl)
+	// Check if new output value required
+	if (pidEnableCnt == 0)
 	{
-		// Heater enabled
-		setTempDbg = setup_temp_value;
+		getNewPidOutput = 1;
+		pidEnableCnt = 20;		// in units of 50ms
 		
-		//-----------------//
-		// Process PID
-		
-		if (heaterState & READY_TO_UPDATE_HEATER)
+		pidOutputUpdate = 1;	// debug
+	}
+	pidEnableCnt--;
+	
+	
+	// Check if heater control should be updated
+	if (heaterState & READY_TO_UPDATE_HEATER)
+	{
+		setHeaterControl(pid_output);
+		heaterState &= ~READY_TO_UPDATE_HEATER;
+	}
+	
+	
+	
+	if (heaterEnabled)
+	{
+		if (getNewPidOutput)
 		{
-			
 			// Convert temperature setup to equal ADC value
 			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
 			
-			// PID !!!
-			pid_output = processPID(set_value_adc,adc_filtered_value);
-			//setHeaterControl(10);	
-			setHeaterControl(pid_output);	
+			// Process PID
+			pid_output = processPID(set_value_adc,adc_filtered_value);	
 			
-			heaterState &= ~READY_TO_UPDATE_HEATER;
+			getNewPidOutput = 0;		
 		}
-		//-----------------//
-		
+	}
+	else
+	{	
+		pid_output = 0;
+	}
+	
+	
+	
+	setHeaterControl(pid_output);
+	
+	// Debug
+	if (heaterEnabled)
+	{
 		setExtraLeds(LED_HEATER);
+		setTempDbg = setup_temp_value;
 	}
 	else
 	{
-		// Heater disabled
 		setTempDbg = 0;
-		setHeaterControl(0);
 		clearExtraLeds(LED_HEATER);
 	}
 }
