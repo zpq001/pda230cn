@@ -323,7 +323,7 @@ void mf_realTempDo(void)
 {
 	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
 	// Output ADC result to LED
-	u16toa_align_right(adc_filtered_celsius,str,0x80 | 4,' ');
+	u16toa_align_right(adc_celsius,str,0x80 | 4,' ');
 	printLedBuffer(0,str);
 }
 
@@ -584,7 +584,7 @@ void mf_calib2Do(void)
 void mf_cdone1Select(void)
 {
 	// Save current ADC as calibrating point
-	cpoint1_adc = adc_filtered_value;
+	cpoint1_adc = adc_normalized;
 	// Save current Celsius degree
 	cpoint1 = cpoint1_copy;
 	// Calculate new coefficient for temperature conversion
@@ -594,7 +594,7 @@ void mf_cdone1Select(void)
 void mf_cdone2Select(void)
 {
 	// Save current ADC as calibrating point
-	cpoint2_adc = adc_filtered_value;
+	cpoint2_adc = adc_normalized;
 	// Save current Celsius degree
 	cpoint2 = cpoint2_copy;
 	// Calculate new coefficient for temperature conversion

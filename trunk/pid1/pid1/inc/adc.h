@@ -24,7 +24,7 @@ typedef struct {
 
 
 
-#define ADC_BUFFER_LENGTH 8
+#define ADC_BUFFER_LENGTH 10
 #define COEFF_SCALE	1000
 
 
@@ -37,5 +37,7 @@ uint16_t conv_ADC_to_Celsius(uint16_t adc_value);
 uint16_t conv_Celsius_to_ADC(uint16_t degree_value);
 void update_normalized_adc();
 
+void addToRingU16(RingBufU16_t* bptr, uint16_t sample);
+uint16_t getNormalizedRingU16(RingBufU16_t* bptr);
 
 #endif /* ADC_H_ */

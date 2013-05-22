@@ -29,8 +29,8 @@ static int32_t k_norm;				// integer, scaled by COEFF_SCALE
 static int32_t offset_norm;			// integer, scaled by COEFF_SCALE
 
 // Ring buffer functions
-static void addToRingU16(RingBufU16_t* bptr, uint16_t sample);
-static uint16_t getNormalizedRingU16(RingBufU16_t* bptr);
+void addToRingU16(RingBufU16_t* bptr, uint16_t sample);
+uint16_t getNormalizedRingU16(RingBufU16_t* bptr);
 
 //---------------------------------------------//
 //---------------------------------------------//
@@ -48,7 +48,7 @@ uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
 
 void calculateCoeffs(void)
 {
-	k_norm = ((int32_t)(cpoint1 - cpoint2) * COEFF_SCALE) / ((int32_t)(cpoint1_adc - cpoint2_adc));
+	k_norm = ((int32_t)(cpoint2 - cpoint1) * COEFF_SCALE) / ((int32_t)(cpoint2_adc - cpoint1_adc));
 	offset_norm = (int32_t)cpoint1 * COEFF_SCALE - (int32_t)cpoint1_adc * k_norm;
 }
 
@@ -58,7 +58,7 @@ void update_normalized_adc()
 	// Disable interrupts from ADC - to save data integrity
 	ACSR &= ~(1<<ACIE);	
 	// Get normalized mean window summ
-	adc_normalized = getNormalizedRingU16;
+	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
 	// Enable interrupts from ADC
 	ACSR |= (1<<ACIE);
 	// Convert to Celsius degree

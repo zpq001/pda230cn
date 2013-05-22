@@ -46,6 +46,7 @@ uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
 // ----- debug only ------ //
 uint8_t setTempDbg;				// For UART log only
+uint16_t setAdcDbg;
 uint8_t pidOutputUpdate;
 
 
@@ -150,7 +151,7 @@ void processRollControl(void)
 void processHeaterControl(void)
 {
 	static uint8_t heaterEnabled = 0;
-	uint16_t set_value_adc;
+	static uint16_t set_value_adc;
 	uint16_t process_value;
 	static uint16_t pid_output;
 	static uint8_t pidEnableCnt;
@@ -167,18 +168,22 @@ void processHeaterControl(void)
 	if (pidEnableCnt == 0)
 	{
 		getNewPidOutput = 1;
-		pidEnableCnt = 20;		// in units of 50ms
+		pidEnableCnt = 80;		// in units of 50ms
 		
 		pidOutputUpdate = 1;	// debug
 	}
-	pidEnableCnt--;
+	else
+	{
+		pidEnableCnt--;	
+		getNewPidOutput = 0;
+	}
+	
 	
 	
 	// Check if heater control should be updated
 	if (heaterState & READY_TO_UPDATE_HEATER)
 	{
 		setHeaterControl(pid_output);
-		heaterState &= ~READY_TO_UPDATE_HEATER;
 	}
 	
 	
@@ -197,13 +202,12 @@ void processHeaterControl(void)
 			process_value = (uint16_t)ringBufADC.summ;
 			ACSR |= (1<<ACIE);
 			
-			// Filter curent process value
+			// Filter current process value
 			// TODO?
 			
 			// Process PID
 			pid_output = processPID(set_value_adc,process_value);	
 			
-			getNewPidOutput = 0;		
 		}
 	}
 	else
@@ -212,18 +216,17 @@ void processHeaterControl(void)
 	}
 	
 	
-	
-	setHeaterControl(pid_output);
-	
 	// Debug
 	if (heaterEnabled)
 	{
 		setExtraLeds(LED_HEATER);
 		setTempDbg = setup_temp_value;
+		setAdcDbg = set_value_adc;
 	}
 	else
 	{
 		setTempDbg = 0;
+		setAdcDbg = 0;
 		clearExtraLeds(LED_HEATER);
 	}
 }
@@ -236,10 +239,11 @@ void processHeaterControl(void)
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
 	
-	int16_t error, p_term, i_term, temp;
+	int16_t error, p_term, i_term, d_term, temp;
+	static uint16_t lastProcessValue;
 	static int16_t integAcc = 0;
 	
-	error = - setPoint + processValue;
+	error = setPoint - processValue;
 	
 	
 	//------ Calculate P term --------//
@@ -268,13 +272,17 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	i_term = integAcc * Ki;
 */	
+	//------ Calculate D term --------//
+	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
+	lastProcessValue = processValue;
+	
 	//--------- Summ terms -----------//
 	//temp = (p_term + i_term) / SCALING_FACTOR;
-	temp = (p_term) / SCALING_FACTOR;
+	temp = (p_term + d_term) / SCALING_FACTOR;
 	
-	if (temp > 10)
+	if (temp > 50)
 	{
-		temp = 10;	
+		temp = 50;	
 	}		
 	else if (temp < 0)
 	{
