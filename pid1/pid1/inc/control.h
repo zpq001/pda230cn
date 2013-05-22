@@ -39,7 +39,8 @@ typedef struct
 // PID regulator
 #define Kp	20		// experiment#3 = 40
 #define Ki	30
-#define SCALING_FACTOR	600
+#define Kd	30
+#define SCALING_FACTOR	80
 
 
 // Global variables - main system control
@@ -53,6 +54,7 @@ extern uint16_t cpoint1_adc;
 extern uint16_t cpoint2_adc;
 
 extern uint8_t setTempDbg;				// For UART log only
+uint16_t setAdcDbg;
 extern uint8_t pidOutputUpdate;			// For UART log only
 
 void processRollControl(void);

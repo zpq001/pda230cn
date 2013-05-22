@@ -117,6 +117,7 @@ int main(void)
 {
 	char str[10];
 	uint8_t temp8u = 0x00;
+	volatile uint16_t temp16u;
 	
 	//powTest();
 	
@@ -147,6 +148,17 @@ int main(void)
 	//processMenu();
 	
 	printLedBuffer(0,"      ");
+	/*
+	addToRingU16(&ringBufADC, 464);
+	addToRingU16(&ringBufADC, 464);
+	addToRingU16(&ringBufADC, 464);
+	addToRingU16(&ringBufADC, 464);
+	
+	temp16u = getNormalizedRingU16(&ringBufADC);
+	*/
+	
+	//temp16u = conv_ADC_to_Celsius(310);
+	//temp16u = conv_ADC_to_Celsius(464);
 	
     while(1)
     {
@@ -196,7 +208,12 @@ int main(void)
 				u16toa_align_right(setTempDbg,str,6,' ');				// Temp setting
 				USART_sendstr(str);
 				
+				u16toa_align_right(setAdcDbg,str,6,' ');				// Temp setting, as input to PID
+				USART_sendstr(str);
+				
+				ACSR &= ~(1<<ACIE);	
 				u16toa_align_right((uint16_t)ringBufADC.summ,str,8,' ');	// ADC ring buffer summ
+				ACSR |= (1<<ACIE);
 				USART_sendstr(str);
 				
 				u16toa_align_right(adc_normalized,str,8,' ');			// ADC filtered value
