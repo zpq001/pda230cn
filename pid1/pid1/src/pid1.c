@@ -117,8 +117,6 @@ int main(void)
 {
 	char str[10];
 	uint8_t temp8u = 0x00;
-	uint8_t uart_log_timeout_counter = 0;
-	uint16_t uart_log_counter = 0;
 	
 	//powTest();
 	
@@ -157,7 +155,7 @@ int main(void)
 		{
 			// Get new temperature measurement - new value is pushed into ring buffer
 			// once every AC line period
-			update_filtered_adc();
+			update_normalized_adc();			// TODO: slow down temperature change (say once per 200-400ms)
 			
 			// Get new button state
 			process_buttons();
@@ -192,20 +190,24 @@ int main(void)
 				// Log to UART
 				//---------------------------------//
 				// Function is called every 50ms
-				// UART message is sent every second call
+				// UART message is sent every second call (once per 100ms)
 				
-										
-				u16toa_align_right(uart_log_counter,str,5,' ');			// log message counter
-				USART_sendstr(str);
 				
 				u16toa_align_right(setTempDbg,str,6,' ');				// Temp setting
 				USART_sendstr(str);
 				
-				u16toa_align_right(adc_filtered_value,str,8,' ');		// ADC filtered value
+				u16toa_align_right((uint16_t)ringBufADC.summ,str,8,' ');	// ADC ring buffer summ
 				USART_sendstr(str);
 				
-				u16toa_align_right(adc_filtered_celsius,str,6,' ');		// Celsius degree
+				u16toa_align_right(adc_normalized,str,8,' ');			// ADC filtered value
 				USART_sendstr(str);
+				
+				u16toa_align_right(adc_celsius,str,6,' ');				// Celsius degree
+				USART_sendstr(str);
+				
+				u16toa_align_right(pidOutputUpdate,str,4,' ');			// PID update 
+				USART_sendstr(str);
+				if (pidOutputUpdate) pidOutputUpdate = 0;
 				
 				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (0 to 10)
 				USART_sendstr(str);
@@ -213,7 +215,6 @@ int main(void)
 				
 				USART_sendstr("\n\r");
 				
-				uart_log_counter++;
 				
 
 				//---------------------------------//
