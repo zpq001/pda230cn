@@ -151,6 +151,7 @@ void processHeaterControl(void)
 {
 	static uint8_t heaterEnabled = 0;
 	uint16_t set_value_adc;
+	uint16_t process_value;
 	static uint16_t pid_output;
 	static uint8_t pidEnableCnt;
 	uint8_t getNewPidOutput;
@@ -188,9 +189,19 @@ void processHeaterControl(void)
 		{
 			// Convert temperature setup to equal ADC value
 			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
+			// Scale up to ring buffer summ
+			set_value_adc *= ADC_BUFFER_LENGTH;
+			
+			// Get current process value
+			ACSR &= ~(1<<ACIE);	
+			process_value = (uint16_t)ringBufADC.summ;
+			ACSR |= (1<<ACIE);
+			
+			// Filter curent process value
+			// TODO?
 			
 			// Process PID
-			pid_output = processPID(set_value_adc,adc_filtered_value);	
+			pid_output = processPID(set_value_adc,process_value);	
 			
 			getNewPidOutput = 0;		
 		}
@@ -232,11 +243,11 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	
 	//------ Calculate P term --------//
-	if (error > 100)
+	if (error > 500)
 	{
 		p_term = 10000;
 	}
-	else if (error < -100)
+	else if (error < -500)
 	{
 		p_term = -10000;
 	}
@@ -291,9 +302,9 @@ void restoreGlobalParams(void)
 	 cpoint2_adc = gParams.cpoint2_adc;
 	 
 	 cpoint1 		= 25;		// TODO: check and remove
-	 cpoint1_adc 	= 860;
+	 cpoint1_adc 	= 164;
 	 cpoint2 		= 145;
-	 cpoint2_adc 	= 591;
+	 cpoint2_adc 	= 433;
 	 
 }
 
