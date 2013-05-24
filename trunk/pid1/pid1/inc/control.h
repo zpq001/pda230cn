@@ -22,7 +22,7 @@ typedef struct
 	uint16_t cpoint2_adc;
 } gParams_t;
 
-
+// Menu items
 #define MAX_SET_TEMP	210
 #define MIN_SET_TEMP	30
 
@@ -37,10 +37,10 @@ typedef struct
 
 
 // PID regulator
-#define Kp	20		// experiment#3 = 40
+#define Kp	10		
 #define Ki	30
-#define Kd	30
-#define SCALING_FACTOR	80
+#define Kd	80
+#define SCALING_FACTOR	1
 
 
 // Global variables - main system control
@@ -53,9 +53,18 @@ extern uint8_t cpoint2;						// Calibration point 2
 extern uint16_t cpoint1_adc;
 extern uint16_t cpoint2_adc;
 
-extern uint8_t setTempDbg;				// For UART log only
-uint16_t setAdcDbg;
-extern uint8_t pidOutputUpdate;			// For UART log only
+//------- Debug --------//
+extern uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
+extern uint16_t dbg_SetTempPID;			// Temperature setting, PID input
+extern uint8_t dbg_RealTempCelsius;		// Real temperature, Celsius degree
+extern uint16_t dbg_RealTempPID;		// Real temperature, PID input
+
+extern int16_t dbg_PID_p_term;
+extern int16_t dbg_PID_d_term;
+extern int16_t dbg_PID_i_term;
+extern int16_t dbg_PID_output;
+
+
 
 void processRollControl(void);
 void processHeaterControl(void);

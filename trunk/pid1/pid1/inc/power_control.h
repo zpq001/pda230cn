@@ -22,7 +22,7 @@ MOTOR	________________________________________________|*************************
 
 
 // Regulation params
-#define HEATER_REGULATION_PERIODS	50		// Number of whole periods of AC voltage for one heater regulation cycle
+#define HEATER_REGULATION_PERIODS	250		// Number of whole periods of AC voltage for one heater regulation cycle
 #define TRIAC_IMPULSE_TIME			10		// in units of 64 us
 #define QUATER_PERIOD_TIME			78		// in units of 64 us
 #define SYNC_IGNORE_TIME			140		// in units of 64 us
@@ -58,10 +58,13 @@ MOTOR	________________________________________________|*************************
 #define CYCLE_ROLL_DONE				0x10
 #define ROLL_DIR_CHANGED			0x20
 
-extern uint8_t ctrl_heater;			// for read-only
+extern uint16_t ctrl_heater;			// for read-only
 extern uint8_t heaterState;
+extern uint16_t PIDsampedADC;
+
 extern uint8_t rollState;
 extern uint8_t activeRollCycle;
+
 
 
 // User function to control motor rotation
