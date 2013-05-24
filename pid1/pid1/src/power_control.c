@@ -38,7 +38,7 @@ static uint8_t p_state = 0x0F;			// default error state - if AC line sync is pre
 
 
 // User function to control heater intensity
-void setHeaterControl(uint8_t value)
+void setHeaterControl(uint16_t value)
 {
 	ctrl_heater = value;
 	heaterState &= ~READY_TO_UPDATE_HEATER;
@@ -309,13 +309,13 @@ ISR(TIMER0_OVF_vect)
 			heater_cnt = 0;
 			ctrl_heater_sync = ctrl_heater;
 		}
-		else if (heater_cnt == HEATER_REGULATION_PERIODS - 6)
-		{
-			heaterState |= READY_TO_UPDATE_HEATER;
-			PIDsampedADC = getNormalizedRingU16(&ringBufADC);	// save temperature measure at current time
-		}
 		else
 		{
+			 if (heater_cnt == HEATER_REGULATION_PERIODS - 6)
+			{
+				heaterState |= READY_TO_UPDATE_HEATER;
+				PIDsampedADC = getNormalizedRingU16(&ringBufADC);	// save temperature measure at current time
+			}
 			heater_cnt++;
 		}
 
