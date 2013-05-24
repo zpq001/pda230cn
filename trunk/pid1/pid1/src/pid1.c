@@ -222,26 +222,30 @@ int main(void)
 				u16toa_align_right(dbg_RealTempPID,str,6,' ');			// Real temp, sampled for PID input
 				USART_sendstr(str);
 				
+				USART_sendstr("    ");
+				
 				if (dbg_PID_p_term >= 0)
 				{
-					u16toa_align_right(dbg_PID_p_term,str,6,' ');		// Real temp, sampled for PID input
+					u16toa_align_right(dbg_PID_p_term,str,6,'0');		// Real temp, sampled for PID input
 					USART_sendstr(str);	
 				}
 				else
 				{
-					u16toa_align_right(-dbg_PID_p_term,str,6,' ');		
+					u16toa_align_right(-dbg_PID_p_term,str,6,'0');		
 					USART_send('-');
 					USART_sendstr(str);
 				}
 				
+				USART_sendstr("    ");
+				
 				if (dbg_PID_d_term >= 0)
 				{
-					u16toa_align_right(dbg_PID_d_term,str,6,' ');		// Real temp, sampled for PID input
+					u16toa_align_right(dbg_PID_d_term,str,6,'0');		// Real temp, sampled for PID input
 					USART_sendstr(str);
 				}
 				else
 				{
-					u16toa_align_right(-dbg_PID_d_term,str,6,' ');
+					u16toa_align_right(-dbg_PID_d_term,str,6,'0');
 					USART_send('-');
 					USART_sendstr(str);
 				}

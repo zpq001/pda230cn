@@ -70,7 +70,7 @@ extern uint8_t activeRollCycle;
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir);
 // User function to control heater intensity
-void setHeaterControl(uint8_t value);
+void setHeaterControl(uint16_t value);
 
 uint8_t startCycleRolling(void);
 void stopCycleRolling(uint8_t doResetPoints);
