@@ -204,29 +204,53 @@ int main(void)
 				// Function is called every 50ms
 				// UART message is sent every second call (once per 100ms)
 				
-				
-				u16toa_align_right(setTempDbg,str,6,' ');				// Temp setting
+				u16toa_align_right(adc_celsius,str,6,' ');				// Displayed temp, Celsius
 				USART_sendstr(str);
 				
-				u16toa_align_right(setAdcDbg,str,6,' ');				// Temp setting, as input to PID
+				u16toa_align_right(adc_normalized,str,6,' ');			// Displayed temp
 				USART_sendstr(str);
 				
-				ACSR &= ~(1<<ACIE);	
-				u16toa_align_right((uint16_t)ringBufADC.summ,str,8,' ');	// ADC ring buffer summ
-				ACSR |= (1<<ACIE);
+				u16toa_align_right(dbg_SetTempCelsius,str,6,' ');		// Temp setting, Celsius
 				USART_sendstr(str);
 				
-				u16toa_align_right(adc_normalized,str,8,' ');			// ADC filtered value
+				u16toa_align_right(dbg_SetTempPID,str,6,' ');			// Temp setting, as input to PID
 				USART_sendstr(str);
 				
-				u16toa_align_right(adc_celsius,str,6,' ');				// Celsius degree
+				u16toa_align_right(dbg_RealTempCelsius,str,8,' ');		// Real temp, sampled for PID input, Celsius
 				USART_sendstr(str);
 				
-				u16toa_align_right(pidOutputUpdate,str,4,' ');			// PID update 
+				u16toa_align_right(dbg_RealTempPID,str,6,' ');			// Real temp, sampled for PID input
 				USART_sendstr(str);
-				if (pidOutputUpdate) pidOutputUpdate = 0;
 				
-				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (0 to 10)
+				if (dbg_PID_p_term >= 0)
+				{
+					u16toa_align_right(dbg_PID_p_term,str,6,' ');		// Real temp, sampled for PID input
+					USART_sendstr(str);	
+				}
+				else
+				{
+					u16toa_align_right(-dbg_PID_p_term,str,6,' ');		
+					USART_send('-');
+					USART_sendstr(str);
+				}
+				
+				if (dbg_PID_d_term >= 0)
+				{
+					u16toa_align_right(dbg_PID_d_term,str,6,' ');		// Real temp, sampled for PID input
+					USART_sendstr(str);
+				}
+				else
+				{
+					u16toa_align_right(-dbg_PID_d_term,str,6,' ');
+					USART_send('-');
+					USART_sendstr(str);
+				}
+				
+				u16toa_align_right(dbg_PID_output,str,6,' ');			// PID output
+				USART_sendstr(str);
+				
+				
+				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (PID output, synchronized)
 				USART_sendstr(str);
 				
 				

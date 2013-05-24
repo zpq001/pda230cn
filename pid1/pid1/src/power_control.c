@@ -11,12 +11,14 @@
 #include "port_defs.h"
 #include "power_control.h"
 #include "control.h"
+#include "adc.h"
 
 // Heater controls
-uint8_t ctrl_heater = 0;				// Heater duty value
-static uint8_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulation period
-static uint8_t heater_cnt = 0;			// Counter used to provide heater PWM
+uint16_t ctrl_heater = 0;				// Heater duty value
+static uint16_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulation period
+static uint16_t heater_cnt = 0;			// Counter used to provide heater PWM
 uint8_t heaterState = 0;				// Global heater flags
+uint16_t PIDsampedADC;
 
 // Motor controls
 uint8_t rollState = 0;					// Roll controller state. Use as read-only
@@ -306,7 +308,11 @@ ISR(TIMER0_OVF_vect)
 		{
 			heater_cnt = 0;
 			ctrl_heater_sync = ctrl_heater;
+		}
+		else if (heater_cnt == HEATER_REGULATION_PERIODS - 6)
+		{
 			heaterState |= READY_TO_UPDATE_HEATER;
+			PIDsampedADC = getNormalizedRingU16(&ringBufADC);	// save temperature measure at current time
 		}
 		else
 		{

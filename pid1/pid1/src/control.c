@@ -44,10 +44,16 @@ uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
-// ----- debug only ------ //
-uint8_t setTempDbg;				// For UART log only
-uint16_t setAdcDbg;
-uint8_t pidOutputUpdate;
+//------- Debug --------//
+uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
+uint16_t dbg_SetTempPID;		// Temperature setting, PID input
+uint8_t dbg_RealTempCelsius;	// Real temperature, Celsius degree
+uint16_t dbg_RealTempPID;		// Real temperature, PID input
+
+int16_t dbg_PID_p_term;
+int16_t dbg_PID_d_term;
+int16_t dbg_PID_i_term;
+int16_t dbg_PID_output;
 
 
 
@@ -154,8 +160,6 @@ void processHeaterControl(void)
 	static uint16_t set_value_adc;
 	uint16_t process_value;
 	static uint16_t pid_output;
-	static uint8_t pidEnableCnt;
-	uint8_t getNewPidOutput;
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
@@ -164,71 +168,54 @@ void processHeaterControl(void)
 	}
 	
 	
-	// Check if new output value required
-	if (pidEnableCnt == 0)
-	{
-		getNewPidOutput = 1;
-		pidEnableCnt = 80;		// in units of 50ms
-		
-		pidOutputUpdate = 1;	// debug
-	}
-	else
-	{
-		pidEnableCnt--;	
-		getNewPidOutput = 0;
-	}
-	
-	
-	
-	// Check if heater control should be updated
-	if (heaterState & READY_TO_UPDATE_HEATER)
-	{
-		setHeaterControl(pid_output);
-	}
-	
-	
-	
+	// If heater is enabled
 	if (heaterEnabled)
 	{
-		if (getNewPidOutput)
+		// Check if heater control should be updated
+		// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms
+		if (heaterState & READY_TO_UPDATE_HEATER)
 		{
 			// Convert temperature setup to equal ADC value
 			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
-			// Scale up to ring buffer summ
-			set_value_adc *= ADC_BUFFER_LENGTH;
 			
-			// Get current process value
-			ACSR &= ~(1<<ACIE);	
-			process_value = (uint16_t)ringBufADC.summ;
-			ACSR |= (1<<ACIE);
+			process_value = PIDsampedADC;		// Use sampled value
 			
 			// Filter current process value
 			// TODO?
 			
 			// Process PID
-			pid_output = processPID(set_value_adc,process_value);	
+			pid_output = processPID(set_value_adc,process_value);
 			
-		}
+			setHeaterControl(pid_output);	// Flag is cleared automatically
+			
+		}			
 	}
 	else
-	{	
+	{
+		// Turn off heater instantly
 		pid_output = 0;
+		setHeaterControl(pid_output);
 	}
 	
 	
-	// Debug
+	
+	
+	//------- Debug --------//
 	if (heaterEnabled)
 	{
 		setExtraLeds(LED_HEATER);
-		setTempDbg = setup_temp_value;
-		setAdcDbg = set_value_adc;
+		dbg_SetTempCelsius = setup_temp_value;
+		dbg_SetTempPID = set_value_adc;
 	}
 	else
 	{
-		setTempDbg = 0;
-		setAdcDbg = 0;
+		dbg_SetTempCelsius = 0;
+		dbg_SetTempPID = 0;
 		clearExtraLeds(LED_HEATER);
 	}
+	
+	dbg_RealTempCelsius = conv_ADC_to_Celsius(PIDsampedADC);
+	dbg_RealTempPID = PIDsampedADC;
 }
 
 
@@ -238,7 +225,6 @@ void processHeaterControl(void)
 
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
-	
 	int16_t error, p_term, i_term, d_term, temp;
 	static uint16_t lastProcessValue;
 	static int16_t integAcc = 0;
@@ -247,13 +233,13 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	
 	//------ Calculate P term --------//
-	if (error > 500)
+	if (error > 20)
 	{
-		p_term = 10000;
+		p_term = 1000;
 	}
-	else if (error < -500)
+	else if (error < -20)
 	{
-		p_term = -10000;
+		p_term = -1000;
 	}
 	else
 	{
@@ -280,14 +266,22 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	//temp = (p_term + i_term) / SCALING_FACTOR;
 	temp = (p_term + d_term) / SCALING_FACTOR;
 	
-	if (temp > 50)
+	if (temp > 250)
 	{
-		temp = 50;	
+		temp = 250;	
 	}		
 	else if (temp < 0)
 	{
 		temp = 0;
 	}
+	
+	
+	//------- Debug --------//
+	dbg_PID_p_term = p_term;
+	dbg_PID_d_term = d_term;
+	dbg_PID_i_term = i_term;
+	dbg_PID_output = temp;
+	
 	
 	return temp;
 	
