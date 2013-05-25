@@ -44,11 +44,21 @@ uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
+uint16_t pid_input_buffer[4];	// Pid input buffer
+RingBufU16_t ringBufPID = {
+	.length = 4,
+	.data = pid_input_buffer,
+	.stat = RINIT
+};
+
+
+
 //------- Debug --------//
 uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
 uint16_t dbg_SetTempPID;		// Temperature setting, PID input
 uint8_t dbg_RealTempCelsius;	// Real temperature, Celsius degree
 uint16_t dbg_RealTempPID;		// Real temperature, PID input
+uint16_t dbg_RealTempPIDfiltered;		// Real temperature, PID input, filtered
 
 int16_t dbg_PID_p_term;
 int16_t dbg_PID_d_term;
@@ -178,13 +188,16 @@ void processHeaterControl(void)
 			// Convert temperature setup to equal ADC value
 			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
 			
-			process_value = PIDsampedADC;		// Use sampled value
+				
 			
-			// Filter current process value
-			// TODO?
+			// Filter by mean window
+			addToRingU16(&ringBufPID, PIDsampedADC);	// Use sampled value
+			
+			process_value = ringBufPID.summ;			// ADC x4
+			
 			
 			// Process PID
-			pid_output = processPID(set_value_adc,process_value);
+			pid_output = processPID(set_value_adc * 4,process_value);
 			
 			setHeaterControl(pid_output);	// Flag is cleared automatically
 			
@@ -216,6 +229,7 @@ void processHeaterControl(void)
 	
 	dbg_RealTempCelsius = conv_ADC_to_Celsius(PIDsampedADC);
 	dbg_RealTempPID = PIDsampedADC;
+	dbg_RealTempPIDfiltered = process_value;
 }
 
 

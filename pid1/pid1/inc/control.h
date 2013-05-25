@@ -39,8 +39,8 @@ typedef struct
 // PID regulator
 #define Kp	10		
 #define Ki	30
-#define Kd	80
-#define SCALING_FACTOR	1
+#define Kd	20
+#define SCALING_FACTOR	4
 
 
 // Global variables - main system control
@@ -58,6 +58,7 @@ extern uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
 extern uint16_t dbg_SetTempPID;			// Temperature setting, PID input
 extern uint8_t dbg_RealTempCelsius;		// Real temperature, Celsius degree
 extern uint16_t dbg_RealTempPID;		// Real temperature, PID input
+extern uint16_t dbg_RealTempPIDfiltered;		// Real temperature, PID input, filtered
 
 extern int16_t dbg_PID_p_term;
 extern int16_t dbg_PID_d_term;

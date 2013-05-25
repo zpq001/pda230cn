@@ -222,6 +222,9 @@ int main(void)
 				u16toa_align_right(dbg_RealTempPID,str,6,' ');			// Real temp, sampled for PID input
 				USART_sendstr(str);
 				
+				u16toa_align_right(dbg_RealTempPIDfiltered,str,6,' ');			// Real temp, sampled for PID input, filtered
+				USART_sendstr(str);
+				
 				USART_sendstr("    ");
 				
 				if (dbg_PID_p_term >= 0)
