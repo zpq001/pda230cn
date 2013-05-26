@@ -4,15 +4,11 @@
  * Created: 24.03.2013 1:35:17
  *  Author: Avega
  
- Asynchronious operations:
+ Asynchronous operations:
 	ISR:	Analog comparator (AC line sync)
 	ISR:	Timer0 (used for power control)
 	ISR:	Timer2 (system timer)
-	ISR:	ADC (ADC conversion is started by system timer)
-	
- 
- 
- 
+	ISR:	ADC (ADC conversion is started by Timer0)
  
  */ 
 
@@ -44,7 +40,7 @@ extern volatile SoftTimer8b_t menuUpdateTimer;
 ////// debug ///////
 //extern void powTest(void);
 
-void init_system()
+void init_system_io()
 {
 	// Setup Port D
 	PORTD = 0; //(1<<PD_SYNCA | 1<<PD_SYNCB);
@@ -116,50 +112,30 @@ void init_system()
 int main(void)
 {
 	char str[10];
-	uint8_t temp8u = 0x00;
+	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
 	
-	//powTest();
-	
 	// Initialize IO
-	init_system();
-	
+	init_system_io();
 	// Restore params
 	restoreGlobalParams();
-	
 	// Calibrate ADC coefficients using restored params
 	calculateCoeffs();
-	
 	// Initialize LED indicator
 	initLedIndicator();
-	
+	// Initialize menu
+	InitMenu();
 	// Enable interrupts
 	sei();
-	
 	// Beep
 	SetBeeperFreq(1000);
 	StartBeep(200);
-	
-	InitMenu();
-
+	// Safety delay for power part
+	_delay_ms(100);
+	// Start rotating
 	setMotorDirection(ROLL_FWD);
-	
-	//button_state = BD_UP;
-	//processMenu();
-	
-	printLedBuffer(0,"      ");
-	/*
-	addToRingU16(&ringBufADC, 464);
-	addToRingU16(&ringBufADC, 464);
-	addToRingU16(&ringBufADC, 464);
-	addToRingU16(&ringBufADC, 464);
-	
-	temp16u = getNormalizedRingU16(&ringBufADC);
-	*/
-	
-	//temp16u = conv_ADC_to_Celsius(310);
-	//temp16u = conv_ADC_to_Celsius(464);
-	
+
+
     while(1)
     {
 		
@@ -172,7 +148,7 @@ int main(void)
 			// Get new button state
 			process_buttons();
 			
-			// Give audio feedback
+			// Give sound feedback
 			if (button_state & BL_MENU)
 			{
 				SetBeeperFreq(800);
@@ -195,7 +171,7 @@ int main(void)
 			processHeaterControl();
 		
 
-
+			// Process log
 			if (menuUpdateTimer.FA_TGL)
 			{
 				//---------------------------------//
@@ -222,14 +198,14 @@ int main(void)
 				u16toa_align_right(dbg_RealTempPID,str,6,' ');			// Real temp, sampled for PID input
 				USART_sendstr(str);
 				
-				u16toa_align_right(dbg_RealTempPIDfiltered,str,6,' ');			// Real temp, sampled for PID input, filtered
-				USART_sendstr(str);
+				//u16toa_align_right(dbg_RealTempPIDfiltered,str,6,' ');			// Real temp, sampled for PID input, filtered
+				//USART_sendstr(str);
 				
 				USART_sendstr("    ");
 				
 				if (dbg_PID_p_term >= 0)
 				{
-					u16toa_align_right(dbg_PID_p_term,str,6,'0');		// Real temp, sampled for PID input
+					u16toa_align_right(dbg_PID_p_term,str,6,'0');		// p term
 					USART_sendstr(str);	
 				}
 				else
@@ -243,12 +219,26 @@ int main(void)
 				
 				if (dbg_PID_d_term >= 0)
 				{
-					u16toa_align_right(dbg_PID_d_term,str,6,'0');		// Real temp, sampled for PID input
+					u16toa_align_right(dbg_PID_d_term,str,6,'0');		// d term
 					USART_sendstr(str);
 				}
 				else
 				{
 					u16toa_align_right(-dbg_PID_d_term,str,6,'0');
+					USART_send('-');
+					USART_sendstr(str);
+				}
+				
+				USART_sendstr("    ");
+				
+				if (dbg_PID_i_term >= 0)
+				{
+					u16toa_align_right(dbg_PID_i_term,str,6,'0');		// i term
+					USART_sendstr(str);
+				}
+				else
+				{
+					u16toa_align_right(-dbg_PID_i_term,str,6,'0');
 					USART_send('-');
 					USART_sendstr(str);
 				}

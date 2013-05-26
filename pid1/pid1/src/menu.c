@@ -20,21 +20,28 @@
 
 
 static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCond);
-static inline void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRecord );
+static void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRecord );
 static inline void processItemFunction(FuncPtr funcAddr);
 static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctionRecord* resPtr );
 static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr );
 static void restartMenuTimer(void);
 
+static uint8_t selectedMenuItemID;
+static MenuFunctionRecord selectedMenuFunctionRecord;
 
-uint8_t selectedMenuItemID;
-MenuFunctionRecord selectedMenuFunctionRecord;
+static uint8_t cpoint1_copy;
+static uint8_t cpoint2_copy;
 
-uint8_t cpoint1_copy;
-uint8_t cpoint2_copy;
+static SoftTimer8b_t menuTimer = {		// used for menu state jumps
+	.Timer = 0,	
+	.Enabled = 0,
+	.RunOnce = 1
+};		
 
-SoftTimer8b_t menuTimer;		// used for menu state jumps
-SoftTimer8b_t userTimer;		// used for display blinking
+static SoftTimer8b_t userTimer = {		// used for display blinking
+	.Enabled = 0,
+	.RunOnce = 0	
+};		
 
 
 
@@ -120,15 +127,6 @@ void InitMenu(void)
 	selectedMenuItemID = mi_REALTEMP;
 	getMenuFunctionRecord(selectedMenuItemID, &selectedMenuFunctionRecord);
 	processItemFunction(selectedMenuFunctionRecord.SelectFunction);
-	
-	// Initialize menu state timer
-	menuTimer.Timer = 0;
-	menuTimer.Enabled = 0;
-	menuTimer.RunOnce = 1;
-	
-	// Initialize user timer
-	userTimer.Enabled = 0;
-	userTimer.RunOnce = 0;
 }
 
 
