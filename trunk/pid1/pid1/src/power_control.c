@@ -14,16 +14,17 @@
 #include "adc.h"
 
 // Heater controls
-uint16_t ctrl_heater = 0;				// Heater duty value
-static uint16_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulation period
-static uint16_t heater_cnt = 0;			// Counter used to provide heater PWM
+uint8_t ctrl_heater = 0;				// Heater duty value
+static uint8_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulation period
+static uint8_t heater_cnt = 0;			// Counter used to provide heater PWM
 uint8_t heaterState = 0;				// Global heater flags
-uint16_t PIDsampedADC;
+uint8_t heater_reg_cnt = 0;
+
 
 // Motor controls
 uint8_t rollState = 0;					// Roll controller state. Use as read-only
-uint8_t activeRollCycle;				// Indicates currently active roll cycle
-static uint8_t newDirReq;
+uint8_t activeRollCycle = 0;			// Indicates currently active roll cycle
+static uint8_t newDirReq = 0;
 static uint16_t rollPoint = 0;
 static uint16_t topPoint = 0;
 static uint16_t bottomPoint = 0;
@@ -38,7 +39,7 @@ static uint8_t p_state = 0x0F;			// default error state - if AC line sync is pre
 
 
 // User function to control heater intensity
-void setHeaterControl(uint16_t value)
+void setHeaterControl(uint8_t value)
 {
 	ctrl_heater = value;
 	heaterState &= ~READY_TO_UPDATE_HEATER;
@@ -50,7 +51,12 @@ void setHeaterControl(uint16_t value)
 }
 
 
-
+void forceHeaterControlUpdate(void)
+{
+	// Flag READY_TO_UPDATE_HEATER will be set on next on next AC line period
+	heater_cnt = HEATER_REGULATION_PERIODS - 6;
+	heater_reg_cnt = HEATER_PID_CALL_INTERVAL - 1;
+}
 	
 	
 // User function to control motor rotation
@@ -65,7 +71,6 @@ void setMotorDirection(uint8_t dir)
 		bottomPoint = rollPoint;
 	else if (dir & ROLL_REV)
 		topPoint = rollPoint;
-		
 
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);	
@@ -107,24 +112,6 @@ void stopCycleRolling(uint8_t doResetPoints)
 }
 
 
-/*
-uint8_t powTest(void)
-{
-	volatile uint8_t result = 0;
-	rollPoint = 65530;
-	topPoint = 40010;
-	bottomPoint = 65520;
-	if ( isTopPointValid() )
-	{
-		result = 1;
-	}
-	if (isBottomPointValid())
-	{
-		result = 2;
-	}
-	return result;
-}
-*/
 
 uint8_t isTopPointValid(void)
 {
@@ -210,6 +197,7 @@ static inline void controlRolling()
 	// Process direction change
 	if ((rollState ^ newDirReq) & (ROLL_FWD | ROLL_REV))
 	{
+		// ROLL_DIR_CHANGED used for sound beep
 		rollState |= (SKIP_CURRENT_MOTOR_CTRL | ROLL_DIR_CHANGED);
 	}
 	rollState &= ~(ROLL_FWD | ROLL_REV);
@@ -303,19 +291,32 @@ ISR(TIMER0_OVF_vect)
 		}
 			
 
-		// Process heater control counter
+		// Process heater control 
+		if (heater_cnt == HEATER_REGULATION_PERIODS - 6)
+		{
+			 if (heater_reg_cnt == HEATER_PID_CALL_INTERVAL - 1)
+			 {
+				 heater_reg_cnt = 0;
+				 // Set flag for PID control
+				 heaterState |= READY_TO_UPDATE_HEATER;
+				 // Save temperature measure at current time
+				 PIDsampledADC = getNormalizedRingU16(&ringBufADC);
+			 }
+			 else
+			 {
+				 heater_reg_cnt++;
+			 }
+		}			 
+		
+		
 		if (heater_cnt == HEATER_REGULATION_PERIODS - 1)
 		{
 			heater_cnt = 0;
+			// Copy new output value
 			ctrl_heater_sync = ctrl_heater;
 		}
 		else
 		{
-			 if (heater_cnt == HEATER_REGULATION_PERIODS - 6)
-			{
-				heaterState |= READY_TO_UPDATE_HEATER;
-				PIDsampedADC = getNormalizedRingU16(&ringBufADC);	// save temperature measure at current time
-			}
 			heater_cnt++;
 		}
 

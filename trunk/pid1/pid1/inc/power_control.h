@@ -22,7 +22,9 @@ MOTOR	________________________________________________|*************************
 
 
 // Regulation params
-#define HEATER_REGULATION_PERIODS	250		// Number of whole periods of AC voltage for one heater regulation cycle
+#define HEATER_REGULATION_PERIODS	50		// Number of whole periods of AC voltage for one heater regulation cycle
+											// Also specifies amount of heater control gradations (0 to HEATER_REGULATION_PERIODS-1)
+#define HEATER_PID_CALL_INTERVAL	4		// Number of heater regulation cycles between PID regulator calls
 #define TRIAC_IMPULSE_TIME			10		// in units of 64 us
 #define QUATER_PERIOD_TIME			78		// in units of 64 us
 #define SYNC_IGNORE_TIME			140		// in units of 64 us
@@ -58,9 +60,9 @@ MOTOR	________________________________________________|*************************
 #define CYCLE_ROLL_DONE				0x10
 #define ROLL_DIR_CHANGED			0x20
 
-extern uint16_t ctrl_heater;			// for read-only
+extern uint8_t ctrl_heater;			// for read-only
 extern uint8_t heaterState;
-extern uint16_t PIDsampedADC;
+
 
 extern uint8_t rollState;
 extern uint8_t activeRollCycle;
@@ -70,7 +72,9 @@ extern uint8_t activeRollCycle;
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir);
 // User function to control heater intensity
-void setHeaterControl(uint16_t value);
+void setHeaterControl(uint8_t value);
+// User function to request heater control update on next AC line period
+void forceHeaterControlUpdate(void);
 
 uint8_t startCycleRolling(void);
 void stopCycleRolling(uint8_t doResetPoints);

@@ -15,7 +15,7 @@
 
 uint16_t adc_normalized;			// normalized (used for calibration) ADC value
 uint16_t adc_celsius;				// celsius degree value (used for indication / calibration)
-
+uint16_t PIDsampledADC;
 
 uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC ring buffer
 RingBufU16_t ringBufADC = {
@@ -42,7 +42,8 @@ uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
 }
 
 uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
-{	
+{
+	degree_value += 1;
 	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm) / k_norm);
 }
 
@@ -73,8 +74,7 @@ ISR(ADC_vect)
 {
 	// Get new sample
 	uint16_t new_sample = 1024 - ADC;	
-	
-	// Filter by mean window
+	// Add new sample to the ring buffer
 	addToRingU16(&ringBufADC, new_sample);
 }	
 

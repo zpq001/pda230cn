@@ -31,6 +31,7 @@ typedef struct {
 extern uint16_t adc_normalized;
 extern uint16_t adc_celsius;
 extern RingBufU16_t ringBufADC;
+extern uint16_t PIDsampledADC;
 
 void calculateCoeffs(void);
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value);

@@ -30,9 +30,9 @@ EEMEM gParams_t nvParams =
 	.sound_enable = 1,
 	.power_off_timeout = 30,
 	.cpoint1 		= 25,
-	.cpoint1_adc 	= 860,
+	.cpoint1_adc 	= 164,
 	.cpoint2 		= 145,
-	.cpoint2_adc 	= 591
+	.cpoint2_adc 	= 433
 };
 
 uint16_t setup_temp_value;		// reference temperature
@@ -44,10 +44,12 @@ uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
-uint16_t pid_input_buffer[4];	// Pid input buffer
-RingBufU16_t ringBufPID = {
+uint8_t autoPowerOffState = 0;
+
+uint16_t pid_dterm_buffer[4];	// PID d-term input buffer
+RingBufU16_t ringBufDterm = {
 	.length = 4,
-	.data = pid_input_buffer,
+	.data = pid_dterm_buffer,
 	.stat = RINIT
 };
 
@@ -58,7 +60,7 @@ uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
 uint16_t dbg_SetTempPID;		// Temperature setting, PID input
 uint8_t dbg_RealTempCelsius;	// Real temperature, Celsius degree
 uint16_t dbg_RealTempPID;		// Real temperature, PID input
-uint16_t dbg_RealTempPIDfiltered;		// Real temperature, PID input, filtered
+//uint16_t dbg_RealTempPIDfiltered;		// Real temperature, PID input, filtered
 
 int16_t dbg_PID_p_term;
 int16_t dbg_PID_d_term;
@@ -72,6 +74,13 @@ void processRollControl(void)
 {	
 	uint8_t beepState = 0;
 	static uint8_t beepMask = 0x00;
+	
+	// Process auto power off control
+	if (autoPowerOffState & AUTO_POFF_ACTIVE)
+	{
+		
+		return;
+	}
 	
 	// Control direction by buttons
 	if (button_action_down & BD_ROTFWD)
@@ -162,56 +171,60 @@ void processRollControl(void)
 
 
 
-
-
 void processHeaterControl(void)
 {
 	static uint8_t heaterEnabled = 0;
-	static uint16_t set_value_adc;
-	uint16_t process_value;
-	static uint16_t pid_output;
+	static uint8_t tempAlertRangeCnt = 0;
+	static uint16_t set_value_adc;		// static for debug
+	static uint16_t pid_output;			// static for debug
+	
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
 	{
 		heaterEnabled ^= 0x01;
+		// Make heater controller set update flag on next call
+		forceHeaterControlUpdate();
 	}
 	
-	
-	// If heater is enabled
-	if (heaterEnabled)
+	// Process auto power off control
+	if (autoPowerOffState & AUTO_POFF_ACTIVE)
 	{
-		// Check if heater control should be updated
-		// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms
-		if (heaterState & READY_TO_UPDATE_HEATER)
-		{
-			// Convert temperature setup to equal ADC value
-			set_value_adc = conv_Celsius_to_ADC(setup_temp_value);
-			
-				
-			
-			// Filter by mean window
-			addToRingU16(&ringBufPID, PIDsampedADC);	// Use sampled value
-			
-			process_value = ringBufPID.summ;			// ADC x4
-			
-			
-			// Process PID
-			pid_output = processPID(set_value_adc * 4,process_value);
-			
-			setHeaterControl(pid_output);	// Flag is cleared automatically
-			
-		}			
-	}
+		heaterEnabled = 0;
+	}		
+	
+	// Indicate reaching of desired temperature
+	if ( (adc_celsius > setup_temp_value - TEMP_ALERT_RANGE) || (adc_celsius < setup_temp_value + TEMP_ALERT_RANGE) )
+	{
+		if (tempAlertRangeCnt < TEMP_ALERT_DELAY + 1)
+			tempAlertRangeCnt++;
+	}			
 	else
 	{
-		// Turn off heater instantly
-		pid_output = 0;
-		setHeaterControl(pid_output);
+		tempAlertRangeCnt = 0;
+	}		
+	if ((tempAlertRangeCnt == TEMP_ALERT_DELAY) && (heaterEnabled))
+	{
+		SetBeeperFreq(1000);
+		StartBeep(400);
 	}
-	
-	
-	
+
+	// Check if heater control should be updated
+	// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms
+	if (heaterState & READY_TO_UPDATE_HEATER)
+	{
+		// Convert temperature setup to equal ADC value
+		set_value_adc = conv_Celsius_to_ADC(setup_temp_value);					
+		// Process PID
+		pid_output = processPID(set_value_adc,PIDsampledADC);
+			
+		// Heater control is updated only when flag is set, even if heater must be powered OFF
+		if (heaterEnabled)
+			setHeaterControl(pid_output);	// Flag is cleared automatically
+		else
+			setHeaterControl(0);
+	}	
+		
 	
 	//------- Debug --------//
 	if (heaterEnabled)
@@ -227,9 +240,8 @@ void processHeaterControl(void)
 		clearExtraLeds(LED_HEATER);
 	}
 	
-	dbg_RealTempCelsius = conv_ADC_to_Celsius(PIDsampedADC);
-	dbg_RealTempPID = PIDsampedADC;
-	dbg_RealTempPIDfiltered = process_value;
+	dbg_RealTempCelsius = conv_ADC_to_Celsius(PIDsampledADC);
+	dbg_RealTempPID = PIDsampledADC;
 }
 
 
@@ -261,28 +273,37 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	
 	//------ Calculate I term --------//
-/*	integAcc += error;
-	if (integAcc > 10)
+	integAcc += error;
+	if (error <= 0)
+	{
+		integAcc = 0;
+	}
+	else if (integAcc > 10)
 	{
 		integAcc = 10;
 	}
-	else if (integAcc < -10)
+	else if (integAcc < 0)
 	{
-		integAcc = -10;
+		integAcc = 0;
 	}
 	i_term = integAcc * Ki;
-*/	
+	
 	//------ Calculate D term --------//
+	//lastProcessValue = getNormalizedRingU16(&ringBufDterm);
+	//addToRingU16(&ringBufDterm, processValue);
+	//d_term = Kd * ((int16_t)(lastProcessValue - processValue));
+	
+	lastProcessValue = ringBufDterm.summ;
+	addToRingU16(&ringBufDterm, processValue);
+	processValue = ringBufDterm.summ;
 	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
-	lastProcessValue = processValue;
 	
 	//--------- Summ terms -----------//
-	//temp = (p_term + i_term) / SCALING_FACTOR;
-	temp = (p_term + d_term) / SCALING_FACTOR;
+	temp = (p_term + i_term + d_term) / SCALING_FACTOR;
 	
-	if (temp > 250)
+	if (temp > 50)
 	{
-		temp = 250;	
+		temp = 50;	
 	}		
 	else if (temp < 0)
 	{
@@ -317,10 +338,10 @@ void restoreGlobalParams(void)
 	 cpoint1_adc = gParams.cpoint1_adc;
 	 cpoint2_adc = gParams.cpoint2_adc;
 	 
-	 cpoint1 		= 25;		// TODO: check and remove
-	 cpoint1_adc 	= 164;
-	 cpoint2 		= 145;
-	 cpoint2_adc 	= 433;
+//	 cpoint1 		= 25;		// TODO: check and remove
+//	 cpoint1_adc 	= 164;
+//	 cpoint2 		= 145;
+//	 cpoint2_adc 	= 433;
 	 
 }
 
