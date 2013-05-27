@@ -68,7 +68,7 @@ void process_buttons()
 	button_action_long  = raw_current & long_press_event_mask;
 	
 	// Compose button state
-	button_state = (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL));
+	button_state = (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE));
 	if (button_action_up_short & BD_MENU)
 		button_state |= BS_MENU;
 	//if (button_action_up_long & BD_MENU)

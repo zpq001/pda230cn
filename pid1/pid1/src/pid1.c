@@ -132,9 +132,8 @@ int main(void)
 	// Check AC line
 	while(p_state == 0x0F) 	
 	{
-		// Power control state machine nas not changed - sync has not been detected
-		str[] = "AC ERR";
-		printLedBuffer(0,str);
+		// Power control state machine has not changed - sync has not been detected
+		printLedBuffer(0,"AC ERR");
 		_delay_ms(50);
 	}
 	// If we get here, AC line is OK and at least one ADC count has been sampled.
