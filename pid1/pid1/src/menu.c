@@ -79,12 +79,16 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_CALIB2, 	BD_DOWN,						mi_SNDEN,		SHIFT_RIGHT	|	40	},
 	{ mi_CALIB2, 	BD_UP,							mi_CALIB1,		SHIFT_LEFT	|	40	},
 	{ mi_CALIB2, 	BS_MENU,						mi_DOCALIB2,					0	},
-	{ mi_DOCALIB1, 	BL_MENU,						mi_CALIB1,						0	},
+	{ mi_DOCALIB1, 	BL_MENU,						mi_CALIB1,						40	},
 	{ mi_DOCALIB1, 	BS_MENU,						mi_CDONE1,						20	},
 	{ mi_CDONE1, 	BS_MENU | BL_MENU | TMR_EXP,	mi_REALTEMP,					0	},
-	{ mi_DOCALIB2, 	BL_MENU,						mi_CALIB2,						0	},
+	{ mi_DOCALIB2, 	BL_MENU,						mi_CALIB2,						40	},
 	{ mi_DOCALIB2, 	BS_MENU,						mi_CDONE2,						20	},
-	{ mi_CDONE2, 	BS_MENU | BL_MENU | TMR_EXP,	mi_REALTEMP,					0	}		
+	{ mi_CDONE2, 	BS_MENU | BL_MENU | TMR_EXP,	mi_REALTEMP,					0	},
+	// Auto power off jumps - only from states without timeout, excluding calibration
+	{ mi_REALTEMP, 	POFF_ENTER,						mi_POFFACT,						0	},	
+	{ mi_ROLL, 		POFF_ENTER,						mi_POFFACT,						0	},	
+	{ mi_POFFACT, 	POFF_LEAVE,						mi_REALTEMP,					0	}
  };
  
 
@@ -106,7 +110,9 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_CALIB2,		mf_calibSelect,			mf_calib2Do,			0				},
 	{ mi_DOCALIB2,		mf_leafSelectAct, 		mf_calib2Do,		mf_leafExit			},
 	{ mi_CDONE1,		mf_cdone1Select, 		mf_cdoneDo,				0				},
-	{ mi_CDONE2,		mf_cdone2Select, 		mf_cdoneDo,				0				}
+	{ mi_CDONE2,		mf_cdone2Select, 		mf_cdoneDo,				0				},
+	
+	{ mi_POFFACT,		mf_leafSelect,			mf_actpoffDo,			0				}
 }; 
 
 
@@ -147,6 +153,10 @@ void processMenu(void)
 	jumpCondition = button_state;		
 	if (menuTimer.FTop)
 		jumpCondition |= TMR_EXP;
+	if (autoPowerOffState & AUTO_POFF_ENTER)
+		jumpCondition |= POFF_ENTER;
+	else if (autoPowerOffState & AUTO_POFF_LEAVE)
+		jumpCondition |= POFF_LEAVE;
 	
 	// Get next menu item according to current state and jump conditions
 	nextItem = getNextMenuItem(selectedMenuItemID, jumpCondition);
@@ -517,6 +527,13 @@ void mf_autopoffDo(void)
 	printLedBuffer(0,str);
 }
 
+// Indication of power off mode
+void mf_actpoffDo(void)
+{
+	char str[] = {' ',' ',' ','O','F','F',0};
+	printLedBuffer(0,str);
+}
+
 //---------------------------------------------//
 
 void mf_calibSelect(void)
@@ -548,6 +565,8 @@ void mf_calib1Do(void)
 	}
 	
 	printLedBuffer(0,str);
+	
+	resetAutoPowerOffCounter();
 }
 
 //---------------------------------------------//
@@ -575,6 +594,7 @@ void mf_calib2Do(void)
 	
 	printLedBuffer(0,str);
 	
+	resetAutoPowerOffCounter();
 }
 
 //---------------------------------------------//

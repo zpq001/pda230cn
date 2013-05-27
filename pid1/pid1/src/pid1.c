@@ -115,9 +115,9 @@ int main(void)
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
 	
-	// Initialize IO
+	// Initialize MCU IO
 	init_system_io();
-	// Restore params
+	// Restore params from EEPROM
 	restoreGlobalParams();
 	// Calibrate ADC coefficients using restored params
 	calculateCoeffs();
@@ -127,14 +127,27 @@ int main(void)
 	InitMenu();
 	// Enable interrupts
 	sei();
+	// Safety delay for power part
+	_delay_ms(50);
+	// Check AC line
+	while(p_state == 0x0F) 	
+	{
+		// Power control state machine nas not changed - sync has not been detected
+		str[] = "AC ERR";
+		printLedBuffer(0,str);
+		_delay_ms(50);
+	}
+	// If we get here, AC line is OK and at least one ADC count has been sampled.
 	// Beep
 	SetBeeperFreq(1000);
 	StartBeep(200);
-	// Safety delay for power part
+	// Init heater PID control internal structures
+	forceHeaterControlUpdate();
 	_delay_ms(100);
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
-
+	// Clear timer
+	menuUpdateTimer.FOvfl = 0;
 
     while(1)
     {
@@ -160,6 +173,13 @@ int main(void)
 				StartBeep(40);
 			}	
 			
+			// Process automatic power off - it is important to call
+			// this function before menu and power controls processing
+			if (button_action_down)
+			{
+				resetAutoPowerOffCounter();
+			}
+			processAutoPowerOff();
 
 			// Process user menu states, settings and indication
 			processMenu();
@@ -258,10 +278,6 @@ int main(void)
 				//---------------------------------//
 				
 			}
-			
-			
-			processAutoPowerOff();	// TODO
-			
 			
 			
 			menuUpdateTimer.FOvfl = 0;	
