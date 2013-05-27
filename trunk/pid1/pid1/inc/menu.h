@@ -46,7 +46,7 @@ typedef struct {
 #define		mi_DOCALIB2		0x0A
 #define		mi_ACTSNDEN		0x0B
 #define		mi_ACTAUTOPOFF	0x0C
-#define		mi_POFFACT		0x0D
+#define		mi_POFFACT		0x0E
 
 // MenuJumpRecord flags:
 #define 	SHIFT_LEFT		0x80
@@ -55,8 +55,8 @@ typedef struct {
 
 // Jump condition flags:
 #define		TMR_EXP			0x8000
-#define 	POFF_ENTER		0x4000
-#define 	POFF_LEAVE		0x2000
+#define 	GOTO_POFF		0x4000
+
 
 // Time intervals
 #define MENU_TIMEOUT_MULT	2		// multiplier of menu item timeouts (1 to 4)
@@ -89,7 +89,9 @@ void mf_leafExit(void);
 
 void mf_sndenDo(void);
 void mf_autopoffDo(void);
+void mf_actpoffSelect(void);
 void mf_actpoffDo(void);
+void mf_actpoffLeave(void);
 void mf_calibSelect(void);
 void mf_calib1Do(void);
 void mf_calib2Do(void);

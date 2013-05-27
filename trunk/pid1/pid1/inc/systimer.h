@@ -19,6 +19,7 @@
 #define RESET_COUNTER		0x10
 
 extern uint8_t autoPowerOffState;
+extern uint8_t minute_counter;
 
 void StartBeep(uint16_t time_ms);
 void StopBeep();

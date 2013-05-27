@@ -86,9 +86,9 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_DOCALIB2, 	BS_MENU,						mi_CDONE2,						20	},
 	{ mi_CDONE2, 	BS_MENU | BL_MENU | TMR_EXP,	mi_REALTEMP,					0	},
 	// Auto power off jumps - only from states without timeout, excluding calibration
-	{ mi_REALTEMP, 	POFF_ENTER,						mi_POFFACT,						0	},	
-	{ mi_ROLL, 		POFF_ENTER,						mi_POFFACT,						0	},	
-	{ mi_POFFACT, 	POFF_LEAVE,						mi_REALTEMP,					0	}
+	{ mi_REALTEMP, 	GOTO_POFF,						mi_POFFACT,						0	},	
+	{ mi_ROLL, 		GOTO_POFF,						mi_POFFACT,						0	},	
+	{ mi_POFFACT, 	BD_UP | BD_DOWN | BS_MENU | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE, mi_REALTEMP,	0	}
  };
  
 
@@ -112,7 +112,7 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_CDONE1,		mf_cdone1Select, 		mf_cdoneDo,				0				},
 	{ mi_CDONE2,		mf_cdone2Select, 		mf_cdoneDo,				0				},
 	
-	{ mi_POFFACT,		mf_leafSelect,			mf_actpoffDo,			0				}
+	{ mi_POFFACT,		mf_actpoffSelect,		mf_actpoffDo,		mf_actpoffLeave		}
 }; 
 
 
@@ -153,10 +153,8 @@ void processMenu(void)
 	jumpCondition = button_state;		
 	if (menuTimer.FTop)
 		jumpCondition |= TMR_EXP;
-	if (autoPowerOffState & AUTO_POFF_ENTER)
-		jumpCondition |= POFF_ENTER;
-	else if (autoPowerOffState & AUTO_POFF_LEAVE)
-		jumpCondition |= POFF_LEAVE;
+	if (minute_counter >= power_off_timeout)
+		jumpCondition |= GOTO_POFF;
 	
 	// Get next menu item according to current state and jump conditions
 	nextItem = getNextMenuItem(selectedMenuItemID, jumpCondition);
@@ -325,6 +323,9 @@ static void restartMenuTimer(void)
 void mf_realTempSelect(void)
 {
 	setExtraLeds(LED_TEMP);
+	// !!! This is the only one auto power off exit menu item !!!
+	// !!! Clear LEAVE flag here !!!
+	autoPowerOffState = 0;
 }
 
 void mf_realTempDo(void)
@@ -527,11 +528,26 @@ void mf_autopoffDo(void)
 	printLedBuffer(0,str);
 }
 
+
+
+void mf_actpoffSelect(void)
+{
+	clearExtraLeds(LED_TEMP | LED_ROLL);
+	autoPowerOffState = AUTO_POFF_ENTER;
+}
+
 // Indication of power off mode
 void mf_actpoffDo(void)
 {
+	autoPowerOffState = AUTO_POFF_ACTIVE;
 	char str[] = {' ',' ',' ','O','F','F',0};
 	printLedBuffer(0,str);
+}
+
+void mf_actpoffLeave(void)
+{
+	autoPowerOffState = AUTO_POFF_LEAVE;
+	resetAutoPowerOffCounter();
 }
 
 //---------------------------------------------//

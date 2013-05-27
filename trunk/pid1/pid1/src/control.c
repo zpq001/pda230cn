@@ -65,6 +65,7 @@ int16_t dbg_PID_i_term;
 int16_t dbg_PID_output;
 
 
+// TODO: add block to buttons when at auto power off state!!! - to prevent unexpected effects
 
 // Function to control motor rotation
 void processRollControl(void)
@@ -76,7 +77,8 @@ void processRollControl(void)
 	if (autoPowerOffState & AUTO_POFF_ENTER)
 	{
 		// Disable CYCLE mode
-		stopCycleRolling(1);		
+		stopCycleRolling(1);	
+		goto INDICATE_ROLLSTATE;	
 	}
 	else if (autoPowerOffState & AUTO_POFF_ACTIVE)
 	{
@@ -84,6 +86,7 @@ void processRollControl(void)
 		{
 			setMotorDirection(0);		// Stop the motor
 		}
+		goto INDICATE_ROLLSTATE;
 	}
 	else if (autoPowerOffState & AUTO_POFF_LEAVE)
 	{
@@ -93,85 +96,84 @@ void processRollControl(void)
 			setMotorDirection(BD_ROTFWD);
 		}
 	}
-	else
+	
+	// Control direction by buttons
+	if (button_action_down & BD_ROTFWD)
 	{
-		// Control direction by buttons
-		if (button_action_down & BD_ROTFWD)
-		{
-			setMotorDirection(ROLL_FWD);	
-			beepState |= 0x01;			// pressed FWD button
-		}		
-		else if (button_action_down & BD_ROTREV)
-		{
-			setMotorDirection(ROLL_REV);
-			beepState |= 0x02;			// pressed REV button
-		}		
-		else if (button_action_long & BD_CYCLE)
-		{
-			stopCycleRolling(1);		// Reset points and disabled CYCLE mode (if was enabled)
-			beepState |= 0x08;			// reset of points by long pressing of ROLL button
-		}
-		
-		
-		if (button_action_up_short & BD_CYCLE)
-		{
-			if (rollState & ROLL_CYCLE)
-			{
-				stopCycleRolling(0);
-				beepState |= 0x20;		// stopped cycle
-			}
-			else if (startCycleRolling())
-			{
-				beepState |= 0x10;		// started cycle
-			}
-			else
-			{
-				beepState |= 0x40;		// failed to start cycle
-			}			
-		}		
-		
-		if (rollState & ROLL_DIR_CHANGED)
-		{
-			rollState &= ~ROLL_DIR_CHANGED;
-			beepState |= 0x04;	
-		}
-		
-		if (rollState & CYCLE_ROLL_DONE)
-		{
-			rollState &= ~CYCLE_ROLL_DONE;
-			beepState |= 0x80;	
-		}		
-		
-		beepState &= beepMask;
-		
-		if (beepState & 0x80)		// Roll cycle done
-		{
-			SetBeeperFreq(1000);
-			StartBeep(200);
-		}		
-		else if (beepState & 0x40)	// Roll cycle start fail
-		{
-			SetBeeperFreq(500);
-			StartBeep(50);
-		} 
-		else if (beepState & 0x08)	// Reset points
-		{
-			SetBeeperFreq(800);
-			StartBeep(50);
-		}							// Other
-		else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
-		{
-			SetBeeperFreq(1000);
-			StartBeep(50);	
-		}			
-		
-		// Apply mask to next sound events
-		beepMask = 0xFF;
-		// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
-		if (beepState & 0x03)	
-			beepMask &= ~0x04;	
+		setMotorDirection(ROLL_FWD);	
+		beepState |= 0x01;			// pressed FWD button
+	}		
+	else if (button_action_down & BD_ROTREV)
+	{
+		setMotorDirection(ROLL_REV);
+		beepState |= 0x02;			// pressed REV button
+	}		
+	else if (button_action_long & BD_CYCLE)
+	{
+		stopCycleRolling(1);		// Reset points and disabled CYCLE mode (if was enabled)
+		beepState |= 0x08;			// reset of points by long pressing of ROLL button
 	}
 		
+		
+	if (button_action_up_short & BD_CYCLE)
+	{
+		if (rollState & ROLL_CYCLE)
+		{
+			stopCycleRolling(0);
+			beepState |= 0x20;		// stopped cycle
+		}
+		else if (startCycleRolling())
+		{
+			beepState |= 0x10;		// started cycle
+		}
+		else
+		{
+			beepState |= 0x40;		// failed to start cycle
+		}			
+	}		
+		
+	if (rollState & ROLL_DIR_CHANGED)
+	{
+		rollState &= ~ROLL_DIR_CHANGED;
+		beepState |= 0x04;	
+	}
+		
+	if (rollState & CYCLE_ROLL_DONE)
+	{
+		rollState &= ~CYCLE_ROLL_DONE;
+		beepState |= 0x80;	
+	}		
+		
+	beepState &= beepMask;
+		
+	if (beepState & 0x80)		// Roll cycle done
+	{
+		SetBeeperFreq(1000);
+		StartBeep(200);
+	}		
+	else if (beepState & 0x40)	// Roll cycle start fail
+	{
+		SetBeeperFreq(500);
+		StartBeep(50);
+	} 
+	else if (beepState & 0x08)	// Reset points
+	{
+		SetBeeperFreq(800);
+		StartBeep(50);
+	}							// Other
+	else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
+	{
+		SetBeeperFreq(1000);
+		StartBeep(50);	
+	}			
+		
+	// Apply mask to next sound events
+	beepMask = 0xFF;
+	// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
+	if (beepState & 0x03)	
+		beepMask &= ~0x04;	
+
+INDICATE_ROLLSTATE:
 	// Indicate direction by LEDs
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);
 	if (rollState & ROLL_FWD)
