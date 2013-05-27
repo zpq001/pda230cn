@@ -66,6 +66,7 @@ static uint8_t decode_led_char(char c)
 		case 'D': return (SEGB | SEGC | SEGD | SEGE | SEGG);
 		case 'P': return (SEGA | SEGB | SEGE | SEGF | SEGG);
 		case 'E': return (SEGA | SEGD | SEGE | SEGF | SEGG);
+		case 'R': return (SEGE | SEGG);
 		default:  return c;	
 	}
 }

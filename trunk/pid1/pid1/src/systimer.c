@@ -16,6 +16,7 @@
 
 
 static uint16_t beep_cnt = 0;
+uint8_t autoPowerOffState = 0;
 
 SoftTimer8b_t menuUpdateTimer = {
 	.Enabled = 1,
@@ -26,6 +27,27 @@ SoftTimer8b_t menuUpdateTimer = {
 	.Timer = 0,
 	.Top = MENU_UPDATE_INTERVAL
 };	
+
+SoftTimer8b_t systickTimer = {
+	.Enabled = 1,
+	.RunOnce = 0,
+	.Timer = 0,
+	.Top = SYSTICKS_PER_SECOND - 1
+};	
+
+SoftTimer8b_t secondsTimer = {
+	.Enabled = 1,
+	.RunOnce = 0,
+	.Timer = 0,
+	.Top = 60 - 1
+};	
+
+SoftTimer8b_t minutesTimer = {
+	.Enabled = 1,
+	.RunOnce = 0,
+	.Timer = 0,
+	.Top = MAX_POWEROFF_TIMEOUT - 1;
+};
 	
 
 
@@ -82,8 +104,53 @@ void StopBeep()
 
 
 
+
+
+void resetAutoPowerOffCounter(void)
+{
+	autoPowerOffState |= RESET_COUNTER;
+}
+
+void processAutoPowerOff(void)
+{
+	minutesTimer.CompA = power_off_timeout;
+	switch(autoPowerOffState & 0x0F)
+	{
+		case 0:
+			if (autoPowerOffState & RESET_COUNTER)
+			{
+				minutesTimer = 0;
+				minutesTimer.FA_GE = 0;
+				autoPowerOffState = 0;
+			}
+			else if (minutesTimer.FA_GE)
+			{
+				autoPowerOffState = AUTO_POFF_ENTER;
+			}
+			break;
+		case AUTO_POFF_ENTER:
+			autoPowerOffState = AUTO_POFF_ACTIVE;
+			break;
+		case AUTO_POFF_ACTIVE:
+			if (autoPowerOffState & RESET_COUNTER)
+			{
+				minutesTimer = 0;
+				minutesTimer.FA_GE = 0;
+				autoPowerOffState = AUTO_POFF_LEAVE;
+			}
+			break;
+		case AUTO_POFF_LEAVE:
+			autoPowerOffState = 0;
+			break;
+	}
+}
+
+
 ISR(TIMER2_COMP_vect)
 {	
+	static uint16_t poff_timer_low = 0;
+	static uint8_t poff_timer_high = 0;
+	
 	// Manage beeper
 	if (beep_cnt)
 		beep_cnt--;
@@ -96,6 +163,20 @@ ISR(TIMER2_COMP_vect)
 	// Process menu update timer
 	processSoftTimer8b(&menuUpdateTimer);	
 	
+	// Process time
+	if (menuUpdateTimer.FOvfl)
+	{
+		processSoftTimer8b(&systickTimer);
+		if (systickTimer.FOvfl)
+		{
+			processSoftTimer8b(&secondsTimer);
+			if (secondsTimer.FOvfl)
+			{
+				processSoftTimer8b(&minutesTimer);
+			}
+		
+		}
+	}
 }
 
 

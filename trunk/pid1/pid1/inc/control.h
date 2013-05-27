@@ -42,16 +42,19 @@ typedef struct
 #define Kd	80 
 #define SCALING_FACTOR	5
 
-// Auto power off flags
-#define AUTO_POFF_ACTIVE	0x01
-#define AUTO_POFF_ENTER		0x02
-#define AUTO_POFF_LEAVE		0x04
+
+#define POFF_MOTOR_TRESHOLD	50				// Below this temperature point motor will stop
+											// if auto power off mode is active
 
 // Temperature reaching alert range
-#define TEMP_ALERT_RANGE	10				// Signal will be active when temperature reach
+#define TEMP_ALERT_RANGE	5				// Signal will be active when temperature reach
 											// desired value within +-TEMP_ALERT_RANGE Celsius degrees
 											// TODO - deliver this to menu
-#define TEMP_ALERT_DELAY	10
+#define TEMP_ALERT_HYST		5				// Hysteresis value for alert range
+
+
+
+
 
 // Global variables - main system control
 extern uint16_t setup_temp_value;			// reference temperature
@@ -63,7 +66,7 @@ extern uint8_t cpoint2;						// Calibration point 2
 extern uint16_t cpoint1_adc;
 extern uint16_t cpoint2_adc;
 
-extern uint8_t autoPowerOffState;
+
 
 //------- Debug --------//
 extern uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
@@ -84,7 +87,6 @@ void processHeaterControl(void);
 
 void restoreGlobalParams(void);
 void exitPowerOff(void);
-void processAutoPowerOff(void);
 
 uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 

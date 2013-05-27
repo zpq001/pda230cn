@@ -33,29 +33,36 @@ static uint16_t bottomPoint = 0;
 // p_state bits:
 //	[7] <- half-period toggling flag
 // [3:0] <- state
-static uint8_t p_state = 0x0F;			// default error state - if AC line sync is present, 
-										// it will be cleared at first comparator ISR
+uint8_t p_state = 0x0F;			// default error state - if AC line sync is present, 
+								// it will be cleared at first comparator ISR
 
 
 
 // User function to control heater intensity
 void setHeaterControl(uint8_t value)
 {
+	// Disable interrupts from timer0 
+	TIMSK &= ~(1<<TOIE0);
+	
 	ctrl_heater = value;
 	heaterState &= ~READY_TO_UPDATE_HEATER;
 	
-	if (ctrl_heater)
-		heaterState |= HEATER_ENABLED;
-	else
-		heaterState &= ~HEATER_ENABLED;	
+	// Enable interrupts from timer 0
+	TIMSK |= (1<<TOIE0);	
 }
 
 
 void forceHeaterControlUpdate(void)
 {
+	// Disable interrupts from timer0 
+	TIMSK &= ~(1<<TOIE0);
+	
 	// Flag READY_TO_UPDATE_HEATER will be set on next on next AC line period
 	heater_cnt = HEATER_REGULATION_PERIODS - 6;
 	heater_reg_cnt = HEATER_PID_CALL_INTERVAL - 1;
+	
+	// Enable interrupts from timer 0
+	TIMSK |= (1<<TOIE0);	
 }
 	
 	
@@ -262,7 +269,7 @@ ISR(TIMER0_OVF_vect)
 			break;
 		
 		default:
-			// Sync is not present - TODO
+			// Sync is not present - do nothing
 			break;
 	}	
 

@@ -44,15 +44,12 @@ uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
-uint8_t autoPowerOffState = 0;
-
 uint16_t pid_dterm_buffer[4];	// PID d-term input buffer
 RingBufU16_t ringBufDterm = {
 	.length = 4,
 	.data = pid_dterm_buffer,
 	.stat = RINIT
 };
-
 
 
 //------- Debug --------//
@@ -76,89 +73,104 @@ void processRollControl(void)
 	static uint8_t beepMask = 0x00;
 	
 	// Process auto power off control
-	if (autoPowerOffState & AUTO_POFF_ACTIVE)
+	if (autoPowerOffState & AUTO_POFF_ENTER)
 	{
+		// Disable CYCLE mode
+		stopCycleRolling(1);		
+	}
+	else if (autoPowerOffState & AUTO_POFF_ACTIVE)
+	{
+		if (adc_celsius <= POFF_MOTOR_TRESHOLD)
+		{
+			setMotorDirection(0);		// Stop the motor
+		}
+	}
+	else if (autoPowerOffState & AUTO_POFF_LEAVE)
+	{
+		if (!(button_action_down & (BD_ROTFWD | BD_ROTREV)))
+		{
+			// Restore direction - always start rotating forward when leaving auto power off mode
+			setMotorDirection(BD_ROTFWD);
+		}
+	}
+	else
+	{
+		// Control direction by buttons
+		if (button_action_down & BD_ROTFWD)
+		{
+			setMotorDirection(ROLL_FWD);	
+			beepState |= 0x01;			// pressed FWD button
+		}		
+		else if (button_action_down & BD_ROTREV)
+		{
+			setMotorDirection(ROLL_REV);
+			beepState |= 0x02;			// pressed REV button
+		}		
+		else if (button_action_long & BD_CYCLE)
+		{
+			stopCycleRolling(1);		// Reset points and disabled CYCLE mode (if was enabled)
+			beepState |= 0x08;			// reset of points by long pressing of ROLL button
+		}
 		
-		return;
-	}
-	
-	// Control direction by buttons
-	if (button_action_down & BD_ROTFWD)
-	{
-		setMotorDirection(ROLL_FWD);	
-		beepState |= 0x01;			// pressed FWD button
-	}		
-	else if (button_action_down & BD_ROTREV)
-	{
-		setMotorDirection(ROLL_REV);
-		beepState |= 0x02;			// pressed REV button
-	}		
-	else if (button_action_long & BD_CYCLE)
-	{
-		stopCycleRolling(1);		// Reset points and disabled CYCLE mode (if was enabled)
-		beepState |= 0x08;			// reset of points by long pressing of ROLL button
-	}
-	
-	
-	if (button_action_up_short & BD_CYCLE)
-	{
-		if (rollState & ROLL_CYCLE)
+		
+		if (button_action_up_short & BD_CYCLE)
 		{
-			stopCycleRolling(0);
-			beepState |= 0x20;		// stopped cycle
+			if (rollState & ROLL_CYCLE)
+			{
+				stopCycleRolling(0);
+				beepState |= 0x20;		// stopped cycle
+			}
+			else if (startCycleRolling())
+			{
+				beepState |= 0x10;		// started cycle
+			}
+			else
+			{
+				beepState |= 0x40;		// failed to start cycle
+			}			
+		}		
+		
+		if (rollState & ROLL_DIR_CHANGED)
+		{
+			rollState &= ~ROLL_DIR_CHANGED;
+			beepState |= 0x04;	
 		}
-		else if (startCycleRolling())
+		
+		if (rollState & CYCLE_ROLL_DONE)
 		{
-			beepState |= 0x10;		// started cycle
-		}
-		else
+			rollState &= ~CYCLE_ROLL_DONE;
+			beepState |= 0x80;	
+		}		
+		
+		beepState &= beepMask;
+		
+		if (beepState & 0x80)		// Roll cycle done
 		{
-			beepState |= 0x40;		// failed to start cycle
+			SetBeeperFreq(1000);
+			StartBeep(200);
+		}		
+		else if (beepState & 0x40)	// Roll cycle start fail
+		{
+			SetBeeperFreq(500);
+			StartBeep(50);
+		} 
+		else if (beepState & 0x08)	// Reset points
+		{
+			SetBeeperFreq(800);
+			StartBeep(50);
+		}							// Other
+		else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
+		{
+			SetBeeperFreq(1000);
+			StartBeep(50);	
 		}			
-	}		
-	
-	if (rollState & ROLL_DIR_CHANGED)
-	{
-		rollState &= ~ROLL_DIR_CHANGED;
-		beepState |= 0x04;	
-	}
-	
-	if (rollState & CYCLE_ROLL_DONE)
-	{
-		rollState &= ~CYCLE_ROLL_DONE;
-		beepState |= 0x80;	
-	}		
-	
-	beepState &= beepMask;
-	
-	if (beepState & 0x80)		// Roll cycle done
-	{
-		SetBeeperFreq(1000);
-		StartBeep(200);
-	}		
-	else if (beepState & 0x40)	// Roll cycle start fail
-	{
-		SetBeeperFreq(500);
-		StartBeep(50);
-	} 
-	else if (beepState & 0x08)	// Reset points
-	{
-		SetBeeperFreq(800);
-		StartBeep(50);
-	}							// Other
-	else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
-	{
-		SetBeeperFreq(1000);
-		StartBeep(50);	
-	}			
-	
-	// Apply mask to next sound events
-	beepMask = 0xFF;
-	// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
-	if (beepState & 0x03)	
-		beepMask &= ~0x04;	
 		
-	
+		// Apply mask to next sound events
+		beepMask = 0xFF;
+		// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
+		if (beepState & 0x03)	
+			beepMask &= ~0x04;	
+	}
 		
 	// Indicate direction by LEDs
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);
@@ -174,7 +186,7 @@ void processRollControl(void)
 void processHeaterControl(void)
 {
 	static uint8_t heaterEnabled = 0;
-	static uint8_t tempAlertRangeCnt = 0;
+	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
 	static uint16_t set_value_adc;		// static for debug
 	static uint16_t pid_output;			// static for debug
 	
@@ -194,20 +206,21 @@ void processHeaterControl(void)
 	}		
 	
 	// Indicate reaching of desired temperature
-	if ( (adc_celsius > setup_temp_value - TEMP_ALERT_RANGE) || (adc_celsius < setup_temp_value + TEMP_ALERT_RANGE) )
+	if ( (adc_celsius > setup_temp_value - tempAlertRange) && (adc_celsius < setup_temp_value + tempAlertRange) )
 	{
-		if (tempAlertRangeCnt < TEMP_ALERT_DELAY + 1)
-			tempAlertRangeCnt++;
+		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterEnabled))
+		{
+			SetBeeperFreq(1000);
+			StartBeep(400);
+		}
+		// Add some hysteresis
+		tempAlertRange = TEMP_ALERT_RANGE + TEMP_ALERT_HYST;
 	}			
 	else
 	{
-		tempAlertRangeCnt = 0;
+		tempAlertRange = TEMP_ALERT_RANGE;
 	}		
-	if ((tempAlertRangeCnt == TEMP_ALERT_DELAY) && (heaterEnabled))
-	{
-		SetBeeperFreq(1000);
-		StartBeep(400);
-	}
+	
 
 	// Check if heater control should be updated
 	// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms
@@ -376,10 +389,5 @@ void exitPowerOff(void)
 */
 }
 
-
-void processAutoPowerOff(void)
-{
-	//TODO
-}
 
 
