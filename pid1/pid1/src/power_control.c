@@ -28,7 +28,7 @@ static uint8_t newDirReq = 0;
 static uint16_t rollPoint = 0;
 static uint16_t topPoint = 0;
 static uint16_t bottomPoint = 0;
-
+static uint8_t dirChangedMask = 0xFF;
 
 // p_state bits:
 //	[7] <- half-period toggling flag
@@ -73,6 +73,7 @@ void setMotorDirection(uint8_t dir)
 	TIMSK &= ~(1<<TOIE0);
 		
 	newDirReq = dir;	// save new direction request
+	dirChangedMask = ~ROLL_DIR_CHANGED;
 	
 	if (dir & ROLL_FWD)
 		bottomPoint = rollPoint;
@@ -204,11 +205,14 @@ static inline void controlRolling()
 	// Process direction change
 	if ((rollState ^ newDirReq) & (ROLL_FWD | ROLL_REV))
 	{
-		// ROLL_DIR_CHANGED used for sound beep
+		// ROLL_DIR_CHANGED is used for sound beep
 		rollState |= (SKIP_CURRENT_MOTOR_CTRL | ROLL_DIR_CHANGED);
 	}
+	
 	rollState &= ~(ROLL_FWD | ROLL_REV);
 	rollState |= newDirReq;
+	rollState &= dirChangedMask;
+	dirChangedMask = 0xFF;
 	
 	updateRollPoint();
 }

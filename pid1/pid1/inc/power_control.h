@@ -47,7 +47,7 @@ MOTOR	________________________________________________|*************************
 // Heater:
 // heaterState	bits
 #define READY_TO_UPDATE_HEATER		0x80
-
+#define HEATER_ENABLED				0x01
 
 // rollState bits:
 // Flags:
@@ -57,7 +57,7 @@ MOTOR	________________________________________________|*************************
 #define SKIP_CURRENT_MOTOR_CTRL		0x08
 // Event bits:
 #define CYCLE_ROLL_DONE				0x10
-#define ROLL_DIR_CHANGED			0x20
+#define ROLL_DIR_CHANGED			0x20	// Set only automatically during cycle rolling
 
 extern uint8_t p_state;				// for read-only
 

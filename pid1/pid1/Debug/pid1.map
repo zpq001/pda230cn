@@ -345,7 +345,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x1b44
+.text           0x00000000     0x1af8
  *(.vectors)
  .vectors       0x00000000       0x26 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4/crtm8.o
                 0x00000000                __vector_default
@@ -446,243 +446,246 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
                 0x000003c4       0xc2 src/buttons.o
                 0x000003c4                process_buttons
  .text.processRollControl
-                0x00000486      0x11a src/control.o
+                0x00000486       0xf8 src/control.o
                 0x00000486                processRollControl
  .text.processPID
-                0x000005a0      0x100 src/control.o
-                0x000005a0                processPID
+                0x0000057e      0x100 src/control.o
+                0x0000057e                processPID
  .text.processHeaterControl
-                0x000006a0       0xfe src/control.o
-                0x000006a0                processHeaterControl
+                0x0000067e       0xb6 src/control.o
+                0x0000067e                processHeaterControl
+ .text.processHeaterAlerts
+                0x00000734       0x52 src/control.o
+                0x00000734                processHeaterAlerts
  .text.restoreGlobalParams
-                0x0000079e       0x74 src/control.o
-                0x0000079e                restoreGlobalParams
+                0x00000786       0x74 src/control.o
+                0x00000786                restoreGlobalParams
  .text.exitPowerOff
-                0x00000812        0x2 src/control.o
-                0x00000812                exitPowerOff
+                0x000007fa        0x2 src/control.o
+                0x000007fa                exitPowerOff
  .text.decode_led_char
-                0x00000814       0xe6 src/led_indic.o
+                0x000007fc       0xe6 src/led_indic.o
  .text.wrap_led_buffer_index
-                0x000008fa       0x20 src/led_indic.o
+                0x000008e2       0x20 src/led_indic.o
  .text.processLedIndicator
-                0x0000091a       0xc0 src/led_indic.o
-                0x0000091a                processLedIndicator
+                0x00000902       0xc0 src/led_indic.o
+                0x00000902                processLedIndicator
  .text.fillLedBuffer
-                0x000009da       0x48 src/led_indic.o
-                0x000009da                fillLedBuffer
+                0x000009c2       0x48 src/led_indic.o
+                0x000009c2                fillLedBuffer
  .text.startShiftingWindowLeft
-                0x00000a22       0x1c src/led_indic.o
-                0x00000a22                startShiftingWindowLeft
+                0x00000a0a       0x1c src/led_indic.o
+                0x00000a0a                startShiftingWindowLeft
  .text.startShiftingWindowRight
-                0x00000a3e       0x1c src/led_indic.o
-                0x00000a3e                startShiftingWindowRight
+                0x00000a26       0x1c src/led_indic.o
+                0x00000a26                startShiftingWindowRight
  .text.initLedIndicator
-                0x00000a5a       0x46 src/led_indic.o
-                0x00000a5a                initLedIndicator
+                0x00000a42       0x46 src/led_indic.o
+                0x00000a42                initLedIndicator
  .text.printLedBuffer
-                0x00000aa0       0x74 src/led_indic.o
-                0x00000aa0                printLedBuffer
+                0x00000a88       0x74 src/led_indic.o
+                0x00000a88                printLedBuffer
  .text.setComma
-                0x00000b14       0x18 src/led_indic.o
-                0x00000b14                setComma
+                0x00000afc       0x18 src/led_indic.o
+                0x00000afc                setComma
  .text.setExtraLeds
-                0x00000b2c        0xc src/led_indic.o
-                0x00000b2c                setExtraLeds
+                0x00000b14        0xc src/led_indic.o
+                0x00000b14                setExtraLeds
  .text.clearExtraLeds
-                0x00000b38        0xe src/led_indic.o
-                0x00000b38                clearExtraLeds
+                0x00000b20        0xe src/led_indic.o
+                0x00000b20                clearExtraLeds
  .text.led_clock_pulse
-                0x00000b46       0x20 src/led_indic_hw.o
-                0x00000b46                led_clock_pulse
+                0x00000b2e       0x20 src/led_indic_hw.o
+                0x00000b2e                led_clock_pulse
  .text.set_led_segments
-                0x00000b66       0x1c src/led_indic_hw.o
-                0x00000b66                set_led_segments
+                0x00000b4e       0x1c src/led_indic_hw.o
+                0x00000b4e                set_led_segments
  .text.enable_led_segments_pullups
-                0x00000b82        0xe src/led_indic_hw.o
-                0x00000b82                enable_led_segments_pullups
+                0x00000b6a        0xe src/led_indic_hw.o
+                0x00000b6a                enable_led_segments_pullups
  .text.enable_led_segments
-                0x00000b90        0xe src/led_indic_hw.o
-                0x00000b90                enable_led_segments
+                0x00000b78        0xe src/led_indic_hw.o
+                0x00000b78                enable_led_segments
  .text.disable_led_segments
-                0x00000b9e        0xe src/led_indic_hw.o
-                0x00000b9e                disable_led_segments
+                0x00000b86        0xe src/led_indic_hw.o
+                0x00000b86                disable_led_segments
  .text.capture_button_state
-                0x00000bac       0x16 src/led_indic_hw.o
-                0x00000bac                capture_button_state
+                0x00000b94       0x16 src/led_indic_hw.o
+                0x00000b94                capture_button_state
  .text.processItemFunction
-                0x00000bc2        0xa src/menu.o
+                0x00000baa        0xa src/menu.o
  .text.mf_setTempLeave
-                0x00000bcc        0xc src/menu.o
-                0x00000bcc                mf_setTempLeave
+                0x00000bb4        0xc src/menu.o
+                0x00000bb4                mf_setTempLeave
  .text.mf_leafSelectAct
-                0x00000bd8       0x1c src/menu.o
-                0x00000bd8                mf_leafSelectAct
+                0x00000bc0       0x1c src/menu.o
+                0x00000bc0                mf_leafSelectAct
  .text.mf_leafExit
-                0x00000bf4        0xc src/menu.o
-                0x00000bf4                mf_leafExit
- .text.mf_cdoneDo
-                0x00000c00        0x8 src/menu.o
-                0x00000c00                mf_cdoneDo
- .text.mf_actpoffDo
-                0x00000c08       0x48 src/menu.o
-                0x00000c08                mf_actpoffDo
- .text.mf_cdone2Select
-                0x00000c50       0x1a src/menu.o
-                0x00000c50                mf_cdone2Select
- .text.mf_cdone1Select
-                0x00000c6a       0x1a src/menu.o
-                0x00000c6a                mf_cdone1Select
- .text.mf_autopoffDo
-                0x00000c84       0xa2 src/menu.o
-                0x00000c84                mf_autopoffDo
- .text.mf_realTempDo
-                0x00000d26       0x56 src/menu.o
-                0x00000d26                mf_realTempDo
- .text.mf_calib2Do
-                0x00000d7c       0x92 src/menu.o
-                0x00000d7c                mf_calib2Do
- .text.mf_calib1Do
-                0x00000e0e       0x92 src/menu.o
-                0x00000e0e                mf_calib1Do
+                0x00000bdc        0xc src/menu.o
+                0x00000bdc                mf_leafExit
  .text.mf_actpoffLeave
-                0x00000ea0        0x8 src/menu.o
-                0x00000ea0                mf_actpoffLeave
+                0x00000be8        0x6 src/menu.o
+                0x00000be8                mf_actpoffLeave
+ .text.mf_cdoneDo
+                0x00000bee        0x8 src/menu.o
+                0x00000bee                mf_cdoneDo
+ .text.mf_actpoffDo
+                0x00000bf6        0x8 src/menu.o
+                0x00000bf6                mf_actpoffDo
+ .text.mf_cdone2Select
+                0x00000bfe       0x1a src/menu.o
+                0x00000bfe                mf_cdone2Select
+ .text.mf_cdone1Select
+                0x00000c18       0x1a src/menu.o
+                0x00000c18                mf_cdone1Select
+ .text.mf_autopoffDo
+                0x00000c32       0xa2 src/menu.o
+                0x00000c32                mf_autopoffDo
+ .text.mf_realTempDo
+                0x00000cd4       0x56 src/menu.o
+                0x00000cd4                mf_realTempDo
+ .text.mf_calib2Do
+                0x00000d2a       0x92 src/menu.o
+                0x00000d2a                mf_calib2Do
+ .text.mf_calib1Do
+                0x00000dbc       0x92 src/menu.o
+                0x00000dbc                mf_calib1Do
  .text.mf_actpoffSelect
-                0x00000ea8        0xc src/menu.o
-                0x00000ea8                mf_actpoffSelect
+                0x00000e4e        0xc src/menu.o
+                0x00000e4e                mf_actpoffSelect
  .text.mf_leafSelect
-                0x00000eb4       0x10 src/menu.o
-                0x00000eb4                mf_leafSelect
+                0x00000e5a       0x10 src/menu.o
+                0x00000e5a                mf_leafSelect
  .text.mf_calibSelect
-                0x00000ec4       0x14 src/menu.o
-                0x00000ec4                mf_calibSelect
+                0x00000e6a       0x14 src/menu.o
+                0x00000e6a                mf_calibSelect
  .text.mf_rollLeave
-                0x00000ed8       0x10 src/menu.o
-                0x00000ed8                mf_rollLeave
+                0x00000e7e       0x10 src/menu.o
+                0x00000e7e                mf_rollLeave
  .text.mf_setTempSelect
-                0x00000ee8        0x6 src/menu.o
-                0x00000ee8                mf_setTempSelect
+                0x00000e8e        0x6 src/menu.o
+                0x00000e8e                mf_setTempSelect
  .text.mf_realTempLeave
-                0x00000eee        0x4 src/menu.o
-                0x00000eee                mf_realTempLeave
+                0x00000e94        0x4 src/menu.o
+                0x00000e94                mf_realTempLeave
  .text.mf_sndenDo
-                0x00000ef2       0x8a src/menu.o
-                0x00000ef2                mf_sndenDo
+                0x00000e98       0x8a src/menu.o
+                0x00000e98                mf_sndenDo
  .text.mf_rollDo
-                0x00000f7c       0xca src/menu.o
-                0x00000f7c                mf_rollDo
+                0x00000f22       0xca src/menu.o
+                0x00000f22                mf_rollDo
  .text.mf_rollSelect
-                0x00001046        0x6 src/menu.o
-                0x00001046                mf_rollSelect
+                0x00000fec        0x6 src/menu.o
+                0x00000fec                mf_rollSelect
  .text.mf_setTempDo
-                0x0000104c       0xa8 src/menu.o
-                0x0000104c                mf_setTempDo
+                0x00000ff2       0xa8 src/menu.o
+                0x00000ff2                mf_setTempDo
  .text.mf_realTempSelect
-                0x000010f4        0xa src/menu.o
-                0x000010f4                mf_realTempSelect
+                0x0000109a        0x4 src/menu.o
+                0x0000109a                mf_realTempSelect
  .text.getMenuFunctionRecord.constprop.0
-                0x000010fe       0x6c src/menu.o
+                0x0000109e       0x6c src/menu.o
  .text.InitMenu
-                0x0000116a       0x12 src/menu.o
-                0x0000116a                InitMenu
+                0x0000110a       0x12 src/menu.o
+                0x0000110a                InitMenu
  .text.processMenu
-                0x0000117c       0xfe src/menu.o
-                0x0000117c                processMenu
+                0x0000111c       0xfe src/menu.o
+                0x0000111c                processMenu
  .text.u16toa_align_right
-                0x0000127a       0x40 src/my_string.o
-                0x0000127a                u16toa_align_right
+                0x0000121a       0x40 src/my_string.o
+                0x0000121a                u16toa_align_right
  .text.init_system_io
-                0x000012ba       0x62 src/pid1.o
-                0x000012ba                init_system_io
+                0x0000125a       0x62 src/pid1.o
+                0x0000125a                init_system_io
  .text.startup.main
-                0x0000131c      0x226 src/pid1.o
-                0x0000131c                main
+                0x000012bc      0x228 src/pid1.o
+                0x000012bc                main
  .text.setHeaterControl
-                0x00001542       0x1c src/power_control.o
-                0x00001542                setHeaterControl
+                0x000014e4       0x1c src/power_control.o
+                0x000014e4                setHeaterControl
  .text.forceHeaterControlUpdate
-                0x0000155e       0x1a src/power_control.o
-                0x0000155e                forceHeaterControlUpdate
+                0x00001500       0x1a src/power_control.o
+                0x00001500                forceHeaterControlUpdate
  .text.setMotorDirection
-                0x00001578       0x3c src/power_control.o
-                0x00001578                setMotorDirection
+                0x0000151a       0x42 src/power_control.o
+                0x0000151a                setMotorDirection
  .text.stopCycleRolling
-                0x000015b4       0x38 src/power_control.o
-                0x000015b4                stopCycleRolling
+                0x0000155c       0x38 src/power_control.o
+                0x0000155c                stopCycleRolling
  .text.isTopPointValid
-                0x000015ec       0x20 src/power_control.o
-                0x000015ec                isTopPointValid
+                0x00001594       0x20 src/power_control.o
+                0x00001594                isTopPointValid
  .text.isBottomPointValid
-                0x0000160c       0x20 src/power_control.o
-                0x0000160c                isBottomPointValid
+                0x000015b4       0x20 src/power_control.o
+                0x000015b4                isBottomPointValid
  .text.startCycleRolling
-                0x0000162c       0x30 src/power_control.o
-                0x0000162c                startCycleRolling
+                0x000015d4       0x30 src/power_control.o
+                0x000015d4                startCycleRolling
  .text.__vector_16
-                0x0000165c       0x44 src/power_control.o
-                0x0000165c                __vector_16
+                0x00001604       0x44 src/power_control.o
+                0x00001604                __vector_16
  .text.__vector_9
-                0x000016a0      0x1e0 src/power_control.o
-                0x000016a0                __vector_9
+                0x00001648      0x1ec src/power_control.o
+                0x00001648                __vector_9
  .text.processSoftTimer8b
-                0x00001880       0x58 src/soft_timer.o
-                0x00001880                processSoftTimer8b
+                0x00001834       0x58 src/soft_timer.o
+                0x00001834                processSoftTimer8b
  .text.SetBeeperFreq
-                0x000018d8       0x40 src/systimer.o
-                0x000018d8                SetBeeperFreq
+                0x0000188c       0x40 src/systimer.o
+                0x0000188c                SetBeeperFreq
  .text.StartBeep
-                0x00001918       0x18 src/systimer.o
-                0x00001918                StartBeep
+                0x000018cc       0x18 src/systimer.o
+                0x000018cc                StartBeep
  .text.resetAutoPowerOffCounter
-                0x00001930        0xe src/systimer.o
-                0x00001930                resetAutoPowerOffCounter
+                0x000018e4        0xe src/systimer.o
+                0x000018e4                resetAutoPowerOffCounter
  .text.processAutoPowerOff
-                0x0000193e       0x32 src/systimer.o
-                0x0000193e                processAutoPowerOff
+                0x000018f2       0x32 src/systimer.o
+                0x000018f2                processAutoPowerOff
  .text.__vector_3
-                0x00001970       0x6a src/systimer.o
-                0x00001970                __vector_3
+                0x00001924       0x6a src/systimer.o
+                0x00001924                __vector_3
  .text.USART_send
-                0x000019da        0xa src/usart.o
-                0x000019da                USART_send
+                0x0000198e        0xa src/usart.o
+                0x0000198e                USART_send
  .text.USART_sendstr
-                0x000019e4       0x24 src/usart.o
-                0x000019e4                USART_sendstr
+                0x00001998       0x24 src/usart.o
+                0x00001998                USART_sendstr
  .text.libgcc.div
-                0x00001a08       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodqi4.o)
-                0x00001a08                __udivmodqi4
+                0x000019bc       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodqi4.o)
+                0x000019bc                __udivmodqi4
  .text.libgcc.div
-                0x00001a20       0x28 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodhi4.o)
-                0x00001a20                __udivmodhi4
+                0x000019d4       0x28 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodhi4.o)
+                0x000019d4                __udivmodhi4
  .text.libgcc.div
-                0x00001a48       0x26 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodhi4.o)
-                0x00001a48                _div
-                0x00001a48                __divmodhi4
+                0x000019fc       0x26 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodhi4.o)
+                0x000019fc                _div
+                0x000019fc                __divmodhi4
  .text.libgcc.div
-                0x00001a6e       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodsi4.o)
-                0x00001a6e                __udivmodsi4
+                0x00001a22       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodsi4.o)
+                0x00001a22                __udivmodsi4
  .text.libgcc.div
-                0x00001ab2       0x36 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodsi4.o)
-                0x00001ab2                __divmodsi4
+                0x00001a66       0x36 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodsi4.o)
+                0x00001a66                __divmodsi4
  .text.libgcc.mul
-                0x00001ae8       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_umulhisi3.o)
-                0x00001ae8                __umulhisi3
+                0x00001a9c       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_umulhisi3.o)
+                0x00001a9c                __umulhisi3
  .text.libgcc.mul
-                0x00001b00        0xc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_usmulhisi3.o)
-                0x00001b00                __usmulhisi3
-                0x00001b02                __usmulhisi3_tail
+                0x00001ab4        0xc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_usmulhisi3.o)
+                0x00001ab4                __usmulhisi3
+                0x00001ab6                __usmulhisi3_tail
  .text.libgcc.mul
-                0x00001b0c       0x14 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_muluhisi3.o)
-                0x00001b0c                __muluhisi3
+                0x00001ac0       0x14 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_muluhisi3.o)
+                0x00001ac0                __muluhisi3
  .text.avr-libc
-                0x00001b20       0x20 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_block_atmega8.o)
-                0x00001b20                __eerd_block_m8
-                0x00001b24                __eerd_blraw_m8
-                0x00001b40                . = ALIGN (0x2)
+                0x00001ad4       0x20 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_block_atmega8.o)
+                0x00001ad4                __eerd_block_m8
+                0x00001ad8                __eerd_blraw_m8
+                0x00001af4                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00001b40        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
-                0x00001b40                _exit
-                0x00001b40                exit
+ .fini9         0x00001af4        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
+                0x00001af4                _exit
+                0x00001af4                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -701,11 +704,11 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00001b40        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
+ .fini0         0x00001af4        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
  *(.fini0)
-                0x00001b44                _etext = .
+                0x00001af8                _etext = .
 
-.data           0x00800060       0x64 load address 0x00001b44
+.data           0x00800060       0x66 load address 0x00001af8
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4/crtm8.o
@@ -719,101 +722,102 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  .data          0x00800074        0x4 src/menu.o
  .data          0x00800078        0x0 src/my_string.o
  .data          0x00800078        0x0 src/pid1.o
- .data          0x00800078        0x1 src/power_control.o
+ .data          0x00800078        0x2 src/power_control.o
                 0x00800078                p_state
- .data          0x00800079        0x0 src/soft_timer.o
- .data          0x00800079        0x4 src/systimer.o
-                0x00800079                menuUpdateTimer
- .data          0x0080007d        0x0 src/usart.o
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodqi4.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodhi4.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodhi4.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodsi4.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodsi4.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_copy_data.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_clear_bss.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_umulhisi3.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_usmulhisi3.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_muluhisi3.o)
- .data          0x0080007d        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_block_atmega8.o)
+ .data          0x0080007a        0x0 src/soft_timer.o
+ .data          0x0080007a        0x4 src/systimer.o
+                0x0080007a                menuUpdateTimer
+ .data          0x0080007e        0x0 src/usart.o
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodqi4.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodhi4.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodhi4.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodsi4.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodsi4.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_copy_data.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_clear_bss.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_umulhisi3.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_usmulhisi3.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_muluhisi3.o)
+ .data          0x0080007e        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_block_atmega8.o)
  *(.data*)
  *(.rodata)
- .rodata        0x0080007d       0x31 src/menu.o
+ .rodata        0x0080007e       0x2a src/menu.o
  *(.rodata*)
  .rodata.str1.1
-                0x008000ae        0x7 src/menu.o
+                0x008000a8        0xe src/menu.o
  .rodata.str1.1
-                0x008000b5        0xf src/pid1.o
+                0x008000b6        0xf src/pid1.o
  *(.gnu.linkonce.d*)
-                0x008000c4                . = ALIGN (0x2)
-                0x008000c4                _edata = .
-                0x008000c4                PROVIDE (__data_end, .)
+                0x008000c6                . = ALIGN (0x2)
+ *fill*         0x008000c5        0x1 
+                0x008000c6                _edata = .
+                0x008000c6                PROVIDE (__data_end, .)
 
-.bss            0x008000c4       0x90
-                0x008000c4                PROVIDE (__bss_start, .)
+.bss            0x008000c6       0x8f
+                0x008000c6                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x008000c4        0x8 src/adc.o
- .bss           0x008000cc        0x8 src/buttons.o
-                0x008000cc                button_action_long
-                0x008000cd                button_action_up_short
-                0x008000ce                button_action_rep
-                0x008000cf                button_action_down
-                0x008000d0                button_state
- .bss           0x008000d4        0xa src/control.o
- .bss           0x008000de        0x6 src/led_indic.o
- .bss           0x008000e4        0xe src/menu.o
- .bss           0x008000f2        0xe src/power_control.o
-                0x008000f2                activeRollCycle
-                0x008000f3                rollState
-                0x008000f4                heater_reg_cnt
-                0x008000f5                heaterState
-                0x008000f6                ctrl_heater
- .bss           0x00800100        0x6 src/systimer.o
-                0x00800100                minute_counter
-                0x00800101                autoPowerOffState
+ .bss           0x008000c6        0x8 src/adc.o
+ .bss           0x008000ce        0x8 src/buttons.o
+                0x008000ce                button_action_long
+                0x008000cf                button_action_up_short
+                0x008000d0                button_action_rep
+                0x008000d1                button_action_down
+                0x008000d2                button_state
+ .bss           0x008000d6        0x9 src/control.o
+ .bss           0x008000df        0x6 src/led_indic.o
+ .bss           0x008000e5        0xe src/menu.o
+ .bss           0x008000f3        0xe src/power_control.o
+                0x008000f3                activeRollCycle
+                0x008000f4                rollState
+                0x008000f5                heater_reg_cnt
+                0x008000f6                heaterState
+                0x008000f7                ctrl_heater
+ .bss           0x00800101        0x6 src/systimer.o
+                0x00800101                minute_counter
+                0x00800102                autoPowerOffState
  *(.bss*)
  *(COMMON)
- COMMON         0x00800106       0x1a src/adc.o
-                0x00800106                PIDsampledADC
-                0x00800108                raw_adc_buffer
-                0x0080011c                adc_normalized
-                0x0080011e                adc_celsius
- COMMON         0x00800120       0x21 src/control.o
-                0x00800120                cpoint1
-                0x00800121                dbg_PID_output
-                0x00800123                dbg_SetTempCelsius
-                0x00800124                dbg_PID_p_term
-                0x00800126                dbg_RealTempPID
-                0x00800128                setup_temp_value
-                0x0080012a                sound_enable
-                0x0080012b                dbg_PID_i_term
-                0x0080012d                rollCycleSet
-                0x0080012e                pid_dterm_buffer
-                0x00800136                dbg_PID_d_term
-                0x00800138                cpoint1_adc
-                0x0080013a                power_off_timeout
-                0x0080013b                dbg_RealTempCelsius
-                0x0080013c                cpoint2_adc
-                0x0080013e                dbg_SetTempPID
-                0x00800140                cpoint2
- COMMON         0x00800141       0x13 src/led_indic.o
-                0x00800141                extra_led_state
-                0x00800142                wStartPos
-                0x00800143                shifterState
-                0x00800144                bufStartPos
-                0x00800145                led_data_buffer
-                0x00800153                raw_button_state
-                0x00800154                PROVIDE (__bss_end, .)
-                0x00001b44                __data_load_start = LOADADDR (.data)
-                0x00001ba8                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800107       0x1a src/adc.o
+                0x00800107                PIDsampledADC
+                0x00800109                raw_adc_buffer
+                0x0080011d                adc_normalized
+                0x0080011f                adc_celsius
+ COMMON         0x00800121       0x21 src/control.o
+                0x00800121                cpoint1
+                0x00800122                dbg_PID_output
+                0x00800124                dbg_SetTempCelsius
+                0x00800125                dbg_PID_p_term
+                0x00800127                dbg_RealTempPID
+                0x00800129                setup_temp_value
+                0x0080012b                sound_enable
+                0x0080012c                dbg_PID_i_term
+                0x0080012e                rollCycleSet
+                0x0080012f                pid_dterm_buffer
+                0x00800137                dbg_PID_d_term
+                0x00800139                cpoint1_adc
+                0x0080013b                power_off_timeout
+                0x0080013c                dbg_RealTempCelsius
+                0x0080013d                cpoint2_adc
+                0x0080013f                dbg_SetTempPID
+                0x00800141                cpoint2
+ COMMON         0x00800142       0x13 src/led_indic.o
+                0x00800142                extra_led_state
+                0x00800143                wStartPos
+                0x00800144                shifterState
+                0x00800145                bufStartPos
+                0x00800146                led_data_buffer
+                0x00800154                raw_button_state
+                0x00800155                PROVIDE (__bss_end, .)
+                0x00001af8                __data_load_start = LOADADDR (.data)
+                0x00001b5e                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800154        0x0
-                0x00800154                PROVIDE (__noinit_start, .)
+.noinit         0x00800155        0x0
+                0x00800155                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800154                PROVIDE (__noinit_end, .)
-                0x00800154                _end = .
-                0x00800154                PROVIDE (__heap_start, .)
+                0x00800155                PROVIDE (__noinit_end, .)
+                0x00800155                _end = .
+                0x00800155                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0xa
  *(.eeprom*)
@@ -886,138 +890,138 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x3c0
+.debug_aranges  0x00000000      0x3c8
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x50 src/adc.o
  .debug_aranges
                 0x00000050       0x20 src/buttons.o
  .debug_aranges
-                0x00000070       0x40 src/control.o
+                0x00000070       0x48 src/control.o
  .debug_aranges
-                0x000000b0       0x98 src/led_indic.o
+                0x000000b8       0x98 src/led_indic.o
  .debug_aranges
-                0x00000148       0x48 src/led_indic_hw.o
+                0x00000150       0x48 src/led_indic_hw.o
  .debug_aranges
-                0x00000190       0xf0 src/menu.o
+                0x00000198       0xf0 src/menu.o
  .debug_aranges
-                0x00000280       0x20 src/my_string.o
+                0x00000288       0x20 src/my_string.o
  .debug_aranges
-                0x000002a0       0x28 src/pid1.o
+                0x000002a8       0x28 src/pid1.o
  .debug_aranges
-                0x000002c8       0x60 src/power_control.o
+                0x000002d0       0x60 src/power_control.o
  .debug_aranges
-                0x00000328       0x20 src/soft_timer.o
+                0x00000330       0x20 src/soft_timer.o
  .debug_aranges
-                0x00000348       0x50 src/systimer.o
+                0x00000350       0x50 src/systimer.o
  .debug_aranges
-                0x00000398       0x28 src/usart.o
+                0x000003a0       0x28 src/usart.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x39ed
+.debug_info     0x00000000     0x39c9
  *(.debug_info)
  .debug_info    0x00000000      0x32e src/adc.o
  .debug_info    0x0000032e      0x16d src/buttons.o
- .debug_info    0x0000049b      0x7d7 src/control.o
- .debug_info    0x00000c72      0x8c1 src/led_indic.o
- .debug_info    0x00001533      0x21c src/led_indic_hw.o
- .debug_info    0x0000174f      0xf77 src/menu.o
- .debug_info    0x000026c6       0xda src/my_string.o
- .debug_info    0x000027a0      0x8f6 src/pid1.o
- .debug_info    0x00003096      0x3cc src/power_control.o
- .debug_info    0x00003462      0x161 src/soft_timer.o
- .debug_info    0x000035c3      0x348 src/systimer.o
- .debug_info    0x0000390b       0xe2 src/usart.o
+ .debug_info    0x0000049b      0x7c0 src/control.o
+ .debug_info    0x00000c5b      0x8c1 src/led_indic.o
+ .debug_info    0x0000151c      0x21c src/led_indic_hw.o
+ .debug_info    0x00001738      0xf5e src/menu.o
+ .debug_info    0x00002696       0xda src/my_string.o
+ .debug_info    0x00002770      0x909 src/pid1.o
+ .debug_info    0x00003079      0x3dd src/power_control.o
+ .debug_info    0x00003456      0x161 src/soft_timer.o
+ .debug_info    0x000035b7      0x330 src/systimer.o
+ .debug_info    0x000038e7       0xe2 src/usart.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000     0x134b
+.debug_abbrev   0x00000000     0x1320
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x1a5 src/adc.o
  .debug_abbrev  0x000001a5       0x98 src/buttons.o
- .debug_abbrev  0x0000023d      0x231 src/control.o
- .debug_abbrev  0x0000046e      0x2a9 src/led_indic.o
- .debug_abbrev  0x00000717      0x154 src/led_indic_hw.o
- .debug_abbrev  0x0000086b      0x341 src/menu.o
- .debug_abbrev  0x00000bac       0x89 src/my_string.o
- .debug_abbrev  0x00000c35      0x1e4 src/pid1.o
- .debug_abbrev  0x00000e19      0x1e2 src/power_control.o
- .debug_abbrev  0x00000ffb       0xba src/soft_timer.o
- .debug_abbrev  0x000010b5      0x1e8 src/systimer.o
- .debug_abbrev  0x0000129d       0xae src/usart.o
+ .debug_abbrev  0x0000023d      0x215 src/control.o
+ .debug_abbrev  0x00000452      0x2a9 src/led_indic.o
+ .debug_abbrev  0x000006fb      0x154 src/led_indic_hw.o
+ .debug_abbrev  0x0000084f      0x341 src/menu.o
+ .debug_abbrev  0x00000b90       0x89 src/my_string.o
+ .debug_abbrev  0x00000c19      0x1e4 src/pid1.o
+ .debug_abbrev  0x00000dfd      0x1e2 src/power_control.o
+ .debug_abbrev  0x00000fdf       0xba src/soft_timer.o
+ .debug_abbrev  0x00001099      0x1d9 src/systimer.o
+ .debug_abbrev  0x00001272       0xae src/usart.o
 
-.debug_line     0x00000000     0x17bd
+.debug_line     0x00000000     0x17c8
  *(.debug_line)
  .debug_line    0x00000000      0x176 src/adc.o
  .debug_line    0x00000176      0x111 src/buttons.o
- .debug_line    0x00000287      0x31e src/control.o
- .debug_line    0x000005a5      0x361 src/led_indic.o
- .debug_line    0x00000906      0x206 src/led_indic_hw.o
- .debug_line    0x00000b0c      0x3ce src/menu.o
- .debug_line    0x00000eda       0xf6 src/my_string.o
- .debug_line    0x00000fd0      0x27b src/pid1.o
- .debug_line    0x0000124b      0x1f4 src/power_control.o
- .debug_line    0x0000143f       0xfe src/soft_timer.o
- .debug_line    0x0000153d      0x18e src/systimer.o
- .debug_line    0x000016cb       0xf2 src/usart.o
+ .debug_line    0x00000287      0x329 src/control.o
+ .debug_line    0x000005b0      0x361 src/led_indic.o
+ .debug_line    0x00000911      0x206 src/led_indic_hw.o
+ .debug_line    0x00000b17      0x3c9 src/menu.o
+ .debug_line    0x00000ee0       0xf6 src/my_string.o
+ .debug_line    0x00000fd6      0x27c src/pid1.o
+ .debug_line    0x00001252      0x1f8 src/power_control.o
+ .debug_line    0x0000144a       0xfe src/soft_timer.o
+ .debug_line    0x00001548      0x18e src/systimer.o
+ .debug_line    0x000016d6       0xf2 src/usart.o
 
-.debug_frame    0x00000000      0x8d4
+.debug_frame    0x00000000      0x8d0
  *(.debug_frame)
  .debug_frame   0x00000000      0x134 src/adc.o
  .debug_frame   0x00000134       0x24 src/buttons.o
- .debug_frame   0x00000158       0x94 src/control.o
- .debug_frame   0x000001ec      0x15c src/led_indic.o
- .debug_frame   0x00000348       0x74 src/led_indic_hw.o
- .debug_frame   0x000003bc      0x270 src/menu.o
- .debug_frame   0x0000062c       0x30 src/my_string.o
- .debug_frame   0x0000065c       0x44 src/pid1.o
- .debug_frame   0x000006a0      0x100 src/power_control.o
- .debug_frame   0x000007a0       0x24 src/soft_timer.o
- .debug_frame   0x000007c4       0xcc src/systimer.o
- .debug_frame   0x00000890       0x44 src/usart.o
+ .debug_frame   0x00000158       0xa0 src/control.o
+ .debug_frame   0x000001f8      0x15c src/led_indic.o
+ .debug_frame   0x00000354       0x74 src/led_indic_hw.o
+ .debug_frame   0x000003c8      0x260 src/menu.o
+ .debug_frame   0x00000628       0x30 src/my_string.o
+ .debug_frame   0x00000658       0x44 src/pid1.o
+ .debug_frame   0x0000069c      0x100 src/power_control.o
+ .debug_frame   0x0000079c       0x24 src/soft_timer.o
+ .debug_frame   0x000007c0       0xcc src/systimer.o
+ .debug_frame   0x0000088c       0x44 src/usart.o
 
-.debug_str      0x00000000      0xeef
+.debug_str      0x00000000      0xede
  *(.debug_str)
  .debug_str     0x00000000      0x1eb src/adc.o
                                 0x22e (size before relaxing)
  .debug_str     0x000001eb       0xeb src/buttons.o
                                 0x1ab (size before relaxing)
- .debug_str     0x000002d6      0x2c6 src/control.o
-                                0x495 (size before relaxing)
- .debug_str     0x0000059c      0x327 src/led_indic.o
+ .debug_str     0x000002d6      0x2bd src/control.o
+                                0x48c (size before relaxing)
+ .debug_str     0x00000593      0x32f src/led_indic.o
                                 0x465 (size before relaxing)
- .debug_str     0x000008c3       0x22 src/led_indic_hw.o
+ .debug_str     0x000008c2       0x22 src/led_indic_hw.o
                                 0x1ab (size before relaxing)
- .debug_str     0x000008e5      0x3c1 src/menu.o
+ .debug_str     0x000008e4      0x3c1 src/menu.o
                                 0x621 (size before relaxing)
- .debug_str     0x00000ca6       0x1d src/my_string.o
+ .debug_str     0x00000ca5       0x1d src/my_string.o
                                  0xef (size before relaxing)
- .debug_str     0x00000cc3       0x91 src/pid1.o
-                                0x3c0 (size before relaxing)
- .debug_str     0x00000d54       0xd2 src/power_control.o
-                                0x2d1 (size before relaxing)
- .debug_str     0x00000e26       0x20 src/soft_timer.o
+ .debug_str     0x00000cc2       0x91 src/pid1.o
+                                0x3d4 (size before relaxing)
+ .debug_str     0x00000d53       0xe1 src/power_control.o
+                                0x2e0 (size before relaxing)
+ .debug_str     0x00000e34       0x20 src/soft_timer.o
                                 0x125 (size before relaxing)
- .debug_str     0x00000e46       0x9a src/systimer.o
-                                0x249 (size before relaxing)
- .debug_str     0x00000ee0        0xf src/usart.o
+ .debug_str     0x00000e54       0x7b src/systimer.o
+                                0x22a (size before relaxing)
+ .debug_str     0x00000ecf        0xf src/usart.o
                                  0xdc (size before relaxing)
 
-.debug_loc      0x00000000     0x1b78
+.debug_loc      0x00000000     0x1b19
  *(.debug_loc)
  .debug_loc     0x00000000      0x330 src/adc.o
  .debug_loc     0x00000330       0x69 src/buttons.o
- .debug_loc     0x00000399      0x225 src/control.o
- .debug_loc     0x000005be      0x7de src/led_indic.o
- .debug_loc     0x00000d9c       0xf6 src/led_indic_hw.o
- .debug_loc     0x00000e92      0x791 src/menu.o
- .debug_loc     0x00001623       0xca src/my_string.o
- .debug_loc     0x000016ed       0x47 src/pid1.o
- .debug_loc     0x00001734      0x1b2 src/power_control.o
- .debug_loc     0x000018e6       0x47 src/soft_timer.o
- .debug_loc     0x0000192d      0x1ba src/systimer.o
- .debug_loc     0x00001ae7       0x91 src/usart.o
+ .debug_loc     0x00000399      0x20d src/control.o
+ .debug_loc     0x000005a6      0x7de src/led_indic.o
+ .debug_loc     0x00000d84       0xf6 src/led_indic_hw.o
+ .debug_loc     0x00000e7a      0x74a src/menu.o
+ .debug_loc     0x000015c4       0xca src/my_string.o
+ .debug_loc     0x0000168e       0x47 src/pid1.o
+ .debug_loc     0x000016d5      0x1b2 src/power_control.o
+ .debug_loc     0x00001887       0x47 src/soft_timer.o
+ .debug_loc     0x000018ce      0x1ba src/systimer.o
+ .debug_loc     0x00001a88       0x91 src/usart.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -1025,20 +1029,20 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x300
+.debug_ranges   0x00000000      0x308
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x40 src/adc.o
  .debug_ranges  0x00000040       0x10 src/buttons.o
- .debug_ranges  0x00000050       0x30 src/control.o
- .debug_ranges  0x00000080       0x88 src/led_indic.o
- .debug_ranges  0x00000108       0x38 src/led_indic_hw.o
- .debug_ranges  0x00000140       0xe0 src/menu.o
- .debug_ranges  0x00000220       0x10 src/my_string.o
- .debug_ranges  0x00000230       0x18 src/pid1.o
- .debug_ranges  0x00000248       0x50 src/power_control.o
- .debug_ranges  0x00000298       0x10 src/soft_timer.o
- .debug_ranges  0x000002a8       0x40 src/systimer.o
- .debug_ranges  0x000002e8       0x18 src/usart.o
+ .debug_ranges  0x00000050       0x38 src/control.o
+ .debug_ranges  0x00000088       0x88 src/led_indic.o
+ .debug_ranges  0x00000110       0x38 src/led_indic_hw.o
+ .debug_ranges  0x00000148       0xe0 src/menu.o
+ .debug_ranges  0x00000228       0x10 src/my_string.o
+ .debug_ranges  0x00000238       0x18 src/pid1.o
+ .debug_ranges  0x00000250       0x50 src/power_control.o
+ .debug_ranges  0x000002a0       0x10 src/soft_timer.o
+ .debug_ranges  0x000002b0       0x40 src/systimer.o
+ .debug_ranges  0x000002f0       0x18 src/usart.o
 
 .debug_macro
  *(.debug_macro)

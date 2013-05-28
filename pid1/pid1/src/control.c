@@ -69,7 +69,8 @@ int16_t dbg_PID_output;
 void processRollControl(void)
 {	
 	uint8_t beepState = 0;
-	static uint8_t beepMask = 0x00;
+//	static uint8_t beepMask = 0x00;
+//	uint8_t nextBeepMask = 0xFF;
 	static uint8_t force_rotate = 0;
 	
 	// Process auto power off control
@@ -85,15 +86,17 @@ void processRollControl(void)
 	else
 	{
 		// Control direction by buttons
-		if ((button_action_down) & BD_ROTFWD)
+		if (button_action_down & BD_ROTFWD)
 		{
 			setMotorDirection(ROLL_FWD);	
 			beepState |= 0x01;			// pressed FWD button
+	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}		
 		else if (button_action_down & BD_ROTREV)
 		{
 			setMotorDirection(ROLL_REV);
 			beepState |= 0x02;			// pressed REV button
+	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}		
 		else if (button_action_long & BD_CYCLE)
 		{
@@ -105,6 +108,7 @@ void processRollControl(void)
 			// Auto power off mode was exited by pressing some other button, not direction buttons
 			// Start roll, but do not beep in this case
 			setMotorDirection(force_rotate);
+	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}
 		force_rotate = 0;		// First normal pass will clear 
 			
@@ -137,7 +141,7 @@ void processRollControl(void)
 			beepState |= 0x80;	
 		}		
 			
-		beepState &= beepMask;
+		//beepState &= beepMask;
 			
 		if (beepState & 0x80)		// Roll cycle done
 		{
@@ -161,11 +165,7 @@ void processRollControl(void)
 		}			
 			
 		// Apply mask to next sound events
-		beepMask = 0xFF;
-		// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
-		if (beepState & 0x03)	
-			beepMask &= ~0x04;	
-			
+		//beepMask = nextBeepMask;	
 	}
 
 	// Indicate direction by LEDs
@@ -180,7 +180,6 @@ void processRollControl(void)
 
 void processHeaterControl(void)
 {
-	static uint8_t heaterEnabled = 0;
 	static uint16_t set_value_adc;		// static for debug
 	static uint16_t pid_output;			// static for debug
 	
@@ -188,7 +187,7 @@ void processHeaterControl(void)
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
 	{
-		heaterEnabled ^= 0x01;
+		heaterState ^= HEATER_ENABLED;
 		// Make heater controller set update flag on next call
 		forceHeaterControlUpdate();
 	}
@@ -196,7 +195,7 @@ void processHeaterControl(void)
 	// Process auto power off control
 	if (autoPowerOffState & AUTO_POFF_ACTIVE)
 	{
-		heaterEnabled = 0;
+		heaterState &= ~HEATER_ENABLED;
 	}		
 	
 	
@@ -210,7 +209,7 @@ void processHeaterControl(void)
 		pid_output = processPID(set_value_adc,PIDsampledADC);
 			
 		// Heater control is updated only when flag is set, even if heater must be powered OFF
-		if (heaterEnabled)
+		if (heaterState & HEATER_ENABLED)
 			setHeaterControl(pid_output);	// Flag is cleared automatically
 		else
 			setHeaterControl(0);
@@ -218,7 +217,7 @@ void processHeaterControl(void)
 		
 	
 	//------- Debug --------//
-	if (heaterEnabled)
+	if (heaterState & HEATER_ENABLED)
 	{
 		setExtraLeds(LED_HEATER);
 		dbg_SetTempCelsius = setup_temp_value;
@@ -324,7 +323,7 @@ void processHeaterAlerts(void)
 	// Indicate reaching of desired temperature
 	if ( (adc_celsius > setup_temp_value - tempAlertRange) && (adc_celsius < setup_temp_value + tempAlertRange) )
 	{
-		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterEnabled))
+		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterState & HEATER_ENABLED))
 		{
 			SetBeeperFreq(1000);
 			StartBeep(400);
@@ -341,7 +340,7 @@ void processHeaterAlerts(void)
 	// This alert is done regardless of global sound enable
 	// TODO
 
-]
+}
 
 
 void restoreGlobalParams(void)

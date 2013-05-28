@@ -120,8 +120,6 @@ void processAutoPowerOff(void)
 
 ISR(TIMER2_COMP_vect)
 {	
-	static uint16_t poff_timer_low = 0;
-	static uint8_t poff_timer_high = 0;
 	
 	// Manage beeper
 	if (beep_cnt)
