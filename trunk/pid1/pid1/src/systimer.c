@@ -99,7 +99,7 @@ void processAutoPowerOff(void)
 	if (systick_counter == SYSTICKS_PER_SECOND * 5 - 1)
 	{
 		systick_counter = 0;
-		if (minute_counter != MAX_POWEROFF_TIMEOUT)
+		if (minute_counter != MAX_POWEROFF_TIMEOUT - 1)
 		{
 			minute_counter++;
 		}

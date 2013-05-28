@@ -65,122 +65,115 @@ int16_t dbg_PID_i_term;
 int16_t dbg_PID_output;
 
 
-// TODO: add block to buttons when at auto power off state!!! - to prevent unexpected effects
-
 // Function to control motor rotation
 void processRollControl(void)
 {	
 	uint8_t beepState = 0;
 	static uint8_t beepMask = 0x00;
+	static uint8_t force_rotate = 0;
 	
 	// Process auto power off control
-	if (autoPowerOffState & AUTO_POFF_ENTER)
+	if (autoPowerOffState & AUTO_POFF_ACTIVE)
 	{
-		// Disable CYCLE mode
 		stopCycleRolling(1);	
-		goto INDICATE_ROLLSTATE;	
-	}
-	else if (autoPowerOffState & AUTO_POFF_ACTIVE)
-	{
 		if (adc_celsius <= POFF_MOTOR_TRESHOLD)
 		{
-			setMotorDirection(0);		// Stop the motor
-		}
-		goto INDICATE_ROLLSTATE;
-	}
-	else if (autoPowerOffState & AUTO_POFF_LEAVE)
-	{
-		if (!(button_action_down & (BD_ROTFWD | BD_ROTREV)))
-		{
-			// Restore direction - always start rotating forward when leaving auto power off mode
-			setMotorDirection(BD_ROTFWD);
+			force_rotate = ROLL_FWD;		// Default direction
+			setMotorDirection(0);			// Stop the motor
 		}
 	}
-	
-	// Control direction by buttons
-	if (button_action_down & BD_ROTFWD)
+	else
 	{
-		setMotorDirection(ROLL_FWD);	
-		beepState |= 0x01;			// pressed FWD button
-	}		
-	else if (button_action_down & BD_ROTREV)
-	{
-		setMotorDirection(ROLL_REV);
-		beepState |= 0x02;			// pressed REV button
-	}		
-	else if (button_action_long & BD_CYCLE)
-	{
-		stopCycleRolling(1);		// Reset points and disabled CYCLE mode (if was enabled)
-		beepState |= 0x08;			// reset of points by long pressing of ROLL button
-	}
-		
-		
-	if (button_action_up_short & BD_CYCLE)
-	{
-		if (rollState & ROLL_CYCLE)
+		// Control direction by buttons
+		if ((button_action_down) & BD_ROTFWD)
 		{
-			stopCycleRolling(0);
-			beepState |= 0x20;		// stopped cycle
+			setMotorDirection(ROLL_FWD);	
+			beepState |= 0x01;			// pressed FWD button
+		}		
+		else if (button_action_down & BD_ROTREV)
+		{
+			setMotorDirection(ROLL_REV);
+			beepState |= 0x02;			// pressed REV button
+		}		
+		else if (button_action_long & BD_CYCLE)
+		{
+			stopCycleRolling(1);		// Reset points and disable CYCLE mode (if was enabled)
+			beepState |= 0x08;			// reset of points by long pressing of ROLL button
 		}
-		else if (startCycleRolling())
+		else if (force_rotate)
 		{
-			beepState |= 0x10;		// started cycle
+			// Auto power off mode was exited by pressing some other button, not direction buttons
+			// Start roll, but do not beep in this case
+			setMotorDirection(force_rotate);
 		}
-		else
+		force_rotate = 0;		// First normal pass will clear 
+			
+		if (button_action_up_short & BD_CYCLE)
 		{
-			beepState |= 0x40;		// failed to start cycle
+			if (rollState & ROLL_CYCLE)
+			{
+				stopCycleRolling(0);
+				beepState |= 0x20;		// stopped cycle
+			}
+			else if (startCycleRolling())
+			{
+				beepState |= 0x10;		// started cycle
+			}
+			else
+			{
+				beepState |= 0x40;		// failed to start cycle
+			}			
+		}		
+			
+		if (rollState & ROLL_DIR_CHANGED)
+		{
+			rollState &= ~ROLL_DIR_CHANGED;
+			beepState |= 0x04;	
+		}
+			
+		if (rollState & CYCLE_ROLL_DONE)
+		{
+			rollState &= ~CYCLE_ROLL_DONE;
+			beepState |= 0x80;	
+		}		
+			
+		beepState &= beepMask;
+			
+		if (beepState & 0x80)		// Roll cycle done
+		{
+			SetBeeperFreq(1000);
+			StartBeep(200);
+		}		
+		else if (beepState & 0x40)	// Roll cycle start fail
+		{
+			SetBeeperFreq(500);
+			StartBeep(50);
+		} 
+		else if (beepState & 0x08)	// Reset points
+		{
+			SetBeeperFreq(800);
+			StartBeep(50);
+		}							// Other
+		else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
+		{
+			SetBeeperFreq(1000);
+			StartBeep(50);	
 		}			
-	}		
-		
-	if (rollState & ROLL_DIR_CHANGED)
-	{
-		rollState &= ~ROLL_DIR_CHANGED;
-		beepState |= 0x04;	
+			
+		// Apply mask to next sound events
+		beepMask = 0xFF;
+		// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
+		if (beepState & 0x03)	
+			beepMask &= ~0x04;	
+			
 	}
-		
-	if (rollState & CYCLE_ROLL_DONE)
-	{
-		rollState &= ~CYCLE_ROLL_DONE;
-		beepState |= 0x80;	
-	}		
-		
-	beepState &= beepMask;
-		
-	if (beepState & 0x80)		// Roll cycle done
-	{
-		SetBeeperFreq(1000);
-		StartBeep(200);
-	}		
-	else if (beepState & 0x40)	// Roll cycle start fail
-	{
-		SetBeeperFreq(500);
-		StartBeep(50);
-	} 
-	else if (beepState & 0x08)	// Reset points
-	{
-		SetBeeperFreq(800);
-		StartBeep(50);
-	}							// Other
-	else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
-	{
-		SetBeeperFreq(1000);
-		StartBeep(50);	
-	}			
-		
-	// Apply mask to next sound events
-	beepMask = 0xFF;
-	// Disable beep from DIR_CHANGED on next call if direction buttons have been pressed
-	if (beepState & 0x03)	
-		beepMask &= ~0x04;	
 
-INDICATE_ROLLSTATE:
 	// Indicate direction by LEDs
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);
 	if (rollState & ROLL_FWD)
 		setExtraLeds(LED_ROTFWD);
 	else if (rollState & ROLL_REV)
 		setExtraLeds(LED_ROTREV);
-		
 }
 
 
@@ -188,7 +181,6 @@ INDICATE_ROLLSTATE:
 void processHeaterControl(void)
 {
 	static uint8_t heaterEnabled = 0;
-	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
 	static uint16_t set_value_adc;		// static for debug
 	static uint16_t pid_output;			// static for debug
 	
@@ -207,23 +199,7 @@ void processHeaterControl(void)
 		heaterEnabled = 0;
 	}		
 	
-	// Indicate reaching of desired temperature
-	if ( (adc_celsius > setup_temp_value - tempAlertRange) && (adc_celsius < setup_temp_value + tempAlertRange) )
-	{
-		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterEnabled))
-		{
-			SetBeeperFreq(1000);
-			StartBeep(400);
-		}
-		// Add some hysteresis
-		tempAlertRange = TEMP_ALERT_RANGE + TEMP_ALERT_HYST;
-	}			
-	else
-	{
-		tempAlertRange = TEMP_ALERT_RANGE;
-	}		
 	
-
 	// Check if heater control should be updated
 	// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms
 	if (heaterState & READY_TO_UPDATE_HEATER)
@@ -338,6 +314,34 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 }
 
 
+// Function to process all heater alerts:
+//	- getting near to desired temperature
+//	- continuous heating when disabled
+void processHeaterAlerts(void)
+{
+	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
+	
+	// Indicate reaching of desired temperature
+	if ( (adc_celsius > setup_temp_value - tempAlertRange) && (adc_celsius < setup_temp_value + tempAlertRange) )
+	{
+		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterEnabled))
+		{
+			SetBeeperFreq(1000);
+			StartBeep(400);
+		}
+		// Add some hysteresis
+		tempAlertRange = TEMP_ALERT_RANGE + TEMP_ALERT_HYST;
+	}			
+	else
+	{
+		tempAlertRange = TEMP_ALERT_RANGE;
+	}
+
+	// Growing temperature with heater disabled alert 
+	// This alert is done regardless of global sound enable
+	// TODO
+
+]
 
 
 void restoreGlobalParams(void)
