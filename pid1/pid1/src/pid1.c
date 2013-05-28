@@ -171,6 +171,7 @@ int main(void)
 				SetBeeperFreq(1000);
 				StartBeep(40);
 			}	
+			// Direction control buttons sounds get special processing at processRollControl()
 			
 			// Process automatic power off - it is important to call
 			// this function before menu and power controls processing
@@ -189,6 +190,8 @@ int main(void)
 			// Process heater regulation
 			processHeaterControl();
 		
+			// Process heater events and warnings
+			processHeaterAlerts();
 
 			// Process log
 			if (menuUpdateTimer.FA_TGL)

@@ -84,7 +84,7 @@ extern int16_t dbg_PID_output;
 
 void processRollControl(void);
 void processHeaterControl(void);
-
+void processHeaterAlerts(void);
 void restoreGlobalParams(void);
 void exitPowerOff(void);
 

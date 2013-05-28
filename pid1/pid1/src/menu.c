@@ -88,7 +88,7 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	// Auto power off jumps - only from states without timeout, excluding calibration
 	{ mi_REALTEMP, 	GOTO_POFF,						mi_POFFACT,						0	},	
 	{ mi_ROLL, 		GOTO_POFF,						mi_POFFACT,						0	},	
-	{ mi_POFFACT, 	BD_UP | BD_DOWN | BS_MENU | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE, mi_REALTEMP,	0	}
+	{ mi_POFFACT, 	BD_UP | BD_DOWN | BS_MENU | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL, mi_REALTEMP,	0	}
  };
  
 
@@ -323,9 +323,6 @@ static void restartMenuTimer(void)
 void mf_realTempSelect(void)
 {
 	setExtraLeds(LED_TEMP);
-	// !!! This is the only one auto power off exit menu item !!!
-	// !!! Clear LEAVE flag here !!!
-	autoPowerOffState = 0;
 }
 
 void mf_realTempDo(void)
@@ -533,21 +530,18 @@ void mf_autopoffDo(void)
 void mf_actpoffSelect(void)
 {
 	clearExtraLeds(LED_TEMP | LED_ROLL);
-	autoPowerOffState = AUTO_POFF_ENTER;
+	autoPowerOffState = AUTO_POFF_ACTIVE;
 }
 
 // Indication of power off mode
 void mf_actpoffDo(void)
 {
-	autoPowerOffState = AUTO_POFF_ACTIVE;
-	char str[] = {' ',' ',' ','O','F','F',0};
-	printLedBuffer(0,str);
+	printLedBuffer(0,"   OFF");
 }
 
 void mf_actpoffLeave(void)
 {
-	autoPowerOffState = AUTO_POFF_LEAVE;
-	resetAutoPowerOffCounter();
+	autoPowerOffState = 0;	
 }
 
 //---------------------------------------------//
