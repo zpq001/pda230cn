@@ -59,7 +59,8 @@ static uint8_t decode_led_char(char c)
 		case '-': return (SEGG);
 		case '_': return (SEGD);
 		case ' ': return 0;
-		case 0xB0:	return (SEGA | SEGB | SEGF | SEGG);		// Degree sin
+		case 0xB0:	return (SEGA | SEGB | SEGF | SEGG);		// Degree sign
+		case 'A': return (SEGA | SEGB | SEGC | SEGE | SEGF | SEGG);
 		case 'C':	return (SEGA | SEGD | SEGE | SEGF);
 		case 'F':	return (SEGA | SEGE | SEGF | SEGG);
 		case 'N':	return (SEGC | SEGE | SEGG);

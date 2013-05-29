@@ -14,8 +14,9 @@
 
 
 uint16_t adc_normalized;			// normalized (used for calibration) ADC value
-uint16_t adc_celsius;				// celsius degree value (used for indication / calibration)
+uint16_t adc_celsius;				// Celsius degree value (used for indication / calibration)
 uint16_t PIDsampledADC;
+uint16_t adc_oversampled;
 
 uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC ring buffer
 RingBufU16_t ringBufADC = {
@@ -60,8 +61,13 @@ void update_normalized_adc()
 	ACSR &= ~(1<<ACIE);	
 	// Get normalized mean window summ
 	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
+	adc_oversampled = ringBufADC.summ >> 2;
 	// Enable interrupts from ADC
 	ACSR |= (1<<ACIE);
+}
+
+void update_Celsius(void)
+{
 	// Convert to Celsius degree
 	adc_celsius = conv_ADC_to_Celsius(adc_normalized);
 }

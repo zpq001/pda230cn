@@ -11,6 +11,7 @@
 
 #define MENU_UPDATE_INTERVAL 	50	// in units of systimer ticks
 #define SYSTICKS_PER_SECOND		(1000 / MENU_UPDATE_INTERVAL)
+#define CELSIUS_UDPATE_INTERVAL	4	// in units of MENU_UPDATE_INTERVAL
 
 // Auto power off flags
 #define AUTO_POFF_ACTIVE	0x01
