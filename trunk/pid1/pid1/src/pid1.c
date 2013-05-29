@@ -43,7 +43,7 @@ extern volatile SoftTimer8b_t menuUpdateTimer;
 void init_system_io()
 {
 	// Setup Port D
-	PORTD = 0; //(1<<PD_SYNCA | 1<<PD_SYNCB);
+	PORTD = (1<<PD_SYNCA | 1<<PD_SYNCB);
 	DDRD = (1<<PD_TXD | 1<<PD_M1 | 1<<PD_M2 | 1<<PD_HEATER | 1<<PD_HEAT_INDIC );
 	
 	// Setup Port B
@@ -56,7 +56,6 @@ void init_system_io()
 	// Setup timer0
 	// 1/1024 prescaler, T=64us @16MHz
 	TCCR0 = (1<<CS02 | 0<<CS01 | 1<<CS00);
-	// Start 256 * 64us = 16384us interval
 	TCNT0 = 0;
 	// Clear interrupt flag
 	TIFR |= (1<<TOV0);
@@ -78,7 +77,7 @@ void init_system_io()
 
 	// Setup AC sync comparator
 	// Interrupt on output toggle
-	ACSR |= (1<<ACI);
+	//ACSR |= (1<<ACI);		// Will be cleared just before sei
 	ACSR = (1<<ACIE | 0<<ACIS1 | 0<<ACIS0);
 	
 	// Setup ADC
@@ -114,6 +113,7 @@ int main(void)
 	char str[10];
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
+	uint8_t celsiusUpdateCounter = 0;
 	
 	// Initialize MCU IO
 	init_system_io();
@@ -123,24 +123,25 @@ int main(void)
 	calculateCoeffs();
 	// Initialize LED indicator
 	initLedIndicator();
-	// Initialize menu
-	InitMenu();
-	// Enable interrupts
+	// Clear comparator interrupt flag to prevent false triggering
+	ACSR |= (1<<ACI);
 	sei();
 	// Safety delay for power part
 	_delay_ms(50);
 	// Check AC line
-	while(p_state == 0x0F) 	
+	if(p_state == 0x0F) 	
 	{
 		// Power control state machine has not changed - sync has not been detected
 		printLedBuffer(0,"AC ERR");
-		_delay_ms(50);
+		_delay_ms(1000);
 	}
-	// If we get here, AC line is OK and at least one ADC count has been sampled.
+	// Initialize menu
+	InitMenu();
 	// Beep
 	SetBeeperFreq(1000);
 	StartBeep(200);
-	// Init heater PID control internal structures
+	// When we get here, few ADC counts have been sampled
+	// First call to PID controller initializes it's internal structures
 	forceHeaterControlUpdate();
 	_delay_ms(100);
 	// Start rotating
@@ -153,9 +154,17 @@ int main(void)
 		
 		if (menuUpdateTimer.FOvfl)
 		{
-			// Get new temperature measurement - new value is pushed into ring buffer
-			// once every AC line period
-			update_normalized_adc();			// TODO: slow down temperature change (say once per 200-400ms)
+			
+			// Get new temperature measurement
+			update_normalized_adc();			
+		
+			// Update indicated Celsius degree
+			if (celsiusUpdateCounter == 0)	
+			{
+				update_Celsius();
+				celsiusUpdateCounter = CELSIUS_UDPATE_INTERVAL;
+			}				
+			celsiusUpdateCounter--;
 			
 			// Get new button state
 			process_buttons();
@@ -202,6 +211,12 @@ int main(void)
 				// Function is called every 50ms
 				// UART message is sent every second call (once per 100ms)
 				
+				u16toa_align_right(adc_oversampled,str,6,' ');				// Displayed temp, Celsius
+				USART_sendstr(str);
+				
+				
+				
+		/*		
 				u16toa_align_right(adc_celsius,str,6,' ');				// Displayed temp, Celsius
 				USART_sendstr(str);
 				
@@ -272,7 +287,7 @@ int main(void)
 				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (PID output, synchronized)
 				USART_sendstr(str);
 				
-				
+*/				
 				USART_sendstr("\n\r");
 				
 				

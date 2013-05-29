@@ -133,6 +133,9 @@ ISR(TIMER2_COMP_vect)
 	// Process menu update timer
 	processSoftTimer8b(&menuUpdateTimer);	
 	
+	// Start ADC conversion 
+	ADCSRA |= (1<<ADSC);
+	
 }
 
 

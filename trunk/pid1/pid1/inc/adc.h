@@ -24,7 +24,7 @@ typedef struct {
 
 
 
-#define ADC_BUFFER_LENGTH 10
+#define ADC_BUFFER_LENGTH 20
 #define COEFF_SCALE	1000
 
 
@@ -32,11 +32,13 @@ extern uint16_t adc_normalized;
 extern uint16_t adc_celsius;
 extern RingBufU16_t ringBufADC;
 extern uint16_t PIDsampledADC;
+extern uint16_t adc_oversampled;
 
 void calculateCoeffs(void);
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value);
 uint16_t conv_Celsius_to_ADC(uint16_t degree_value);
-void update_normalized_adc();
+void update_normalized_adc(void);
+void update_Celsius(void);
 
 void addToRingU16(RingBufU16_t* bptr, uint16_t sample);
 uint16_t getNormalizedRingU16(RingBufU16_t* bptr);

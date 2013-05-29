@@ -33,8 +33,8 @@ static uint8_t dirChangedMask = 0xFF;
 // p_state bits:
 //	[7] <- half-period toggling flag
 // [3:0] <- state
-uint8_t p_state = 0x0F;			// default error state - if AC line sync is present, 
-								// it will be cleared at first comparator ISR
+uint8_t p_state = 0x0F;			// default state - if AC line sync is present, 
+								// it will be cleared at first comparator ISR call
 
 
 
@@ -254,9 +254,6 @@ ISR(TIMER0_OVF_vect)
 		// QUATER_PERIOD_TIME finished	
 		case 0x01:	
 			TCNT0 = 256 - (SYNC_IGNORE_TIME - QUATER_PERIOD_TIME);
-			// Start ADC conversion once every AC line period
-			if (!(p_state & HALF_PERIOD_FLAG))
-				ADCSRA |= (1<<ADSC);
 			break;	
 		// SYNC_IGNORE_TIME finished	
 		case 0x02:
