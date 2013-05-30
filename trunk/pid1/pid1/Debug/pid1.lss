@@ -3,35 +3,35 @@ pid1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00001a0c  00000000  00000000  000000b4  2**1
+  0 .text         00001a68  00000000  00000000  000000b4  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000060  00800060  00001a0c  00001ac0  2**0
+  1 .data         00000066  00800060  00001a68  00001b1c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          000000a5  008000c0  008000c0  00001b20  2**0
+  2 .bss          000000a2  008000c6  008000c6  00001b82  2**0
                   ALLOC
-  3 .eeprom       0000000a  00810000  00810000  00001b20  2**0
+  3 .eeprom       0000000a  00810000  00810000  00001b82  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  4 .stab         000007d4  00000000  00000000  00001b2c  2**2
+  4 .stab         000007d4  00000000  00000000  00001b8c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  5 .stabstr      000000e3  00000000  00000000  00002300  2**0
+  5 .stabstr      000000e3  00000000  00000000  00002360  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .comment      0000002f  00000000  00000000  000023e3  2**0
+  6 .comment      0000002f  00000000  00000000  00002443  2**0
                   CONTENTS, READONLY
-  7 .debug_aranges 000003d0  00000000  00000000  00002412  2**0
+  7 .debug_aranges 000003d0  00000000  00000000  00002472  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_info   000036a0  00000000  00000000  000027e2  2**0
+  8 .debug_info   000037f4  00000000  00000000  00002842  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_abbrev 00001341  00000000  00000000  00005e82  2**0
+  9 .debug_abbrev 00001350  00000000  00000000  00006036  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_line   000017cd  00000000  00000000  000071c3  2**0
+ 10 .debug_line   000017db  00000000  00000000  00007386  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_frame  000008f4  00000000  00000000  00008990  2**2
+ 11 .debug_frame  000008f4  00000000  00000000  00008b64  2**2
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_str    00000f12  00000000  00000000  00009284  2**0
+ 12 .debug_str    00000f38  00000000  00000000  00009458  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_loc    00001c01  00000000  00000000  0000a196  2**0
+ 13 .debug_loc    00001b9a  00000000  00000000  0000a390  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 00000310  00000000  00000000  0000bd97  2**0
+ 14 .debug_ranges 00000310  00000000  00000000  0000bf2a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -40,7 +40,7 @@ Disassembly of section .text:
        0:	93 c0       	rjmp	.+294    	; 0x128 <__ctors_end>
        2:	ad c0       	rjmp	.+346    	; 0x15e <__bad_interrupt>
        4:	ac c0       	rjmp	.+344    	; 0x15e <__bad_interrupt>
-       6:	17 cc       	rjmp	.-2002   	; 0xfffff836 <__eeprom_end+0xff7ef82c>
+       6:	45 cc       	rjmp	.-1910   	; 0xfffff892 <__eeprom_end+0xff7ef888>
        8:	aa c0       	rjmp	.+340    	; 0x15e <__bad_interrupt>
        a:	a9 c0       	rjmp	.+338    	; 0x15e <__bad_interrupt>
        c:	a8 c0       	rjmp	.+336    	; 0x15e <__bad_interrupt>
@@ -90,18 +90,18 @@ Disassembly of section .text:
      134:	10 e0       	ldi	r17, 0x00	; 0
      136:	a0 e6       	ldi	r26, 0x60	; 96
      138:	b0 e0       	ldi	r27, 0x00	; 0
-     13a:	ec e0       	ldi	r30, 0x0C	; 12
+     13a:	e8 e6       	ldi	r30, 0x68	; 104
      13c:	fa e1       	ldi	r31, 0x1A	; 26
      13e:	02 c0       	rjmp	.+4      	; 0x144 <__do_copy_data+0x10>
      140:	05 90       	lpm	r0, Z+
      142:	0d 92       	st	X+, r0
-     144:	a0 3c       	cpi	r26, 0xC0	; 192
+     144:	a6 3c       	cpi	r26, 0xC6	; 198
      146:	b1 07       	cpc	r27, r17
      148:	d9 f7       	brne	.-10     	; 0x140 <__do_copy_data+0xc>
 
 0000014a <__do_clear_bss>:
      14a:	21 e0       	ldi	r18, 0x01	; 1
-     14c:	a0 ec       	ldi	r26, 0xC0	; 192
+     14c:	a6 ec       	ldi	r26, 0xC6	; 198
      14e:	b0 e0       	ldi	r27, 0x00	; 0
      150:	01 c0       	rjmp	.+2      	; 0x154 <.do_clear_bss_start>
 
@@ -109,11 +109,11 @@ Disassembly of section .text:
      152:	1d 92       	st	X+, r1
 
 00000154 <.do_clear_bss_start>:
-     154:	a5 36       	cpi	r26, 0x65	; 101
+     154:	a8 36       	cpi	r26, 0x68	; 104
      156:	b2 07       	cpc	r27, r18
      158:	e1 f7       	brne	.-8      	; 0x152 <.do_clear_bss_loop>
-     15a:	cd d8       	rcall	.-3686   	; 0xfffff2f6 <__eeprom_end+0xff7ef2ec>
-     15c:	55 cc       	rjmp	.-1878   	; 0xfffffa08 <__eeprom_end+0xff7ef9fe>
+     15a:	ca d8       	rcall	.-3692   	; 0xfffff2f0 <__eeprom_end+0xff7ef2e6>
+     15c:	83 cc       	rjmp	.-1786   	; 0xfffffa64 <__eeprom_end+0xff7efa5a>
 
 0000015e <__bad_interrupt>:
      15e:	50 cf       	rjmp	.-352    	; 0x0 <__vectors>
@@ -128,16 +128,16 @@ uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
      160:	0f 93       	push	r16
      162:	1f 93       	push	r17
 	return (uint16_t)(((int32_t)adc_value * k_norm + offset_norm) / (COEFF_SCALE));
-     164:	20 91 c0 00 	lds	r18, 0x00C0
-     168:	30 91 c1 00 	lds	r19, 0x00C1
-     16c:	40 91 c2 00 	lds	r20, 0x00C2
-     170:	50 91 c3 00 	lds	r21, 0x00C3
+     164:	20 91 c6 00 	lds	r18, 0x00C6
+     168:	30 91 c7 00 	lds	r19, 0x00C7
+     16c:	40 91 c8 00 	lds	r20, 0x00C8
+     170:	50 91 c9 00 	lds	r21, 0x00C9
      174:	dc 01       	movw	r26, r24
-     176:	2e dc       	rcall	.-1956   	; 0xfffff9d4 <__eeprom_end+0xff7ef9ca>
-     178:	00 91 c4 00 	lds	r16, 0x00C4
-     17c:	10 91 c5 00 	lds	r17, 0x00C5
-     180:	20 91 c6 00 	lds	r18, 0x00C6
-     184:	30 91 c7 00 	lds	r19, 0x00C7
+     176:	5c dc       	rcall	.-1864   	; 0xfffffa30 <__eeprom_end+0xff7efa26>
+     178:	00 91 ca 00 	lds	r16, 0x00CA
+     17c:	10 91 cb 00 	lds	r17, 0x00CB
+     180:	20 91 cc 00 	lds	r18, 0x00CC
+     184:	30 91 cd 00 	lds	r19, 0x00CD
      188:	60 0f       	add	r22, r16
      18a:	71 1f       	adc	r23, r17
      18c:	82 1f       	adc	r24, r18
@@ -146,7 +146,7 @@ uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
      192:	33 e0       	ldi	r19, 0x03	; 3
      194:	40 e0       	ldi	r20, 0x00	; 0
      196:	50 e0       	ldi	r21, 0x00	; 0
-     198:	f0 db       	rcall	.-2080   	; 0xfffff97a <__eeprom_end+0xff7ef970>
+     198:	1e dc       	rcall	.-1988   	; 0xfffff9d6 <__eeprom_end+0xff7ef9cc>
 }
      19a:	c9 01       	movw	r24, r18
      19c:	1f 91       	pop	r17
@@ -166,20 +166,20 @@ uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
 	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm) / k_norm);
      1ac:	a8 ee       	ldi	r26, 0xE8	; 232
      1ae:	b3 e0       	ldi	r27, 0x03	; 3
-     1b0:	ff db       	rcall	.-2050   	; 0xfffff9b0 <__eeprom_end+0xff7ef9a6>
-     1b2:	00 91 c4 00 	lds	r16, 0x00C4
-     1b6:	10 91 c5 00 	lds	r17, 0x00C5
-     1ba:	20 91 c6 00 	lds	r18, 0x00C6
-     1be:	30 91 c7 00 	lds	r19, 0x00C7
+     1b0:	2d dc       	rcall	.-1958   	; 0xfffffa0c <__eeprom_end+0xff7efa02>
+     1b2:	00 91 ca 00 	lds	r16, 0x00CA
+     1b6:	10 91 cb 00 	lds	r17, 0x00CB
+     1ba:	20 91 cc 00 	lds	r18, 0x00CC
+     1be:	30 91 cd 00 	lds	r19, 0x00CD
      1c2:	60 1b       	sub	r22, r16
      1c4:	71 0b       	sbc	r23, r17
      1c6:	82 0b       	sbc	r24, r18
      1c8:	93 0b       	sbc	r25, r19
-     1ca:	20 91 c0 00 	lds	r18, 0x00C0
-     1ce:	30 91 c1 00 	lds	r19, 0x00C1
-     1d2:	40 91 c2 00 	lds	r20, 0x00C2
-     1d6:	50 91 c3 00 	lds	r21, 0x00C3
-     1da:	cf db       	rcall	.-2146   	; 0xfffff97a <__eeprom_end+0xff7ef970>
+     1ca:	20 91 c6 00 	lds	r18, 0x00C6
+     1ce:	30 91 c7 00 	lds	r19, 0x00C7
+     1d2:	40 91 c8 00 	lds	r20, 0x00C8
+     1d6:	50 91 c9 00 	lds	r21, 0x00C9
+     1da:	fd db       	rcall	.-2054   	; 0xfffff9d6 <__eeprom_end+0xff7ef9cc>
 }
      1dc:	c9 01       	movw	r24, r18
      1de:	1f 91       	pop	r17
@@ -201,49 +201,49 @@ void calculateCoeffs(void)
      1f4:	cf 93       	push	r28
      1f6:	df 93       	push	r29
 	k_norm = ((int32_t)(cpoint2 - cpoint1) * COEFF_SCALE) / ((int32_t)(cpoint2_adc - cpoint1_adc));
-     1f8:	f0 90 31 01 	lds	r15, 0x0131
-     1fc:	a0 91 51 01 	lds	r26, 0x0151
+     1f8:	f0 90 34 01 	lds	r15, 0x0134
+     1fc:	a0 91 54 01 	lds	r26, 0x0154
      200:	b0 e0       	ldi	r27, 0x00	; 0
      202:	af 19       	sub	r26, r15
      204:	b1 09       	sbc	r27, r1
-     206:	c0 91 49 01 	lds	r28, 0x0149
-     20a:	d0 91 4a 01 	lds	r29, 0x014A
+     206:	c0 91 4c 01 	lds	r28, 0x014C
+     20a:	d0 91 4d 01 	lds	r29, 0x014D
      20e:	28 ee       	ldi	r18, 0xE8	; 232
      210:	33 e0       	ldi	r19, 0x03	; 3
-     212:	da db       	rcall	.-2124   	; 0xfffff9c8 <__eeprom_end+0xff7ef9be>
-     214:	20 91 4d 01 	lds	r18, 0x014D
-     218:	30 91 4e 01 	lds	r19, 0x014E
+     212:	08 dc       	rcall	.-2032   	; 0xfffffa24 <__eeprom_end+0xff7efa1a>
+     214:	20 91 50 01 	lds	r18, 0x0150
+     218:	30 91 51 01 	lds	r19, 0x0151
      21c:	2c 1b       	sub	r18, r28
      21e:	3d 0b       	sbc	r19, r29
      220:	40 e0       	ldi	r20, 0x00	; 0
      222:	50 e0       	ldi	r21, 0x00	; 0
-     224:	aa db       	rcall	.-2220   	; 0xfffff97a <__eeprom_end+0xff7ef970>
+     224:	d8 db       	rcall	.-2128   	; 0xfffff9d6 <__eeprom_end+0xff7ef9cc>
      226:	49 01       	movw	r8, r18
      228:	5a 01       	movw	r10, r20
-     22a:	20 93 c0 00 	sts	0x00C0, r18
-     22e:	30 93 c1 00 	sts	0x00C1, r19
-     232:	40 93 c2 00 	sts	0x00C2, r20
-     236:	50 93 c3 00 	sts	0x00C3, r21
+     22a:	20 93 c6 00 	sts	0x00C6, r18
+     22e:	30 93 c7 00 	sts	0x00C7, r19
+     232:	40 93 c8 00 	sts	0x00C8, r20
+     236:	50 93 c9 00 	sts	0x00C9, r21
 	offset_norm = (int32_t)cpoint1 * COEFF_SCALE - (int32_t)cpoint1_adc * k_norm;
      23a:	2f 2d       	mov	r18, r15
      23c:	30 e0       	ldi	r19, 0x00	; 0
      23e:	a8 ee       	ldi	r26, 0xE8	; 232
      240:	b3 e0       	ldi	r27, 0x03	; 3
-     242:	b6 db       	rcall	.-2196   	; 0xfffff9b0 <__eeprom_end+0xff7ef9a6>
+     242:	e4 db       	rcall	.-2104   	; 0xfffffa0c <__eeprom_end+0xff7efa02>
      244:	6b 01       	movw	r12, r22
      246:	7c 01       	movw	r14, r24
      248:	de 01       	movw	r26, r28
      24a:	a5 01       	movw	r20, r10
      24c:	94 01       	movw	r18, r8
-     24e:	c2 db       	rcall	.-2172   	; 0xfffff9d4 <__eeprom_end+0xff7ef9ca>
+     24e:	f0 db       	rcall	.-2080   	; 0xfffffa30 <__eeprom_end+0xff7efa26>
      250:	c6 1a       	sub	r12, r22
      252:	d7 0a       	sbc	r13, r23
      254:	e8 0a       	sbc	r14, r24
      256:	f9 0a       	sbc	r15, r25
-     258:	c0 92 c4 00 	sts	0x00C4, r12
-     25c:	d0 92 c5 00 	sts	0x00C5, r13
-     260:	e0 92 c6 00 	sts	0x00C6, r14
-     264:	f0 92 c7 00 	sts	0x00C7, r15
+     258:	c0 92 ca 00 	sts	0x00CA, r12
+     25c:	d0 92 cb 00 	sts	0x00CB, r13
+     260:	e0 92 cc 00 	sts	0x00CC, r14
+     264:	f0 92 cd 00 	sts	0x00CD, r15
 }
      268:	df 91       	pop	r29
      26a:	cf 91       	pop	r28
@@ -285,9 +285,9 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
      2a0:	50 e0       	ldi	r21, 0x00	; 0
      2a2:	c7 01       	movw	r24, r14
      2a4:	b6 01       	movw	r22, r12
-     2a6:	47 db       	rcall	.-2418   	; 0xfffff936 <__eeprom_end+0xff7ef92c>
-     2a8:	30 93 2e 01 	sts	0x012E, r19
-     2ac:	20 93 2d 01 	sts	0x012D, r18
+     2a6:	75 db       	rcall	.-2326   	; 0xfffff992 <__eeprom_end+0xff7ef988>
+     2a8:	30 93 31 01 	sts	0x0131, r19
+     2ac:	20 93 30 01 	sts	0x0130, r18
 {
 	// Disable interrupts from ADC - to save data integrity
 	ACSR &= ~(1<<ACIE);	
@@ -301,8 +301,8 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
      2b8:	c7 94       	ror	r12
      2ba:	8a 95       	dec	r24
      2bc:	d1 f7       	brne	.-12     	; 0x2b2 <update_normalized_adc+0x34>
-     2be:	d0 92 04 01 	sts	0x0104, r13
-     2c2:	c0 92 03 01 	sts	0x0103, r12
+     2be:	d0 92 07 01 	sts	0x0107, r13
+     2c2:	c0 92 06 01 	sts	0x0106, r12
 	// Enable interrupts from ADC
 	ACSR |= (1<<ACIE);
      2c6:	43 9a       	sbi	0x08, 3	; 8
@@ -319,11 +319,11 @@ void update_Celsius(void)
 {
 	// Convert to Celsius degree
 	adc_celsius = conv_ADC_to_Celsius(adc_normalized);
-     2d2:	80 91 2d 01 	lds	r24, 0x012D
-     2d6:	90 91 2e 01 	lds	r25, 0x012E
+     2d2:	80 91 30 01 	lds	r24, 0x0130
+     2d6:	90 91 31 01 	lds	r25, 0x0131
      2da:	42 df       	rcall	.-380    	; 0x160 <conv_ADC_to_Celsius>
-     2dc:	90 93 30 01 	sts	0x0130, r25
-     2e0:	80 93 2f 01 	sts	0x012F, r24
+     2dc:	90 93 33 01 	sts	0x0133, r25
+     2e0:	80 93 32 01 	sts	0x0132, r24
      2e4:	08 95       	ret
 
 000002e6 <addToRingU16>:
@@ -525,7 +525,7 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
      3ea:	74 81       	ldd	r23, Z+4	; 0x04
      3ec:	85 81       	ldd	r24, Z+5	; 0x05
      3ee:	96 81       	ldd	r25, Z+6	; 0x06
-     3f0:	a2 da       	rcall	.-2748   	; 0xfffff936 <__eeprom_end+0xff7ef92c>
+     3f0:	d0 da       	rcall	.-2656   	; 0xfffff992 <__eeprom_end+0xff7ef988>
 }
      3f2:	c9 01       	movw	r24, r18
      3f4:	08 95       	ret
@@ -537,12 +537,12 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
 	uint8_t long_press_event_mask;
 	
 	raw_delayed = raw_current;
-     3f6:	50 91 ce 00 	lds	r21, 0x00CE
+     3f6:	50 91 d4 00 	lds	r21, 0x00D4
 	raw_delayed_inv = raw_current_inv;
      3fa:	30 91 69 00 	lds	r19, 0x0069
 	raw_current = raw_button_state;
-     3fe:	90 91 64 01 	lds	r25, 0x0164
-     402:	90 93 ce 00 	sts	0x00CE, r25
+     3fe:	90 91 67 01 	lds	r25, 0x0167
+     402:	90 93 d4 00 	sts	0x00D4, r25
 	raw_current_inv = ~raw_current;
      406:	69 2f       	mov	r22, r25
      408:	60 95       	com	r22
@@ -550,7 +550,7 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
 	
 	// Must be before press_timer update
 	long_press_mask = (press_timer >= LONG_PRESS_DELAY) ? 0xFF : 0x00;
-     40e:	80 91 cf 00 	lds	r24, 0x00CF
+     40e:	80 91 d5 00 	lds	r24, 0x00D5
      412:	8c 30       	cpi	r24, 0x0C	; 12
      414:	10 f0       	brcs	.+4      	; 0x41a <process_buttons+0x24>
      416:	2f ef       	ldi	r18, 0xFF	; 255
@@ -562,7 +562,7 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
      41e:	19 f0       	breq	.+6      	; 0x426 <process_buttons+0x30>
 	{
 		press_timer = 0;
-     420:	10 92 cf 00 	sts	0x00CF, r1
+     420:	10 92 d5 00 	sts	0x00D5, r1
      424:	05 c0       	rjmp	.+10     	; 0x430 <process_buttons+0x3a>
 	}
 	else if (press_timer <= LONG_PRESS_DELAY)
@@ -571,12 +571,12 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
 	{
 		press_timer++;
      42a:	8f 5f       	subi	r24, 0xFF	; 255
-     42c:	80 93 cf 00 	sts	0x00CF, r24
+     42c:	80 93 d5 00 	sts	0x00D5, r24
 	}
 	
 	// Must after press_timer update
 	long_press_event_mask = (press_timer == LONG_PRESS_DELAY) ? 0xFF : 0x00;
-     430:	70 91 cf 00 	lds	r23, 0x00CF
+     430:	70 91 d5 00 	lds	r23, 0x00D5
      434:	7c 30       	cpi	r23, 0x0C	; 12
      436:	11 f4       	brne	.+4      	; 0x43c <process_buttons+0x46>
      438:	4f ef       	ldi	r20, 0xFF	; 255
@@ -586,7 +586,7 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
 	button_action_down = raw_current & raw_delayed_inv;
      43e:	89 2f       	mov	r24, r25
      440:	83 23       	and	r24, r19
-     442:	80 93 cb 00 	sts	0x00CB, r24
+     442:	80 93 d1 00 	sts	0x00D1, r24
 			
 	if (press_timer > REPEAT_DELAY)
      446:	77 30       	cpi	r23, 0x07	; 7
@@ -596,17 +596,17 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
 	
 	button_action_rep = raw_current & raw_delayed_inv;
      44c:	39 23       	and	r19, r25
-     44e:	30 93 ca 00 	sts	0x00CA, r19
+     44e:	30 93 d0 00 	sts	0x00D0, r19
 	
 	button_action_up_short = raw_current_inv & raw_delayed & ~long_press_mask;
      452:	20 95       	com	r18
      454:	56 23       	and	r21, r22
      456:	25 23       	and	r18, r21
-     458:	20 93 c9 00 	sts	0x00C9, r18
+     458:	20 93 cf 00 	sts	0x00CF, r18
 	//button_action_up_long  = raw_current_inv & raw_delayed & long_press_mask;
 	button_action_long  = raw_current & long_press_event_mask;
      45c:	49 23       	and	r20, r25
-     45e:	40 93 c8 00 	sts	0x00C8, r20
+     45e:	40 93 ce 00 	sts	0x00CE, r20
 	
 	// Compose button state
 	button_state = (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE));
@@ -617,36 +617,36 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
      468:	01 c0       	rjmp	.+2      	; 0x46c <__stack+0xd>
 		button_state |= BS_MENU;
      46a:	91 60       	ori	r25, 0x01	; 1
-     46c:	90 93 cd 00 	sts	0x00CD, r25
-     470:	80 93 cc 00 	sts	0x00CC, r24
+     46c:	90 93 d3 00 	sts	0x00D3, r25
+     470:	80 93 d2 00 	sts	0x00D2, r24
 	//if (button_action_up_long & BD_MENU)
 	if (button_action_long & BD_MENU)
      474:	40 ff       	sbrs	r20, 0
      476:	09 c0       	rjmp	.+18     	; 0x48a <__stack+0x2b>
 		button_state |= BL_MENU;
-     478:	80 91 cc 00 	lds	r24, 0x00CC
-     47c:	90 91 cd 00 	lds	r25, 0x00CD
+     478:	80 91 d2 00 	lds	r24, 0x00D2
+     47c:	90 91 d3 00 	lds	r25, 0x00D3
      480:	92 60       	ori	r25, 0x02	; 2
-     482:	90 93 cd 00 	sts	0x00CD, r25
-     486:	80 93 cc 00 	sts	0x00CC, r24
+     482:	90 93 d3 00 	sts	0x00D3, r25
+     486:	80 93 d2 00 	sts	0x00D2, r24
 	if (button_action_rep & BD_UP)
      48a:	31 ff       	sbrs	r19, 1
      48c:	09 c0       	rjmp	.+18     	; 0x4a0 <__stack+0x41>
 		button_state |= BR_UP;	
-     48e:	80 91 cc 00 	lds	r24, 0x00CC
-     492:	90 91 cd 00 	lds	r25, 0x00CD
+     48e:	80 91 d2 00 	lds	r24, 0x00D2
+     492:	90 91 d3 00 	lds	r25, 0x00D3
      496:	94 60       	ori	r25, 0x04	; 4
-     498:	90 93 cd 00 	sts	0x00CD, r25
-     49c:	80 93 cc 00 	sts	0x00CC, r24
+     498:	90 93 d3 00 	sts	0x00D3, r25
+     49c:	80 93 d2 00 	sts	0x00D2, r24
 	if (button_action_rep & BD_DOWN)
      4a0:	32 ff       	sbrs	r19, 2
      4a2:	09 c0       	rjmp	.+18     	; 0x4b6 <__stack+0x57>
 		button_state |= BR_DOWN;
-     4a4:	80 91 cc 00 	lds	r24, 0x00CC
-     4a8:	90 91 cd 00 	lds	r25, 0x00CD
+     4a4:	80 91 d2 00 	lds	r24, 0x00D2
+     4a8:	90 91 d3 00 	lds	r25, 0x00D3
      4ac:	98 60       	ori	r25, 0x08	; 8
-     4ae:	90 93 cd 00 	sts	0x00CD, r25
-     4b2:	80 93 cc 00 	sts	0x00CC, r24
+     4ae:	90 93 d3 00 	sts	0x00D3, r25
+     4b2:	80 93 d2 00 	sts	0x00D2, r24
      4b6:	08 95       	ret
 
 000004b8 <processRollControl>:
@@ -663,7 +663,7 @@ void processRollControl(void)
 	
 	// Process auto power off control
 	if (autoPowerOffState & AUTO_POFF_ACTIVE)
-     4ba:	80 91 fc 00 	lds	r24, 0x00FC
+     4ba:	80 91 d6 00 	lds	r24, 0x00D6
      4be:	80 ff       	sbrs	r24, 0
      4c0:	0f c0       	rjmp	.+30     	; 0x4e0 <processRollControl+0x28>
 	{
@@ -671,15 +671,15 @@ void processRollControl(void)
      4c2:	81 e0       	ldi	r24, 0x01	; 1
      4c4:	d9 d7       	rcall	.+4018   	; 0x1478 <stopCycleRolling>
 		if (adc_celsius <= POFF_MOTOR_TRESHOLD)
-     4c6:	80 91 2f 01 	lds	r24, 0x012F
-     4ca:	90 91 30 01 	lds	r25, 0x0130
+     4c6:	80 91 32 01 	lds	r24, 0x0132
+     4ca:	90 91 33 01 	lds	r25, 0x0133
      4ce:	c3 97       	sbiw	r24, 0x33	; 51
      4d0:	08 f0       	brcs	.+2      	; 0x4d4 <processRollControl+0x1c>
      4d2:	5f c0       	rjmp	.+190    	; 0x592 <processRollControl+0xda>
 		{
 			force_rotate = ROLL_FWD;		// Default direction
      4d4:	81 e0       	ldi	r24, 0x01	; 1
-     4d6:	80 93 d0 00 	sts	0x00D0, r24
+     4d6:	80 93 d7 00 	sts	0x00D7, r24
 			setMotorDirection(0);			// Stop the motor
      4da:	80 e0       	ldi	r24, 0x00	; 0
      4dc:	ac d7       	rcall	.+3928   	; 0x1436 <setMotorDirection>
@@ -690,7 +690,7 @@ void processRollControl(void)
 	{
 		// Control direction by buttons
 		if (button_action_down & BD_ROTFWD)
-     4e0:	80 91 cb 00 	lds	r24, 0x00CB
+     4e0:	80 91 d1 00 	lds	r24, 0x00D1
      4e4:	84 ff       	sbrs	r24, 4
      4e6:	04 c0       	rjmp	.+8      	; 0x4f0 <processRollControl+0x38>
 		{
@@ -715,7 +715,7 @@ void processRollControl(void)
 	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}		
 		else if (button_action_long & BD_CYCLE)
-     4fc:	80 91 c8 00 	lds	r24, 0x00C8
+     4fc:	80 91 ce 00 	lds	r24, 0x00CE
      500:	87 ff       	sbrs	r24, 7
      502:	04 c0       	rjmp	.+8      	; 0x50c <processRollControl+0x54>
 		{
@@ -727,7 +727,7 @@ void processRollControl(void)
      50a:	05 c0       	rjmp	.+10     	; 0x516 <processRollControl+0x5e>
 		}
 		else if (force_rotate)
-     50c:	80 91 d0 00 	lds	r24, 0x00D0
+     50c:	80 91 d7 00 	lds	r24, 0x00D7
      510:	81 11       	cpse	r24, r1
 		{
 			// Auto power off mode was exited by pressing some other button, not direction buttons
@@ -747,15 +747,15 @@ void processRollControl(void)
 	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}
 		force_rotate = 0;		// First normal pass will clear 
-     516:	10 92 d0 00 	sts	0x00D0, r1
+     516:	10 92 d7 00 	sts	0x00D7, r1
 			
 		if (button_action_up_short & BD_CYCLE)
-     51a:	80 91 c9 00 	lds	r24, 0x00C9
+     51a:	80 91 cf 00 	lds	r24, 0x00CF
      51e:	87 ff       	sbrs	r24, 7
      520:	0e c0       	rjmp	.+28     	; 0x53e <processRollControl+0x86>
 		{
 			if (rollState & ROLL_CYCLE)
-     522:	80 91 ee 00 	lds	r24, 0x00EE
+     522:	80 91 f5 00 	lds	r24, 0x00F5
      526:	82 ff       	sbrs	r24, 2
      528:	04 c0       	rjmp	.+8      	; 0x532 <processRollControl+0x7a>
 			{
@@ -783,25 +783,25 @@ void processRollControl(void)
 		}		
 			
 		if (rollState & ROLL_DIR_CHANGED)
-     53e:	80 91 ee 00 	lds	r24, 0x00EE
+     53e:	80 91 f5 00 	lds	r24, 0x00F5
      542:	85 ff       	sbrs	r24, 5
      544:	04 c0       	rjmp	.+8      	; 0x54e <processRollControl+0x96>
 		{
 			rollState &= ~ROLL_DIR_CHANGED;
      546:	8f 7d       	andi	r24, 0xDF	; 223
-     548:	80 93 ee 00 	sts	0x00EE, r24
+     548:	80 93 f5 00 	sts	0x00F5, r24
 			beepState |= 0x04;	
      54c:	c4 60       	ori	r28, 0x04	; 4
 		}
 			
 		if (rollState & CYCLE_ROLL_DONE)
-     54e:	80 91 ee 00 	lds	r24, 0x00EE
+     54e:	80 91 f5 00 	lds	r24, 0x00F5
      552:	84 ff       	sbrs	r24, 4
      554:	04 c0       	rjmp	.+8      	; 0x55e <processRollControl+0xa6>
 		{
 			rollState &= ~CYCLE_ROLL_DONE;
      556:	8f 7e       	andi	r24, 0xEF	; 239
-     558:	80 93 ee 00 	sts	0x00EE, r24
+     558:	80 93 f5 00 	sts	0x00F5, r24
 			beepState |= 0x80;	
      55c:	c0 68       	ori	r28, 0x80	; 128
 		}		
@@ -815,7 +815,7 @@ void processRollControl(void)
 			SetBeeperFreq(1000);
      562:	88 ee       	ldi	r24, 0xE8	; 232
      564:	93 e0       	ldi	r25, 0x03	; 3
-     566:	1b d9       	rcall	.-3530   	; 0xfffff79e <__eeprom_end+0xff7ef794>
+     566:	69 d9       	rcall	.-3374   	; 0xfffff83a <__eeprom_end+0xff7ef830>
 			StartBeep(200);
      568:	88 ec       	ldi	r24, 0xC8	; 200
      56a:	90 e0       	ldi	r25, 0x00	; 0
@@ -848,11 +848,11 @@ void processRollControl(void)
 			SetBeeperFreq(1000);
      586:	88 ee       	ldi	r24, 0xE8	; 232
      588:	93 e0       	ldi	r25, 0x03	; 3
-     58a:	09 d9       	rcall	.-3566   	; 0xfffff79e <__eeprom_end+0xff7ef794>
+     58a:	57 d9       	rcall	.-3410   	; 0xfffff83a <__eeprom_end+0xff7ef830>
 			StartBeep(50);	
      58c:	82 e3       	ldi	r24, 0x32	; 50
      58e:	90 e0       	ldi	r25, 0x00	; 0
-     590:	26 d9       	rcall	.-3508   	; 0xfffff7de <__eeprom_end+0xff7ef7d4>
+     590:	74 d9       	rcall	.-3352   	; 0xfffff87a <__eeprom_end+0xff7ef870>
 		// Apply mask to next sound events
 		//beepMask = nextBeepMask;	
 	}
@@ -862,7 +862,7 @@ void processRollControl(void)
      592:	80 e3       	ldi	r24, 0x30	; 48
      594:	e2 d2       	rcall	.+1476   	; 0xb5a <clearExtraLeds>
 	if (rollState & ROLL_FWD)
-     596:	80 91 ee 00 	lds	r24, 0x00EE
+     596:	80 91 f5 00 	lds	r24, 0x00F5
      59a:	80 ff       	sbrs	r24, 0
      59c:	02 c0       	rjmp	.+4      	; 0x5a2 <processRollControl+0xea>
 		setExtraLeds(LED_ROTFWD);
@@ -953,8 +953,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	//------ Calculate I term --------//
 	integAcc += error;
-     5e2:	20 91 d5 00 	lds	r18, 0x00D5
-     5e6:	30 91 d6 00 	lds	r19, 0x00D6
+     5e2:	20 91 dc 00 	lds	r18, 0x00DC
+     5e6:	30 91 dd 00 	lds	r19, 0x00DD
 	if (error <= 0)
      5ea:	18 16       	cp	r1, r24
      5ec:	19 06       	cpc	r1, r25
@@ -991,8 +991,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	//------ Calculate I term --------//
 	integAcc += error;
-     606:	90 93 d6 00 	sts	0x00D6, r25
-     60a:	80 93 d5 00 	sts	0x00D5, r24
+     606:	90 93 dd 00 	sts	0x00DD, r25
+     60a:	80 93 dc 00 	sts	0x00DC, r24
      60e:	04 c0       	rjmp	.+8      	; 0x618 <processPID+0x68>
 	{
 		integAcc = 10;
@@ -1000,12 +1000,12 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	else if (integAcc < 0)
 	{
 		integAcc = 0;
-     610:	10 92 d6 00 	sts	0x00D6, r1
-     614:	10 92 d5 00 	sts	0x00D5, r1
+     610:	10 92 dd 00 	sts	0x00DD, r1
+     614:	10 92 dc 00 	sts	0x00DC, r1
 	}
 	i_term = integAcc * Ki;
-     618:	80 91 d5 00 	lds	r24, 0x00D5
-     61c:	90 91 d6 00 	lds	r25, 0x00D6
+     618:	80 91 dc 00 	lds	r24, 0x00DC
+     61c:	90 91 dd 00 	lds	r25, 0x00DD
      620:	2f e0       	ldi	r18, 0x0F	; 15
      622:	28 9f       	mul	r18, r24
      624:	80 01       	movw	r16, r0
@@ -1020,16 +1020,16 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	lastProcessValue = ringBufDterm.summ;
      62c:	80 91 6d 00 	lds	r24, 0x006D
      630:	90 91 6e 00 	lds	r25, 0x006E
-     634:	90 93 d8 00 	sts	0x00D8, r25
-     638:	80 93 d7 00 	sts	0x00D7, r24
+     634:	90 93 df 00 	sts	0x00DF, r25
+     638:	80 93 de 00 	sts	0x00DE, r24
 	addToRingU16(&ringBufDterm, processValue);
      63c:	8a e6       	ldi	r24, 0x6A	; 106
      63e:	90 e0       	ldi	r25, 0x00	; 0
      640:	52 de       	rcall	.-860    	; 0x2e6 <addToRingU16>
 	processValue = ringBufDterm.summ;
 	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
-     642:	80 91 d7 00 	lds	r24, 0x00D7
-     646:	90 91 d8 00 	lds	r25, 0x00D8
+     642:	80 91 de 00 	lds	r24, 0x00DE
+     646:	90 91 df 00 	lds	r25, 0x00DF
      64a:	20 91 6d 00 	lds	r18, 0x006D
      64e:	30 91 6e 00 	lds	r19, 0x006E
      652:	82 1b       	sub	r24, r18
@@ -1050,7 +1050,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
      66a:	93 1f       	adc	r25, r19
      66c:	65 e0       	ldi	r22, 0x05	; 5
      66e:	70 e0       	ldi	r23, 0x00	; 0
-     670:	4f d9       	rcall	.-3426   	; 0xfffff910 <__eeprom_end+0xff7ef906>
+     670:	7d d9       	rcall	.-3334   	; 0xfffff96c <__eeprom_end+0xff7ef962>
      672:	cb 01       	movw	r24, r22
      674:	77 ff       	sbrs	r23, 7
      676:	02 c0       	rjmp	.+4      	; 0x67c <processPID+0xcc>
@@ -1067,17 +1067,17 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	//------- Debug --------//
 	dbg_PID_p_term = p_term;
-     686:	d0 93 36 01 	sts	0x0136, r29
-     68a:	c0 93 35 01 	sts	0x0135, r28
+     686:	d0 93 39 01 	sts	0x0139, r29
+     68a:	c0 93 38 01 	sts	0x0138, r28
 	dbg_PID_d_term = d_term;
-     68e:	30 93 48 01 	sts	0x0148, r19
-     692:	20 93 47 01 	sts	0x0147, r18
+     68e:	30 93 4b 01 	sts	0x014B, r19
+     692:	20 93 4a 01 	sts	0x014A, r18
 	dbg_PID_i_term = i_term;
-     696:	10 93 3d 01 	sts	0x013D, r17
-     69a:	00 93 3c 01 	sts	0x013C, r16
+     696:	10 93 40 01 	sts	0x0140, r17
+     69a:	00 93 3f 01 	sts	0x013F, r16
 	dbg_PID_output = temp;
-     69e:	90 93 33 01 	sts	0x0133, r25
-     6a2:	80 93 32 01 	sts	0x0132, r24
+     69e:	90 93 36 01 	sts	0x0136, r25
+     6a2:	80 93 35 01 	sts	0x0135, r24
 	
 	
 	return temp;
@@ -1096,15 +1096,15 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
-     6b0:	80 91 cc 00 	lds	r24, 0x00CC
+     6b0:	80 91 d2 00 	lds	r24, 0x00D2
      6b4:	86 ff       	sbrs	r24, 6
      6b6:	07 c0       	rjmp	.+14     	; 0x6c6 <processHeaterControl+0x16>
 	{
 		heaterState ^= HEATER_ENABLED;
-     6b8:	80 91 f0 00 	lds	r24, 0x00F0
+     6b8:	80 91 f7 00 	lds	r24, 0x00F7
      6bc:	91 e0       	ldi	r25, 0x01	; 1
      6be:	89 27       	eor	r24, r25
-     6c0:	80 93 f0 00 	sts	0x00F0, r24
+     6c0:	80 93 f7 00 	sts	0x00F7, r24
 		// Make heater controller set update flag on next call
 		forceHeaterControlUpdate();
      6c4:	ab d6       	rcall	.+3414   	; 0x141c <forceHeaterControlUpdate>
@@ -1112,42 +1112,42 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	// Process auto power off control
 	if (autoPowerOffState & AUTO_POFF_ACTIVE)
-     6c6:	80 91 fc 00 	lds	r24, 0x00FC
+     6c6:	80 91 d6 00 	lds	r24, 0x00D6
      6ca:	80 ff       	sbrs	r24, 0
      6cc:	05 c0       	rjmp	.+10     	; 0x6d8 <processHeaterControl+0x28>
 	{
 		heaterState &= ~HEATER_ENABLED;
-     6ce:	80 91 f0 00 	lds	r24, 0x00F0
+     6ce:	80 91 f7 00 	lds	r24, 0x00F7
      6d2:	8e 7f       	andi	r24, 0xFE	; 254
-     6d4:	80 93 f0 00 	sts	0x00F0, r24
+     6d4:	80 93 f7 00 	sts	0x00F7, r24
 	}		
 	
 	
 	// Check if heater control should be updated
 	// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms
 	if (heaterState & READY_TO_UPDATE_HEATER)
-     6d8:	80 91 f0 00 	lds	r24, 0x00F0
+     6d8:	80 91 f7 00 	lds	r24, 0x00F7
      6dc:	87 ff       	sbrs	r24, 7
      6de:	18 c0       	rjmp	.+48     	; 0x710 <processHeaterControl+0x60>
 	{
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(setup_temp_value);					
-     6e0:	80 91 39 01 	lds	r24, 0x0139
-     6e4:	90 91 3a 01 	lds	r25, 0x013A
+     6e0:	80 91 3c 01 	lds	r24, 0x013C
+     6e4:	90 91 3d 01 	lds	r25, 0x013D
      6e8:	5c dd       	rcall	.-1352   	; 0x1a2 <conv_Celsius_to_ADC>
-     6ea:	90 93 d2 00 	sts	0x00D2, r25
-     6ee:	80 93 d1 00 	sts	0x00D1, r24
+     6ea:	90 93 d9 00 	sts	0x00D9, r25
+     6ee:	80 93 d8 00 	sts	0x00D8, r24
 		// Process PID
 		pid_output = processPID(set_value_adc,PIDsampledADC);
-     6f2:	60 91 01 01 	lds	r22, 0x0101
-     6f6:	70 91 02 01 	lds	r23, 0x0102
+     6f2:	60 91 04 01 	lds	r22, 0x0104
+     6f6:	70 91 05 01 	lds	r23, 0x0105
      6fa:	5a df       	rcall	.-332    	; 0x5b0 <processPID>
-     6fc:	80 93 d3 00 	sts	0x00D3, r24
-     700:	10 92 d4 00 	sts	0x00D4, r1
+     6fc:	80 93 da 00 	sts	0x00DA, r24
+     700:	10 92 db 00 	sts	0x00DB, r1
 			
 		// Heater control is updated only when flag is set, even if heater must be powered OFF
 		if (heaterState & HEATER_ENABLED)
-     704:	90 91 f0 00 	lds	r25, 0x00F0
+     704:	90 91 f7 00 	lds	r25, 0x00F7
      708:	90 fd       	sbrc	r25, 0
      70a:	01 c0       	rjmp	.+2      	; 0x70e <processHeaterControl+0x5e>
 			setHeaterControl(pid_output);	// Flag is cleared automatically
@@ -1160,7 +1160,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	//------- Debug --------//
 	if (heaterState & HEATER_ENABLED)
-     710:	80 91 f0 00 	lds	r24, 0x00F0
+     710:	80 91 f7 00 	lds	r24, 0x00F7
      714:	80 ff       	sbrs	r24, 0
      716:	0f c0       	rjmp	.+30     	; 0x736 <processHeaterControl+0x86>
 	{
@@ -1168,37 +1168,37 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
      718:	80 e4       	ldi	r24, 0x40	; 64
      71a:	19 d2       	rcall	.+1074   	; 0xb4e <setExtraLeds>
 		dbg_SetTempCelsius = setup_temp_value;
-     71c:	80 91 39 01 	lds	r24, 0x0139
-     720:	80 93 34 01 	sts	0x0134, r24
+     71c:	80 91 3c 01 	lds	r24, 0x013C
+     720:	80 93 37 01 	sts	0x0137, r24
 		dbg_SetTempPID = set_value_adc;
-     724:	80 91 d1 00 	lds	r24, 0x00D1
-     728:	90 91 d2 00 	lds	r25, 0x00D2
-     72c:	90 93 50 01 	sts	0x0150, r25
-     730:	80 93 4f 01 	sts	0x014F, r24
+     724:	80 91 d8 00 	lds	r24, 0x00D8
+     728:	90 91 d9 00 	lds	r25, 0x00D9
+     72c:	90 93 53 01 	sts	0x0153, r25
+     730:	80 93 52 01 	sts	0x0152, r24
      734:	08 c0       	rjmp	.+16     	; 0x746 <processHeaterControl+0x96>
 	}
 	else
 	{
 		dbg_SetTempCelsius = 0;
-     736:	10 92 34 01 	sts	0x0134, r1
+     736:	10 92 37 01 	sts	0x0137, r1
 		dbg_SetTempPID = 0;
-     73a:	10 92 50 01 	sts	0x0150, r1
-     73e:	10 92 4f 01 	sts	0x014F, r1
+     73a:	10 92 53 01 	sts	0x0153, r1
+     73e:	10 92 52 01 	sts	0x0152, r1
 		clearExtraLeds(LED_HEATER);
      742:	80 e4       	ldi	r24, 0x40	; 64
      744:	0a d2       	rcall	.+1044   	; 0xb5a <clearExtraLeds>
 	}
 	
 	dbg_RealTempCelsius = conv_ADC_to_Celsius(PIDsampledADC);
-     746:	80 91 01 01 	lds	r24, 0x0101
-     74a:	90 91 02 01 	lds	r25, 0x0102
+     746:	80 91 04 01 	lds	r24, 0x0104
+     74a:	90 91 05 01 	lds	r25, 0x0105
      74e:	08 dd       	rcall	.-1520   	; 0x160 <conv_ADC_to_Celsius>
-     750:	80 93 4c 01 	sts	0x014C, r24
+     750:	80 93 4f 01 	sts	0x014F, r24
 	dbg_RealTempPID = PIDsampledADC;
-     754:	80 91 01 01 	lds	r24, 0x0101
-     758:	90 91 02 01 	lds	r25, 0x0102
-     75c:	90 93 38 01 	sts	0x0138, r25
-     760:	80 93 37 01 	sts	0x0137, r24
+     754:	80 91 04 01 	lds	r24, 0x0104
+     758:	90 91 05 01 	lds	r25, 0x0105
+     75c:	90 93 3b 01 	sts	0x013B, r25
+     760:	80 93 3a 01 	sts	0x013A, r24
      764:	08 95       	ret
 
 00000766 <processHeaterAlerts>:
@@ -1208,10 +1208,10 @@ void processHeaterAlerts(void)
 	
 	// Indicate reaching of desired temperature
 	if ( (adc_celsius > setup_temp_value - tempAlertRange) && (adc_celsius < setup_temp_value + tempAlertRange) )
-     766:	80 91 2f 01 	lds	r24, 0x012F
-     76a:	90 91 30 01 	lds	r25, 0x0130
-     76e:	20 91 39 01 	lds	r18, 0x0139
-     772:	30 91 3a 01 	lds	r19, 0x013A
+     766:	80 91 32 01 	lds	r24, 0x0132
+     76a:	90 91 33 01 	lds	r25, 0x0133
+     76e:	20 91 3c 01 	lds	r18, 0x013C
+     772:	30 91 3d 01 	lds	r19, 0x013D
      776:	e0 91 73 00 	lds	r30, 0x0073
      77a:	4e 2f       	mov	r20, r30
      77c:	50 e0       	ldi	r21, 0x00	; 0
@@ -1230,18 +1230,18 @@ void processHeaterAlerts(void)
 		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterState & HEATER_ENABLED))
      794:	e5 30       	cpi	r30, 0x05	; 5
      796:	51 f4       	brne	.+20     	; 0x7ac <processHeaterAlerts+0x46>
-     798:	80 91 f0 00 	lds	r24, 0x00F0
+     798:	80 91 f7 00 	lds	r24, 0x00F7
      79c:	80 ff       	sbrs	r24, 0
      79e:	06 c0       	rjmp	.+12     	; 0x7ac <processHeaterAlerts+0x46>
 		{
 			SetBeeperFreq(1000);
      7a0:	88 ee       	ldi	r24, 0xE8	; 232
      7a2:	93 e0       	ldi	r25, 0x03	; 3
-     7a4:	fc d7       	rcall	.+4088   	; 0x179e <SetBeeperFreq>
+     7a4:	4a d8       	rcall	.-3948   	; 0xfffff83a <__eeprom_end+0xff7ef830>
 			StartBeep(400);
      7a6:	80 e9       	ldi	r24, 0x90	; 144
      7a8:	91 e0       	ldi	r25, 0x01	; 1
-     7aa:	19 d8       	rcall	.-4046   	; 0xfffff7de <__eeprom_end+0xff7ef7d4>
+     7aa:	67 d8       	rcall	.-3890   	; 0xfffff87a <__eeprom_end+0xff7ef870>
 		}
 		// Add some hysteresis
 		tempAlertRange = TEMP_ALERT_RANGE + TEMP_ALERT_HYST;
@@ -1280,36 +1280,36 @@ void restoreGlobalParams(void)
      7d2:	70 e0       	ldi	r23, 0x00	; 0
      7d4:	ce 01       	movw	r24, r28
      7d6:	01 96       	adiw	r24, 0x01	; 1
-     7d8:	07 d9       	rcall	.-3570   	; 0xfffff9e8 <__eeprom_end+0xff7ef9de>
+     7d8:	35 d9       	rcall	.-3478   	; 0xfffffa44 <__eeprom_end+0xff7efa3a>
 	 setup_temp_value = gParams.setup_temp_value;	// reference temperature
      7da:	89 81       	ldd	r24, Y+1	; 0x01
-     7dc:	80 93 39 01 	sts	0x0139, r24
-     7e0:	10 92 3a 01 	sts	0x013A, r1
+     7dc:	80 93 3c 01 	sts	0x013C, r24
+     7e0:	10 92 3d 01 	sts	0x013D, r1
 	 rollCycleSet = gParams.rollCycleSet;			// number of rolling cycles
      7e4:	8a 81       	ldd	r24, Y+2	; 0x02
-     7e6:	80 93 3e 01 	sts	0x013E, r24
+     7e6:	80 93 41 01 	sts	0x0141, r24
 	 sound_enable = gParams.sound_enable;			// Global sound enable
      7ea:	8b 81       	ldd	r24, Y+3	; 0x03
-     7ec:	80 93 3b 01 	sts	0x013B, r24
+     7ec:	80 93 3e 01 	sts	0x013E, r24
 	 power_off_timeout = gParams.power_off_timeout;	// Auto power OFF timeout, minutes
      7f0:	8c 81       	ldd	r24, Y+4	; 0x04
-     7f2:	80 93 4b 01 	sts	0x014B, r24
+     7f2:	80 93 4e 01 	sts	0x014E, r24
 	 cpoint1 = gParams.cpoint1;						// Calibration point 1
      7f6:	8d 81       	ldd	r24, Y+5	; 0x05
-     7f8:	80 93 31 01 	sts	0x0131, r24
+     7f8:	80 93 34 01 	sts	0x0134, r24
 	 cpoint2 = gParams.cpoint2;						// Calibration point 2
      7fc:	8e 81       	ldd	r24, Y+6	; 0x06
-     7fe:	80 93 51 01 	sts	0x0151, r24
+     7fe:	80 93 54 01 	sts	0x0154, r24
 	 cpoint1_adc = gParams.cpoint1_adc;
      802:	8f 81       	ldd	r24, Y+7	; 0x07
      804:	98 85       	ldd	r25, Y+8	; 0x08
-     806:	90 93 4a 01 	sts	0x014A, r25
-     80a:	80 93 49 01 	sts	0x0149, r24
+     806:	90 93 4d 01 	sts	0x014D, r25
+     80a:	80 93 4c 01 	sts	0x014C, r24
 	 cpoint2_adc = gParams.cpoint2_adc;
      80e:	89 85       	ldd	r24, Y+9	; 0x09
      810:	9a 85       	ldd	r25, Y+10	; 0x0a
-     812:	90 93 4e 01 	sts	0x014E, r25
-     816:	80 93 4d 01 	sts	0x014D, r24
+     812:	90 93 51 01 	sts	0x0151, r25
+     816:	80 93 50 01 	sts	0x0150, r24
 //	 cpoint1 		= 25;		// TODO: check and remove
 //	 cpoint1_adc 	= 164;
 //	 cpoint2 		= 145;
@@ -1518,7 +1518,7 @@ static uint8_t wrap_led_buffer_index(int8_t buf_index)
      924:	18 f0       	brcs	.+6      	; 0x92c <wrap_led_buffer_index+0x10>
 		new_index_u = new_index_u % LED_BUFFER_LENGTH;
      926:	6e e0       	ldi	r22, 0x0E	; 14
-     928:	d3 d7       	rcall	.+4006   	; 0x18d0 <__udivmodqi4>
+     928:	01 d8       	rcall	.-4094   	; 0xfffff92c <__eeprom_end+0xff7ef922>
      92a:	89 2f       	mov	r24, r25
 	new_index_u = ((buf_index >= 0) || (new_index_u == 0)) ? new_index_u :  LED_BUFFER_LENGTH - new_index_u ;
      92c:	27 ff       	sbrs	r18, 7
@@ -1550,7 +1550,7 @@ void processLedIndicator()
      940:	13 d1       	rcall	.+550    	; 0xb68 <led_clock_pulse>
 	
 	switch (wActivePos)
-     942:	c0 91 da 00 	lds	r28, 0x00DA
+     942:	c0 91 e1 00 	lds	r28, 0x00E1
      946:	cc 23       	and	r28, r28
      948:	19 f0       	breq	.+6      	; 0x950 <processLedIndicator+0x14>
      94a:	c6 30       	cpi	r28, 0x06	; 6
@@ -1588,10 +1588,10 @@ void processLedIndicator()
      962:	02 d1       	rcall	.+516    	; 0xb68 <led_clock_pulse>
 		// Always start new cycle from specified buffer start position
 		bufActivePos = wStartPos;
-     964:	80 91 53 01 	lds	r24, 0x0153
-     968:	80 93 d9 00 	sts	0x00D9, r24
+     964:	80 91 56 01 	lds	r24, 0x0156
+     968:	80 93 e0 00 	sts	0x00E0, r24
 		next_wActivePos = wActivePos + 1;
-     96c:	c0 91 da 00 	lds	r28, 0x00DA
+     96c:	c0 91 e1 00 	lds	r28, 0x00E1
      970:	28 c0       	rjmp	.+80     	; 0x9c2 <processLedIndicator+0x86>
 //---------------------------------------------//
 // Performs window shifting
@@ -1599,7 +1599,7 @@ void processLedIndicator()
 static void processWindowShifter(void)
 {
 	if (shifterState == LED_SHIFT_DONE)
-     972:	80 91 54 01 	lds	r24, 0x0154
+     972:	80 91 57 01 	lds	r24, 0x0157
      976:	81 11       	cpse	r24, r1
      978:	01 c0       	rjmp	.+2      	; 0x97c <processLedIndicator+0x40>
      97a:	1b c0       	rjmp	.+54     	; 0x9b2 <processLedIndicator+0x76>
@@ -1607,29 +1607,29 @@ static void processWindowShifter(void)
 	
 	// Process shift timer
 	processSoftTimer8b(&shiftTimer);	
-     97c:	8b ed       	ldi	r24, 0xDB	; 219
+     97c:	82 ee       	ldi	r24, 0xE2	; 226
      97e:	90 e0       	ldi	r25, 0x00	; 0
      980:	e2 d6       	rcall	.+3524   	; 0x1746 <processSoftTimer8b>
 	
 	if (shiftTimer.FTop)
-     982:	80 91 db 00 	lds	r24, 0x00DB
+     982:	80 91 e2 00 	lds	r24, 0x00E2
      986:	85 ff       	sbrs	r24, 5
      988:	14 c0       	rjmp	.+40     	; 0x9b2 <processLedIndicator+0x76>
 	{
 		// Check if finished
 		if (wStartPos == bufStartPos)	
-     98a:	80 91 53 01 	lds	r24, 0x0153
-     98e:	90 91 55 01 	lds	r25, 0x0155
+     98a:	80 91 56 01 	lds	r24, 0x0156
+     98e:	90 91 58 01 	lds	r25, 0x0158
      992:	89 13       	cpse	r24, r25
      994:	03 c0       	rjmp	.+6      	; 0x99c <processLedIndicator+0x60>
 		{
 			// Update state
 			shifterState = LED_SHIFT_DONE;
-     996:	10 92 54 01 	sts	0x0154, r1
+     996:	10 92 57 01 	sts	0x0157, r1
      99a:	0b c0       	rjmp	.+22     	; 0x9b2 <processLedIndicator+0x76>
 		}
 		else if (shifterState == LED_SHIFT_RIGHT)
-     99c:	90 91 54 01 	lds	r25, 0x0154
+     99c:	90 91 57 01 	lds	r25, 0x0157
      9a0:	92 30       	cpi	r25, 0x02	; 2
      9a2:	49 f4       	brne	.+18     	; 0x9b6 <processLedIndicator+0x7a>
 // Increments index. If index falls out of buffer range,
@@ -1649,7 +1649,7 @@ static inline uint8_t inc_buffer_position(uint8_t position)
 		else if (shifterState == LED_SHIFT_RIGHT)
 		{
 			wStartPos = inc_buffer_position(wStartPos);	
-     9ae:	80 93 53 01 	sts	0x0153, r24
+     9ae:	80 93 56 01 	sts	0x0156, r24
 		// Always start new cycle from specified buffer start position
 		bufActivePos = wStartPos;
 		next_wActivePos = wActivePos + 1;
@@ -1682,13 +1682,13 @@ static inline uint8_t dec_buffer_position(uint8_t position)
 	
 	#ifdef 	USE_EXTRA_LED_DIGIT
 	if (wActivePos == EXTRA_DIGIT_NUM)
-     9c4:	80 91 da 00 	lds	r24, 0x00DA
+     9c4:	80 91 e1 00 	lds	r24, 0x00E1
      9c8:	86 30       	cpi	r24, 0x06	; 6
      9ca:	21 f4       	brne	.+8      	; 0x9d4 <processLedIndicator+0x98>
 	{
 		// Output separate LEDs state
 		set_led_segments(extra_led_state);
-     9cc:	80 91 52 01 	lds	r24, 0x0152
+     9cc:	80 91 55 01 	lds	r24, 0x0155
      9d0:	db d0       	rcall	.+438    	; 0xb88 <set_led_segments>
      9d2:	10 c0       	rjmp	.+32     	; 0x9f4 <processLedIndicator+0xb8>
 	}
@@ -1697,15 +1697,15 @@ static inline uint8_t dec_buffer_position(uint8_t position)
 	{
 		// Output new segment data
 		set_led_segments(led_data_buffer[bufActivePos]);
-     9d4:	e0 91 d9 00 	lds	r30, 0x00D9
+     9d4:	e0 91 e0 00 	lds	r30, 0x00E0
      9d8:	f0 e0       	ldi	r31, 0x00	; 0
-     9da:	ea 5a       	subi	r30, 0xAA	; 170
+     9da:	e7 5a       	subi	r30, 0xA7	; 167
      9dc:	fe 4f       	sbci	r31, 0xFE	; 254
      9de:	80 81       	ld	r24, Z
      9e0:	d3 d0       	rcall	.+422    	; 0xb88 <set_led_segments>
 		// Wrap around buffer length
 		bufActivePos = inc_buffer_position(bufActivePos );
-     9e2:	80 91 d9 00 	lds	r24, 0x00D9
+     9e2:	80 91 e0 00 	lds	r24, 0x00E0
 // Increments index. If index falls out of buffer range,
 // index is wrapped
 //---------------------------------------------//
@@ -1723,11 +1723,11 @@ static inline uint8_t inc_buffer_position(uint8_t position)
 		set_led_segments(led_data_buffer[bufActivePos]);
 		// Wrap around buffer length
 		bufActivePos = inc_buffer_position(bufActivePos );
-     9f0:	80 93 d9 00 	sts	0x00D9, r24
+     9f0:	80 93 e0 00 	sts	0x00E0, r24
 	}
 		
 	wActivePos = next_wActivePos;
-     9f4:	c0 93 da 00 	sts	0x00DA, r28
+     9f4:	c0 93 e1 00 	sts	0x00E1, r28
 	
 	#ifdef CLEAN_OPERATION
 	enable_led_segments();
@@ -1759,7 +1759,7 @@ void fillLedBuffer(int8_t offset, uint8_t length, char c)
      a12:	08 2f       	mov	r16, r24
 	// Ensure index is inside the buffer
 	uint8_t position = wrap_led_buffer_index((int8_t)bufStartPos + offset);
-     a14:	80 91 55 01 	lds	r24, 0x0155
+     a14:	80 91 58 01 	lds	r24, 0x0158
      a18:	81 0f       	add	r24, r17
      a1a:	80 df       	rcall	.-256    	; 0x91c <wrap_led_buffer_index>
 	while(length--)
@@ -1769,7 +1769,7 @@ void fillLedBuffer(int8_t offset, uint8_t length, char c)
 		led_data_buffer[position] = val;
      a20:	e8 2f       	mov	r30, r24
      a22:	f0 e0       	ldi	r31, 0x00	; 0
-     a24:	ea 5a       	subi	r30, 0xAA	; 170
+     a24:	e7 5a       	subi	r30, 0xA7	; 167
      a26:	fe 4f       	sbci	r31, 0xFE	; 254
      a28:	00 83       	st	Z, r16
 // Increments index. If index falls out of buffer range,
@@ -1816,14 +1816,14 @@ void startShiftingWindowLeft(void)
      a4a:	d8 df       	rcall	.-80     	; 0x9fc <fillLedBuffer>
 	// Set new buffer position for writing
 	bufStartPos = wrap_led_buffer_index( (int8_t)bufStartPos - (NUM_DIGITS + 2) );
-     a4c:	80 91 55 01 	lds	r24, 0x0155
+     a4c:	80 91 58 01 	lds	r24, 0x0158
      a50:	88 50       	subi	r24, 0x08	; 8
      a52:	64 df       	rcall	.-312    	; 0x91c <wrap_led_buffer_index>
-     a54:	80 93 55 01 	sts	0x0155, r24
+     a54:	80 93 58 01 	sts	0x0158, r24
 	// Set shifter state
 	shifterState = LED_SHIFT_LEFT;
      a58:	81 e0       	ldi	r24, 0x01	; 1
-     a5a:	80 93 54 01 	sts	0x0154, r24
+     a5a:	80 93 57 01 	sts	0x0157, r24
      a5e:	08 95       	ret
 
 00000a60 <startShiftingWindowRight>:
@@ -1839,14 +1839,14 @@ void startShiftingWindowRight(void)
      a66:	ca df       	rcall	.-108    	; 0x9fc <fillLedBuffer>
 	// Set new buffer position for writing
 	bufStartPos = wrap_led_buffer_index( (int8_t)bufStartPos + NUM_DIGITS + 2 );
-     a68:	80 91 55 01 	lds	r24, 0x0155
+     a68:	80 91 58 01 	lds	r24, 0x0158
      a6c:	88 5f       	subi	r24, 0xF8	; 248
      a6e:	56 df       	rcall	.-340    	; 0x91c <wrap_led_buffer_index>
-     a70:	80 93 55 01 	sts	0x0155, r24
+     a70:	80 93 58 01 	sts	0x0158, r24
 	// Set shifter state
 	shifterState = LED_SHIFT_RIGHT;
      a74:	82 e0       	ldi	r24, 0x02	; 2
-     a76:	80 93 54 01 	sts	0x0154, r24
+     a76:	80 93 57 01 	sts	0x0157, r24
      a7a:	08 95       	ret
 
 00000a7c <initLedIndicator>:
@@ -1885,16 +1885,16 @@ void initLedIndicator()
 	
 	// Reset pointers
 	wStartPos = 0;
-     a8c:	10 92 53 01 	sts	0x0153, r1
+     a8c:	10 92 56 01 	sts	0x0156, r1
 	bufStartPos = 0;
-     a90:	10 92 55 01 	sts	0x0155, r1
+     a90:	10 92 58 01 	sts	0x0158, r1
 	bufActivePos = 0;
-     a94:	10 92 d9 00 	sts	0x00D9, r1
+     a94:	10 92 e0 00 	sts	0x00E0, r1
 	wActivePos = 0;
-     a98:	10 92 da 00 	sts	0x00DA, r1
+     a98:	10 92 e1 00 	sts	0x00E1, r1
 	#ifdef 	USE_EXTRA_LED_DIGIT
 	extra_led_state = 0;
-     a9c:	10 92 52 01 	sts	0x0152, r1
+     a9c:	10 92 55 01 	sts	0x0155, r1
 	#endif
 	
 	// Clear the buffer 
@@ -1907,16 +1907,16 @@ void initLedIndicator()
 	// Initialize shift timer - always enabled, but 
 	//	processed only when shifting is active
 	shifterState = LED_SHIFT_DONE;
-     aa8:	10 92 54 01 	sts	0x0154, r1
+     aa8:	10 92 57 01 	sts	0x0157, r1
 	shiftTimer.Enabled = 1;
-     aac:	80 91 db 00 	lds	r24, 0x00DB
+     aac:	80 91 e2 00 	lds	r24, 0x00E2
 	shiftTimer.RunOnce = 0;
      ab0:	81 60       	ori	r24, 0x01	; 1
      ab2:	8d 7f       	andi	r24, 0xFD	; 253
-     ab4:	80 93 db 00 	sts	0x00DB, r24
+     ab4:	80 93 e2 00 	sts	0x00E2, r24
 	shiftTimer.Top = LED_SHIFT_INTERVAL-1;
      ab8:	89 e0       	ldi	r24, 0x09	; 9
-     aba:	80 93 dd 00 	sts	0x00DD, r24
+     aba:	80 93 e4 00 	sts	0x00E4, r24
 }
      abe:	cf 91       	pop	r28
      ac0:	08 95       	ret
@@ -1940,7 +1940,7 @@ void printLedBuffer(int8_t offset, char* str)
 	uint8_t comma_pos;
 	// Ensure index is inside the buffer
 	uint8_t buffer_position = wrap_led_buffer_index((int8_t)bufStartPos + offset);
-     ace:	90 91 55 01 	lds	r25, 0x0155
+     ace:	90 91 58 01 	lds	r25, 0x0158
      ad2:	89 0f       	add	r24, r25
      ad4:	23 df       	rcall	.-442    	; 0x91c <wrap_led_buffer_index>
      ad6:	18 2f       	mov	r17, r24
@@ -1976,7 +1976,7 @@ void printLedBuffer(int8_t offset, char* str)
 			led_data_buffer[comma_pos] |= decoded_sym;
      aee:	ef 2d       	mov	r30, r15
      af0:	f0 e0       	ldi	r31, 0x00	; 0
-     af2:	ea 5a       	subi	r30, 0xAA	; 170
+     af2:	e7 5a       	subi	r30, 0xA7	; 167
      af4:	fe 4f       	sbci	r31, 0xFE	; 254
      af6:	90 81       	ld	r25, Z
      af8:	98 2b       	or	r25, r24
@@ -1989,7 +1989,7 @@ void printLedBuffer(int8_t offset, char* str)
 			led_data_buffer[buffer_position] = decoded_sym;	
      b00:	e1 2f       	mov	r30, r17
      b02:	f0 e0       	ldi	r31, 0x00	; 0
-     b04:	ea 5a       	subi	r30, 0xAA	; 170
+     b04:	e7 5a       	subi	r30, 0xA7	; 167
      b06:	fe 4f       	sbci	r31, 0xFE	; 254
      b08:	80 83       	st	Z, r24
 // Increments index. If index falls out of buffer range,
@@ -2046,13 +2046,13 @@ void setComma(int8_t offset)
 {
 	// Ensure index is inside the buffer
 	uint8_t position = wrap_led_buffer_index((int8_t)bufStartPos + offset);
-     b36:	90 91 55 01 	lds	r25, 0x0155
+     b36:	90 91 58 01 	lds	r25, 0x0158
      b3a:	89 0f       	add	r24, r25
      b3c:	ef de       	rcall	.-546    	; 0x91c <wrap_led_buffer_index>
 	led_data_buffer[position] |= (SEGH);
      b3e:	e8 2f       	mov	r30, r24
      b40:	f0 e0       	ldi	r31, 0x00	; 0
-     b42:	ea 5a       	subi	r30, 0xAA	; 170
+     b42:	e7 5a       	subi	r30, 0xA7	; 167
      b44:	fe 4f       	sbci	r31, 0xFE	; 254
      b46:	80 81       	ld	r24, Z
      b48:	80 68       	ori	r24, 0x80	; 128
@@ -2066,9 +2066,9 @@ inline void setExtraLeds(uint8_t leds_set_value)
 {
 		//asm("cli");
 		extra_led_state |= leds_set_value;
-     b4e:	90 91 52 01 	lds	r25, 0x0152
+     b4e:	90 91 55 01 	lds	r25, 0x0155
      b52:	98 2b       	or	r25, r24
-     b54:	90 93 52 01 	sts	0x0152, r25
+     b54:	90 93 55 01 	sts	0x0155, r25
      b58:	08 95       	ret
 
 00000b5a <clearExtraLeds>:
@@ -2078,10 +2078,10 @@ inline void clearExtraLeds(uint8_t leds_clear_value)
 {
 		//asm("cli");
 		extra_led_state &= ~leds_clear_value;
-     b5a:	90 91 52 01 	lds	r25, 0x0152
+     b5a:	90 91 55 01 	lds	r25, 0x0155
      b5e:	80 95       	com	r24
      b60:	89 23       	and	r24, r25
-     b62:	80 93 52 01 	sts	0x0152, r24
+     b62:	80 93 55 01 	sts	0x0155, r24
      b66:	08 95       	ret
 
 00000b68 <led_clock_pulse>:
@@ -2235,7 +2235,7 @@ void capture_button_state()
      bda:	89 2b       	or	r24, r25
 	raw_button_state = pdat ^ RAW_BUTTONS_INVERSE_MASK;
      bdc:	80 95       	com	r24
-     bde:	80 93 64 01 	sts	0x0164, r24
+     bde:	80 93 67 01 	sts	0x0167, r24
      be2:	08 95       	ret
 
 00000be4 <processItemFunction>:
@@ -2259,7 +2259,7 @@ static inline void processItemFunction(FuncPtr funcAddr)
 void mf_setTempLeave(void)
 {
 	userTimer.Enabled = 0;
-     bee:	e7 ee       	ldi	r30, 0xE7	; 231
+     bee:	ee ee       	ldi	r30, 0xEE	; 238
      bf0:	f0 e0       	ldi	r31, 0x00	; 0
      bf2:	80 81       	ld	r24, Z
      bf4:	8e 7f       	andi	r24, 0xFE	; 254
@@ -2273,15 +2273,15 @@ void mf_setTempLeave(void)
 void mf_leafSelectAct(void)
 {
 	userTimer.Timer = 0;
-     bfa:	10 92 e8 00 	sts	0x00E8, r1
+     bfa:	10 92 ef 00 	sts	0x00EF, r1
 	userTimer.Top = BLINK_PERIOD - 1;
      bfe:	87 e0       	ldi	r24, 0x07	; 7
-     c00:	80 93 e9 00 	sts	0x00E9, r24
+     c00:	80 93 f0 00 	sts	0x00F0, r24
 	userTimer.CompA = BLINK_PERIOD / 2;
      c04:	84 e0       	ldi	r24, 0x04	; 4
-     c06:	80 93 ea 00 	sts	0x00EA, r24
+     c06:	80 93 f1 00 	sts	0x00F1, r24
 	userTimer.Enabled = 1;
-     c0a:	e7 ee       	ldi	r30, 0xE7	; 231
+     c0a:	ee ee       	ldi	r30, 0xEE	; 238
      c0c:	f0 e0       	ldi	r31, 0x00	; 0
      c0e:	80 81       	ld	r24, Z
      c10:	81 60       	ori	r24, 0x01	; 1
@@ -2294,7 +2294,7 @@ void mf_leafSelectAct(void)
 void mf_leafExit(void)
 {
 	userTimer.Enabled = 0;	
-     c16:	e7 ee       	ldi	r30, 0xE7	; 231
+     c16:	ee ee       	ldi	r30, 0xEE	; 238
      c18:	f0 e0       	ldi	r31, 0x00	; 0
      c1a:	80 81       	ld	r24, Z
      c1c:	8e 7f       	andi	r24, 0xFE	; 254
@@ -2308,7 +2308,7 @@ void mf_leafExit(void)
 void mf_actpoffLeave(void)
 {
 	autoPowerOffState = 0;	
-     c22:	10 92 fc 00 	sts	0x00FC, r1
+     c22:	10 92 d6 00 	sts	0x00D6, r1
      c26:	08 95       	ret
 
 00000c28 <mf_cdoneDo>:
@@ -2318,7 +2318,7 @@ void mf_actpoffLeave(void)
 void mf_cdoneDo(void)
 {
 	printLedBuffer(0," DONE ");
-     c28:	68 ea       	ldi	r22, 0xA8	; 168
+     c28:	6d ea       	ldi	r22, 0xAD	; 173
      c2a:	70 e0       	ldi	r23, 0x00	; 0
      c2c:	80 e0       	ldi	r24, 0x00	; 0
      c2e:	49 cf       	rjmp	.-366    	; 0xac2 <printLedBuffer>
@@ -2330,7 +2330,7 @@ void mf_cdoneDo(void)
 void mf_actpoffDo(void)
 {
 	printLedBuffer(0,"   OFF");
-     c30:	6f ea       	ldi	r22, 0xAF	; 175
+     c30:	64 eb       	ldi	r22, 0xB4	; 180
      c32:	70 e0       	ldi	r23, 0x00	; 0
      c34:	80 e0       	ldi	r24, 0x00	; 0
      c36:	45 cf       	rjmp	.-374    	; 0xac2 <printLedBuffer>
@@ -2342,14 +2342,14 @@ void mf_cdone2Select(void)
 {
 	// Save current ADC as calibrating point
 	cpoint2_adc = adc_normalized;
-     c38:	80 91 2d 01 	lds	r24, 0x012D
-     c3c:	90 91 2e 01 	lds	r25, 0x012E
-     c40:	90 93 4e 01 	sts	0x014E, r25
-     c44:	80 93 4d 01 	sts	0x014D, r24
+     c38:	80 91 30 01 	lds	r24, 0x0130
+     c3c:	90 91 31 01 	lds	r25, 0x0131
+     c40:	90 93 51 01 	sts	0x0151, r25
+     c44:	80 93 50 01 	sts	0x0150, r24
 	// Save current Celsius degree
 	cpoint2 = cpoint2_copy;
-     c48:	80 91 ec 00 	lds	r24, 0x00EC
-     c4c:	80 93 51 01 	sts	0x0151, r24
+     c48:	80 91 f3 00 	lds	r24, 0x00F3
+     c4c:	80 93 54 01 	sts	0x0154, r24
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
      c50:	c9 ca       	rjmp	.-2670   	; 0x1e4 <calculateCoeffs>
@@ -2361,14 +2361,14 @@ void mf_cdone1Select(void)
 {
 	// Save current ADC as calibrating point
 	cpoint1_adc = adc_normalized;
-     c52:	80 91 2d 01 	lds	r24, 0x012D
-     c56:	90 91 2e 01 	lds	r25, 0x012E
-     c5a:	90 93 4a 01 	sts	0x014A, r25
-     c5e:	80 93 49 01 	sts	0x0149, r24
+     c52:	80 91 30 01 	lds	r24, 0x0130
+     c56:	90 91 31 01 	lds	r25, 0x0131
+     c5a:	90 93 4d 01 	sts	0x014D, r25
+     c5e:	80 93 4c 01 	sts	0x014C, r24
 	// Save current Celsius degree
 	cpoint1 = cpoint1_copy;
-     c62:	80 91 eb 00 	lds	r24, 0x00EB
-     c66:	80 93 31 01 	sts	0x0131, r24
+     c62:	80 91 f2 00 	lds	r24, 0x00F2
+     c66:	80 93 34 01 	sts	0x0134, r24
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
      c6a:	bc ca       	rjmp	.-2696   	; 0x1e4 <calculateCoeffs>
@@ -2392,7 +2392,7 @@ void mf_autopoffDo(void)
      c7e:	cd bf       	out	0x3d, r28	; 61
 	char str[] = {'O','F','F',' ',' ',' ',0};
      c80:	87 e0       	ldi	r24, 0x07	; 7
-     c82:	ee e7       	ldi	r30, 0x7E	; 126
+     c82:	e3 e8       	ldi	r30, 0x83	; 131
      c84:	f0 e0       	ldi	r31, 0x00	; 0
      c86:	de 01       	movw	r26, r28
      c88:	11 96       	adiw	r26, 0x01	; 1
@@ -2403,8 +2403,8 @@ void mf_autopoffDo(void)
 		
 		
 	if (button_state & (BD_UP | BR_UP))
-     c92:	80 91 cc 00 	lds	r24, 0x00CC
-     c96:	90 91 cd 00 	lds	r25, 0x00CD
+     c92:	80 91 d2 00 	lds	r24, 0x00D2
+     c96:	90 91 d3 00 	lds	r25, 0x00D3
      c9a:	9c 01       	movw	r18, r24
      c9c:	22 70       	andi	r18, 0x02	; 2
      c9e:	34 70       	andi	r19, 0x04	; 4
@@ -2412,7 +2412,7 @@ void mf_autopoffDo(void)
      ca2:	31 f0       	breq	.+12     	; 0xcb0 <mf_autopoffDo+0x44>
 	{
 		if (power_off_timeout < MAX_POWEROFF_TIMEOUT)
-     ca4:	80 91 4b 01 	lds	r24, 0x014B
+     ca4:	80 91 4e 01 	lds	r24, 0x014E
      ca8:	8f 35       	cpi	r24, 0x5F	; 95
      caa:	68 f4       	brcc	.+26     	; 0xcc6 <mf_autopoffDo+0x5a>
 			power_off_timeout += 5;
@@ -2427,12 +2427,12 @@ void mf_autopoffDo(void)
      cb6:	49 f0       	breq	.+18     	; 0xcca <mf_autopoffDo+0x5e>
 	{
 		if (power_off_timeout > MIN_POWEROFF_TIMEOUT)
-     cb8:	80 91 4b 01 	lds	r24, 0x014B
+     cb8:	80 91 4e 01 	lds	r24, 0x014E
      cbc:	86 30       	cpi	r24, 0x06	; 6
      cbe:	18 f0       	brcs	.+6      	; 0xcc6 <mf_autopoffDo+0x5a>
 			power_off_timeout -= 5;
      cc0:	85 50       	subi	r24, 0x05	; 5
-     cc2:	80 93 4b 01 	sts	0x014B, r24
+     cc2:	80 93 4e 01 	sts	0x014E, r24
 //	 Restarts menu state timeout
 //	Should be used in RUN function when control buttons are pressed.
 //-----------------------------------------------------------------//
@@ -2446,12 +2446,12 @@ static void restartMenuTimer(void)
 	}	
 		
 	if (userTimer.FA_GE)
-     cca:	80 91 e7 00 	lds	r24, 0x00E7
+     cca:	80 91 ee 00 	lds	r24, 0x00EE
      cce:	84 ff       	sbrs	r24, 4
      cd0:	10 c0       	rjmp	.+32     	; 0xcf2 <mf_autopoffDo+0x86>
 	{
 		if (power_off_timeout != MAX_POWEROFF_TIMEOUT)
-     cd2:	80 91 4b 01 	lds	r24, 0x014B
+     cd2:	80 91 4e 01 	lds	r24, 0x014E
      cd6:	8f 35       	cpi	r24, 0x5F	; 95
      cd8:	41 f0       	breq	.+16     	; 0xcea <mf_autopoffDo+0x7e>
 			u16toa_align_right(power_off_timeout,str + 4,0x80 | 2,' ');	
@@ -2461,7 +2461,7 @@ static void restartMenuTimer(void)
      ce0:	6b 5f       	subi	r22, 0xFB	; 251
      ce2:	7f 4f       	sbci	r23, 0xFF	; 255
      ce4:	90 e0       	ldi	r25, 0x00	; 0
-     ce6:	b6 d2       	rcall	.+1388   	; 0x1254 <u16toa_align_right>
+     ce6:	b3 d2       	rcall	.+1382   	; 0x124e <u16toa_align_right>
      ce8:	04 c0       	rjmp	.+8      	; 0xcf2 <mf_autopoffDo+0x86>
 		else 
 		{
@@ -2510,7 +2510,7 @@ void mf_realTempDo(void)
      d20:	cd bf       	out	0x3d, r28	; 61
 	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
      d22:	87 e0       	ldi	r24, 0x07	; 7
-     d24:	e5 e8       	ldi	r30, 0x85	; 133
+     d24:	ea e8       	ldi	r30, 0x8A	; 138
      d26:	f0 e0       	ldi	r31, 0x00	; 0
      d28:	de 01       	movw	r26, r28
      d2a:	11 96       	adiw	r26, 0x01	; 1
@@ -2525,9 +2525,9 @@ void mf_realTempDo(void)
      d38:	be 01       	movw	r22, r28
      d3a:	6f 5f       	subi	r22, 0xFF	; 255
      d3c:	7f 4f       	sbci	r23, 0xFF	; 255
-     d3e:	80 91 2f 01 	lds	r24, 0x012F
-     d42:	90 91 30 01 	lds	r25, 0x0130
-     d46:	86 d2       	rcall	.+1292   	; 0x1254 <u16toa_align_right>
+     d3e:	80 91 32 01 	lds	r24, 0x0132
+     d42:	90 91 33 01 	lds	r25, 0x0133
+     d46:	83 d2       	rcall	.+1286   	; 0x124e <u16toa_align_right>
 	printLedBuffer(0,str);
      d48:	be 01       	movw	r22, r28
      d4a:	6f 5f       	subi	r22, 0xFF	; 255
@@ -2564,7 +2564,7 @@ void mf_calib2Do(void)
      d76:	cd bf       	out	0x3d, r28	; 61
 	char str[] = {'P','2',' ',' ',' ',' ',0};
      d78:	87 e0       	ldi	r24, 0x07	; 7
-     d7a:	ec e8       	ldi	r30, 0x8C	; 140
+     d7a:	e1 e9       	ldi	r30, 0x91	; 145
      d7c:	f0 e0       	ldi	r31, 0x00	; 0
      d7e:	de 01       	movw	r26, r28
      d80:	11 96       	adiw	r26, 0x01	; 1
@@ -2575,8 +2575,8 @@ void mf_calib2Do(void)
 	
 	
 	if (button_state & (BD_UP | BR_UP))
-     d8a:	80 91 cc 00 	lds	r24, 0x00CC
-     d8e:	90 91 cd 00 	lds	r25, 0x00CD
+     d8a:	80 91 d2 00 	lds	r24, 0x00D2
+     d8e:	90 91 d3 00 	lds	r25, 0x00D3
      d92:	9c 01       	movw	r18, r24
      d94:	22 70       	andi	r18, 0x02	; 2
      d96:	34 70       	andi	r19, 0x04	; 4
@@ -2584,7 +2584,7 @@ void mf_calib2Do(void)
      d9a:	31 f0       	breq	.+12     	; 0xda8 <mf_calib2Do+0x44>
 	{
 		if (cpoint2_copy < MAX_CALIB_TEMP)
-     d9c:	80 91 ec 00 	lds	r24, 0x00EC
+     d9c:	80 91 f3 00 	lds	r24, 0x00F3
      da0:	8a 3f       	cpi	r24, 0xFA	; 250
      da2:	68 f4       	brcc	.+26     	; 0xdbe <mf_calib2Do+0x5a>
 		cpoint2_copy += 1;
@@ -2598,16 +2598,16 @@ void mf_calib2Do(void)
      dae:	39 f0       	breq	.+14     	; 0xdbe <mf_calib2Do+0x5a>
 	{
 		if (cpoint2_copy > MIN_CALIB_TEMP)
-     db0:	80 91 ec 00 	lds	r24, 0x00EC
+     db0:	80 91 f3 00 	lds	r24, 0x00F3
      db4:	8b 30       	cpi	r24, 0x0B	; 11
      db6:	18 f0       	brcs	.+6      	; 0xdbe <mf_calib2Do+0x5a>
 		cpoint2_copy -= 1;
      db8:	81 50       	subi	r24, 0x01	; 1
-     dba:	80 93 ec 00 	sts	0x00EC, r24
+     dba:	80 93 f3 00 	sts	0x00F3, r24
 	}
 	
 	if (userTimer.FA_GE)
-     dbe:	80 91 e7 00 	lds	r24, 0x00E7
+     dbe:	80 91 ee 00 	lds	r24, 0x00EE
      dc2:	84 ff       	sbrs	r24, 4
      dc4:	09 c0       	rjmp	.+18     	; 0xdd8 <mf_calib2Do+0x74>
 	{
@@ -2617,9 +2617,9 @@ void mf_calib2Do(void)
      dca:	be 01       	movw	r22, r28
      dcc:	6c 5f       	subi	r22, 0xFC	; 252
      dce:	7f 4f       	sbci	r23, 0xFF	; 255
-     dd0:	80 91 ec 00 	lds	r24, 0x00EC
+     dd0:	80 91 f3 00 	lds	r24, 0x00F3
      dd4:	90 e0       	ldi	r25, 0x00	; 0
-     dd6:	3e d2       	rcall	.+1148   	; 0x1254 <u16toa_align_right>
+     dd6:	3b d2       	rcall	.+1142   	; 0x124e <u16toa_align_right>
 	}
 	
 	printLedBuffer(0,str);
@@ -2630,7 +2630,7 @@ void mf_calib2Do(void)
      de0:	70 de       	rcall	.-800    	; 0xac2 <printLedBuffer>
 	
 	resetAutoPowerOffCounter();
-     de2:	09 d5       	rcall	.+2578   	; 0x17f6 <resetAutoPowerOffCounter>
+     de2:	28 d5       	rcall	.+2640   	; 0x1834 <resetAutoPowerOffCounter>
 }
      de4:	27 96       	adiw	r28, 0x07	; 7
      de6:	0f b6       	in	r0, 0x3f	; 63
@@ -2661,7 +2661,7 @@ void mf_calib1Do(void)
      e08:	cd bf       	out	0x3d, r28	; 61
 	char str[] = {'P','1',' ',' ',' ',' ',0};
      e0a:	87 e0       	ldi	r24, 0x07	; 7
-     e0c:	e3 e9       	ldi	r30, 0x93	; 147
+     e0c:	e8 e9       	ldi	r30, 0x98	; 152
      e0e:	f0 e0       	ldi	r31, 0x00	; 0
      e10:	de 01       	movw	r26, r28
      e12:	11 96       	adiw	r26, 0x01	; 1
@@ -2672,8 +2672,8 @@ void mf_calib1Do(void)
 	
 	
 	if (button_state & (BD_UP | BR_UP))
-     e1c:	80 91 cc 00 	lds	r24, 0x00CC
-     e20:	90 91 cd 00 	lds	r25, 0x00CD
+     e1c:	80 91 d2 00 	lds	r24, 0x00D2
+     e20:	90 91 d3 00 	lds	r25, 0x00D3
      e24:	9c 01       	movw	r18, r24
      e26:	22 70       	andi	r18, 0x02	; 2
      e28:	34 70       	andi	r19, 0x04	; 4
@@ -2681,7 +2681,7 @@ void mf_calib1Do(void)
      e2c:	31 f0       	breq	.+12     	; 0xe3a <mf_calib1Do+0x44>
 	{
 		if (cpoint1_copy < MAX_CALIB_TEMP)
-     e2e:	80 91 eb 00 	lds	r24, 0x00EB
+     e2e:	80 91 f2 00 	lds	r24, 0x00F2
      e32:	8a 3f       	cpi	r24, 0xFA	; 250
      e34:	68 f4       	brcc	.+26     	; 0xe50 <mf_calib1Do+0x5a>
 			cpoint1_copy += 1;
@@ -2695,16 +2695,16 @@ void mf_calib1Do(void)
      e40:	39 f0       	breq	.+14     	; 0xe50 <mf_calib1Do+0x5a>
 	{
 		if (cpoint1_copy > MIN_CALIB_TEMP)
-     e42:	80 91 eb 00 	lds	r24, 0x00EB
+     e42:	80 91 f2 00 	lds	r24, 0x00F2
      e46:	8b 30       	cpi	r24, 0x0B	; 11
      e48:	18 f0       	brcs	.+6      	; 0xe50 <mf_calib1Do+0x5a>
 			cpoint1_copy -= 1;
      e4a:	81 50       	subi	r24, 0x01	; 1
-     e4c:	80 93 eb 00 	sts	0x00EB, r24
+     e4c:	80 93 f2 00 	sts	0x00F2, r24
 	}
 	
 	if (userTimer.FA_GE)
-     e50:	80 91 e7 00 	lds	r24, 0x00E7
+     e50:	80 91 ee 00 	lds	r24, 0x00EE
      e54:	84 ff       	sbrs	r24, 4
      e56:	09 c0       	rjmp	.+18     	; 0xe6a <mf_calib1Do+0x74>
 	{
@@ -2714,9 +2714,9 @@ void mf_calib1Do(void)
      e5c:	be 01       	movw	r22, r28
      e5e:	6c 5f       	subi	r22, 0xFC	; 252
      e60:	7f 4f       	sbci	r23, 0xFF	; 255
-     e62:	80 91 eb 00 	lds	r24, 0x00EB
+     e62:	80 91 f2 00 	lds	r24, 0x00F2
      e66:	90 e0       	ldi	r25, 0x00	; 0
-     e68:	f5 d1       	rcall	.+1002   	; 0x1254 <u16toa_align_right>
+     e68:	f2 d1       	rcall	.+996    	; 0x124e <u16toa_align_right>
 	}
 	
 	printLedBuffer(0,str);
@@ -2727,7 +2727,7 @@ void mf_calib1Do(void)
      e72:	27 de       	rcall	.-946    	; 0xac2 <printLedBuffer>
 	
 	resetAutoPowerOffCounter();
-     e74:	c0 d4       	rcall	.+2432   	; 0x17f6 <resetAutoPowerOffCounter>
+     e74:	df d4       	rcall	.+2494   	; 0x1834 <resetAutoPowerOffCounter>
 }
      e76:	27 96       	adiw	r28, 0x07	; 7
      e78:	0f b6       	in	r0, 0x3f	; 63
@@ -2750,7 +2750,7 @@ void mf_actpoffSelect(void)
      e8a:	67 de       	rcall	.-818    	; 0xb5a <clearExtraLeds>
 	autoPowerOffState = AUTO_POFF_ACTIVE;
      e8c:	81 e0       	ldi	r24, 0x01	; 1
-     e8e:	80 93 fc 00 	sts	0x00FC, r24
+     e8e:	80 93 d6 00 	sts	0x00D6, r24
      e92:	08 95       	ret
 
 00000e94 <mf_leafSelect>:
@@ -2763,7 +2763,7 @@ void mf_leafSelect(void)
      e94:	83 e0       	ldi	r24, 0x03	; 3
      e96:	61 de       	rcall	.-830    	; 0xb5a <clearExtraLeds>
 	userTimer.FA_GE = 1;	
-     e98:	e7 ee       	ldi	r30, 0xE7	; 231
+     e98:	ee ee       	ldi	r30, 0xEE	; 238
      e9a:	f0 e0       	ldi	r31, 0x00	; 0
      e9c:	80 81       	ld	r24, Z
      e9e:	80 61       	ori	r24, 0x10	; 16
@@ -2779,11 +2779,11 @@ void mf_calibSelect(void)
 	mf_leafSelect();
      ea4:	f7 df       	rcall	.-18     	; 0xe94 <mf_leafSelect>
 	cpoint1_copy = cpoint1;
-     ea6:	80 91 31 01 	lds	r24, 0x0131
-     eaa:	80 93 eb 00 	sts	0x00EB, r24
+     ea6:	80 91 34 01 	lds	r24, 0x0134
+     eaa:	80 93 f2 00 	sts	0x00F2, r24
 	cpoint2_copy = cpoint2;
-     eae:	80 91 51 01 	lds	r24, 0x0151
-     eb2:	80 93 ec 00 	sts	0x00EC, r24
+     eae:	80 91 54 01 	lds	r24, 0x0154
+     eb2:	80 93 f3 00 	sts	0x00F3, r24
      eb6:	08 95       	ret
 
 00000eb8 <mf_rollLeave>:
@@ -2796,7 +2796,7 @@ void mf_rollLeave(void)
      eb8:	82 e0       	ldi	r24, 0x02	; 2
      eba:	4f de       	rcall	.-866    	; 0xb5a <clearExtraLeds>
 	userTimer.Enabled = 0;
-     ebc:	e7 ee       	ldi	r30, 0xE7	; 231
+     ebc:	ee ee       	ldi	r30, 0xEE	; 238
      ebe:	f0 e0       	ldi	r31, 0x00	; 0
      ec0:	80 81       	ld	r24, Z
      ec2:	8e 7f       	andi	r24, 0xFE	; 254
@@ -2844,7 +2844,7 @@ void mf_sndenDo(void)
      ee4:	cd bf       	out	0x3d, r28	; 61
 	char str[] = {'S','N','D',' ',' ',' ',0};
      ee6:	87 e0       	ldi	r24, 0x07	; 7
-     ee8:	ea e9       	ldi	r30, 0x9A	; 154
+     ee8:	ef e9       	ldi	r30, 0x9F	; 159
      eea:	f0 e0       	ldi	r31, 0x00	; 0
      eec:	de 01       	movw	r26, r28
      eee:	11 96       	adiw	r26, 0x01	; 1
@@ -2854,8 +2854,8 @@ void mf_sndenDo(void)
      ef6:	e1 f7       	brne	.-8      	; 0xef0 <mf_sndenDo+0x1e>
 		
 	if (button_state & (BD_UP | BD_DOWN))
-     ef8:	80 91 cc 00 	lds	r24, 0x00CC
-     efc:	90 91 cd 00 	lds	r25, 0x00CD
+     ef8:	80 91 d2 00 	lds	r24, 0x00D2
+     efc:	90 91 d3 00 	lds	r25, 0x00D3
      f00:	86 70       	andi	r24, 0x06	; 6
      f02:	99 27       	eor	r25, r25
      f04:	89 2b       	or	r24, r25
@@ -2863,10 +2863,10 @@ void mf_sndenDo(void)
 	{
 		sound_enable = !sound_enable;
      f08:	81 e0       	ldi	r24, 0x01	; 1
-     f0a:	90 91 3b 01 	lds	r25, 0x013B
+     f0a:	90 91 3e 01 	lds	r25, 0x013E
      f0e:	91 11       	cpse	r25, r1
      f10:	80 e0       	ldi	r24, 0x00	; 0
-     f12:	80 93 3b 01 	sts	0x013B, r24
+     f12:	80 93 3e 01 	sts	0x013E, r24
 //	 Restarts menu state timeout
 //	Should be used in RUN function when control buttons are pressed.
 //-----------------------------------------------------------------//
@@ -2880,12 +2880,12 @@ static void restartMenuTimer(void)
 	}			
 		
 	if (userTimer.FA_GE)
-     f1a:	80 91 e7 00 	lds	r24, 0x00E7
+     f1a:	80 91 ee 00 	lds	r24, 0x00EE
      f1e:	84 ff       	sbrs	r24, 4
      f20:	0d c0       	rjmp	.+26     	; 0xf3c <mf_sndenDo+0x6a>
 	{
 		if (sound_enable)		
-     f22:	80 91 3b 01 	lds	r24, 0x013B
+     f22:	80 91 3e 01 	lds	r24, 0x013E
      f26:	88 23       	and	r24, r24
      f28:	21 f0       	breq	.+8      	; 0xf32 <mf_sndenDo+0x60>
 		{
@@ -2948,7 +2948,7 @@ void mf_rollDo(void)
      f6e:	cd bf       	out	0x3d, r28	; 61
 	char str[] = {' ',' ',' ',' ',' ',' ',0};
      f70:	87 e0       	ldi	r24, 0x07	; 7
-     f72:	e1 ea       	ldi	r30, 0xA1	; 161
+     f72:	e6 ea       	ldi	r30, 0xA6	; 166
      f74:	f0 e0       	ldi	r31, 0x00	; 0
      f76:	de 01       	movw	r26, r28
      f78:	11 96       	adiw	r26, 0x01	; 1
@@ -2958,12 +2958,12 @@ void mf_rollDo(void)
      f80:	e1 f7       	brne	.-8      	; 0xf7a <mf_rollDo+0x1e>
 		
 	if (button_state & (BD_UP | BR_UP))
-     f82:	80 91 cc 00 	lds	r24, 0x00CC
-     f86:	90 91 cd 00 	lds	r25, 0x00CD
+     f82:	80 91 d2 00 	lds	r24, 0x00D2
+     f86:	90 91 d3 00 	lds	r25, 0x00D3
      f8a:	9c 01       	movw	r18, r24
      f8c:	22 70       	andi	r18, 0x02	; 2
      f8e:	34 70       	andi	r19, 0x04	; 4
-     f90:	40 91 3e 01 	lds	r20, 0x013E
+     f90:	40 91 41 01 	lds	r20, 0x0141
      f94:	23 2b       	or	r18, r19
      f96:	21 f0       	breq	.+8      	; 0xfa0 <mf_rollDo+0x44>
 	{
@@ -2985,7 +2985,7 @@ void mf_rollDo(void)
      faa:	18 f0       	brcs	.+6      	; 0xfb2 <mf_rollDo+0x56>
 		rollCycleSet -= 1;
      fac:	41 50       	subi	r20, 0x01	; 1
-     fae:	40 93 3e 01 	sts	0x013E, r20
+     fae:	40 93 41 01 	sts	0x0141, r20
 	}	
 		
 	u16toa_align_right(rollCycleSet,str + 4,0x80 | 2,' ');
@@ -2994,15 +2994,15 @@ void mf_rollDo(void)
      fb6:	be 01       	movw	r22, r28
      fb8:	6b 5f       	subi	r22, 0xFB	; 251
      fba:	7f 4f       	sbci	r23, 0xFF	; 255
-     fbc:	80 91 3e 01 	lds	r24, 0x013E
+     fbc:	80 91 41 01 	lds	r24, 0x0141
      fc0:	90 e0       	ldi	r25, 0x00	; 0
-     fc2:	48 d1       	rcall	.+656    	; 0x1254 <u16toa_align_right>
+     fc2:	45 d1       	rcall	.+650    	; 0x124e <u16toa_align_right>
 	
 	if ((!(rollState & ROLL_CYCLE)) || (userTimer.FA_GE))
-     fc4:	80 91 ee 00 	lds	r24, 0x00EE
+     fc4:	80 91 f5 00 	lds	r24, 0x00F5
      fc8:	82 ff       	sbrs	r24, 2
      fca:	04 c0       	rjmp	.+8      	; 0xfd4 <mf_rollDo+0x78>
-     fcc:	80 91 e7 00 	lds	r24, 0x00E7
+     fcc:	80 91 ee 00 	lds	r24, 0x00EE
      fd0:	84 ff       	sbrs	r24, 4
      fd2:	09 c0       	rjmp	.+18     	; 0xfe6 <mf_rollDo+0x8a>
 	{
@@ -3012,9 +3012,9 @@ void mf_rollDo(void)
      fd8:	be 01       	movw	r22, r28
      fda:	6e 5f       	subi	r22, 0xFE	; 254
      fdc:	7f 4f       	sbci	r23, 0xFF	; 255
-     fde:	80 91 ed 00 	lds	r24, 0x00ED
+     fde:	80 91 f4 00 	lds	r24, 0x00F4
      fe2:	90 e0       	ldi	r25, 0x00	; 0
-     fe4:	37 d1       	rcall	.+622    	; 0x1254 <u16toa_align_right>
+     fe4:	34 d1       	rcall	.+616    	; 0x124e <u16toa_align_right>
 	}
 	
 	str[0] = 0;
@@ -3091,7 +3091,7 @@ void mf_setTempDo(void)
     103e:	cd bf       	out	0x3d, r28	; 61
 	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
     1040:	87 e0       	ldi	r24, 0x07	; 7
-    1042:	e5 e8       	ldi	r30, 0x85	; 133
+    1042:	ea e8       	ldi	r30, 0x8A	; 138
     1044:	f0 e0       	ldi	r31, 0x00	; 0
     1046:	de 01       	movw	r26, r28
     1048:	11 96       	adiw	r26, 0x01	; 1
@@ -3102,13 +3102,13 @@ void mf_setTempDo(void)
 
 	
 	if (button_state & (BD_UP | BR_UP))
-    1052:	20 91 cc 00 	lds	r18, 0x00CC
-    1056:	30 91 cd 00 	lds	r19, 0x00CD
+    1052:	20 91 d2 00 	lds	r18, 0x00D2
+    1056:	30 91 d3 00 	lds	r19, 0x00D3
     105a:	a9 01       	movw	r20, r18
     105c:	42 70       	andi	r20, 0x02	; 2
     105e:	54 70       	andi	r21, 0x04	; 4
-    1060:	80 91 39 01 	lds	r24, 0x0139
-    1064:	90 91 3a 01 	lds	r25, 0x013A
+    1060:	80 91 3c 01 	lds	r24, 0x013C
+    1064:	90 91 3d 01 	lds	r25, 0x013D
     1068:	45 2b       	or	r20, r21
     106a:	29 f0       	breq	.+10     	; 0x1076 <mf_setTempDo+0x4a>
 	{
@@ -3133,8 +3133,8 @@ void mf_setTempDo(void)
     1082:	28 f0       	brcs	.+10     	; 0x108e <mf_setTempDo+0x62>
 			setup_temp_value -= 5;
     1084:	05 97       	sbiw	r24, 0x05	; 5
-    1086:	90 93 3a 01 	sts	0x013A, r25
-    108a:	80 93 39 01 	sts	0x0139, r24
+    1086:	90 93 3d 01 	sts	0x013D, r25
+    108a:	80 93 3c 01 	sts	0x013C, r24
 //	 Restarts menu state timeout
 //	Should be used in RUN function when control buttons are pressed.
 //-----------------------------------------------------------------//
@@ -3153,9 +3153,9 @@ static void restartMenuTimer(void)
     1096:	be 01       	movw	r22, r28
     1098:	6f 5f       	subi	r22, 0xFF	; 255
     109a:	7f 4f       	sbci	r23, 0xFF	; 255
-    109c:	80 91 39 01 	lds	r24, 0x0139
-    10a0:	90 91 3a 01 	lds	r25, 0x013A
-    10a4:	d7 d0       	rcall	.+430    	; 0x1254 <u16toa_align_right>
+    109c:	80 91 3c 01 	lds	r24, 0x013C
+    10a0:	90 91 3d 01 	lds	r25, 0x013D
+    10a4:	d4 d0       	rcall	.+424    	; 0x124e <u16toa_align_right>
 	printLedBuffer(0,str);
     10a6:	be 01       	movw	r22, r28
     10a8:	6f 5f       	subi	r22, 0xFF	; 255
@@ -3164,7 +3164,7 @@ static void restartMenuTimer(void)
     10ae:	09 dd       	rcall	.-1518   	; 0xac2 <printLedBuffer>
 	
 	if (userTimer.FA_GE)
-    10b0:	80 91 e7 00 	lds	r24, 0x00E7
+    10b0:	80 91 ee 00 	lds	r24, 0x00EE
     10b4:	84 ff       	sbrs	r24, 4
     10b6:	03 c0       	rjmp	.+6      	; 0x10be <mf_setTempDo+0x92>
 		setExtraLeds(LED_TEMP);
@@ -3252,7 +3252,7 @@ static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctio
 		if (menuRecord->Item == menuItemID)
     110e:	98 13       	cpse	r25, r24
     1110:	03 c0       	rjmp	.+6      	; 0x1118 <getMenuFunctionRecord.constprop.0+0x40>
-    1112:	80 93 e0 00 	sts	0x00E0, r24
+    1112:	80 93 e7 00 	sts	0x00E7, r24
     1116:	06 c0       	rjmp	.+12     	; 0x1124 <getMenuFunctionRecord.constprop.0+0x4c>
     1118:	21 96       	adiw	r28, 0x01	; 1
 //	Output:
@@ -3264,13 +3264,13 @@ static void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRe
     111a:	ce 30       	cpi	r28, 0x0E	; 14
     111c:	d1 05       	cpc	r29, r1
     111e:	11 f7       	brne	.-60     	; 0x10e4 <getMenuFunctionRecord.constprop.0+0xc>
-    1120:	90 93 e0 00 	sts	0x00E0, r25
-    1124:	a0 93 e1 00 	sts	0x00E1, r26
-    1128:	b0 93 e2 00 	sts	0x00E2, r27
-    112c:	60 93 e3 00 	sts	0x00E3, r22
-    1130:	70 93 e4 00 	sts	0x00E4, r23
-    1134:	40 93 e5 00 	sts	0x00E5, r20
-    1138:	50 93 e6 00 	sts	0x00E6, r21
+    1120:	90 93 e7 00 	sts	0x00E7, r25
+    1124:	a0 93 e8 00 	sts	0x00E8, r26
+    1128:	b0 93 e9 00 	sts	0x00E9, r27
+    112c:	60 93 ea 00 	sts	0x00EA, r22
+    1130:	70 93 eb 00 	sts	0x00EB, r23
+    1134:	40 93 ec 00 	sts	0x00EC, r20
+    1138:	50 93 ed 00 	sts	0x00ED, r21
 	{
 		readMenuRecord(&menuFunctionSet[i], menuRecord);
 		if (menuRecord->Item == menuItemID)
@@ -3290,12 +3290,12 @@ void InitMenu(void)
 {
 	selectedMenuItemID = mi_REALTEMP;
     1144:	81 e0       	ldi	r24, 0x01	; 1
-    1146:	80 93 df 00 	sts	0x00DF, r24
+    1146:	80 93 e6 00 	sts	0x00E6, r24
 	getMenuFunctionRecord(selectedMenuItemID, &selectedMenuFunctionRecord);
     114a:	c6 df       	rcall	.-116    	; 0x10d8 <getMenuFunctionRecord.constprop.0>
 	processItemFunction(selectedMenuFunctionRecord.SelectFunction);
-    114c:	80 91 e1 00 	lds	r24, 0x00E1
-    1150:	90 91 e2 00 	lds	r25, 0x00E2
+    114c:	80 91 e8 00 	lds	r24, 0x00E8
+    1150:	90 91 e9 00 	lds	r25, 0x00E9
     1154:	47 cd       	rjmp	.-1394   	; 0xbe4 <processItemFunction>
 
 00001156 <processMenu>:
@@ -3320,632 +3320,624 @@ void processMenu(void)
 	
 	// Compose jump condition
 	jumpCondition = button_state;		
-    1166:	40 91 cc 00 	lds	r20, 0x00CC
-    116a:	50 91 cd 00 	lds	r21, 0x00CD
+    1166:	40 91 d2 00 	lds	r20, 0x00D2
+    116a:	50 91 d3 00 	lds	r21, 0x00D3
 	if (menuTimer.FTop)
     116e:	80 91 74 00 	lds	r24, 0x0074
     1172:	85 fd       	sbrc	r24, 5
 		jumpCondition |= TMR_EXP;
     1174:	50 68       	ori	r21, 0x80	; 128
-	if (minute_counter >= power_off_timeout)
-    1176:	90 91 fb 00 	lds	r25, 0x00FB
-    117a:	80 91 4b 01 	lds	r24, 0x014B
-    117e:	98 17       	cp	r25, r24
-    1180:	08 f0       	brcs	.+2      	; 0x1184 <processMenu+0x2e>
+	if (sys_timers.flags & AUTOPOFF_EXPIRED)
+    1176:	80 91 7e 00 	lds	r24, 0x007E
+    117a:	84 fd       	sbrc	r24, 4
 		jumpCondition |= GOTO_POFF;
-    1182:	50 64       	ori	r21, 0x40	; 64
+    117c:	50 64       	ori	r21, 0x40	; 64
 	
 	// Get next menu item according to current state and jump conditions
 	nextItem = getNextMenuItem(selectedMenuItemID, jumpCondition);
-    1184:	80 91 df 00 	lds	r24, 0x00DF
-    1188:	60 e0       	ldi	r22, 0x00	; 0
-    118a:	70 e0       	ldi	r23, 0x00	; 0
+    117e:	80 91 e6 00 	lds	r24, 0x00E6
+    1182:	60 e0       	ldi	r22, 0x00	; 0
+    1184:	70 e0       	ldi	r23, 0x00	; 0
 	MenuJumpRecord	jRecord;
 	uint8_t i;
 	
 	for (i = 0; i < sizeof(menuJumpSet)/sizeof(MenuJumpRecord); i++  )
 	{
 		readJumpRecord(&menuJumpSet[i], &jRecord);		// read full jump record
-    118c:	95 e0       	ldi	r25, 0x05	; 5
-    118e:	96 9f       	mul	r25, r22
-    1190:	90 01       	movw	r18, r0
-    1192:	97 9f       	mul	r25, r23
-    1194:	30 0d       	add	r19, r0
-    1196:	11 24       	eor	r1, r1
-    1198:	28 57       	subi	r18, 0x78	; 120
-    119a:	3f 4f       	sbci	r19, 0xFF	; 255
+    1186:	95 e0       	ldi	r25, 0x05	; 5
+    1188:	96 9f       	mul	r25, r22
+    118a:	90 01       	movw	r18, r0
+    118c:	97 9f       	mul	r25, r23
+    118e:	30 0d       	add	r19, r0
+    1190:	11 24       	eor	r1, r1
+    1192:	28 57       	subi	r18, 0x78	; 120
+    1194:	3f 4f       	sbci	r19, 0xFF	; 255
 //		jRecPtr		- address of the jump record in the FLASH
 //		resPtr		- address of the record to fill in the SRAM
 //-----------------------------------------------------------------//
 static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr )
 {
 	resPtr->Item = pgm_read_byte(&jRecPtr->Item);
-    119c:	f9 01       	movw	r30, r18
-    119e:	14 91       	lpm	r17, Z
+    1196:	f9 01       	movw	r30, r18
+    1198:	14 91       	lpm	r17, Z
 	resPtr->JumpCondition = pgm_read_word(&jRecPtr->JumpCondition);
-    11a0:	31 96       	adiw	r30, 0x01	; 1
-    11a2:	a5 91       	lpm	r26, Z+
-    11a4:	b4 91       	lpm	r27, Z
+    119a:	31 96       	adiw	r30, 0x01	; 1
+    119c:	a5 91       	lpm	r26, Z+
+    119e:	b4 91       	lpm	r27, Z
 	resPtr->NextItem= pgm_read_byte(&jRecPtr->NextItem);
-    11a6:	f9 01       	movw	r30, r18
-    11a8:	33 96       	adiw	r30, 0x03	; 3
-    11aa:	d4 91       	lpm	r29, Z
+    11a0:	f9 01       	movw	r30, r18
+    11a2:	33 96       	adiw	r30, 0x03	; 3
+    11a4:	d4 91       	lpm	r29, Z
 	resPtr->Flags= pgm_read_byte(&jRecPtr->Flags);
-    11ac:	f9 01       	movw	r30, r18
-    11ae:	34 96       	adiw	r30, 0x04	; 4
-    11b0:	24 91       	lpm	r18, Z
+    11a6:	f9 01       	movw	r30, r18
+    11a8:	34 96       	adiw	r30, 0x04	; 4
+    11aa:	24 91       	lpm	r18, Z
 	uint8_t i;
 	
 	for (i = 0; i < sizeof(menuJumpSet)/sizeof(MenuJumpRecord); i++  )
 	{
 		readJumpRecord(&menuJumpSet[i], &jRecord);		// read full jump record
 		if (jRecord.Item == selectedItemId)				// If ID match,
-    11b2:	18 13       	cpse	r17, r24
-    11b4:	0e c0       	rjmp	.+28     	; 0x11d2 <processMenu+0x7c>
+    11ac:	18 13       	cpse	r17, r24
+    11ae:	0e c0       	rjmp	.+28     	; 0x11cc <processMenu+0x76>
 		{
 			if ((jRecord.JumpCondition & jmpCond) != 0)		// if any of jump conditions match too,
-    11b6:	a4 23       	and	r26, r20
-    11b8:	b5 23       	and	r27, r21
-    11ba:	ab 2b       	or	r26, r27
-    11bc:	51 f0       	breq	.+20     	; 0x11d2 <processMenu+0x7c>
+    11b0:	a4 23       	and	r26, r20
+    11b2:	b5 23       	and	r27, r21
+    11b4:	ab 2b       	or	r26, r27
+    11b6:	51 f0       	breq	.+20     	; 0x11cc <processMenu+0x76>
 			{
 				nextItem.ItemID = jRecord.NextItem;			// switch to next menu item
 				nextItem.ItemTimeout = jRecord.Flags & TIMEOUT_MASK;
-    11be:	c2 2f       	mov	r28, r18
-    11c0:	cf 73       	andi	r28, 0x3F	; 63
+    11b8:	c2 2f       	mov	r28, r18
+    11ba:	cf 73       	andi	r28, 0x3F	; 63
 				nextItem.ShiftRight = (jRecord.Flags & SHIFT_RIGHT) ? 1 : 0;
-    11c2:	26 fb       	bst	r18, 6
-    11c4:	00 27       	eor	r16, r16
-    11c6:	00 f9       	bld	r16, 0
+    11bc:	26 fb       	bst	r18, 6
+    11be:	00 27       	eor	r16, r16
+    11c0:	00 f9       	bld	r16, 0
 				nextItem.ShiftLeft = (jRecord.Flags & SHIFT_LEFT) ? 1 : 0;
-    11c8:	f2 2e       	mov	r15, r18
-    11ca:	ff 1c       	adc	r15, r15
-    11cc:	ff 24       	eor	r15, r15
-    11ce:	ff 1c       	adc	r15, r15
-    11d0:	06 c0       	rjmp	.+12     	; 0x11de <processMenu+0x88>
-    11d2:	6f 5f       	subi	r22, 0xFF	; 255
-    11d4:	7f 4f       	sbci	r23, 0xFF	; 255
+    11c2:	f2 2e       	mov	r15, r18
+    11c4:	ff 1c       	adc	r15, r15
+    11c6:	ff 24       	eor	r15, r15
+    11c8:	ff 1c       	adc	r15, r15
+    11ca:	06 c0       	rjmp	.+12     	; 0x11d8 <processMenu+0x82>
+    11cc:	6f 5f       	subi	r22, 0xFF	; 255
+    11ce:	7f 4f       	sbci	r23, 0xFF	; 255
 	NextItem_t nextItem;
 	nextItem.ItemID = selectedItemId;
 	MenuJumpRecord	jRecord;
 	uint8_t i;
 	
 	for (i = 0; i < sizeof(menuJumpSet)/sizeof(MenuJumpRecord); i++  )
-    11d6:	60 32       	cpi	r22, 0x20	; 32
-    11d8:	71 05       	cpc	r23, r1
-    11da:	c9 f6       	brne	.-78     	; 0x118e <processMenu+0x38>
+    11d0:	60 32       	cpi	r22, 0x20	; 32
+    11d2:	71 05       	cpc	r23, r1
+    11d4:	c9 f6       	brne	.-78     	; 0x1188 <processMenu+0x32>
 		jumpCondition |= TMR_EXP;
-	if (minute_counter >= power_off_timeout)
+	if (sys_timers.flags & AUTOPOFF_EXPIRED)
 		jumpCondition |= GOTO_POFF;
 	
 	// Get next menu item according to current state and jump conditions
 	nextItem = getNextMenuItem(selectedMenuItemID, jumpCondition);
-    11dc:	d8 2f       	mov	r29, r24
-    11de:	10 e0       	ldi	r17, 0x00	; 0
-    11e0:	f0 fa       	bst	r15, 0
-    11e2:	10 f9       	bld	r17, 0
-    11e4:	00 fb       	bst	r16, 0
-    11e6:	11 f9       	bld	r17, 1
+    11d6:	d8 2f       	mov	r29, r24
+    11d8:	10 e0       	ldi	r17, 0x00	; 0
+    11da:	f0 fa       	bst	r15, 0
+    11dc:	10 f9       	bld	r17, 0
+    11de:	00 fb       	bst	r16, 0
+    11e0:	11 f9       	bld	r17, 1
 	
 	// If next item differs from current
 	if (nextItem.ItemID != selectedMenuItemID)
-    11e8:	d8 17       	cp	r29, r24
-    11ea:	09 f1       	breq	.+66     	; 0x122e <processMenu+0xd8>
+    11e2:	d8 17       	cp	r29, r24
+    11e4:	09 f1       	breq	.+66     	; 0x1228 <processMenu+0xd2>
 	{		
 		// Call exit function for current item
 		processItemFunction(selectedMenuFunctionRecord.LeaveFunction);
-    11ec:	80 91 e5 00 	lds	r24, 0x00E5
-    11f0:	90 91 e6 00 	lds	r25, 0x00E6
-    11f4:	f7 dc       	rcall	.-1554   	; 0xbe4 <processItemFunction>
+    11e6:	80 91 ec 00 	lds	r24, 0x00EC
+    11ea:	90 91 ed 00 	lds	r25, 0x00ED
+    11ee:	fa dc       	rcall	.-1548   	; 0xbe4 <processItemFunction>
 		
 		// If shifting is specified, start it before calling any 
 		//	new menu item functions 
 		if (nextItem.ShiftRight)
-    11f6:	11 ff       	sbrs	r17, 1
-    11f8:	02 c0       	rjmp	.+4      	; 0x11fe <processMenu+0xa8>
+    11f0:	11 ff       	sbrs	r17, 1
+    11f2:	02 c0       	rjmp	.+4      	; 0x11f8 <processMenu+0xa2>
 			startShiftingWindowRight();
-    11fa:	32 dc       	rcall	.-1948   	; 0xa60 <startShiftingWindowRight>
-    11fc:	02 c0       	rjmp	.+4      	; 0x1202 <processMenu+0xac>
+    11f4:	35 dc       	rcall	.-1942   	; 0xa60 <startShiftingWindowRight>
+    11f6:	02 c0       	rjmp	.+4      	; 0x11fc <processMenu+0xa6>
 		else if (nextItem.ShiftLeft)
-    11fe:	10 fd       	sbrc	r17, 0
+    11f8:	10 fd       	sbrc	r17, 0
 			startShiftingWindowLeft();
-    1200:	21 dc       	rcall	.-1982   	; 0xa44 <startShiftingWindowLeft>
+    11fa:	24 dc       	rcall	.-1976   	; 0xa44 <startShiftingWindowLeft>
 		
 		// Select new item
 		selectedMenuItemID = nextItem.ItemID;
-    1202:	d0 93 df 00 	sts	0x00DF, r29
+    11fc:	d0 93 e6 00 	sts	0x00E6, r29
 		
 		// Load from FLASH and save function pointers
 		getMenuFunctionRecord(selectedMenuItemID, &selectedMenuFunctionRecord);
-    1206:	8d 2f       	mov	r24, r29
-    1208:	67 df       	rcall	.-306    	; 0x10d8 <getMenuFunctionRecord.constprop.0>
+    1200:	8d 2f       	mov	r24, r29
+    1202:	6a df       	rcall	.-300    	; 0x10d8 <getMenuFunctionRecord.constprop.0>
 		// Call select function for next item
 		processItemFunction(selectedMenuFunctionRecord.SelectFunction);
-    120a:	80 91 e1 00 	lds	r24, 0x00E1
-    120e:	90 91 e2 00 	lds	r25, 0x00E2
-    1212:	e8 dc       	rcall	.-1584   	; 0xbe4 <processItemFunction>
+    1204:	80 91 e8 00 	lds	r24, 0x00E8
+    1208:	90 91 e9 00 	lds	r25, 0x00E9
+    120c:	eb dc       	rcall	.-1578   	; 0xbe4 <processItemFunction>
 		// Start timer if timeout is enabled
 		if (nextItem.ItemTimeout != 0)
-    1214:	cc 23       	and	r28, r28
-    1216:	c1 f0       	breq	.+48     	; 0x1248 <processMenu+0xf2>
+    120e:	cc 23       	and	r28, r28
+    1210:	c1 f0       	breq	.+48     	; 0x1242 <processMenu+0xec>
 		{
 			menuTimer.Top = nextItem.ItemTimeout * MENU_TIMEOUT_MULT;
-    1218:	cc 0f       	add	r28, r28
-    121a:	c0 93 76 00 	sts	0x0076, r28
+    1212:	cc 0f       	add	r28, r28
+    1214:	c0 93 76 00 	sts	0x0076, r28
 			menuTimer.Timer = 0;
-    121e:	10 92 75 00 	sts	0x0075, r1
+    1218:	10 92 75 00 	sts	0x0075, r1
 			menuTimer.Enabled = 1;	
-    1222:	80 91 74 00 	lds	r24, 0x0074
-    1226:	81 60       	ori	r24, 0x01	; 1
-    1228:	80 93 74 00 	sts	0x0074, r24
-    122c:	0d c0       	rjmp	.+26     	; 0x1248 <processMenu+0xf2>
+    121c:	80 91 74 00 	lds	r24, 0x0074
+    1220:	81 60       	ori	r24, 0x01	; 1
+    1222:	80 93 74 00 	sts	0x0074, r24
+    1226:	0d c0       	rjmp	.+26     	; 0x1242 <processMenu+0xec>
 		}
 		
 	}
 	else
 	{
 		processSoftTimer8b(&userTimer);
-    122e:	87 ee       	ldi	r24, 0xE7	; 231
-    1230:	90 e0       	ldi	r25, 0x00	; 0
-    1232:	89 d2       	rcall	.+1298   	; 0x1746 <processSoftTimer8b>
+    1228:	8e ee       	ldi	r24, 0xEE	; 238
+    122a:	90 e0       	ldi	r25, 0x00	; 0
+    122c:	8c d2       	rcall	.+1304   	; 0x1746 <processSoftTimer8b>
 		// Stay at previous item
 		processItemFunction(selectedMenuFunctionRecord.RunFunction);
-    1234:	80 91 e3 00 	lds	r24, 0x00E3
-    1238:	90 91 e4 00 	lds	r25, 0x00E4
+    122e:	80 91 ea 00 	lds	r24, 0x00EA
+    1232:	90 91 eb 00 	lds	r25, 0x00EB
 	}	
 }
-    123c:	df 91       	pop	r29
-    123e:	cf 91       	pop	r28
-    1240:	1f 91       	pop	r17
-    1242:	0f 91       	pop	r16
-    1244:	ff 90       	pop	r15
+    1236:	df 91       	pop	r29
+    1238:	cf 91       	pop	r28
+    123a:	1f 91       	pop	r17
+    123c:	0f 91       	pop	r16
+    123e:	ff 90       	pop	r15
 	}
 	else
 	{
 		processSoftTimer8b(&userTimer);
 		// Stay at previous item
 		processItemFunction(selectedMenuFunctionRecord.RunFunction);
-    1246:	ce cc       	rjmp	.-1636   	; 0xbe4 <processItemFunction>
+    1240:	d1 cc       	rjmp	.-1630   	; 0xbe4 <processItemFunction>
 	}	
 }
-    1248:	df 91       	pop	r29
-    124a:	cf 91       	pop	r28
-    124c:	1f 91       	pop	r17
-    124e:	0f 91       	pop	r16
-    1250:	ff 90       	pop	r15
-    1252:	08 95       	ret
+    1242:	df 91       	pop	r29
+    1244:	cf 91       	pop	r28
+    1246:	1f 91       	pop	r17
+    1248:	0f 91       	pop	r16
+    124a:	ff 90       	pop	r15
+    124c:	08 95       	ret
 
-00001254 <u16toa_align_right>:
+0000124e <u16toa_align_right>:
 // Converts uint16_t value into decimal string with right alignment
 // len = number of digits output (without terminating '\0')
 // len[7] = 1 -> no terminating '\0' at buffer[len]
 // fill_char -> char used for string padding
 void u16toa_align_right(uint16_t val, char *buffer, uint8_t len,char fill_char)
 {
-    1254:	cf 93       	push	r28
-    1256:	df 93       	push	r29
+    124e:	cf 93       	push	r28
+    1250:	df 93       	push	r29
 	if (len & 0x80)
-    1258:	47 ff       	sbrs	r20, 7
-    125a:	05 c0       	rjmp	.+10     	; 0x1266 <u16toa_align_right+0x12>
+    1252:	47 ff       	sbrs	r20, 7
+    1254:	05 c0       	rjmp	.+10     	; 0x1260 <u16toa_align_right+0x12>
 	{
 		len = len & 0x7F;
-    125c:	4f 77       	andi	r20, 0x7F	; 127
+    1256:	4f 77       	andi	r20, 0x7F	; 127
 		buffer += len;	
-    125e:	fb 01       	movw	r30, r22
-    1260:	e4 0f       	add	r30, r20
-    1262:	f1 1d       	adc	r31, r1
-    1264:	04 c0       	rjmp	.+8      	; 0x126e <u16toa_align_right+0x1a>
+    1258:	fb 01       	movw	r30, r22
+    125a:	e4 0f       	add	r30, r20
+    125c:	f1 1d       	adc	r31, r1
+    125e:	04 c0       	rjmp	.+8      	; 0x1268 <u16toa_align_right+0x1a>
 	}
 	else
 	{
 		buffer += len;	
-    1266:	fb 01       	movw	r30, r22
-    1268:	e4 0f       	add	r30, r20
-    126a:	f1 1d       	adc	r31, r1
+    1260:	fb 01       	movw	r30, r22
+    1262:	e4 0f       	add	r30, r20
+    1264:	f1 1d       	adc	r31, r1
 		*buffer = 0;
-    126c:	10 82       	st	Z, r1
+    1266:	10 82       	st	Z, r1
 	}
 	
 	do
 	{
 		*--buffer = val % 10 + '0';
-    126e:	ca e0       	ldi	r28, 0x0A	; 10
-    1270:	d0 e0       	ldi	r29, 0x00	; 0
-    1272:	be 01       	movw	r22, r28
-    1274:	39 d3       	rcall	.+1650   	; 0x18e8 <__udivmodhi4>
-    1276:	80 5d       	subi	r24, 0xD0	; 208
-    1278:	82 93       	st	-Z, r24
+    1268:	ca e0       	ldi	r28, 0x0A	; 10
+    126a:	d0 e0       	ldi	r29, 0x00	; 0
+    126c:	be 01       	movw	r22, r28
+    126e:	6a d3       	rcall	.+1748   	; 0x1944 <__udivmodhi4>
+    1270:	80 5d       	subi	r24, 0xD0	; 208
+    1272:	82 93       	st	-Z, r24
 		val /= 10;
-    127a:	cb 01       	movw	r24, r22
+    1274:	cb 01       	movw	r24, r22
 		len--;
-    127c:	41 50       	subi	r20, 0x01	; 1
+    1276:	41 50       	subi	r20, 0x01	; 1
 	}
 	while ((val != 0) && len);
-    127e:	00 97       	sbiw	r24, 0x00	; 0
-    1280:	21 f0       	breq	.+8      	; 0x128a <u16toa_align_right+0x36>
-    1282:	41 11       	cpse	r20, r1
-    1284:	f6 cf       	rjmp	.-20     	; 0x1272 <u16toa_align_right+0x1e>
-    1286:	01 c0       	rjmp	.+2      	; 0x128a <u16toa_align_right+0x36>
+    1278:	00 97       	sbiw	r24, 0x00	; 0
+    127a:	21 f0       	breq	.+8      	; 0x1284 <u16toa_align_right+0x36>
+    127c:	41 11       	cpse	r20, r1
+    127e:	f6 cf       	rjmp	.-20     	; 0x126c <u16toa_align_right+0x1e>
+    1280:	01 c0       	rjmp	.+2      	; 0x1284 <u16toa_align_right+0x36>
 	
 	// Padding
 	while(len--)
 		*--buffer = fill_char;
-    1288:	22 93       	st	-Z, r18
+    1282:	22 93       	st	-Z, r18
 		len--;
 	}
 	while ((val != 0) && len);
 	
 	// Padding
 	while(len--)
-    128a:	41 50       	subi	r20, 0x01	; 1
-    128c:	e8 f7       	brcc	.-6      	; 0x1288 <u16toa_align_right+0x34>
+    1284:	41 50       	subi	r20, 0x01	; 1
+    1286:	e8 f7       	brcc	.-6      	; 0x1282 <u16toa_align_right+0x34>
 		*--buffer = fill_char;
 }
-    128e:	df 91       	pop	r29
-    1290:	cf 91       	pop	r28
-    1292:	08 95       	ret
+    1288:	df 91       	pop	r29
+    128a:	cf 91       	pop	r28
+    128c:	08 95       	ret
 
-00001294 <init_system_io>:
+0000128e <init_system_io>:
 //extern void powTest(void);
 
 void init_system_io()
 {
 	// Setup Port D
 	PORTD = (1<<PD_SYNCA | 1<<PD_SYNCB);
-    1294:	80 ec       	ldi	r24, 0xC0	; 192
-    1296:	82 bb       	out	0x12, r24	; 18
+    128e:	80 ec       	ldi	r24, 0xC0	; 192
+    1290:	82 bb       	out	0x12, r24	; 18
 	DDRD = (1<<PD_TXD | 1<<PD_M1 | 1<<PD_M2 | 1<<PD_HEATER | 1<<PD_HEAT_INDIC );
-    1298:	8e e3       	ldi	r24, 0x3E	; 62
-    129a:	81 bb       	out	0x11, r24	; 17
+    1292:	8e e3       	ldi	r24, 0x3E	; 62
+    1294:	81 bb       	out	0x11, r24	; 17
 	
 	// Setup Port B
 	PORTB = 0;
-    129c:	18 ba       	out	0x18, r1	; 24
+    1296:	18 ba       	out	0x18, r1	; 24
 	DDRB = (1<<PB_BEEPER | 1<<PB_LED_DOUT | 1<<PB_LED_CLK | 1<<PB_SEGF | 1<<PB_SEGG | 1<<PB_SEGH);
-    129e:	8f e3       	ldi	r24, 0x3F	; 63
-    12a0:	87 bb       	out	0x17, r24	; 23
+    1298:	8f e3       	ldi	r24, 0x3F	; 63
+    129a:	87 bb       	out	0x17, r24	; 23
 	
 	PORTC = 0;
-    12a2:	15 ba       	out	0x15, r1	; 21
+    129c:	15 ba       	out	0x15, r1	; 21
 	DDRC = (1<<PC_SEGA | 1<<PC_SEGB | 1<<PC_SEGC | 1<<PC_SEGD | 1<<PC_SEGE);	
-    12a4:	8f e1       	ldi	r24, 0x1F	; 31
-    12a6:	84 bb       	out	0x14, r24	; 20
+    129e:	8f e1       	ldi	r24, 0x1F	; 31
+    12a0:	84 bb       	out	0x14, r24	; 20
 
 	// Setup timer0
 	// 1/1024 prescaler, T=64us @16MHz
 	TCCR0 = (1<<CS02 | 0<<CS01 | 1<<CS00);
-    12a8:	85 e0       	ldi	r24, 0x05	; 5
-    12aa:	83 bf       	out	0x33, r24	; 51
+    12a2:	85 e0       	ldi	r24, 0x05	; 5
+    12a4:	83 bf       	out	0x33, r24	; 51
 	TCNT0 = 0;
-    12ac:	12 be       	out	0x32, r1	; 50
+    12a6:	12 be       	out	0x32, r1	; 50
 	// Clear interrupt flag
 	TIFR |= (1<<TOV0);
-    12ae:	88 b7       	in	r24, 0x38	; 56
-    12b0:	81 60       	ori	r24, 0x01	; 1
-    12b2:	88 bf       	out	0x38, r24	; 56
+    12a8:	88 b7       	in	r24, 0x38	; 56
+    12aa:	81 60       	ori	r24, 0x01	; 1
+    12ac:	88 bf       	out	0x38, r24	; 56
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);
-    12b4:	89 b7       	in	r24, 0x39	; 57
-    12b6:	81 60       	ori	r24, 0x01	; 1
-    12b8:	89 bf       	out	0x39, r24	; 57
+    12ae:	89 b7       	in	r24, 0x39	; 57
+    12b0:	81 60       	ori	r24, 0x01	; 1
+    12b2:	89 bf       	out	0x39, r24	; 57
 	
 	// Setup timer2 as 1ms system frequency generator
 	// 1/64 prescaler, CTC mode, OC2 disconnected
 	TCCR2 = (1<<CS22 | 1<<WGM21);
-    12ba:	8c e0       	ldi	r24, 0x0C	; 12
-    12bc:	85 bd       	out	0x25, r24	; 37
+    12b4:	8c e0       	ldi	r24, 0x0C	; 12
+    12b6:	85 bd       	out	0x25, r24	; 37
 	OCR2 = 249;
-    12be:	89 ef       	ldi	r24, 0xF9	; 249
-    12c0:	83 bd       	out	0x23, r24	; 35
+    12b8:	89 ef       	ldi	r24, 0xF9	; 249
+    12ba:	83 bd       	out	0x23, r24	; 35
 	TIMSK |= (1<<OCIE2);
-    12c2:	89 b7       	in	r24, 0x39	; 57
-    12c4:	80 68       	ori	r24, 0x80	; 128
-    12c6:	89 bf       	out	0x39, r24	; 57
+    12bc:	89 b7       	in	r24, 0x39	; 57
+    12be:	80 68       	ori	r24, 0x80	; 128
+    12c0:	89 bf       	out	0x39, r24	; 57
 	
 	// Setup timer1 as beeper frequency generator
 	// CTC mode, 1/64 prescaler
 	TCCR1A = 0;
-    12c8:	1f bc       	out	0x2f, r1	; 47
+    12c2:	1f bc       	out	0x2f, r1	; 47
 	TCCR1B = (1<<WGM12 | 1<<CS11 | 1<<CS10);
-    12ca:	8b e0       	ldi	r24, 0x0B	; 11
-    12cc:	8e bd       	out	0x2e, r24	; 46
+    12c4:	8b e0       	ldi	r24, 0x0B	; 11
+    12c6:	8e bd       	out	0x2e, r24	; 46
 	// 1kHz beeper frequency default
 	OCR1A = 127;
-    12ce:	8f e7       	ldi	r24, 0x7F	; 127
-    12d0:	90 e0       	ldi	r25, 0x00	; 0
-    12d2:	9b bd       	out	0x2b, r25	; 43
-    12d4:	8a bd       	out	0x2a, r24	; 42
+    12c8:	8f e7       	ldi	r24, 0x7F	; 127
+    12ca:	90 e0       	ldi	r25, 0x00	; 0
+    12cc:	9b bd       	out	0x2b, r25	; 43
+    12ce:	8a bd       	out	0x2a, r24	; 42
 
 	// Setup AC sync comparator
 	// Interrupt on output toggle
 	//ACSR |= (1<<ACI);		// Will be cleared just before sei
 	ACSR = (1<<ACIE | 0<<ACIS1 | 0<<ACIS0);
-    12d6:	88 e0       	ldi	r24, 0x08	; 8
-    12d8:	88 b9       	out	0x08, r24	; 8
+    12d0:	88 e0       	ldi	r24, 0x08	; 8
+    12d2:	88 b9       	out	0x08, r24	; 8
 	
 	// Setup ADC
 	// Internal Vref + cap, input ADC5, 
 	ADMUX = (1<<REFS1 | 1<<REFS0 | 0<<MUX3 | 1<<MUX2 | 0<<MUX1 | 1<<MUX0 );
-    12da:	85 ec       	ldi	r24, 0xC5	; 197
-    12dc:	87 b9       	out	0x07, r24	; 7
+    12d4:	85 ec       	ldi	r24, 0xC5	; 197
+    12d6:	87 b9       	out	0x07, r24	; 7
 	// Prescaler = 128
 	ADCSRA = (1<<ADEN |/* 1<<ADFR |*/  1<<ADIE | 1<<ADPS2 | 1<<ADPS1 | 1<<ADPS0);
-    12de:	8f e8       	ldi	r24, 0x8F	; 143
-    12e0:	86 b9       	out	0x06, r24	; 6
+    12d8:	8f e8       	ldi	r24, 0x8F	; 143
+    12da:	86 b9       	out	0x06, r24	; 6
 	
 	// Setup USART
 	// Double speed
 	UCSRA = (1<<U2X);
-    12e2:	82 e0       	ldi	r24, 0x02	; 2
-    12e4:	8b b9       	out	0x0b, r24	; 11
+    12dc:	82 e0       	ldi	r24, 0x02	; 2
+    12de:	8b b9       	out	0x0b, r24	; 11
 	UCSRB = (1<<RXEN | 1<<TXEN | 0<<UCSZ2);
-    12e6:	88 e1       	ldi	r24, 0x18	; 24
-    12e8:	8a b9       	out	0x0a, r24	; 10
+    12e0:	88 e1       	ldi	r24, 0x18	; 24
+    12e2:	8a b9       	out	0x0a, r24	; 10
 	// No parity, 1 stop bit, 8 bit
 	UCSRC = (1<<URSEL | 0<<UPM1 | 0<<UPM0 | 0<<USBS | 1<<UCSZ1 | 1<<UCSZ0);
-    12ea:	86 e8       	ldi	r24, 0x86	; 134
-    12ec:	80 bd       	out	0x20, r24	; 32
+    12e4:	86 e8       	ldi	r24, 0x86	; 134
+    12e6:	80 bd       	out	0x20, r24	; 32
 	// 57600 @16MHz, 2x
 	UBRRH=0x00;
-    12ee:	10 bc       	out	0x20, r1	; 32
+    12e8:	10 bc       	out	0x20, r1	; 32
 	UBRRL=0x22;
-    12f0:	82 e2       	ldi	r24, 0x22	; 34
-    12f2:	89 b9       	out	0x09, r24	; 9
-    12f4:	08 95       	ret
+    12ea:	82 e2       	ldi	r24, 0x22	; 34
+    12ec:	89 b9       	out	0x09, r24	; 9
+    12ee:	08 95       	ret
 
-000012f6 <main>:
+000012f0 <main>:
 
 
 
 
 int main(void)
 {
-    12f6:	cf 93       	push	r28
-    12f8:	df 93       	push	r29
-    12fa:	cd b7       	in	r28, 0x3d	; 61
-    12fc:	de b7       	in	r29, 0x3e	; 62
-    12fe:	2b 97       	sbiw	r28, 0x0b	; 11
-    1300:	0f b6       	in	r0, 0x3f	; 63
-    1302:	f8 94       	cli
-    1304:	de bf       	out	0x3e, r29	; 62
-    1306:	0f be       	out	0x3f, r0	; 63
-    1308:	cd bf       	out	0x3d, r28	; 61
+    12f0:	cf 93       	push	r28
+    12f2:	df 93       	push	r29
+    12f4:	cd b7       	in	r28, 0x3d	; 61
+    12f6:	de b7       	in	r29, 0x3e	; 62
+    12f8:	2b 97       	sbiw	r28, 0x0b	; 11
+    12fa:	0f b6       	in	r0, 0x3f	; 63
+    12fc:	f8 94       	cli
+    12fe:	de bf       	out	0x3e, r29	; 62
+    1300:	0f be       	out	0x3f, r0	; 63
+    1302:	cd bf       	out	0x3d, r28	; 61
 	char str[10];
 	volatile uint8_t temp8u = 0x00;
-    130a:	1b 86       	std	Y+11, r1	; 0x0b
+    1304:	1b 86       	std	Y+11, r1	; 0x0b
 	volatile uint16_t temp16u;
-	uint8_t celsiusUpdateCounter = 0;
+	//uint8_t celsiusUpdateCounter = 0;
 	
 	// Initialize MCU IO
 	init_system_io();
-    130c:	c3 df       	rcall	.-122    	; 0x1294 <init_system_io>
+    1306:	c3 df       	rcall	.-122    	; 0x128e <init_system_io>
 	// Restore params from EEPROM
 	restoreGlobalParams();
-    130e:	54 da       	rcall	.-2904   	; 0x7b8 <restoreGlobalParams>
+    1308:	57 da       	rcall	.-2898   	; 0x7b8 <restoreGlobalParams>
 	// Calibrate ADC coefficients using restored params
 	calculateCoeffs();
-    1310:	69 d7       	rcall	.+3794   	; 0x21e4 <__data_load_end+0x778>
+    130a:	6c d7       	rcall	.+3800   	; 0x21e4 <__data_load_end+0x716>
 	// Initialize LED indicator
 	initLedIndicator();
-    1312:	b4 db       	rcall	.-2200   	; 0xa7c <initLedIndicator>
+    130c:	b7 db       	rcall	.-2194   	; 0xa7c <initLedIndicator>
 	// Clear comparator interrupt flag to prevent false triggering
 	ACSR |= (1<<ACI);
-    1314:	44 9a       	sbi	0x08, 4	; 8
+    130e:	44 9a       	sbi	0x08, 4	; 8
 	sei();
-    1316:	78 94       	sei
+    1310:	78 94       	sei
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-    1318:	2f ef       	ldi	r18, 0xFF	; 255
-    131a:	80 e7       	ldi	r24, 0x70	; 112
-    131c:	92 e0       	ldi	r25, 0x02	; 2
-    131e:	21 50       	subi	r18, 0x01	; 1
-    1320:	80 40       	sbci	r24, 0x00	; 0
-    1322:	90 40       	sbci	r25, 0x00	; 0
-    1324:	e1 f7       	brne	.-8      	; 0x131e <main+0x28>
-    1326:	00 c0       	rjmp	.+0      	; 0x1328 <main+0x32>
-    1328:	00 00       	nop
+    1312:	2f ef       	ldi	r18, 0xFF	; 255
+    1314:	80 e7       	ldi	r24, 0x70	; 112
+    1316:	92 e0       	ldi	r25, 0x02	; 2
+    1318:	21 50       	subi	r18, 0x01	; 1
+    131a:	80 40       	sbci	r24, 0x00	; 0
+    131c:	90 40       	sbci	r25, 0x00	; 0
+    131e:	e1 f7       	brne	.-8      	; 0x1318 <main+0x28>
+    1320:	00 c0       	rjmp	.+0      	; 0x1322 <main+0x32>
+    1322:	00 00       	nop
 	// Safety delay for power part
 	_delay_ms(50);
 	// Check AC line
 	if(p_state == 0x0F) 	
-    132a:	80 91 78 00 	lds	r24, 0x0078
-    132e:	8f 30       	cpi	r24, 0x0F	; 15
-    1330:	69 f4       	brne	.+26     	; 0x134c <main+0x56>
+    1324:	80 91 78 00 	lds	r24, 0x0078
+    1328:	8f 30       	cpi	r24, 0x0F	; 15
+    132a:	69 f4       	brne	.+26     	; 0x1346 <main+0x56>
 	{
 		// Power control state machine has not changed - sync has not been detected
 		printLedBuffer(0,"AC ERR");
-    1332:	66 eb       	ldi	r22, 0xB6	; 182
-    1334:	70 e0       	ldi	r23, 0x00	; 0
-    1336:	80 e0       	ldi	r24, 0x00	; 0
-    1338:	c4 db       	rcall	.-2168   	; 0xac2 <printLedBuffer>
-    133a:	2f ef       	ldi	r18, 0xFF	; 255
-    133c:	83 ed       	ldi	r24, 0xD3	; 211
-    133e:	90 e3       	ldi	r25, 0x30	; 48
-    1340:	21 50       	subi	r18, 0x01	; 1
-    1342:	80 40       	sbci	r24, 0x00	; 0
-    1344:	90 40       	sbci	r25, 0x00	; 0
-    1346:	e1 f7       	brne	.-8      	; 0x1340 <main+0x4a>
-    1348:	00 c0       	rjmp	.+0      	; 0x134a <main+0x54>
-    134a:	00 00       	nop
+    132c:	6b eb       	ldi	r22, 0xBB	; 187
+    132e:	70 e0       	ldi	r23, 0x00	; 0
+    1330:	80 e0       	ldi	r24, 0x00	; 0
+    1332:	c7 db       	rcall	.-2162   	; 0xac2 <printLedBuffer>
+    1334:	2f ef       	ldi	r18, 0xFF	; 255
+    1336:	83 ed       	ldi	r24, 0xD3	; 211
+    1338:	90 e3       	ldi	r25, 0x30	; 48
+    133a:	21 50       	subi	r18, 0x01	; 1
+    133c:	80 40       	sbci	r24, 0x00	; 0
+    133e:	90 40       	sbci	r25, 0x00	; 0
+    1340:	e1 f7       	brne	.-8      	; 0x133a <main+0x4a>
+    1342:	00 c0       	rjmp	.+0      	; 0x1344 <main+0x54>
+    1344:	00 00       	nop
 		_delay_ms(1000);
 	}
 	// Initialize menu
 	InitMenu();
-    134c:	fb de       	rcall	.-522    	; 0x1144 <InitMenu>
+    1346:	fe de       	rcall	.-516    	; 0x1144 <InitMenu>
 	// Beep
 	SetBeeperFreq(1000);
-    134e:	88 ee       	ldi	r24, 0xE8	; 232
-    1350:	93 e0       	ldi	r25, 0x03	; 3
-    1352:	25 d2       	rcall	.+1098   	; 0x179e <SetBeeperFreq>
+    1348:	88 ee       	ldi	r24, 0xE8	; 232
+    134a:	93 e0       	ldi	r25, 0x03	; 3
+    134c:	76 d2       	rcall	.+1260   	; 0x183a <SetBeeperFreq>
 	StartBeep(200);
-    1354:	88 ec       	ldi	r24, 0xC8	; 200
-    1356:	90 e0       	ldi	r25, 0x00	; 0
-    1358:	42 d2       	rcall	.+1156   	; 0x17de <StartBeep>
+    134e:	88 ec       	ldi	r24, 0xC8	; 200
+    1350:	90 e0       	ldi	r25, 0x00	; 0
+    1352:	93 d2       	rcall	.+1318   	; 0x187a <StartBeep>
 	// When we get here, few ADC counts have been sampled
 	// First call to PID controller initializes it's internal structures
 	forceHeaterControlUpdate();
-    135a:	60 d0       	rcall	.+192    	; 0x141c <forceHeaterControlUpdate>
-    135c:	2f ef       	ldi	r18, 0xFF	; 255
-    135e:	81 ee       	ldi	r24, 0xE1	; 225
-    1360:	94 e0       	ldi	r25, 0x04	; 4
-    1362:	21 50       	subi	r18, 0x01	; 1
-    1364:	80 40       	sbci	r24, 0x00	; 0
-    1366:	90 40       	sbci	r25, 0x00	; 0
-    1368:	e1 f7       	brne	.-8      	; 0x1362 <main+0x6c>
-    136a:	00 c0       	rjmp	.+0      	; 0x136c <main+0x76>
-    136c:	00 00       	nop
+    1354:	63 d0       	rcall	.+198    	; 0x141c <forceHeaterControlUpdate>
+    1356:	2f ef       	ldi	r18, 0xFF	; 255
+    1358:	81 ee       	ldi	r24, 0xE1	; 225
+    135a:	94 e0       	ldi	r25, 0x04	; 4
+    135c:	21 50       	subi	r18, 0x01	; 1
+    135e:	80 40       	sbci	r24, 0x00	; 0
+    1360:	90 40       	sbci	r25, 0x00	; 0
+    1362:	e1 f7       	brne	.-8      	; 0x135c <main+0x6c>
+    1364:	00 c0       	rjmp	.+0      	; 0x1366 <main+0x76>
+    1366:	00 00       	nop
 	_delay_ms(100);
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
-    136e:	81 e0       	ldi	r24, 0x01	; 1
-    1370:	62 d0       	rcall	.+196    	; 0x1436 <setMotorDirection>
+    1368:	81 e0       	ldi	r24, 0x01	; 1
+    136a:	65 d0       	rcall	.+202    	; 0x1436 <setMotorDirection>
 	// Clear timer
 	menuUpdateTimer.FOvfl = 0;
-    1372:	80 91 7a 00 	lds	r24, 0x007A
-    1376:	8f 7b       	andi	r24, 0xBF	; 191
-    1378:	80 93 7a 00 	sts	0x007A, r24
-int main(void)
-{
-	char str[10];
-	volatile uint8_t temp8u = 0x00;
-	volatile uint16_t temp16u;
-	uint8_t celsiusUpdateCounter = 0;
-    137c:	10 e0       	ldi	r17, 0x00	; 0
-	menuUpdateTimer.FOvfl = 0;
+    136c:	80 91 7f 00 	lds	r24, 0x007F
+    1370:	8f 7b       	andi	r24, 0xBF	; 191
+    1372:	80 93 7f 00 	sts	0x007F, r24
 
     while(1)
     {
 		
 		if (menuUpdateTimer.FOvfl)
-    137e:	80 91 7a 00 	lds	r24, 0x007A
-    1382:	86 ff       	sbrs	r24, 6
-    1384:	fc cf       	rjmp	.-8      	; 0x137e <main+0x88>
+    1376:	80 91 7f 00 	lds	r24, 0x007F
+    137a:	86 ff       	sbrs	r24, 6
+    137c:	fc cf       	rjmp	.-8      	; 0x1376 <main+0x86>
 		{
+			processSystemTimers();
+    137e:	0f d2       	rcall	.+1054   	; 0x179e <processSystemTimers>
 			
 			// Get new temperature measurement
 			update_normalized_adc();			
-    1386:	7b d7       	rcall	.+3830   	; 0x227e <__data_load_end+0x812>
+    1380:	7e d7       	rcall	.+3836   	; 0x227e <__data_load_end+0x7b0>
 		
 			// Update indicated Celsius degree
-			if (celsiusUpdateCounter == 0)	
-    1388:	11 11       	cpse	r17, r1
-    138a:	02 c0       	rjmp	.+4      	; 0x1390 <main+0x9a>
+			if (sys_timers.flags & EXPIRED_CELSIUS)
+    1382:	80 91 7e 00 	lds	r24, 0x007E
+    1386:	80 fd       	sbrc	r24, 0
 			{
 				update_Celsius();
-    138c:	a2 d7       	rcall	.+3908   	; 0x22d2 <__data_load_end+0x866>
-				celsiusUpdateCounter = CELSIUS_UDPATE_INTERVAL;
-    138e:	14 e0       	ldi	r17, 0x04	; 4
+    1388:	a4 d7       	rcall	.+3912   	; 0x22d2 <__data_load_end+0x804>
 			}				
-			celsiusUpdateCounter--;
-    1390:	11 50       	subi	r17, 0x01	; 1
+			
 			
 			// Get new button state
 			process_buttons();
-    1392:	31 d8       	rcall	.-3998   	; 0x3f6 <process_buttons>
+    138a:	35 d8       	rcall	.-3990   	; 0x3f6 <process_buttons>
 			
 			// Give sound feedback
 			if (button_state & BL_MENU)
-    1394:	80 91 cc 00 	lds	r24, 0x00CC
-    1398:	90 91 cd 00 	lds	r25, 0x00CD
-    139c:	91 ff       	sbrs	r25, 1
-    139e:	03 c0       	rjmp	.+6      	; 0x13a6 <main+0xb0>
+    138c:	80 91 d2 00 	lds	r24, 0x00D2
+    1390:	90 91 d3 00 	lds	r25, 0x00D3
+    1394:	91 ff       	sbrs	r25, 1
+    1396:	03 c0       	rjmp	.+6      	; 0x139e <main+0xae>
 			{
 				SetBeeperFreq(800);
-    13a0:	80 e2       	ldi	r24, 0x20	; 32
-    13a2:	93 e0       	ldi	r25, 0x03	; 3
-    13a4:	06 c0       	rjmp	.+12     	; 0x13b2 <main+0xbc>
+    1398:	80 e2       	ldi	r24, 0x20	; 32
+    139a:	93 e0       	ldi	r25, 0x03	; 3
+    139c:	06 c0       	rjmp	.+12     	; 0x13aa <main+0xba>
 				StartBeep(40);
 			}
 			else if (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_HEATCTRL))
-    13a6:	80 91 cb 00 	lds	r24, 0x00CB
-    13aa:	87 74       	andi	r24, 0x47	; 71
-    13ac:	31 f0       	breq	.+12     	; 0x13ba <main+0xc4>
+    139e:	80 91 d1 00 	lds	r24, 0x00D1
+    13a2:	87 74       	andi	r24, 0x47	; 71
+    13a4:	31 f0       	breq	.+12     	; 0x13b2 <main+0xc2>
 			{
 				SetBeeperFreq(1000);
-    13ae:	88 ee       	ldi	r24, 0xE8	; 232
-    13b0:	93 e0       	ldi	r25, 0x03	; 3
-    13b2:	f5 d1       	rcall	.+1002   	; 0x179e <SetBeeperFreq>
+    13a6:	88 ee       	ldi	r24, 0xE8	; 232
+    13a8:	93 e0       	ldi	r25, 0x03	; 3
+    13aa:	47 d2       	rcall	.+1166   	; 0x183a <SetBeeperFreq>
 				StartBeep(40);
-    13b4:	88 e2       	ldi	r24, 0x28	; 40
-    13b6:	90 e0       	ldi	r25, 0x00	; 0
-    13b8:	12 d2       	rcall	.+1060   	; 0x17de <StartBeep>
+    13ac:	88 e2       	ldi	r24, 0x28	; 40
+    13ae:	90 e0       	ldi	r25, 0x00	; 0
+    13b0:	64 d2       	rcall	.+1224   	; 0x187a <StartBeep>
 			}	
 			// Direction control buttons sounds get special processing at processRollControl()
 			
 			// Process automatic power off - it is important to call
 			// this function before menu and power controls processing
 			if (button_action_down)
-    13ba:	80 91 cb 00 	lds	r24, 0x00CB
-    13be:	81 11       	cpse	r24, r1
-			{
+    13b2:	80 91 d1 00 	lds	r24, 0x00D1
+    13b6:	81 11       	cpse	r24, r1
 				resetAutoPowerOffCounter();
-    13c0:	1a d2       	rcall	.+1076   	; 0x17f6 <resetAutoPowerOffCounter>
-			}
-			processAutoPowerOff();
-    13c2:	20 d2       	rcall	.+1088   	; 0x1804 <processAutoPowerOff>
+    13b8:	3d d2       	rcall	.+1146   	; 0x1834 <resetAutoPowerOffCounter>
 
 			// Process user menu states, settings and indication
 			processMenu();
-    13c4:	c8 de       	rcall	.-624    	; 0x1156 <processMenu>
+    13ba:	cd de       	rcall	.-614    	; 0x1156 <processMenu>
 			
 			// Process cyclic rolling, direction control
 			processRollControl();	
-    13c6:	78 d8       	rcall	.-3856   	; 0x4b8 <processRollControl>
+    13bc:	7d d8       	rcall	.-3846   	; 0x4b8 <processRollControl>
 			
 			// Process heater regulation
 			processHeaterControl();
-    13c8:	73 d9       	rcall	.-3354   	; 0x6b0 <processHeaterControl>
+    13be:	78 d9       	rcall	.-3344   	; 0x6b0 <processHeaterControl>
 		
 			// Process heater events and warnings
 			processHeaterAlerts();
-    13ca:	cd d9       	rcall	.-3174   	; 0x766 <processHeaterAlerts>
+    13c0:	d2 d9       	rcall	.-3164   	; 0x766 <processHeaterAlerts>
+			
+			
+			if (sys_timers.flags & AUTOPOFF_SOON)
+    13c2:	80 91 7e 00 	lds	r24, 0x007E
+    13c6:	83 ff       	sbrs	r24, 3
+    13c8:	06 c0       	rjmp	.+12     	; 0x13d6 <main+0xe6>
+			{
+				SetBeeperFreq(1200);
+    13ca:	80 eb       	ldi	r24, 0xB0	; 176
+    13cc:	94 e0       	ldi	r25, 0x04	; 4
+    13ce:	35 d2       	rcall	.+1130   	; 0x183a <SetBeeperFreq>
+				StartBeep(200);
+    13d0:	88 ec       	ldi	r24, 0xC8	; 200
+    13d2:	90 e0       	ldi	r25, 0x00	; 0
+    13d4:	52 d2       	rcall	.+1188   	; 0x187a <StartBeep>
+			}
 
 			// Process log
 			if (menuUpdateTimer.FA_TGL)
-    13cc:	80 91 7a 00 	lds	r24, 0x007A
-    13d0:	82 ff       	sbrs	r24, 2
-    13d2:	10 c0       	rjmp	.+32     	; 0x13f4 <main+0xfe>
+    13d6:	80 91 7f 00 	lds	r24, 0x007F
+    13da:	82 ff       	sbrs	r24, 2
+    13dc:	c7 cf       	rjmp	.-114    	; 0x136c <main+0x7c>
 				// Log to UART
 				//---------------------------------//
 				// Function is called every 50ms
 				// UART message is sent every second call (once per 100ms)
 				
 				u16toa_align_right(adc_oversampled,str,6,' ');				// Displayed temp, Celsius
-    13d4:	20 e2       	ldi	r18, 0x20	; 32
-    13d6:	46 e0       	ldi	r20, 0x06	; 6
-    13d8:	be 01       	movw	r22, r28
-    13da:	6f 5f       	subi	r22, 0xFF	; 255
-    13dc:	7f 4f       	sbci	r23, 0xFF	; 255
-    13de:	80 91 03 01 	lds	r24, 0x0103
-    13e2:	90 91 04 01 	lds	r25, 0x0104
-    13e6:	36 df       	rcall	.-404    	; 0x1254 <u16toa_align_right>
+    13de:	20 e2       	ldi	r18, 0x20	; 32
+    13e0:	46 e0       	ldi	r20, 0x06	; 6
+    13e2:	be 01       	movw	r22, r28
+    13e4:	6f 5f       	subi	r22, 0xFF	; 255
+    13e6:	7f 4f       	sbci	r23, 0xFF	; 255
+    13e8:	80 91 06 01 	lds	r24, 0x0106
+    13ec:	90 91 07 01 	lds	r25, 0x0107
+    13f0:	2e df       	rcall	.-420    	; 0x124e <u16toa_align_right>
 				USART_sendstr(str);
-    13e8:	ce 01       	movw	r24, r28
-    13ea:	01 96       	adiw	r24, 0x01	; 1
-    13ec:	5f d2       	rcall	.+1214   	; 0x18ac <USART_sendstr>
+    13f2:	ce 01       	movw	r24, r28
+    13f4:	01 96       	adiw	r24, 0x01	; 1
+    13f6:	88 d2       	rcall	.+1296   	; 0x1908 <USART_sendstr>
 				
 				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (PID output, synchronized)
 				USART_sendstr(str);
 				
 */				
 				USART_sendstr("\n\r");
-    13ee:	8d eb       	ldi	r24, 0xBD	; 189
-    13f0:	90 e0       	ldi	r25, 0x00	; 0
-    13f2:	5c d2       	rcall	.+1208   	; 0x18ac <USART_sendstr>
-				//---------------------------------//
-				
-			}
-			
-			
-			menuUpdateTimer.FOvfl = 0;	
-    13f4:	80 91 7a 00 	lds	r24, 0x007A
-    13f8:	8f 7b       	andi	r24, 0xBF	; 191
-    13fa:	80 93 7a 00 	sts	0x007A, r24
-    13fe:	bf cf       	rjmp	.-130    	; 0x137e <main+0x88>
+    13f8:	82 ec       	ldi	r24, 0xC2	; 194
+    13fa:	90 e0       	ldi	r25, 0x00	; 0
+    13fc:	85 d2       	rcall	.+1290   	; 0x1908 <USART_sendstr>
+    13fe:	b6 cf       	rjmp	.-148    	; 0x136c <main+0x7c>
 
 00001400 <setHeaterControl>:
 
@@ -3959,11 +3951,11 @@ void setHeaterControl(uint8_t value)
     1404:	99 bf       	out	0x39, r25	; 57
 	
 	ctrl_heater = value;
-    1406:	80 93 f1 00 	sts	0x00F1, r24
+    1406:	80 93 f8 00 	sts	0x00F8, r24
 	heaterState &= ~READY_TO_UPDATE_HEATER;
-    140a:	80 91 f0 00 	lds	r24, 0x00F0
+    140a:	80 91 f7 00 	lds	r24, 0x00F7
     140e:	8f 77       	andi	r24, 0x7F	; 127
-    1410:	80 93 f0 00 	sts	0x00F0, r24
+    1410:	80 93 f7 00 	sts	0x00F7, r24
 	
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);	
@@ -3986,10 +3978,10 @@ void forceHeaterControlUpdate(void)
 	// Flag READY_TO_UPDATE_HEATER will be set on next on next AC line period
 	heater_cnt = HEATER_REGULATION_PERIODS - 6;
     1422:	8c e2       	ldi	r24, 0x2C	; 44
-    1424:	80 93 f2 00 	sts	0x00F2, r24
+    1424:	80 93 f9 00 	sts	0x00F9, r24
 	heater_reg_cnt = HEATER_PID_CALL_INTERVAL - 1;
     1428:	83 e0       	ldi	r24, 0x03	; 3
-    142a:	80 93 ef 00 	sts	0x00EF, r24
+    142a:	80 93 f6 00 	sts	0x00F6, r24
 	
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);	
@@ -4010,7 +4002,7 @@ void setMotorDirection(uint8_t dir)
     143a:	99 bf       	out	0x39, r25	; 57
 		
 	newDirReq = dir;	// save new direction request
-    143c:	80 93 f3 00 	sts	0x00F3, r24
+    143c:	80 93 fa 00 	sts	0x00FA, r24
 	dirChangedMask = ~ROLL_DIR_CHANGED;
     1440:	9f ed       	ldi	r25, 0xDF	; 223
     1442:	90 93 79 00 	sts	0x0079, r25
@@ -4019,19 +4011,19 @@ void setMotorDirection(uint8_t dir)
     1446:	80 ff       	sbrs	r24, 0
     1448:	09 c0       	rjmp	.+18     	; 0x145c <setMotorDirection+0x26>
 		bottomPoint = rollPoint;
-    144a:	80 91 f4 00 	lds	r24, 0x00F4
-    144e:	90 91 f5 00 	lds	r25, 0x00F5
-    1452:	90 93 f7 00 	sts	0x00F7, r25
-    1456:	80 93 f6 00 	sts	0x00F6, r24
+    144a:	80 91 fb 00 	lds	r24, 0x00FB
+    144e:	90 91 fc 00 	lds	r25, 0x00FC
+    1452:	90 93 fe 00 	sts	0x00FE, r25
+    1456:	80 93 fd 00 	sts	0x00FD, r24
     145a:	0a c0       	rjmp	.+20     	; 0x1470 <setMotorDirection+0x3a>
 	else if (dir & ROLL_REV)
     145c:	81 ff       	sbrs	r24, 1
     145e:	08 c0       	rjmp	.+16     	; 0x1470 <setMotorDirection+0x3a>
 		topPoint = rollPoint;
-    1460:	80 91 f4 00 	lds	r24, 0x00F4
-    1464:	90 91 f5 00 	lds	r25, 0x00F5
-    1468:	90 93 f9 00 	sts	0x00F9, r25
-    146c:	80 93 f8 00 	sts	0x00F8, r24
+    1460:	80 91 fb 00 	lds	r24, 0x00FB
+    1464:	90 91 fc 00 	lds	r25, 0x00FC
+    1468:	90 93 00 01 	sts	0x0100, r25
+    146c:	80 93 ff 00 	sts	0x00FF, r24
 
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);	
@@ -4052,22 +4044,22 @@ void stopCycleRolling(uint8_t doResetPoints)
     147c:	99 bf       	out	0x39, r25	; 57
 	
 	rollState &= ~ROLL_CYCLE;
-    147e:	90 91 ee 00 	lds	r25, 0x00EE
+    147e:	90 91 f5 00 	lds	r25, 0x00F5
     1482:	9b 7f       	andi	r25, 0xFB	; 251
-    1484:	90 93 ee 00 	sts	0x00EE, r25
+    1484:	90 93 f5 00 	sts	0x00F5, r25
 	if (doResetPoints)
     1488:	88 23       	and	r24, r24
     148a:	71 f0       	breq	.+28     	; 0x14a8 <stopCycleRolling+0x30>
 	{
 		topPoint = bottomPoint = rollPoint;
-    148c:	80 91 f4 00 	lds	r24, 0x00F4
-    1490:	90 91 f5 00 	lds	r25, 0x00F5
-    1494:	90 93 f7 00 	sts	0x00F7, r25
-    1498:	80 93 f6 00 	sts	0x00F6, r24
-    149c:	90 93 f9 00 	sts	0x00F9, r25
-    14a0:	80 93 f8 00 	sts	0x00F8, r24
+    148c:	80 91 fb 00 	lds	r24, 0x00FB
+    1490:	90 91 fc 00 	lds	r25, 0x00FC
+    1494:	90 93 fe 00 	sts	0x00FE, r25
+    1498:	80 93 fd 00 	sts	0x00FD, r24
+    149c:	90 93 00 01 	sts	0x0100, r25
+    14a0:	80 93 ff 00 	sts	0x00FF, r24
 		activeRollCycle = 0;	
-    14a4:	10 92 ed 00 	sts	0x00ED, r1
+    14a4:	10 92 f4 00 	sts	0x00F4, r1
 	}		
 	
 	// Enable interrupts from timer 0
@@ -4084,10 +4076,10 @@ void stopCycleRolling(uint8_t doResetPoints)
 uint8_t isTopPointValid(void)
 {
 	return (	(int16_t)(topPoint - rollPoint) >= 0 );
-    14b0:	80 91 f8 00 	lds	r24, 0x00F8
-    14b4:	90 91 f9 00 	lds	r25, 0x00F9
-    14b8:	20 91 f4 00 	lds	r18, 0x00F4
-    14bc:	30 91 f5 00 	lds	r19, 0x00F5
+    14b0:	80 91 ff 00 	lds	r24, 0x00FF
+    14b4:	90 91 00 01 	lds	r25, 0x0100
+    14b8:	20 91 fb 00 	lds	r18, 0x00FB
+    14bc:	30 91 fc 00 	lds	r19, 0x00FC
     14c0:	82 1b       	sub	r24, r18
     14c2:	93 0b       	sbc	r25, r19
     14c4:	89 2f       	mov	r24, r25
@@ -4103,10 +4095,10 @@ uint8_t isTopPointValid(void)
 uint8_t isBottomPointValid(void)
 {
 	return (	(int16_t)(rollPoint - bottomPoint) >= 0	);
-    14d0:	80 91 f4 00 	lds	r24, 0x00F4
-    14d4:	90 91 f5 00 	lds	r25, 0x00F5
-    14d8:	20 91 f6 00 	lds	r18, 0x00F6
-    14dc:	30 91 f7 00 	lds	r19, 0x00F7
+    14d0:	80 91 fb 00 	lds	r24, 0x00FB
+    14d4:	90 91 fc 00 	lds	r25, 0x00FC
+    14d8:	20 91 fd 00 	lds	r18, 0x00FD
+    14dc:	30 91 fe 00 	lds	r19, 0x00FE
     14e0:	82 1b       	sub	r24, r18
     14e2:	93 0b       	sbc	r25, r19
     14e4:	89 2f       	mov	r24, r25
@@ -4137,12 +4129,12 @@ uint8_t startCycleRolling(void)
     1500:	41 f0       	breq	.+16     	; 0x1512 <startCycleRolling+0x22>
 	{
 		rollState |= ROLL_CYCLE;
-    1502:	80 91 ee 00 	lds	r24, 0x00EE
+    1502:	80 91 f5 00 	lds	r24, 0x00F5
     1506:	84 60       	ori	r24, 0x04	; 4
-    1508:	80 93 ee 00 	sts	0x00EE, r24
+    1508:	80 93 f5 00 	sts	0x00F5, r24
 		activeRollCycle = 1;
     150c:	81 e0       	ldi	r24, 0x01	; 1
-    150e:	80 93 ed 00 	sts	0x00ED, r24
+    150e:	80 93 f4 00 	sts	0x00F4, r24
 	}
 	
 	// Enable interrupts from timer 0
@@ -4152,7 +4144,7 @@ uint8_t startCycleRolling(void)
     1516:	89 bf       	out	0x39, r24	; 57
 	
 	return (rollState & ROLL_CYCLE);
-    1518:	80 91 ee 00 	lds	r24, 0x00EE
+    1518:	80 91 f5 00 	lds	r24, 0x00F5
 }
     151c:	84 70       	andi	r24, 0x04	; 4
     151e:	08 95       	ret
@@ -4176,8 +4168,8 @@ ISR(ANA_COMP_vect)
     152e:	43 98       	cbi	0x08, 3	; 8
 	// Turn on heater TRIAC
 	if (heater_cnt < ctrl_heater_sync)
-    1530:	90 91 f2 00 	lds	r25, 0x00F2
-    1534:	80 91 fa 00 	lds	r24, 0x00FA
+    1530:	90 91 f9 00 	lds	r25, 0x00F9
+    1534:	80 91 01 01 	lds	r24, 0x0101
     1538:	98 17       	cp	r25, r24
     153a:	20 f4       	brcc	.+8      	; 0x1544 <__vector_16+0x24>
 		PORTD |= (1<<PD_HEATER | 1<<PD_HEAT_INDIC);	// Direct heater indication
@@ -4299,14 +4291,14 @@ ISR(TIMER0_OVF_vect)
 		temp &= ~(1<<PD_M1 | 1<<PD_M2);
     15c2:	83 7f       	andi	r24, 0xF3	; 243
 		if ( rollState & SKIP_CURRENT_MOTOR_CTRL )
-    15c4:	90 91 ee 00 	lds	r25, 0x00EE
+    15c4:	90 91 f5 00 	lds	r25, 0x00F5
     15c8:	93 ff       	sbrs	r25, 3
     15ca:	05 c0       	rjmp	.+10     	; 0x15d6 <__vector_9+0x72>
 		{
 			// Direction control changed. Skip current period to allow TRIACs fully close
 			rollState &= ~SKIP_CURRENT_MOTOR_CTRL;
     15cc:	97 7f       	andi	r25, 0xF7	; 247
-    15ce:	90 93 ee 00 	sts	0x00EE, r25
+    15ce:	90 93 f5 00 	sts	0x00F5, r25
 			PORTD = temp; 	
     15d2:	82 bb       	out	0x12, r24	; 18
     15d4:	76 c0       	rjmp	.+236    	; 0x16c2 <__vector_9+0x15e>
@@ -4332,7 +4324,7 @@ static inline void controlRolling()
 {
 	// Process cycle rolling
 	switch(rollState & (ROLL_FWD | ROLL_REV | ROLL_CYCLE))
-    15e4:	40 91 ee 00 	lds	r20, 0x00EE
+    15e4:	40 91 f5 00 	lds	r20, 0x00F5
     15e8:	84 2f       	mov	r24, r20
     15ea:	87 70       	andi	r24, 0x07	; 7
     15ec:	85 30       	cpi	r24, 0x05	; 5
@@ -4346,10 +4338,10 @@ static inline void controlRolling()
 static inline uint8_t reachedTopPoint(void)
 {
 	return (	(int16_t)(topPoint - rollPoint) <= 0 );
-    15f6:	80 91 f8 00 	lds	r24, 0x00F8
-    15fa:	90 91 f9 00 	lds	r25, 0x00F9
-    15fe:	20 91 f4 00 	lds	r18, 0x00F4
-    1602:	30 91 f5 00 	lds	r19, 0x00F5
+    15f6:	80 91 ff 00 	lds	r24, 0x00FF
+    15fa:	90 91 00 01 	lds	r25, 0x0100
+    15fe:	20 91 fb 00 	lds	r18, 0x00FB
+    1602:	30 91 fc 00 	lds	r19, 0x00FC
     1606:	82 1b       	sub	r24, r18
     1608:	93 0b       	sbc	r25, r19
 {
@@ -4363,8 +4355,8 @@ static inline uint8_t reachedTopPoint(void)
     160e:	7c f1       	brlt	.+94     	; 0x166e <__vector_9+0x10a>
 			{
 				if (activeRollCycle >= rollCycleSet)	
-    1610:	80 91 ed 00 	lds	r24, 0x00ED
-    1614:	90 91 3e 01 	lds	r25, 0x013E
+    1610:	80 91 f4 00 	lds	r24, 0x00F4
+    1614:	90 91 41 01 	lds	r25, 0x0141
     1618:	89 17       	cp	r24, r25
     161a:	28 f0       	brcs	.+10     	; 0x1626 <__vector_9+0xc2>
 				{
@@ -4373,14 +4365,14 @@ static inline uint8_t reachedTopPoint(void)
     161c:	4b 7f       	andi	r20, 0xFB	; 251
 					rollState |= CYCLE_ROLL_DONE;
     161e:	40 61       	ori	r20, 0x10	; 16
-    1620:	40 93 ee 00 	sts	0x00EE, r20
+    1620:	40 93 f5 00 	sts	0x00F5, r20
     1624:	24 c0       	rjmp	.+72     	; 0x166e <__vector_9+0x10a>
 				}
 				else
 				{
 					activeRollCycle++;
     1626:	8f 5f       	subi	r24, 0xFF	; 255
-    1628:	80 93 ed 00 	sts	0x00ED, r24
+    1628:	80 93 f4 00 	sts	0x00F4, r24
 					// Change dir	
 					newDirReq = ROLL_REV;				
     162c:	82 e0       	ldi	r24, 0x02	; 2
@@ -4391,10 +4383,10 @@ static inline uint8_t reachedTopPoint(void)
 static inline uint8_t reachedBottomPoint(void)
 {
 	return (	(int16_t)(rollPoint - bottomPoint) <= 0 );
-    1630:	80 91 f4 00 	lds	r24, 0x00F4
-    1634:	90 91 f5 00 	lds	r25, 0x00F5
-    1638:	20 91 f6 00 	lds	r18, 0x00F6
-    163c:	30 91 f7 00 	lds	r19, 0x00F7
+    1630:	80 91 fb 00 	lds	r24, 0x00FB
+    1634:	90 91 fc 00 	lds	r25, 0x00FC
+    1638:	20 91 fd 00 	lds	r18, 0x00FD
+    163c:	30 91 fe 00 	lds	r19, 0x00FE
     1640:	82 1b       	sub	r24, r18
     1642:	93 0b       	sbc	r25, r19
 				}
@@ -4408,8 +4400,8 @@ static inline uint8_t reachedBottomPoint(void)
     1648:	94 f0       	brlt	.+36     	; 0x166e <__vector_9+0x10a>
 			{
 				if (activeRollCycle >= rollCycleSet)	
-    164a:	80 91 ed 00 	lds	r24, 0x00ED
-    164e:	90 91 3e 01 	lds	r25, 0x013E
+    164a:	80 91 f4 00 	lds	r24, 0x00F4
+    164e:	90 91 41 01 	lds	r25, 0x0141
     1652:	89 17       	cp	r24, r25
     1654:	30 f0       	brcs	.+12     	; 0x1662 <__vector_9+0xfe>
 				{
@@ -4419,26 +4411,26 @@ static inline uint8_t reachedBottomPoint(void)
     1658:	8b 7f       	andi	r24, 0xFB	; 251
 					rollState |= CYCLE_ROLL_DONE;
     165a:	80 61       	ori	r24, 0x10	; 16
-    165c:	80 93 ee 00 	sts	0x00EE, r24
+    165c:	80 93 f5 00 	sts	0x00F5, r24
     1660:	06 c0       	rjmp	.+12     	; 0x166e <__vector_9+0x10a>
 				}
 				else
 				{
 					activeRollCycle++;
     1662:	8f 5f       	subi	r24, 0xFF	; 255
-    1664:	80 93 ed 00 	sts	0x00ED, r24
+    1664:	80 93 f4 00 	sts	0x00F4, r24
 					// Change dir	
 					newDirReq = ROLL_FWD;
     1668:	81 e0       	ldi	r24, 0x01	; 1
-    166a:	80 93 f3 00 	sts	0x00F3, r24
+    166a:	80 93 fa 00 	sts	0x00FA, r24
 		default:
 			break;
 	}
 	
 	// Process direction change
 	if ((rollState ^ newDirReq) & (ROLL_FWD | ROLL_REV))
-    166e:	20 91 ee 00 	lds	r18, 0x00EE
-    1672:	90 91 f3 00 	lds	r25, 0x00F3
+    166e:	20 91 f5 00 	lds	r18, 0x00F5
+    1672:	90 91 fa 00 	lds	r25, 0x00FA
     1676:	89 2f       	mov	r24, r25
     1678:	82 27       	eor	r24, r18
     167a:	83 70       	andi	r24, 0x03	; 3
@@ -4447,18 +4439,18 @@ static inline uint8_t reachedBottomPoint(void)
 		// ROLL_DIR_CHANGED is used for sound beep
 		rollState |= (SKIP_CURRENT_MOTOR_CTRL | ROLL_DIR_CHANGED);
     167e:	28 62       	ori	r18, 0x28	; 40
-    1680:	20 93 ee 00 	sts	0x00EE, r18
+    1680:	20 93 f5 00 	sts	0x00F5, r18
 	}
 	
 	rollState &= ~(ROLL_FWD | ROLL_REV);
-    1684:	80 91 ee 00 	lds	r24, 0x00EE
+    1684:	80 91 f5 00 	lds	r24, 0x00F5
     1688:	8c 7f       	andi	r24, 0xFC	; 252
 	rollState |= newDirReq;
     168a:	89 2b       	or	r24, r25
 	rollState &= dirChangedMask;
     168c:	90 91 79 00 	lds	r25, 0x0079
     1690:	89 23       	and	r24, r25
-    1692:	80 93 ee 00 	sts	0x00EE, r24
+    1692:	80 93 f5 00 	sts	0x00F5, r24
 	dirChangedMask = 0xFF;
     1696:	9f ef       	ldi	r25, 0xFF	; 255
     1698:	90 93 79 00 	sts	0x0079, r25
@@ -4471,77 +4463,77 @@ static inline void updateRollPoint(void)
     169c:	80 ff       	sbrs	r24, 0
     169e:	06 c0       	rjmp	.+12     	; 0x16ac <__vector_9+0x148>
 		rollPoint++;
-    16a0:	80 91 f4 00 	lds	r24, 0x00F4
-    16a4:	90 91 f5 00 	lds	r25, 0x00F5
+    16a0:	80 91 fb 00 	lds	r24, 0x00FB
+    16a4:	90 91 fc 00 	lds	r25, 0x00FC
     16a8:	01 96       	adiw	r24, 0x01	; 1
     16aa:	07 c0       	rjmp	.+14     	; 0x16ba <__vector_9+0x156>
 	else if (rollState & ROLL_REV)
     16ac:	81 ff       	sbrs	r24, 1
     16ae:	09 c0       	rjmp	.+18     	; 0x16c2 <__vector_9+0x15e>
 		rollPoint--;	
-    16b0:	80 91 f4 00 	lds	r24, 0x00F4
-    16b4:	90 91 f5 00 	lds	r25, 0x00F5
+    16b0:	80 91 fb 00 	lds	r24, 0x00FB
+    16b4:	90 91 fc 00 	lds	r25, 0x00FC
     16b8:	01 97       	sbiw	r24, 0x01	; 1
-    16ba:	90 93 f5 00 	sts	0x00F5, r25
-    16be:	80 93 f4 00 	sts	0x00F4, r24
+    16ba:	90 93 fc 00 	sts	0x00FC, r25
+    16be:	80 93 fb 00 	sts	0x00FB, r24
 			controlRolling();
 		}
 			
 
 		// Process heater control 
 		if (heater_cnt == HEATER_REGULATION_PERIODS - 6)
-    16c2:	80 91 f2 00 	lds	r24, 0x00F2
+    16c2:	80 91 f9 00 	lds	r24, 0x00F9
     16c6:	8c 32       	cpi	r24, 0x2C	; 44
     16c8:	b1 f4       	brne	.+44     	; 0x16f6 <__vector_9+0x192>
 		{
 			 if (heater_reg_cnt == HEATER_PID_CALL_INTERVAL - 1)
-    16ca:	80 91 ef 00 	lds	r24, 0x00EF
+    16ca:	80 91 f6 00 	lds	r24, 0x00F6
     16ce:	83 30       	cpi	r24, 0x03	; 3
     16d0:	79 f4       	brne	.+30     	; 0x16f0 <__vector_9+0x18c>
 			 {
 				 heater_reg_cnt = 0;
-    16d2:	10 92 ef 00 	sts	0x00EF, r1
+    16d2:	10 92 f6 00 	sts	0x00F6, r1
 				 // Set flag for PID control
 				 heaterState |= READY_TO_UPDATE_HEATER;
-    16d6:	80 91 f0 00 	lds	r24, 0x00F0
+    16d6:	80 91 f7 00 	lds	r24, 0x00F7
     16da:	80 68       	ori	r24, 0x80	; 128
-    16dc:	80 93 f0 00 	sts	0x00F0, r24
+    16dc:	80 93 f7 00 	sts	0x00F7, r24
 				 // Save temperature measure at current time
 				 PIDsampledADC = getNormalizedRingU16(&ringBufADC);
     16e0:	80 e6       	ldi	r24, 0x60	; 96
     16e2:	90 e0       	ldi	r25, 0x00	; 0
-    16e4:	7c d6       	rcall	.+3320   	; 0x23de <__data_load_end+0x972>
-    16e6:	90 93 02 01 	sts	0x0102, r25
-    16ea:	80 93 01 01 	sts	0x0101, r24
+    16e4:	7c d6       	rcall	.+3320   	; 0x23de <__data_load_end+0x910>
+    16e6:	90 93 05 01 	sts	0x0105, r25
+    16ea:	80 93 04 01 	sts	0x0104, r24
     16ee:	03 c0       	rjmp	.+6      	; 0x16f6 <__vector_9+0x192>
 			 }
 			 else
 			 {
 				 heater_reg_cnt++;
     16f0:	8f 5f       	subi	r24, 0xFF	; 255
-    16f2:	80 93 ef 00 	sts	0x00EF, r24
+    16f2:	80 93 f6 00 	sts	0x00F6, r24
 			 }
 		}			 
 		
 		
 		if (heater_cnt == HEATER_REGULATION_PERIODS - 1)
-    16f6:	80 91 f2 00 	lds	r24, 0x00F2
+    16f6:	80 91 f9 00 	lds	r24, 0x00F9
     16fa:	81 33       	cpi	r24, 0x31	; 49
     16fc:	39 f4       	brne	.+14     	; 0x170c <__vector_9+0x1a8>
 		{
 			heater_cnt = 0;
-    16fe:	10 92 f2 00 	sts	0x00F2, r1
+    16fe:	10 92 f9 00 	sts	0x00F9, r1
 			// Copy new output value
 			ctrl_heater_sync = ctrl_heater;
-    1702:	80 91 f1 00 	lds	r24, 0x00F1
-    1706:	80 93 fa 00 	sts	0x00FA, r24
+    1702:	80 91 f8 00 	lds	r24, 0x00F8
+    1706:	80 93 01 01 	sts	0x0101, r24
     170a:	03 c0       	rjmp	.+6      	; 0x1712 <__vector_9+0x1ae>
 		}
 		else
 		{
 			heater_cnt++;
     170c:	8f 5f       	subi	r24, 0xFF	; 255
-    170e:	80 93 f2 00 	sts	0x00F2, r24
+    170e:	80 93 f9 00 	sts	0x00F9, r24
 			
 			
 	}
@@ -4664,465 +4656,515 @@ static inline void updateRollPoint(void)
     179a:	21 83       	std	Z+1, r18	; 0x01
     179c:	08 95       	ret
 
-0000179e <SetBeeperFreq>:
+0000179e <processSystemTimers>:
+
+
+
+void processSystemTimers(void)
+{
+	sys_timers.flags = 0x00;
+    179e:	10 92 7e 00 	sts	0x007E, r1
+	
+	// Process Celsius counter
+	if (--sys_timers.celsius_upd_counter == 0)
+    17a2:	80 91 7a 00 	lds	r24, 0x007A
+    17a6:	81 50       	subi	r24, 0x01	; 1
+    17a8:	19 f0       	breq	.+6      	; 0x17b0 <processSystemTimers+0x12>
+    17aa:	80 93 7a 00 	sts	0x007A, r24
+    17ae:	06 c0       	rjmp	.+12     	; 0x17bc <processSystemTimers+0x1e>
+	{
+		sys_timers.celsius_upd_counter = CELSIUS_UDPATE_INTERVAL;
+    17b0:	84 e0       	ldi	r24, 0x04	; 4
+    17b2:	80 93 7a 00 	sts	0x007A, r24
+		sys_timers.flags |= EXPIRED_CELSIUS;
+    17b6:	81 e0       	ldi	r24, 0x01	; 1
+    17b8:	80 93 7e 00 	sts	0x007E, r24
+	}
+	
+	// Process 10 seconds counter
+	if (--sys_timers.counter_10sec == 0)
+    17bc:	80 91 7b 00 	lds	r24, 0x007B
+    17c0:	81 50       	subi	r24, 0x01	; 1
+    17c2:	80 93 7b 00 	sts	0x007B, r24
+    17c6:	81 11       	cpse	r24, r1
+    17c8:	34 c0       	rjmp	.+104    	; 0x1832 <processSystemTimers+0x94>
+	{
+		sys_timers.counter_10sec = COUNTER_10SEC_INTERVAL;
+    17ca:	84 e1       	ldi	r24, 0x14	; 20
+    17cc:	80 93 7b 00 	sts	0x007B, r24
+		sys_timers.flags |= EXPIRED_10SEC;
+    17d0:	40 91 7e 00 	lds	r20, 0x007E
+    17d4:	84 2f       	mov	r24, r20
+    17d6:	82 60       	ori	r24, 0x02	; 2
+    17d8:	80 93 7e 00 	sts	0x007E, r24
+		
+		// Process 1 minute counter
+		if (--sys_timers.counter_1min == 0)
+    17dc:	80 91 7c 00 	lds	r24, 0x007C
+    17e0:	81 50       	subi	r24, 0x01	; 1
+    17e2:	80 93 7c 00 	sts	0x007C, r24
+    17e6:	81 11       	cpse	r24, r1
+    17e8:	24 c0       	rjmp	.+72     	; 0x1832 <processSystemTimers+0x94>
+		{
+			sys_timers.counter_1min = COUNTER_1MIN_INTERVAL;
+    17ea:	86 e0       	ldi	r24, 0x06	; 6
+    17ec:	80 93 7c 00 	sts	0x007C, r24
+			sys_timers.flags |= EXPIRED_1MIN;
+    17f0:	84 2f       	mov	r24, r20
+    17f2:	86 60       	ori	r24, 0x06	; 6
+    17f4:	80 93 7e 00 	sts	0x007E, r24
+			
+			// Process auto power off counter
+			if (sys_timers.poff_counter != MAX_POWEROFF_TIMEOUT - 1)
+    17f8:	80 91 7d 00 	lds	r24, 0x007D
+    17fc:	8e 35       	cpi	r24, 0x5E	; 94
+    17fe:	19 f0       	breq	.+6      	; 0x1806 <processSystemTimers+0x68>
+				sys_timers.poff_counter++;
+    1800:	8f 5f       	subi	r24, 0xFF	; 255
+    1802:	80 93 7d 00 	sts	0x007D, r24
+			if (sys_timers.poff_counter == power_off_timeout - 1)
+    1806:	60 91 7d 00 	lds	r22, 0x007D
+    180a:	50 91 4e 01 	lds	r21, 0x014E
+    180e:	26 2f       	mov	r18, r22
+    1810:	30 e0       	ldi	r19, 0x00	; 0
+    1812:	85 2f       	mov	r24, r21
+    1814:	90 e0       	ldi	r25, 0x00	; 0
+    1816:	01 97       	sbiw	r24, 0x01	; 1
+    1818:	28 17       	cp	r18, r24
+    181a:	39 07       	cpc	r19, r25
+    181c:	19 f4       	brne	.+6      	; 0x1824 <processSystemTimers+0x86>
+				sys_timers.flags |= AUTOPOFF_SOON;
+    181e:	4e 60       	ori	r20, 0x0E	; 14
+    1820:	40 93 7e 00 	sts	0x007E, r20
+			if (sys_timers.poff_counter == power_off_timeout)
+    1824:	65 13       	cpse	r22, r21
+    1826:	05 c0       	rjmp	.+10     	; 0x1832 <processSystemTimers+0x94>
+				sys_timers.flags |= AUTOPOFF_EXPIRED;			
+    1828:	80 91 7e 00 	lds	r24, 0x007E
+    182c:	80 61       	ori	r24, 0x10	; 16
+    182e:	80 93 7e 00 	sts	0x007E, r24
+    1832:	08 95       	ret
+
+00001834 <resetAutoPowerOffCounter>:
+}
+
+
+void resetAutoPowerOffCounter(void)
+{
+	sys_timers.poff_counter = 0;
+    1834:	10 92 7d 00 	sts	0x007D, r1
+    1838:	08 95       	ret
+
+0000183a <SetBeeperFreq>:
 }
 
 // Setup beeper frequency (Hz)
 void SetBeeperFreq(uint16_t freq_hz)
 {
 	uint16_t period_us = 1000000 / freq_hz;
-    179e:	9c 01       	movw	r18, r24
-    17a0:	40 e0       	ldi	r20, 0x00	; 0
-    17a2:	50 e0       	ldi	r21, 0x00	; 0
-    17a4:	60 e4       	ldi	r22, 0x40	; 64
-    17a6:	72 e4       	ldi	r23, 0x42	; 66
-    17a8:	8f e0       	ldi	r24, 0x0F	; 15
-    17aa:	90 e0       	ldi	r25, 0x00	; 0
-    17ac:	e6 d0       	rcall	.+460    	; 0x197a <__divmodsi4>
+    183a:	9c 01       	movw	r18, r24
+    183c:	40 e0       	ldi	r20, 0x00	; 0
+    183e:	50 e0       	ldi	r21, 0x00	; 0
+    1840:	60 e4       	ldi	r22, 0x40	; 64
+    1842:	72 e4       	ldi	r23, 0x42	; 66
+    1844:	8f e0       	ldi	r24, 0x0F	; 15
+    1846:	90 e0       	ldi	r25, 0x00	; 0
+    1848:	c6 d0       	rcall	.+396    	; 0x19d6 <__divmodsi4>
 	if (period_us & 0xFFF8)
-    17ae:	da 01       	movw	r26, r20
-    17b0:	c9 01       	movw	r24, r18
-    17b2:	88 7f       	andi	r24, 0xF8	; 248
-    17b4:	aa 27       	eor	r26, r26
-    17b6:	bb 27       	eor	r27, r27
-    17b8:	89 2b       	or	r24, r25
-    17ba:	51 f0       	breq	.+20     	; 0x17d0 <SetBeeperFreq+0x32>
+    184a:	da 01       	movw	r26, r20
+    184c:	c9 01       	movw	r24, r18
+    184e:	88 7f       	andi	r24, 0xF8	; 248
+    1850:	aa 27       	eor	r26, r26
+    1852:	bb 27       	eor	r27, r27
+    1854:	89 2b       	or	r24, r25
+    1856:	51 f0       	breq	.+20     	; 0x186c <SetBeeperFreq+0x32>
 		OCR1A = (period_us>>3) - 1;
-    17bc:	43 e0       	ldi	r20, 0x03	; 3
-    17be:	36 95       	lsr	r19
-    17c0:	27 95       	ror	r18
-    17c2:	4a 95       	dec	r20
-    17c4:	e1 f7       	brne	.-8      	; 0x17be <SetBeeperFreq+0x20>
-    17c6:	21 50       	subi	r18, 0x01	; 1
-    17c8:	31 09       	sbc	r19, r1
-    17ca:	3b bd       	out	0x2b, r19	; 43
-    17cc:	2a bd       	out	0x2a, r18	; 42
-    17ce:	04 c0       	rjmp	.+8      	; 0x17d8 <SetBeeperFreq+0x3a>
+    1858:	43 e0       	ldi	r20, 0x03	; 3
+    185a:	36 95       	lsr	r19
+    185c:	27 95       	ror	r18
+    185e:	4a 95       	dec	r20
+    1860:	e1 f7       	brne	.-8      	; 0x185a <SetBeeperFreq+0x20>
+    1862:	21 50       	subi	r18, 0x01	; 1
+    1864:	31 09       	sbc	r19, r1
+    1866:	3b bd       	out	0x2b, r19	; 43
+    1868:	2a bd       	out	0x2a, r18	; 42
+    186a:	04 c0       	rjmp	.+8      	; 0x1874 <SetBeeperFreq+0x3a>
 	else
 		OCR1A = 0x1;
-    17d0:	81 e0       	ldi	r24, 0x01	; 1
-    17d2:	90 e0       	ldi	r25, 0x00	; 0
-    17d4:	9b bd       	out	0x2b, r25	; 43
-    17d6:	8a bd       	out	0x2a, r24	; 42
+    186c:	81 e0       	ldi	r24, 0x01	; 1
+    186e:	90 e0       	ldi	r25, 0x00	; 0
+    1870:	9b bd       	out	0x2b, r25	; 43
+    1872:	8a bd       	out	0x2a, r24	; 42
 	TCNT1 = 0;
-    17d8:	1d bc       	out	0x2d, r1	; 45
-    17da:	1c bc       	out	0x2c, r1	; 44
-    17dc:	08 95       	ret
+    1874:	1d bc       	out	0x2d, r1	; 45
+    1876:	1c bc       	out	0x2c, r1	; 44
+    1878:	08 95       	ret
 
-000017de <StartBeep>:
+0000187a <StartBeep>:
 }
 
 // Beep for some time in ms
 void StartBeep(uint16_t time_ms)
 {
 	if (sound_enable)
-    17de:	20 91 3b 01 	lds	r18, 0x013B
-    17e2:	22 23       	and	r18, r18
-    17e4:	39 f0       	breq	.+14     	; 0x17f4 <StartBeep+0x16>
+    187a:	20 91 3e 01 	lds	r18, 0x013E
+    187e:	22 23       	and	r18, r18
+    1880:	39 f0       	breq	.+14     	; 0x1890 <StartBeep+0x16>
 	{
 		beep_cnt = time_ms;
-    17e6:	90 93 fe 00 	sts	0x00FE, r25
-    17ea:	80 93 fd 00 	sts	0x00FD, r24
+    1882:	90 93 03 01 	sts	0x0103, r25
+    1886:	80 93 02 01 	sts	0x0102, r24
 // Enable / disable beeper output
 inline void SetBeepOutput(uint8_t val)
 {
 	if (val)
 		// Toggle OCR1A on compare match
 		TCCR1A |= (1<<COM1A0);
-    17ee:	8f b5       	in	r24, 0x2f	; 47
-    17f0:	80 64       	ori	r24, 0x40	; 64
-    17f2:	8f bd       	out	0x2f, r24	; 47
-    17f4:	08 95       	ret
+    188a:	8f b5       	in	r24, 0x2f	; 47
+    188c:	80 64       	ori	r24, 0x40	; 64
+    188e:	8f bd       	out	0x2f, r24	; 47
+    1890:	08 95       	ret
 
-000017f6 <resetAutoPowerOffCounter>:
-
-
-
-void resetAutoPowerOffCounter(void)
-{
-	systick_counter = 0;
-    17f6:	10 92 00 01 	sts	0x0100, r1
-    17fa:	10 92 ff 00 	sts	0x00FF, r1
-	minute_counter = 0;
-    17fe:	10 92 fb 00 	sts	0x00FB, r1
-    1802:	08 95       	ret
-
-00001804 <processAutoPowerOff>:
-}
-
-void processAutoPowerOff(void)
-{
-	//if (systick_counter == SYSTICKS_PER_SECOND * 60 - 1)
-	if (systick_counter == SYSTICKS_PER_SECOND * 5 - 1)
-    1804:	80 91 ff 00 	lds	r24, 0x00FF
-    1808:	90 91 00 01 	lds	r25, 0x0100
-    180c:	83 36       	cpi	r24, 0x63	; 99
-    180e:	91 05       	cpc	r25, r1
-    1810:	61 f4       	brne	.+24     	; 0x182a <processAutoPowerOff+0x26>
-	{
-		systick_counter = 0;
-    1812:	10 92 00 01 	sts	0x0100, r1
-    1816:	10 92 ff 00 	sts	0x00FF, r1
-		if (minute_counter != MAX_POWEROFF_TIMEOUT - 1)
-    181a:	80 91 fb 00 	lds	r24, 0x00FB
-    181e:	8e 35       	cpi	r24, 0x5E	; 94
-    1820:	49 f0       	breq	.+18     	; 0x1834 <processAutoPowerOff+0x30>
-		{
-			minute_counter++;
-    1822:	8f 5f       	subi	r24, 0xFF	; 255
-    1824:	80 93 fb 00 	sts	0x00FB, r24
-    1828:	08 95       	ret
-		//	 Alert user - TODO
-		//}
-	}
-	else
-	{
-		systick_counter++;
-    182a:	01 96       	adiw	r24, 0x01	; 1
-    182c:	90 93 00 01 	sts	0x0100, r25
-    1830:	80 93 ff 00 	sts	0x00FF, r24
-    1834:	08 95       	ret
-
-00001836 <__vector_3>:
+00001892 <__vector_3>:
 
 
 
 
 ISR(TIMER2_COMP_vect)
 {	
-    1836:	1f 92       	push	r1
-    1838:	0f 92       	push	r0
-    183a:	0f b6       	in	r0, 0x3f	; 63
-    183c:	0f 92       	push	r0
-    183e:	11 24       	eor	r1, r1
-    1840:	2f 93       	push	r18
-    1842:	3f 93       	push	r19
-    1844:	4f 93       	push	r20
-    1846:	5f 93       	push	r21
-    1848:	6f 93       	push	r22
-    184a:	7f 93       	push	r23
-    184c:	8f 93       	push	r24
-    184e:	9f 93       	push	r25
-    1850:	af 93       	push	r26
-    1852:	bf 93       	push	r27
-    1854:	ef 93       	push	r30
-    1856:	ff 93       	push	r31
+    1892:	1f 92       	push	r1
+    1894:	0f 92       	push	r0
+    1896:	0f b6       	in	r0, 0x3f	; 63
+    1898:	0f 92       	push	r0
+    189a:	11 24       	eor	r1, r1
+    189c:	2f 93       	push	r18
+    189e:	3f 93       	push	r19
+    18a0:	4f 93       	push	r20
+    18a2:	5f 93       	push	r21
+    18a4:	6f 93       	push	r22
+    18a6:	7f 93       	push	r23
+    18a8:	8f 93       	push	r24
+    18aa:	9f 93       	push	r25
+    18ac:	af 93       	push	r26
+    18ae:	bf 93       	push	r27
+    18b0:	ef 93       	push	r30
+    18b2:	ff 93       	push	r31
 	
 	// Manage beeper
 	if (beep_cnt)
-    1858:	80 91 fd 00 	lds	r24, 0x00FD
-    185c:	90 91 fe 00 	lds	r25, 0x00FE
-    1860:	00 97       	sbiw	r24, 0x00	; 0
-    1862:	31 f0       	breq	.+12     	; 0x1870 <__vector_3+0x3a>
+    18b4:	80 91 02 01 	lds	r24, 0x0102
+    18b8:	90 91 03 01 	lds	r25, 0x0103
+    18bc:	00 97       	sbiw	r24, 0x00	; 0
+    18be:	31 f0       	breq	.+12     	; 0x18cc <__vector_3+0x3a>
 		beep_cnt--;
-    1864:	01 97       	sbiw	r24, 0x01	; 1
-    1866:	90 93 fe 00 	sts	0x00FE, r25
-    186a:	80 93 fd 00 	sts	0x00FD, r24
-    186e:	03 c0       	rjmp	.+6      	; 0x1876 <__vector_3+0x40>
+    18c0:	01 97       	sbiw	r24, 0x01	; 1
+    18c2:	90 93 03 01 	sts	0x0103, r25
+    18c6:	80 93 02 01 	sts	0x0102, r24
+    18ca:	03 c0       	rjmp	.+6      	; 0x18d2 <__vector_3+0x40>
 	if (val)
 		// Toggle OCR1A on compare match
 		TCCR1A |= (1<<COM1A0);
 	else
 		// Disable OCR1A output
 		TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
-    1870:	8f b5       	in	r24, 0x2f	; 47
-    1872:	8f 73       	andi	r24, 0x3F	; 63
-    1874:	8f bd       	out	0x2f, r24	; 47
+    18cc:	8f b5       	in	r24, 0x2f	; 47
+    18ce:	8f 73       	andi	r24, 0x3F	; 63
+    18d0:	8f bd       	out	0x2f, r24	; 47
 		beep_cnt--;
 	else
 		SetBeepOutput(0);	// done
 	
 	// Manage LED indicator
 	processLedIndicator();
-    1876:	62 d8       	rcall	.-3900   	; 0x93c <processLedIndicator>
+    18d2:	34 d8       	rcall	.-3992   	; 0x93c <processLedIndicator>
 	
 	// Process menu update timer
 	processSoftTimer8b(&menuUpdateTimer);	
-    1878:	8a e7       	ldi	r24, 0x7A	; 122
-    187a:	90 e0       	ldi	r25, 0x00	; 0
-    187c:	64 df       	rcall	.-312    	; 0x1746 <processSoftTimer8b>
+    18d4:	8f e7       	ldi	r24, 0x7F	; 127
+    18d6:	90 e0       	ldi	r25, 0x00	; 0
+    18d8:	36 df       	rcall	.-404    	; 0x1746 <processSoftTimer8b>
 	
 	// Start ADC conversion 
 	ADCSRA |= (1<<ADSC);
-    187e:	36 9a       	sbi	0x06, 6	; 6
+    18da:	36 9a       	sbi	0x06, 6	; 6
 	
 }
-    1880:	ff 91       	pop	r31
-    1882:	ef 91       	pop	r30
-    1884:	bf 91       	pop	r27
-    1886:	af 91       	pop	r26
-    1888:	9f 91       	pop	r25
-    188a:	8f 91       	pop	r24
-    188c:	7f 91       	pop	r23
-    188e:	6f 91       	pop	r22
-    1890:	5f 91       	pop	r21
-    1892:	4f 91       	pop	r20
-    1894:	3f 91       	pop	r19
-    1896:	2f 91       	pop	r18
-    1898:	0f 90       	pop	r0
-    189a:	0f be       	out	0x3f, r0	; 63
-    189c:	0f 90       	pop	r0
-    189e:	1f 90       	pop	r1
-    18a0:	18 95       	reti
+    18dc:	ff 91       	pop	r31
+    18de:	ef 91       	pop	r30
+    18e0:	bf 91       	pop	r27
+    18e2:	af 91       	pop	r26
+    18e4:	9f 91       	pop	r25
+    18e6:	8f 91       	pop	r24
+    18e8:	7f 91       	pop	r23
+    18ea:	6f 91       	pop	r22
+    18ec:	5f 91       	pop	r21
+    18ee:	4f 91       	pop	r20
+    18f0:	3f 91       	pop	r19
+    18f2:	2f 91       	pop	r18
+    18f4:	0f 90       	pop	r0
+    18f6:	0f be       	out	0x3f, r0	; 63
+    18f8:	0f 90       	pop	r0
+    18fa:	1f 90       	pop	r1
+    18fc:	18 95       	reti
 
-000018a2 <USART_send>:
+000018fe <USART_send>:
 
 
 
 void USART_send( uint8_t data )
 {
 	UCSRA |= (1<<TXC);                 // Clear flag
-    18a2:	5e 9a       	sbi	0x0b, 6	; 11
+    18fe:	5e 9a       	sbi	0x0b, 6	; 11
 	UDR = data;
-    18a4:	8c b9       	out	0x0c, r24	; 12
+    1900:	8c b9       	out	0x0c, r24	; 12
 	while ( !(UCSRA & (1<<TXC)) );  // Wait
-    18a6:	5e 9b       	sbis	0x0b, 6	; 11
-    18a8:	fe cf       	rjmp	.-4      	; 0x18a6 <USART_send+0x4>
+    1902:	5e 9b       	sbis	0x0b, 6	; 11
+    1904:	fe cf       	rjmp	.-4      	; 0x1902 <USART_send+0x4>
 }
-    18aa:	08 95       	ret
+    1906:	08 95       	ret
 
-000018ac <USART_sendstr>:
+00001908 <USART_sendstr>:
 
 
 void USART_sendstr(char* str)
 {
-    18ac:	1f 93       	push	r17
-    18ae:	cf 93       	push	r28
-    18b0:	df 93       	push	r29
-    18b2:	ec 01       	movw	r28, r24
+    1908:	1f 93       	push	r17
+    190a:	cf 93       	push	r28
+    190c:	df 93       	push	r29
+    190e:	ec 01       	movw	r28, r24
 	uint8_t i = 0;
-    18b4:	10 e0       	ldi	r17, 0x00	; 0
+    1910:	10 e0       	ldi	r17, 0x00	; 0
 	while (str[i])
-    18b6:	02 c0       	rjmp	.+4      	; 0x18bc <USART_sendstr+0x10>
+    1912:	02 c0       	rjmp	.+4      	; 0x1918 <USART_sendstr+0x10>
 	{
 		USART_send(str[i++]);
-    18b8:	1f 5f       	subi	r17, 0xFF	; 255
-    18ba:	f3 df       	rcall	.-26     	; 0x18a2 <USART_send>
+    1914:	1f 5f       	subi	r17, 0xFF	; 255
+    1916:	f3 df       	rcall	.-26     	; 0x18fe <USART_send>
 
 
 void USART_sendstr(char* str)
 {
 	uint8_t i = 0;
 	while (str[i])
-    18bc:	fe 01       	movw	r30, r28
-    18be:	e1 0f       	add	r30, r17
-    18c0:	f1 1d       	adc	r31, r1
-    18c2:	80 81       	ld	r24, Z
-    18c4:	81 11       	cpse	r24, r1
-    18c6:	f8 cf       	rjmp	.-16     	; 0x18b8 <USART_sendstr+0xc>
+    1918:	fe 01       	movw	r30, r28
+    191a:	e1 0f       	add	r30, r17
+    191c:	f1 1d       	adc	r31, r1
+    191e:	80 81       	ld	r24, Z
+    1920:	81 11       	cpse	r24, r1
+    1922:	f8 cf       	rjmp	.-16     	; 0x1914 <USART_sendstr+0xc>
 	{
 		USART_send(str[i++]);
 	}
 }
-    18c8:	df 91       	pop	r29
-    18ca:	cf 91       	pop	r28
-    18cc:	1f 91       	pop	r17
-    18ce:	08 95       	ret
+    1924:	df 91       	pop	r29
+    1926:	cf 91       	pop	r28
+    1928:	1f 91       	pop	r17
+    192a:	08 95       	ret
 
-000018d0 <__udivmodqi4>:
-    18d0:	99 1b       	sub	r25, r25
-    18d2:	79 e0       	ldi	r23, 0x09	; 9
-    18d4:	04 c0       	rjmp	.+8      	; 0x18de <__udivmodqi4_ep>
+0000192c <__udivmodqi4>:
+    192c:	99 1b       	sub	r25, r25
+    192e:	79 e0       	ldi	r23, 0x09	; 9
+    1930:	04 c0       	rjmp	.+8      	; 0x193a <__udivmodqi4_ep>
 
-000018d6 <__udivmodqi4_loop>:
-    18d6:	99 1f       	adc	r25, r25
-    18d8:	96 17       	cp	r25, r22
-    18da:	08 f0       	brcs	.+2      	; 0x18de <__udivmodqi4_ep>
-    18dc:	96 1b       	sub	r25, r22
+00001932 <__udivmodqi4_loop>:
+    1932:	99 1f       	adc	r25, r25
+    1934:	96 17       	cp	r25, r22
+    1936:	08 f0       	brcs	.+2      	; 0x193a <__udivmodqi4_ep>
+    1938:	96 1b       	sub	r25, r22
 
-000018de <__udivmodqi4_ep>:
-    18de:	88 1f       	adc	r24, r24
-    18e0:	7a 95       	dec	r23
-    18e2:	c9 f7       	brne	.-14     	; 0x18d6 <__udivmodqi4_loop>
-    18e4:	80 95       	com	r24
-    18e6:	08 95       	ret
+0000193a <__udivmodqi4_ep>:
+    193a:	88 1f       	adc	r24, r24
+    193c:	7a 95       	dec	r23
+    193e:	c9 f7       	brne	.-14     	; 0x1932 <__udivmodqi4_loop>
+    1940:	80 95       	com	r24
+    1942:	08 95       	ret
 
-000018e8 <__udivmodhi4>:
-    18e8:	aa 1b       	sub	r26, r26
-    18ea:	bb 1b       	sub	r27, r27
-    18ec:	51 e1       	ldi	r21, 0x11	; 17
-    18ee:	07 c0       	rjmp	.+14     	; 0x18fe <__udivmodhi4_ep>
+00001944 <__udivmodhi4>:
+    1944:	aa 1b       	sub	r26, r26
+    1946:	bb 1b       	sub	r27, r27
+    1948:	51 e1       	ldi	r21, 0x11	; 17
+    194a:	07 c0       	rjmp	.+14     	; 0x195a <__udivmodhi4_ep>
 
-000018f0 <__udivmodhi4_loop>:
-    18f0:	aa 1f       	adc	r26, r26
-    18f2:	bb 1f       	adc	r27, r27
-    18f4:	a6 17       	cp	r26, r22
-    18f6:	b7 07       	cpc	r27, r23
-    18f8:	10 f0       	brcs	.+4      	; 0x18fe <__udivmodhi4_ep>
-    18fa:	a6 1b       	sub	r26, r22
-    18fc:	b7 0b       	sbc	r27, r23
+0000194c <__udivmodhi4_loop>:
+    194c:	aa 1f       	adc	r26, r26
+    194e:	bb 1f       	adc	r27, r27
+    1950:	a6 17       	cp	r26, r22
+    1952:	b7 07       	cpc	r27, r23
+    1954:	10 f0       	brcs	.+4      	; 0x195a <__udivmodhi4_ep>
+    1956:	a6 1b       	sub	r26, r22
+    1958:	b7 0b       	sbc	r27, r23
 
-000018fe <__udivmodhi4_ep>:
-    18fe:	88 1f       	adc	r24, r24
-    1900:	99 1f       	adc	r25, r25
-    1902:	5a 95       	dec	r21
-    1904:	a9 f7       	brne	.-22     	; 0x18f0 <__udivmodhi4_loop>
-    1906:	80 95       	com	r24
-    1908:	90 95       	com	r25
-    190a:	bc 01       	movw	r22, r24
-    190c:	cd 01       	movw	r24, r26
-    190e:	08 95       	ret
+0000195a <__udivmodhi4_ep>:
+    195a:	88 1f       	adc	r24, r24
+    195c:	99 1f       	adc	r25, r25
+    195e:	5a 95       	dec	r21
+    1960:	a9 f7       	brne	.-22     	; 0x194c <__udivmodhi4_loop>
+    1962:	80 95       	com	r24
+    1964:	90 95       	com	r25
+    1966:	bc 01       	movw	r22, r24
+    1968:	cd 01       	movw	r24, r26
+    196a:	08 95       	ret
 
-00001910 <__divmodhi4>:
-    1910:	97 fb       	bst	r25, 7
-    1912:	07 2e       	mov	r0, r23
-    1914:	16 f4       	brtc	.+4      	; 0x191a <__divmodhi4+0xa>
-    1916:	00 94       	com	r0
-    1918:	06 d0       	rcall	.+12     	; 0x1926 <__divmodhi4_neg1>
-    191a:	77 fd       	sbrc	r23, 7
-    191c:	08 d0       	rcall	.+16     	; 0x192e <__divmodhi4_neg2>
-    191e:	e4 df       	rcall	.-56     	; 0x18e8 <__udivmodhi4>
-    1920:	07 fc       	sbrc	r0, 7
-    1922:	05 d0       	rcall	.+10     	; 0x192e <__divmodhi4_neg2>
-    1924:	3e f4       	brtc	.+14     	; 0x1934 <__divmodhi4_exit>
+0000196c <__divmodhi4>:
+    196c:	97 fb       	bst	r25, 7
+    196e:	07 2e       	mov	r0, r23
+    1970:	16 f4       	brtc	.+4      	; 0x1976 <__divmodhi4+0xa>
+    1972:	00 94       	com	r0
+    1974:	06 d0       	rcall	.+12     	; 0x1982 <__divmodhi4_neg1>
+    1976:	77 fd       	sbrc	r23, 7
+    1978:	08 d0       	rcall	.+16     	; 0x198a <__divmodhi4_neg2>
+    197a:	e4 df       	rcall	.-56     	; 0x1944 <__udivmodhi4>
+    197c:	07 fc       	sbrc	r0, 7
+    197e:	05 d0       	rcall	.+10     	; 0x198a <__divmodhi4_neg2>
+    1980:	3e f4       	brtc	.+14     	; 0x1990 <__divmodhi4_exit>
 
-00001926 <__divmodhi4_neg1>:
-    1926:	90 95       	com	r25
-    1928:	81 95       	neg	r24
-    192a:	9f 4f       	sbci	r25, 0xFF	; 255
-    192c:	08 95       	ret
+00001982 <__divmodhi4_neg1>:
+    1982:	90 95       	com	r25
+    1984:	81 95       	neg	r24
+    1986:	9f 4f       	sbci	r25, 0xFF	; 255
+    1988:	08 95       	ret
 
-0000192e <__divmodhi4_neg2>:
-    192e:	70 95       	com	r23
-    1930:	61 95       	neg	r22
-    1932:	7f 4f       	sbci	r23, 0xFF	; 255
+0000198a <__divmodhi4_neg2>:
+    198a:	70 95       	com	r23
+    198c:	61 95       	neg	r22
+    198e:	7f 4f       	sbci	r23, 0xFF	; 255
 
-00001934 <__divmodhi4_exit>:
-    1934:	08 95       	ret
+00001990 <__divmodhi4_exit>:
+    1990:	08 95       	ret
 
-00001936 <__udivmodsi4>:
-    1936:	a1 e2       	ldi	r26, 0x21	; 33
-    1938:	1a 2e       	mov	r1, r26
-    193a:	aa 1b       	sub	r26, r26
-    193c:	bb 1b       	sub	r27, r27
-    193e:	fd 01       	movw	r30, r26
-    1940:	0d c0       	rjmp	.+26     	; 0x195c <__udivmodsi4_ep>
+00001992 <__udivmodsi4>:
+    1992:	a1 e2       	ldi	r26, 0x21	; 33
+    1994:	1a 2e       	mov	r1, r26
+    1996:	aa 1b       	sub	r26, r26
+    1998:	bb 1b       	sub	r27, r27
+    199a:	fd 01       	movw	r30, r26
+    199c:	0d c0       	rjmp	.+26     	; 0x19b8 <__udivmodsi4_ep>
 
-00001942 <__udivmodsi4_loop>:
-    1942:	aa 1f       	adc	r26, r26
-    1944:	bb 1f       	adc	r27, r27
-    1946:	ee 1f       	adc	r30, r30
-    1948:	ff 1f       	adc	r31, r31
-    194a:	a2 17       	cp	r26, r18
-    194c:	b3 07       	cpc	r27, r19
-    194e:	e4 07       	cpc	r30, r20
-    1950:	f5 07       	cpc	r31, r21
-    1952:	20 f0       	brcs	.+8      	; 0x195c <__udivmodsi4_ep>
-    1954:	a2 1b       	sub	r26, r18
-    1956:	b3 0b       	sbc	r27, r19
-    1958:	e4 0b       	sbc	r30, r20
-    195a:	f5 0b       	sbc	r31, r21
+0000199e <__udivmodsi4_loop>:
+    199e:	aa 1f       	adc	r26, r26
+    19a0:	bb 1f       	adc	r27, r27
+    19a2:	ee 1f       	adc	r30, r30
+    19a4:	ff 1f       	adc	r31, r31
+    19a6:	a2 17       	cp	r26, r18
+    19a8:	b3 07       	cpc	r27, r19
+    19aa:	e4 07       	cpc	r30, r20
+    19ac:	f5 07       	cpc	r31, r21
+    19ae:	20 f0       	brcs	.+8      	; 0x19b8 <__udivmodsi4_ep>
+    19b0:	a2 1b       	sub	r26, r18
+    19b2:	b3 0b       	sbc	r27, r19
+    19b4:	e4 0b       	sbc	r30, r20
+    19b6:	f5 0b       	sbc	r31, r21
 
-0000195c <__udivmodsi4_ep>:
-    195c:	66 1f       	adc	r22, r22
-    195e:	77 1f       	adc	r23, r23
-    1960:	88 1f       	adc	r24, r24
-    1962:	99 1f       	adc	r25, r25
-    1964:	1a 94       	dec	r1
-    1966:	69 f7       	brne	.-38     	; 0x1942 <__udivmodsi4_loop>
-    1968:	60 95       	com	r22
-    196a:	70 95       	com	r23
-    196c:	80 95       	com	r24
-    196e:	90 95       	com	r25
-    1970:	9b 01       	movw	r18, r22
-    1972:	ac 01       	movw	r20, r24
-    1974:	bd 01       	movw	r22, r26
-    1976:	cf 01       	movw	r24, r30
-    1978:	08 95       	ret
+000019b8 <__udivmodsi4_ep>:
+    19b8:	66 1f       	adc	r22, r22
+    19ba:	77 1f       	adc	r23, r23
+    19bc:	88 1f       	adc	r24, r24
+    19be:	99 1f       	adc	r25, r25
+    19c0:	1a 94       	dec	r1
+    19c2:	69 f7       	brne	.-38     	; 0x199e <__udivmodsi4_loop>
+    19c4:	60 95       	com	r22
+    19c6:	70 95       	com	r23
+    19c8:	80 95       	com	r24
+    19ca:	90 95       	com	r25
+    19cc:	9b 01       	movw	r18, r22
+    19ce:	ac 01       	movw	r20, r24
+    19d0:	bd 01       	movw	r22, r26
+    19d2:	cf 01       	movw	r24, r30
+    19d4:	08 95       	ret
 
-0000197a <__divmodsi4>:
-    197a:	05 2e       	mov	r0, r21
-    197c:	97 fb       	bst	r25, 7
-    197e:	16 f4       	brtc	.+4      	; 0x1984 <__divmodsi4+0xa>
-    1980:	00 94       	com	r0
-    1982:	06 d0       	rcall	.+12     	; 0x1990 <__divmodsi4_neg1>
-    1984:	57 fd       	sbrc	r21, 7
-    1986:	0c d0       	rcall	.+24     	; 0x19a0 <__divmodsi4_neg2>
-    1988:	d6 df       	rcall	.-84     	; 0x1936 <__udivmodsi4>
-    198a:	07 fc       	sbrc	r0, 7
-    198c:	09 d0       	rcall	.+18     	; 0x19a0 <__divmodsi4_neg2>
-    198e:	7e f4       	brtc	.+30     	; 0x19ae <__divmodsi4_exit>
+000019d6 <__divmodsi4>:
+    19d6:	05 2e       	mov	r0, r21
+    19d8:	97 fb       	bst	r25, 7
+    19da:	16 f4       	brtc	.+4      	; 0x19e0 <__divmodsi4+0xa>
+    19dc:	00 94       	com	r0
+    19de:	06 d0       	rcall	.+12     	; 0x19ec <__divmodsi4_neg1>
+    19e0:	57 fd       	sbrc	r21, 7
+    19e2:	0c d0       	rcall	.+24     	; 0x19fc <__divmodsi4_neg2>
+    19e4:	d6 df       	rcall	.-84     	; 0x1992 <__udivmodsi4>
+    19e6:	07 fc       	sbrc	r0, 7
+    19e8:	09 d0       	rcall	.+18     	; 0x19fc <__divmodsi4_neg2>
+    19ea:	7e f4       	brtc	.+30     	; 0x1a0a <__divmodsi4_exit>
 
-00001990 <__divmodsi4_neg1>:
-    1990:	90 95       	com	r25
-    1992:	80 95       	com	r24
-    1994:	70 95       	com	r23
-    1996:	61 95       	neg	r22
-    1998:	7f 4f       	sbci	r23, 0xFF	; 255
-    199a:	8f 4f       	sbci	r24, 0xFF	; 255
-    199c:	9f 4f       	sbci	r25, 0xFF	; 255
-    199e:	08 95       	ret
+000019ec <__divmodsi4_neg1>:
+    19ec:	90 95       	com	r25
+    19ee:	80 95       	com	r24
+    19f0:	70 95       	com	r23
+    19f2:	61 95       	neg	r22
+    19f4:	7f 4f       	sbci	r23, 0xFF	; 255
+    19f6:	8f 4f       	sbci	r24, 0xFF	; 255
+    19f8:	9f 4f       	sbci	r25, 0xFF	; 255
+    19fa:	08 95       	ret
 
-000019a0 <__divmodsi4_neg2>:
-    19a0:	50 95       	com	r21
-    19a2:	40 95       	com	r20
-    19a4:	30 95       	com	r19
-    19a6:	21 95       	neg	r18
-    19a8:	3f 4f       	sbci	r19, 0xFF	; 255
-    19aa:	4f 4f       	sbci	r20, 0xFF	; 255
-    19ac:	5f 4f       	sbci	r21, 0xFF	; 255
+000019fc <__divmodsi4_neg2>:
+    19fc:	50 95       	com	r21
+    19fe:	40 95       	com	r20
+    1a00:	30 95       	com	r19
+    1a02:	21 95       	neg	r18
+    1a04:	3f 4f       	sbci	r19, 0xFF	; 255
+    1a06:	4f 4f       	sbci	r20, 0xFF	; 255
+    1a08:	5f 4f       	sbci	r21, 0xFF	; 255
 
-000019ae <__divmodsi4_exit>:
-    19ae:	08 95       	ret
+00001a0a <__divmodsi4_exit>:
+    1a0a:	08 95       	ret
 
-000019b0 <__umulhisi3>:
-    19b0:	a2 9f       	mul	r26, r18
-    19b2:	b0 01       	movw	r22, r0
-    19b4:	b3 9f       	mul	r27, r19
-    19b6:	c0 01       	movw	r24, r0
-    19b8:	a3 9f       	mul	r26, r19
-    19ba:	01 d0       	rcall	.+2      	; 0x19be <__umulhisi3+0xe>
-    19bc:	b2 9f       	mul	r27, r18
-    19be:	70 0d       	add	r23, r0
-    19c0:	81 1d       	adc	r24, r1
-    19c2:	11 24       	eor	r1, r1
-    19c4:	91 1d       	adc	r25, r1
-    19c6:	08 95       	ret
+00001a0c <__umulhisi3>:
+    1a0c:	a2 9f       	mul	r26, r18
+    1a0e:	b0 01       	movw	r22, r0
+    1a10:	b3 9f       	mul	r27, r19
+    1a12:	c0 01       	movw	r24, r0
+    1a14:	a3 9f       	mul	r26, r19
+    1a16:	01 d0       	rcall	.+2      	; 0x1a1a <__umulhisi3+0xe>
+    1a18:	b2 9f       	mul	r27, r18
+    1a1a:	70 0d       	add	r23, r0
+    1a1c:	81 1d       	adc	r24, r1
+    1a1e:	11 24       	eor	r1, r1
+    1a20:	91 1d       	adc	r25, r1
+    1a22:	08 95       	ret
 
-000019c8 <__usmulhisi3>:
-    19c8:	f3 df       	rcall	.-26     	; 0x19b0 <__umulhisi3>
+00001a24 <__usmulhisi3>:
+    1a24:	f3 df       	rcall	.-26     	; 0x1a0c <__umulhisi3>
 
-000019ca <__usmulhisi3_tail>:
-    19ca:	b7 ff       	sbrs	r27, 7
-    19cc:	08 95       	ret
-    19ce:	82 1b       	sub	r24, r18
-    19d0:	93 0b       	sbc	r25, r19
-    19d2:	08 95       	ret
+00001a26 <__usmulhisi3_tail>:
+    1a26:	b7 ff       	sbrs	r27, 7
+    1a28:	08 95       	ret
+    1a2a:	82 1b       	sub	r24, r18
+    1a2c:	93 0b       	sbc	r25, r19
+    1a2e:	08 95       	ret
 
-000019d4 <__muluhisi3>:
-    19d4:	ed df       	rcall	.-38     	; 0x19b0 <__umulhisi3>
-    19d6:	a5 9f       	mul	r26, r21
-    19d8:	90 0d       	add	r25, r0
-    19da:	b4 9f       	mul	r27, r20
-    19dc:	90 0d       	add	r25, r0
-    19de:	a4 9f       	mul	r26, r20
-    19e0:	80 0d       	add	r24, r0
-    19e2:	91 1d       	adc	r25, r1
-    19e4:	11 24       	eor	r1, r1
-    19e6:	08 95       	ret
+00001a30 <__muluhisi3>:
+    1a30:	ed df       	rcall	.-38     	; 0x1a0c <__umulhisi3>
+    1a32:	a5 9f       	mul	r26, r21
+    1a34:	90 0d       	add	r25, r0
+    1a36:	b4 9f       	mul	r27, r20
+    1a38:	90 0d       	add	r25, r0
+    1a3a:	a4 9f       	mul	r26, r20
+    1a3c:	80 0d       	add	r24, r0
+    1a3e:	91 1d       	adc	r25, r1
+    1a40:	11 24       	eor	r1, r1
+    1a42:	08 95       	ret
 
-000019e8 <__eerd_block_m8>:
-    19e8:	dc 01       	movw	r26, r24
-    19ea:	cb 01       	movw	r24, r22
+00001a44 <__eerd_block_m8>:
+    1a44:	dc 01       	movw	r26, r24
+    1a46:	cb 01       	movw	r24, r22
 
-000019ec <__eerd_blraw_m8>:
-    19ec:	fc 01       	movw	r30, r24
-    19ee:	e1 99       	sbic	0x1c, 1	; 28
-    19f0:	fe cf       	rjmp	.-4      	; 0x19ee <__eerd_blraw_m8+0x2>
-    19f2:	06 c0       	rjmp	.+12     	; 0x1a00 <__eerd_blraw_m8+0x14>
-    19f4:	ff bb       	out	0x1f, r31	; 31
-    19f6:	ee bb       	out	0x1e, r30	; 30
-    19f8:	e0 9a       	sbi	0x1c, 0	; 28
-    19fa:	31 96       	adiw	r30, 0x01	; 1
-    19fc:	0d b2       	in	r0, 0x1d	; 29
-    19fe:	0d 92       	st	X+, r0
-    1a00:	41 50       	subi	r20, 0x01	; 1
-    1a02:	50 40       	sbci	r21, 0x00	; 0
-    1a04:	b8 f7       	brcc	.-18     	; 0x19f4 <__eerd_blraw_m8+0x8>
-    1a06:	08 95       	ret
+00001a48 <__eerd_blraw_m8>:
+    1a48:	fc 01       	movw	r30, r24
+    1a4a:	e1 99       	sbic	0x1c, 1	; 28
+    1a4c:	fe cf       	rjmp	.-4      	; 0x1a4a <__eerd_blraw_m8+0x2>
+    1a4e:	06 c0       	rjmp	.+12     	; 0x1a5c <__eerd_blraw_m8+0x14>
+    1a50:	ff bb       	out	0x1f, r31	; 31
+    1a52:	ee bb       	out	0x1e, r30	; 30
+    1a54:	e0 9a       	sbi	0x1c, 0	; 28
+    1a56:	31 96       	adiw	r30, 0x01	; 1
+    1a58:	0d b2       	in	r0, 0x1d	; 29
+    1a5a:	0d 92       	st	X+, r0
+    1a5c:	41 50       	subi	r20, 0x01	; 1
+    1a5e:	50 40       	sbci	r21, 0x00	; 0
+    1a60:	b8 f7       	brcc	.-18     	; 0x1a50 <__eerd_blraw_m8+0x8>
+    1a62:	08 95       	ret
 
-00001a08 <_exit>:
-    1a08:	f8 94       	cli
+00001a64 <_exit>:
+    1a64:	f8 94       	cli
 
-00001a0a <__stop_program>:
-    1a0a:	ff cf       	rjmp	.-2      	; 0x1a0a <__stop_program>
+00001a66 <__stop_program>:
+    1a66:	ff cf       	rjmp	.-2      	; 0x1a66 <__stop_program>

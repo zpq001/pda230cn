@@ -13,12 +13,8 @@
 #include "adc.h"
 #include "control.h"
 
-
-
 static uint16_t beep_cnt = 0;
-uint8_t autoPowerOffState = 0;
-static uint16_t systick_counter = 0;
-uint8_t minute_counter = 0;
+
 
 SoftTimer8b_t menuUpdateTimer = {
 	.Enabled = 1,
@@ -29,6 +25,65 @@ SoftTimer8b_t menuUpdateTimer = {
 	.Timer = 0,
 	.Top = MENU_UPDATE_INTERVAL
 };	
+
+
+// ----------------------- //
+// New timers design
+// ----------------------- //
+
+
+sys_timers_t sys_timers = {
+	.celsius_upd_counter = 1,
+	.counter_10sec = COUNTER_10SEC_INTERVAL,
+	.counter_1min = COUNTER_1MIN_INTERVAL,
+	.poff_counter = 0
+};
+
+
+
+void processSystemTimers(void)
+{
+	sys_timers.flags = 0x00;
+	
+	// Process Celsius counter
+	if (--sys_timers.celsius_upd_counter == 0)
+	{
+		sys_timers.celsius_upd_counter = CELSIUS_UDPATE_INTERVAL;
+		sys_timers.flags |= EXPIRED_CELSIUS;
+	}
+	
+	// Process 10 seconds counter
+	if (--sys_timers.counter_10sec == 0)
+	{
+		sys_timers.counter_10sec = COUNTER_10SEC_INTERVAL;
+		sys_timers.flags |= EXPIRED_10SEC;
+		
+		// Process 1 minute counter
+		if (--sys_timers.counter_1min == 0)
+		{
+			sys_timers.counter_1min = COUNTER_1MIN_INTERVAL;
+			sys_timers.flags |= EXPIRED_1MIN;
+			
+			// Process auto power off counter
+			if (sys_timers.poff_counter != MAX_POWEROFF_TIMEOUT - 1)
+				sys_timers.poff_counter++;
+			if (sys_timers.poff_counter == power_off_timeout - 1)
+				sys_timers.flags |= AUTOPOFF_SOON;
+			if (sys_timers.poff_counter == power_off_timeout)
+				sys_timers.flags |= AUTOPOFF_EXPIRED;			
+		}
+	}	
+}
+
+
+void resetAutoPowerOffCounter(void)
+{
+	sys_timers.poff_counter = 0;
+}
+
+// ----------------------- //
+// ----------------------- //
+
 
 
 
@@ -85,34 +140,6 @@ void StopBeep()
 
 
 
-
-
-void resetAutoPowerOffCounter(void)
-{
-	systick_counter = 0;
-	minute_counter = 0;
-}
-
-void processAutoPowerOff(void)
-{
-	//if (systick_counter == SYSTICKS_PER_SECOND * 60 - 1)
-	if (systick_counter == SYSTICKS_PER_SECOND * 5 - 1)
-	{
-		systick_counter = 0;
-		if (minute_counter != MAX_POWEROFF_TIMEOUT - 1)
-		{
-			minute_counter++;
-		}
-		//if (minute_counter == power_off_timeout - 1)
-		//{
-		//	 Alert user - TODO
-		//}
-	}
-	else
-	{
-		systick_counter++;
-	}
-}
 
 
 

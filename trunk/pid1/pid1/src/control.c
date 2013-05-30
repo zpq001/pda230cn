@@ -44,6 +44,14 @@ uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
 
+uint8_t autoPowerOffState = 0;
+
+
+
+
+
+
+
 uint16_t pid_dterm_buffer[4];	// PID d-term input buffer
 RingBufU16_t ringBufDterm = {
 	.length = 4,
@@ -311,6 +319,11 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	return temp;
 	
 }
+
+
+
+
+
 
 
 // Function to process all heater alerts:

@@ -113,7 +113,7 @@ int main(void)
 	char str[10];
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
-	uint8_t celsiusUpdateCounter = 0;
+	//uint8_t celsiusUpdateCounter = 0;
 	
 	// Initialize MCU IO
 	init_system_io();
@@ -154,17 +154,17 @@ int main(void)
 		
 		if (menuUpdateTimer.FOvfl)
 		{
+			processSystemTimers();
 			
 			// Get new temperature measurement
 			update_normalized_adc();			
 		
 			// Update indicated Celsius degree
-			if (celsiusUpdateCounter == 0)	
+			if (sys_timers.flags & EXPIRED_CELSIUS)
 			{
 				update_Celsius();
-				celsiusUpdateCounter = CELSIUS_UDPATE_INTERVAL;
 			}				
-			celsiusUpdateCounter--;
+			
 			
 			// Get new button state
 			process_buttons();
@@ -185,10 +185,7 @@ int main(void)
 			// Process automatic power off - it is important to call
 			// this function before menu and power controls processing
 			if (button_action_down)
-			{
 				resetAutoPowerOffCounter();
-			}
-			processAutoPowerOff();
 
 			// Process user menu states, settings and indication
 			processMenu();
@@ -201,6 +198,13 @@ int main(void)
 		
 			// Process heater events and warnings
 			processHeaterAlerts();
+			
+			
+			if (sys_timers.flags & AUTOPOFF_SOON)
+			{
+				SetBeeperFreq(1200);
+				StartBeep(200);
+			}
 
 			// Process log
 			if (menuUpdateTimer.FA_TGL)
