@@ -53,7 +53,7 @@ typedef struct
 #define TEMP_ALERT_HYST		5				// Hysteresis value for alert range
 
 
-
+extern uint8_t autoPowerOffState;
 
 
 // Global variables - main system control
