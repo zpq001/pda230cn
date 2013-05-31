@@ -60,6 +60,7 @@ extern uint8_t autoPowerOffState;
 
 
 // Global variables - main system control
+/*
 extern uint16_t setup_temp_value;			// reference temperature
 extern uint8_t rollCycleSet;				// number of rolling cycles
 extern uint8_t sound_enable;				// Global sound enable
@@ -68,7 +69,7 @@ extern uint8_t cpoint1;						// Calibration point 1
 extern uint8_t cpoint2;						// Calibration point 2
 extern uint16_t cpoint1_adc;
 extern uint16_t cpoint2_adc;
-
+*/
 
 extern gParams_t p;		// Global params which are saved to and restored from EEPROM
 

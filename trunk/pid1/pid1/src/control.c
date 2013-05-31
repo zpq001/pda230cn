@@ -35,7 +35,7 @@ EEMEM gParams_t nvParams =
 	.cpoint2_adc 		= 433
 };
 
-
+/*
 uint16_t setup_temp_value;		// reference temperature
 uint8_t rollCycleSet;			// number of rolling cycles
 uint8_t sound_enable;			// Global sound enable
@@ -44,7 +44,7 @@ uint8_t cpoint1;				// Calibration point 1, Celsius degree
 uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
-
+*/
 
 
 gParams_t p;		// Global params which are saved to and restored from EEPROM
@@ -228,7 +228,7 @@ void processHeaterControl(void)
 	if (heaterState & READY_TO_UPDATE_HEATER)
 	{
 		// Convert temperature setup to equal ADC value
-		set_value_adc = conv_Celsius_to_ADC(setup_temp_value);					
+		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
 		// Process PID
 		pid_output = processPID(set_value_adc,PIDsampledADC);
 			
@@ -244,7 +244,7 @@ void processHeaterControl(void)
 	if (heaterState & HEATER_ENABLED)
 	{
 		setExtraLeds(LED_HEATER);
-		dbg_SetTempCelsius = setup_temp_value;
+		dbg_SetTempCelsius = p.setup_temp_value;
 		dbg_SetTempPID = set_value_adc;
 	}
 	else
@@ -353,7 +353,7 @@ void processHeaterAlerts(void)
 	
 	
 	// Indicate reaching of desired temperature
-	if ( (currentTemperature > setup_temp_value - tempAlertRange) && (currentTemperature < setup_temp_value + tempAlertRange) )
+	if ( (currentTemperature > p.setup_temp_value - tempAlertRange) && (currentTemperature < p.setup_temp_value + tempAlertRange) )
 	{
 		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterState & HEATER_ENABLED))
 		{
@@ -368,7 +368,7 @@ void processHeaterAlerts(void)
 		tempAlertRange = TEMP_ALERT_RANGE;
 	}
 
-	/*
+	
 	// Growing temperature with heater disabled alert 
 	// This alert is done regardless of global sound enable
 	// A false triggering may occur if ambient temperature grows.
@@ -402,14 +402,14 @@ void processHeaterAlerts(void)
 			}
 		}
 	}
-	*/
+	
 
 }
 
 
 void restoreGlobalParams(void)
 {
-	 gParams_t gParams;
+/*	 gParams_t gParams;
 	 eeprom_read_block(&gParams,&nvParams,sizeof(nvParams));
 	 setup_temp_value = gParams.setup_temp_value;	// reference temperature
 	 rollCycleSet = gParams.rollCycleSet;			// number of rolling cycles
@@ -419,7 +419,7 @@ void restoreGlobalParams(void)
 	 cpoint2 = gParams.cpoint2;						// Calibration point 2
 	 cpoint1_adc = gParams.cpoint1_adc;
 	 cpoint2_adc = gParams.cpoint2_adc;
-
+*/
 	 eeprom_read_block(&p,&nvParams,sizeof(nvParams));
 	
 	 
@@ -435,30 +435,23 @@ void restoreGlobalParams(void)
 
 void exitPowerOff(void)
 {
-	gParams_t gParams;
-	/*
+
 	// Put all ports into HI-Z
 	DDRB = 0x00;
+	PORTB = 0x00;
 	DDRC = 0x00;
+	PORTC = 0x00;
 	DDRD = 0x00;
+	PORTD = 0x00;
 	
 	// Disable all interrupts
 	cli();
-	*/
 	
 	// Save parameters to EEPROM
-/*	gParams.setup_temp_value = setup_temp_value;
-	gParams.rollCycleSet = rollCycleSet;
-	gParams.sound_enable = sound_enable;
-	gParams.power_off_timeout = power_off_timeout;
-	gParams.cpoint1 = cpoint1;
-	gParams.cpoint2 = cpoint2;
-	gParams.cpoint1_adc = cpoint1_adc;
-	gParams.cpoint2_adc = cpoint2_adc;
-	eeprom_update_block(&gParams,&nvParams,sizeof(nvParams));	
+//	eeprom_update_block(&p,&nvParams,sizeof(nvParams));	
 
+	// DIE!
 	while(1);
-*/
 }
 
 

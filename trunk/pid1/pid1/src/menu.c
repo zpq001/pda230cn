@@ -356,19 +356,19 @@ void mf_setTempDo(void)
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (setup_temp_value < MAX_SET_TEMP)
-			setup_temp_value += 5;
+		if (p.setup_temp_value < MAX_SET_TEMP)
+			p.setup_temp_value += 5;
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (setup_temp_value > MIN_SET_TEMP)
-			setup_temp_value -= 5;
+		if (p.setup_temp_value > MIN_SET_TEMP)
+			p.setup_temp_value -= 5;
 		restartMenuTimer();
 	}					
 		
 	// Output ADC result to LED
-	u16toa_align_right(setup_temp_value,str,0x80 | 4,' ');
+	u16toa_align_right(p.setup_temp_value,str,0x80 | 4,' ');
 	printLedBuffer(0,str);
 	
 	if (userTimer.FA_GE)
@@ -398,16 +398,16 @@ void mf_rollDo(void)
 		
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (rollCycleSet < MAX_ROLL_CYCLES)
-		rollCycleSet += 1;
+		if (p.rollCycleSet < MAX_ROLL_CYCLES)
+			p.rollCycleSet += 1;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (rollCycleSet > MIN_ROLL_CYCLES)
-		rollCycleSet -= 1;
+		if (p.rollCycleSet > MIN_ROLL_CYCLES)
+			p.rollCycleSet -= 1;
 	}	
 		
-	u16toa_align_right(rollCycleSet,str + 4,0x80 | 2,' ');
+	u16toa_align_right(p.rollCycleSet,str + 4,0x80 | 2,' ');
 	
 	if ((!(rollState & ROLL_CYCLE)) || (userTimer.FA_GE))
 	{
@@ -466,13 +466,13 @@ void mf_sndenDo(void)
 		
 	if (button_state & (BD_UP | BD_DOWN))
 	{
-		sound_enable = !sound_enable;
+		p.sound_enable = !p.sound_enable;
 		restartMenuTimer();
 	}			
 		
 	if (userTimer.FA_GE)
 	{
-		if (sound_enable)		
+		if (p.sound_enable)		
 		{
 			str[4] = 'O';
 			str[5] = 'N';
@@ -500,21 +500,21 @@ void mf_autopoffDo(void)
 		
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (power_off_timeout < MAX_POWEROFF_TIMEOUT)
-			power_off_timeout += 5;
+		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
+			p.power_off_timeout += 5;
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (power_off_timeout > MIN_POWEROFF_TIMEOUT)
-			power_off_timeout -= 5;
+		if (p.power_off_timeout > MIN_POWEROFF_TIMEOUT)
+			p.power_off_timeout -= 5;
 		restartMenuTimer();
 	}	
 		
 	if (userTimer.FA_GE)
 	{
-		if (power_off_timeout != MAX_POWEROFF_TIMEOUT)
-			u16toa_align_right(power_off_timeout,str + 4,0x80 | 2,' ');	
+		if (p.power_off_timeout != MAX_POWEROFF_TIMEOUT)
+			u16toa_align_right(p.power_off_timeout,str + 4,0x80 | 2,' ');	
 		else 
 		{
 			str[4] = 'N';
@@ -549,8 +549,8 @@ void mf_actpoffLeave(void)
 void mf_calibSelect(void)
 {
 	mf_leafSelect();
-	cpoint1_copy = cpoint1;
-	cpoint2_copy = cpoint2;
+	cpoint1_copy = p.cpoint1;
+	cpoint2_copy = p.cpoint2;
 }
 
 void mf_calib1Do(void)
@@ -620,9 +620,9 @@ void mf_calibDoExit(void)
 void mf_cdone1Select(void)
 {
 	// Save current ADC as calibrating point
-	cpoint1_adc = adc_normalized;
+	p.cpoint1_adc = adc_normalized;
 	// Save current Celsius degree
-	cpoint1 = cpoint1_copy;
+	p.cpoint1 = cpoint1_copy;
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
 }
@@ -630,9 +630,9 @@ void mf_cdone1Select(void)
 void mf_cdone2Select(void)
 {
 	// Save current ADC as calibrating point
-	cpoint2_adc = adc_normalized;
+	p.cpoint2_adc = adc_normalized;
 	// Save current Celsius degree
-	cpoint2 = cpoint2_copy;
+	p.cpoint2 = cpoint2_copy;
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
 }

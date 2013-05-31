@@ -50,8 +50,8 @@ uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
 
 void calculateCoeffs(void)
 {
-	k_norm = ((int32_t)(cpoint2 - cpoint1) * COEFF_SCALE) / ((int32_t)(cpoint2_adc - cpoint1_adc));
-	offset_norm = (int32_t)cpoint1 * COEFF_SCALE - (int32_t)cpoint1_adc * k_norm;
+	k_norm = ((int32_t)(p.cpoint2 - p.cpoint1) * COEFF_SCALE) / ((int32_t)(p.cpoint2_adc - p.cpoint1_adc));
+	offset_norm = (int32_t)p.cpoint1 * COEFF_SCALE - (int32_t)p.cpoint1_adc * k_norm;
 }
 
 
