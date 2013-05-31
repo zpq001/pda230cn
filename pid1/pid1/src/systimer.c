@@ -76,9 +76,9 @@ void processSystemTimers(void)
 			// Process auto power off counter
 			if (sys_timers.poff_counter != MAX_POWEROFF_TIMEOUT - 1)
 				sys_timers.poff_counter++;
-			if (sys_timers.poff_counter == power_off_timeout - 1)
+			if (sys_timers.poff_counter == p.power_off_timeout - 1)
 				sys_timers.flags |= AUTOPOFF_SOON;
-			if (sys_timers.poff_counter == power_off_timeout)
+			if (sys_timers.poff_counter == p.power_off_timeout)
 				sys_timers.flags |= AUTOPOFF_EXPIRED;			
 		}
 	}	
@@ -133,7 +133,7 @@ void SetBeeperFreq(uint16_t freq_hz)
 // Beep for some time in ms
 void StartBeep(uint16_t time_ms)
 {
-	if ( (sound_enable) || (enableOverride) )
+	if ( (p.sound_enable) || (enableOverride) )
 	{
 		beep_cnt = time_ms;
 		SetBeepOutput(1);		
