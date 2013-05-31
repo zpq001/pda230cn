@@ -95,6 +95,7 @@ void mf_actpoffLeave(void);
 void mf_calibSelect(void);
 void mf_calib1Do(void);
 void mf_calib2Do(void);
+void mf_calibDoExit(void);
 void mf_cdone1Select(void);
 void mf_cdone2Select(void);
 void mf_cdoneDo(void);

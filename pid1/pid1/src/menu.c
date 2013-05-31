@@ -106,9 +106,9 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_ACTAUTOPOFF,	mf_leafSelectAct,		mf_autopoffDo,		mf_leafExit			},
 	
 	{ mi_CALIB1,		mf_calibSelect,			mf_calib1Do,			0				},
-	{ mi_DOCALIB1,		mf_leafSelectAct, 		mf_calib1Do,		mf_leafExit			},
+	{ mi_DOCALIB1,		mf_leafSelectAct, 		mf_calib1Do,		mf_calibDoExit		},
 	{ mi_CALIB2,		mf_calibSelect,			mf_calib2Do,			0				},
-	{ mi_DOCALIB2,		mf_leafSelectAct, 		mf_calib2Do,		mf_leafExit			},
+	{ mi_DOCALIB2,		mf_leafSelectAct, 		mf_calib2Do,		mf_calibDoExit		},
 	{ mi_CDONE1,		mf_cdone1Select, 		mf_cdoneDo,				0				},
 	{ mi_CDONE2,		mf_cdone2Select, 		mf_cdoneDo,				0				},
 	
@@ -572,11 +572,12 @@ void mf_calib1Do(void)
 	if (userTimer.FA_GE)
 	{
 		u16toa_align_right(cpoint1_copy,str + 3,0x80 | 3,' ');
+		resetAutoPowerOffCounter();
+		heaterState |= CALIBRATION_ACTIVE;
 	}
 	
 	printLedBuffer(0,str);
 	
-	resetAutoPowerOffCounter();
 }
 
 //---------------------------------------------//
@@ -600,11 +601,18 @@ void mf_calib2Do(void)
 	if (userTimer.FA_GE)
 	{
 		u16toa_align_right(cpoint2_copy,str + 3,0x80 | 3,' ');
+		resetAutoPowerOffCounter();
+		heaterState |= CALIBRATION_ACTIVE;
 	}
 	
 	printLedBuffer(0,str);
 	
-	resetAutoPowerOffCounter();
+}
+
+void mf_calibDoExit(void)
+{
+	mf_leafExit();
+	heaterState &= ~CALIBRATION_ACTIVE;
 }
 
 //---------------------------------------------//

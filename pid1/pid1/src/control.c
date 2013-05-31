@@ -25,15 +25,16 @@
 
 EEMEM gParams_t nvParams = 
 {
-	.setup_temp_value = 50,
-	.rollCycleSet = 10,
-	.sound_enable = 1,
-	.power_off_timeout = 30,
-	.cpoint1 		= 25,
-	.cpoint1_adc 	= 164,
-	.cpoint2 		= 145,
-	.cpoint2_adc 	= 433
+	.setup_temp_value 	= 50,
+	.rollCycleSet 		= 10,
+	.sound_enable 		= 1,
+	.power_off_timeout 	= 30,
+	.cpoint1 			= 25,
+	.cpoint1_adc 		= 164,
+	.cpoint2 			= 145,
+	.cpoint2_adc 		= 433
 };
+
 
 uint16_t setup_temp_value;		// reference temperature
 uint8_t rollCycleSet;			// number of rolling cycles
@@ -43,6 +44,13 @@ uint8_t cpoint1;				// Calibration point 1, Celsius degree
 uint8_t cpoint2;				// Calibration point 2, Celsius degree
 uint16_t cpoint1_adc;			// Calibration point 1, ADC value
 uint16_t cpoint2_adc;			// Calibration point 2, ADC value
+
+
+
+gParams_t p;		// Global params which are saved to and restored from EEPROM
+					// must be restored at system start
+
+
 
 uint8_t autoPowerOffState = 0;
 
@@ -98,13 +106,11 @@ void processRollControl(void)
 		{
 			setMotorDirection(ROLL_FWD);	
 			beepState |= 0x01;			// pressed FWD button
-	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}		
 		else if (button_action_down & BD_ROTREV)
 		{
 			setMotorDirection(ROLL_REV);
 			beepState |= 0x02;			// pressed REV button
-	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}		
 		else if (button_action_long & BD_CYCLE)
 		{
@@ -116,7 +122,6 @@ void processRollControl(void)
 			// Auto power off mode was exited by pressing some other button, not direction buttons
 			// Start roll, but do not beep in this case
 			setMotorDirection(force_rotate);
-	//		nextBeepMask &= ~0x04;		// Disable CHANGED_DIR beep on next cycle
 		}
 		force_rotate = 0;		// First normal pass will clear 
 			
@@ -149,7 +154,7 @@ void processRollControl(void)
 			beepState |= 0x80;	
 		}		
 			
-		//beepState &= beepMask;
+		//-----------//
 			
 		if (beepState & 0x80)		// Roll cycle done
 		{
@@ -172,8 +177,6 @@ void processRollControl(void)
 			StartBeep(50);	
 		}			
 			
-		// Apply mask to next sound events
-		//beepMask = nextBeepMask;	
 	}
 
 	// Indicate direction by LEDs
@@ -186,6 +189,19 @@ void processRollControl(void)
 
 
 
+
+void samplePIDProcessValue(void)
+{
+	PIDsampledADC = getNormalizedRingU16(&ringBufADC);
+}
+
+void heaterInit(void)
+{
+	samplePIDProcessValue();
+	processPID(0,PIDsampledADC);
+}
+
+
 void processHeaterControl(void)
 {
 	static uint16_t set_value_adc;		// static for debug
@@ -196,7 +212,7 @@ void processHeaterControl(void)
 	if (button_state & BD_HEATCTRL)
 	{
 		heaterState ^= HEATER_ENABLED;
-		// Make heater controller set update flag on next call
+		// Make heater controller set update_flag on next call
 		forceHeaterControlUpdate();
 	}
 	
@@ -208,7 +224,7 @@ void processHeaterControl(void)
 	
 	
 	// Check if heater control should be updated
-	// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms
+	// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms * HEATER_PID_CALL_INTERVAL
 	if (heaterState & READY_TO_UPDATE_HEATER)
 	{
 		// Convert temperature setup to equal ADC value
@@ -332,9 +348,12 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 void processHeaterAlerts(void)
 {
 	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
+	static uint16_t refCapturedTemp = 0xFFFF;
+	uint16_t currentTemperature = adc_celsius;
+	
 	
 	// Indicate reaching of desired temperature
-	if ( (adc_celsius > setup_temp_value - tempAlertRange) && (adc_celsius < setup_temp_value + tempAlertRange) )
+	if ( (currentTemperature > setup_temp_value - tempAlertRange) && (currentTemperature < setup_temp_value + tempAlertRange) )
 	{
 		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterState & HEATER_ENABLED))
 		{
@@ -349,9 +368,41 @@ void processHeaterAlerts(void)
 		tempAlertRange = TEMP_ALERT_RANGE;
 	}
 
+	/*
 	// Growing temperature with heater disabled alert 
 	// This alert is done regardless of global sound enable
-	// TODO
+	// A false triggering may occur if ambient temperature grows.
+	// To reset the warning in this case just turn on heater for at least one systimer tick (50ms)
+	// If heater is enabled, it is implied that user controls heating process
+	if (heaterState & (HEATER_ENABLED | CALIBRATION_ACTIVE))
+	{
+		// Heater enabled, just save current temperature as reference
+		// Same if calibration in progress, even if heater is disabled
+		refCapturedTemp = currentTemperature;
+	}
+	else if (sys_timers.flags & EXPIRED_10SEC)
+	{
+		// Heater disabled. If temperature is falling,
+		if (currentTemperature < refCapturedTemp)
+		{
+			// save current temperature as reference
+			refCapturedTemp = currentTemperature;
+		}
+		else
+		{
+			// Heater is disabled. If current temperature is higher than reference + some safe interval,
+			// there might be a hardware failure - short circuit, etc
+			// BEEP like a devil  }:-(
+			if (currentTemperature >= (refCapturedTemp + SAFE_TEMP_INTERVAL))
+			{
+				// Enable beeper output regardless of menu setting
+				OverrideSoundDisable();
+				SetBeeperFreq(1500);
+				StartBeep(5000);	
+			}
+		}
+	}
+	*/
 
 }
 
@@ -368,6 +419,9 @@ void restoreGlobalParams(void)
 	 cpoint2 = gParams.cpoint2;						// Calibration point 2
 	 cpoint1_adc = gParams.cpoint1_adc;
 	 cpoint2_adc = gParams.cpoint2_adc;
+
+	 eeprom_read_block(&p,&nvParams,sizeof(nvParams));
+	
 	 
 //	 cpoint1 		= 25;		// TODO: check and remove
 //	 cpoint1_adc 	= 164;

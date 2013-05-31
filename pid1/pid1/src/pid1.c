@@ -140,10 +140,10 @@ int main(void)
 	// Beep
 	SetBeeperFreq(1000);
 	StartBeep(200);
-	// When we get here, few ADC counts have been sampled
-	// First call to PID controller initializes it's internal structures
-	forceHeaterControlUpdate();
-	_delay_ms(100);
+	// When we get here, few ADC counts have been sampled.
+	// Call PID controller function in order to initialize it's internal structures
+	heaterInit();
+	_delay_ms(50);
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
 	// Clear timer
@@ -154,17 +154,7 @@ int main(void)
 		
 		if (menuUpdateTimer.FOvfl)
 		{
-			processSystemTimers();
-			
-			// Get new temperature measurement
-			update_normalized_adc();			
-		
-			// Update indicated Celsius degree
-			if (sys_timers.flags & EXPIRED_CELSIUS)
-			{
-				update_Celsius();
-			}				
-			
+			//--------- BUTTONS ----------//
 			
 			// Get new button state
 			process_buttons();
@@ -182,13 +172,38 @@ int main(void)
 			}	
 			// Direction control buttons sounds get special processing at processRollControl()
 			
-			// Process automatic power off - it is important to call
-			// this function before menu and power controls processing
+			// If any button is pressed, restart power off interval
 			if (button_action_down)
 				resetAutoPowerOffCounter();
+			
+			//---------- TIMERS ----------//
+			
+			// Process timers and time counters - it is important to call
+			// this function before menu and power controls processing
+			processSystemTimers();
 
+			// Warn user about near auto powering off
+			if (sys_timers.flags & AUTOPOFF_SOON)
+			{
+				SetBeeperFreq(1200);
+				StartBeep(200);
+			}		
+			
+			//----------- ADC ------------//
+			
+			// Get new temperature measurement
+			update_normalized_adc();			
+		
+			// Update indicated Celsius degree
+			if (sys_timers.flags & EXPIRED_CELSIUS)
+				update_Celsius();		
+			
+			//----------- MENU -----------//		
+				
 			// Process user menu states, settings and indication
 			processMenu();
+			
+			//--------- CONTROLS ---------//		
 			
 			// Process cyclic rolling, direction control
 			processRollControl();	
@@ -200,22 +215,13 @@ int main(void)
 			processHeaterAlerts();
 			
 			
-			if (sys_timers.flags & AUTOPOFF_SOON)
+			
+			//------- LOG to UART --------//	
+			if (sys_timers.flags & EXPIRED_LOG)
 			{
-				SetBeeperFreq(1200);
-				StartBeep(200);
-			}
-
-			// Process log
-			if (menuUpdateTimer.FA_TGL)
-			{
-				//---------------------------------//
-				// Log to UART
-				//---------------------------------//
-				// Function is called every 50ms
-				// UART message is sent every second call (once per 100ms)
 				
-				u16toa_align_right(adc_oversampled,str,6,' ');				// Displayed temp, Celsius
+				
+				u16toa_align_right(adc_oversampled,str,6,' ');				// 
 				USART_sendstr(str);
 				
 				
