@@ -23,7 +23,7 @@ typedef struct
 } gParams_t;
 
 // Menu items
-#define MAX_SET_TEMP	210
+#define MAX_SET_TEMP	250
 #define MIN_SET_TEMP	30
 
 #define MAX_ROLL_CYCLES	99
@@ -52,6 +52,9 @@ typedef struct
 											// TODO - deliver this to menu
 #define TEMP_ALERT_HYST		5				// Hysteresis value for alert range
 
+#define SAFE_TEMP_INTERVAL	10				// Safe interval for growing temperature with heater disabled alert
+											// in units of Celsius degree
+
 
 extern uint8_t autoPowerOffState;
 
@@ -66,6 +69,8 @@ extern uint8_t cpoint2;						// Calibration point 2
 extern uint16_t cpoint1_adc;
 extern uint16_t cpoint2_adc;
 
+
+extern gParams_t p;		// Global params which are saved to and restored from EEPROM
 
 
 //------- Debug --------//
@@ -83,6 +88,8 @@ extern int16_t dbg_PID_output;
 
 
 void processRollControl(void);
+void heaterInit(void);
+void samplePIDProcessValue(void);
 void processHeaterControl(void);
 void processHeaterAlerts(void);
 void restoreGlobalParams(void);

@@ -48,6 +48,7 @@ MOTOR	________________________________________________|*************************
 // heaterState	bits
 #define READY_TO_UPDATE_HEATER		0x80
 #define HEATER_ENABLED				0x01
+#define CALIBRATION_ACTIVE			0x02
 
 // rollState bits:
 // Flags:

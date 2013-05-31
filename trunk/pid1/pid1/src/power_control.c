@@ -308,7 +308,7 @@ ISR(TIMER0_OVF_vect)
 				 // Set flag for PID control
 				 heaterState |= READY_TO_UPDATE_HEATER;
 				 // Save temperature measure at current time
-				 PIDsampledADC = getNormalizedRingU16(&ringBufADC);
+				 samplePIDProcessValue();
 			 }
 			 else
 			 {

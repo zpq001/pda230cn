@@ -14,6 +14,7 @@
 #include "control.h"
 
 static uint16_t beep_cnt = 0;
+static uint8_t enableOverride = 0;
 
 
 SoftTimer8b_t menuUpdateTimer = {
@@ -33,7 +34,8 @@ SoftTimer8b_t menuUpdateTimer = {
 
 
 sys_timers_t sys_timers = {
-	.celsius_upd_counter = 1,
+	.celsius_upd_counter = 1,					// To force Celsius update 
+	.log_counter = 1,							// To force log message
 	.counter_10sec = COUNTER_10SEC_INTERVAL,
 	.counter_1min = COUNTER_1MIN_INTERVAL,
 	.poff_counter = 0
@@ -50,6 +52,13 @@ void processSystemTimers(void)
 	{
 		sys_timers.celsius_upd_counter = CELSIUS_UDPATE_INTERVAL;
 		sys_timers.flags |= EXPIRED_CELSIUS;
+	}
+	
+	// Process log counter
+	if (--sys_timers.log_counter == 0)
+	{
+		sys_timers.log_counter = LOG_INTERVAL;
+		sys_timers.flags |= EXPIRED_LOG;
 	}
 	
 	// Process 10 seconds counter
@@ -124,11 +133,17 @@ void SetBeeperFreq(uint16_t freq_hz)
 // Beep for some time in ms
 void StartBeep(uint16_t time_ms)
 {
-	if (sound_enable)
+	if ( (sound_enable) || (enableOverride) )
 	{
 		beep_cnt = time_ms;
 		SetBeepOutput(1);		
 	}
+	enableOverride = 0;
+}
+
+void OverrideSoundDisable(void)
+{
+	enableOverride = 1;
 }
 
 // Stop beeper
