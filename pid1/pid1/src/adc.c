@@ -58,12 +58,12 @@ void calculateCoeffs(void)
 void update_normalized_adc()
 {
 	// Disable interrupts from ADC - to save data integrity
-	ACSR &= ~(1<<ACIE);	
+	ADCSRA &= ~(1<<ADIE);	
 	// Get normalized mean window summ
 	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
 	adc_oversampled = ringBufADC.summ >> 2;
 	// Enable interrupts from ADC
-	ACSR |= (1<<ACIE);
+	ADCSRA |= (1<<ADIE);
 }
 
 void update_Celsius(void)

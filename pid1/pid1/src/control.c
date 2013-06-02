@@ -27,24 +27,13 @@ EEMEM gParams_t nvParams =
 {
 	.setup_temp_value 	= 50,
 	.rollCycleSet 		= 10,
-	.sound_enable 		= 1,
+	.sound_enable 		= 0,
 	.power_off_timeout 	= 30,
 	.cpoint1 			= 25,
 	.cpoint1_adc 		= 164,
 	.cpoint2 			= 145,
 	.cpoint2_adc 		= 433
 };
-
-/*
-uint16_t setup_temp_value;		// reference temperature
-uint8_t rollCycleSet;			// number of rolling cycles
-uint8_t sound_enable;			// Global sound enable
-uint8_t power_off_timeout;		// Auto power OFF timeout, minutes
-uint8_t cpoint1;				// Calibration point 1, Celsius degree
-uint8_t cpoint2;				// Calibration point 2, Celsius degree
-uint16_t cpoint1_adc;			// Calibration point 1, ADC value
-uint16_t cpoint2_adc;			// Calibration point 2, ADC value
-*/
 
 
 gParams_t p;		// Global params which are saved to and restored from EEPROM
@@ -53,11 +42,6 @@ gParams_t p;		// Global params which are saved to and restored from EEPROM
 
 
 uint8_t autoPowerOffState = 0;
-
-
-
-
-
 
 
 uint16_t pid_dterm_buffer[4];	// PID d-term input buffer
@@ -409,17 +393,6 @@ void processHeaterAlerts(void)
 
 void restoreGlobalParams(void)
 {
-/*	 gParams_t gParams;
-	 eeprom_read_block(&gParams,&nvParams,sizeof(nvParams));
-	 setup_temp_value = gParams.setup_temp_value;	// reference temperature
-	 rollCycleSet = gParams.rollCycleSet;			// number of rolling cycles
-	 sound_enable = gParams.sound_enable;			// Global sound enable
-	 power_off_timeout = gParams.power_off_timeout;	// Auto power OFF timeout, minutes
-	 cpoint1 = gParams.cpoint1;						// Calibration point 1
-	 cpoint2 = gParams.cpoint2;						// Calibration point 2
-	 cpoint1_adc = gParams.cpoint1_adc;
-	 cpoint2_adc = gParams.cpoint2_adc;
-*/
 	 eeprom_read_block(&p,&nvParams,sizeof(nvParams));
 	
 	 
@@ -448,7 +421,7 @@ void exitPowerOff(void)
 	cli();
 	
 	// Save parameters to EEPROM
-//	eeprom_update_block(&p,&nvParams,sizeof(nvParams));	
+	eeprom_update_block(&p,&nvParams,sizeof(nvParams));	
 
 	// DIE!
 	while(1);
