@@ -28,48 +28,59 @@ static uint8_t wActivePos;					// number of active LED display digit
 uint8_t shifterState;	
 static SoftTimer8b_t shiftTimer;			// used for LED window shift
 
-
+const __flash encode_7seg_pair led_encode_table[] = {
+	{ '0',	(SEGA | SEGB | SEGC | SEGD | SEGE | SEGF) },
+	{ 'O',	(SEGA | SEGB | SEGC | SEGD | SEGE | SEGF) },
+	{ '1',	(SEGB | SEGC ) },
+		
+	{ '2',	(SEGA | SEGB | SEGD | SEGE | SEGG) },
+	{ '3',	(SEGA | SEGB | SEGC | SEGD | SEGG) },
+	{ '4',	(SEGB | SEGC | SEGF | SEGG) },
+	{ 'S',	(SEGA | SEGC | SEGD | SEGF | SEGG) },
+	{ '5',	(SEGA | SEGC | SEGD | SEGF | SEGG) },
+	{ '6',	(SEGA | SEGC | SEGD | SEGE | SEGF | SEGG) },
+	{ '7',	(SEGA | SEGB | SEGC ) },
+	{ '8',	(SEGA | SEGB | SEGC | SEGD | SEGE | SEGF | SEGG) },
+	{ '9',	(SEGA | SEGB | SEGC | SEGD | SEGF | SEGG) },
+	{ '.',	(SEGH) },
+	{ ',',	(SEGH) },
+	{ '-',	(SEGG) },
+	{ '_',	(SEGD) },
+	{ ' ',	0 },
+	{ 0xB0,	(SEGA | SEGB | SEGF | SEGG) },		// Degree sign
+	{ 'A',	(SEGA | SEGB | SEGC | SEGE | SEGF | SEGG) },
+	{ 'C',	(SEGA | SEGD | SEGE | SEGF) },
+	{ 'F',	(SEGA | SEGE | SEGF | SEGG) },
+	{ 'N',	(SEGC | SEGE | SEGG) },
+	{ 'D',	(SEGB | SEGC | SEGD | SEGE | SEGG) },
+	{ 'P',	(SEGA | SEGB | SEGE | SEGF | SEGG) },
+	{ 'E',	(SEGA | SEGD | SEGE | SEGF | SEGG) },
+	{ 'R',	(SEGE | SEGG) }
+};
 
 /**********************************************************
 *					Internal functions					  *
 **********************************************************/
 
 //---------------------------------------------//
-// Decodes normal string literal to the 
+// Decodes normal string literal to the
 //	7-segment representation
 //---------------------------------------------//
 static uint8_t decode_led_char(char c)
 {
-	switch(c)
+	uint8_t i;
+	encode_7seg_pair encode_pair;
+	for (i = 0; i < sizeof(led_encode_table)/sizeof(encode_7seg_pair); i++  )
 	{
-		case 'O':
-		case '0': return (SEGA | SEGB | SEGC | SEGD | SEGE | SEGF);
-		case '1': return (SEGB | SEGC );
-		case '2': return (SEGA | SEGB | SEGD | SEGE | SEGG);
-		case '3': return (SEGA | SEGB | SEGC | SEGD | SEGG);
-		case '4': return (SEGB | SEGC | SEGF | SEGG);
-		case 'S':
-		case '5': return (SEGA | SEGC | SEGD | SEGF | SEGG);
-		case '6': return (SEGA | SEGC | SEGD | SEGE | SEGF | SEGG);
-		case '7': return (SEGA | SEGB | SEGC );
-		case '8': return (SEGA | SEGB | SEGC | SEGD | SEGE | SEGF | SEGG);
-		case '9': return (SEGA | SEGB | SEGC | SEGD | SEGF | SEGG);
-		case '.': return (SEGH);
-		case ',': return (SEGH);
-		case '-': return (SEGG);
-		case '_': return (SEGD);
-		case ' ': return 0;
-		case 0xB0:	return (SEGA | SEGB | SEGF | SEGG);		// Degree sign
-		case 'A': return (SEGA | SEGB | SEGC | SEGE | SEGF | SEGG);
-		case 'C':	return (SEGA | SEGD | SEGE | SEGF);
-		case 'F':	return (SEGA | SEGE | SEGF | SEGG);
-		case 'N':	return (SEGC | SEGE | SEGG);
-		case 'D': return (SEGB | SEGC | SEGD | SEGE | SEGG);
-		case 'P': return (SEGA | SEGB | SEGE | SEGF | SEGG);
-		case 'E': return (SEGA | SEGD | SEGE | SEGF | SEGG);
-		case 'R': return (SEGE | SEGG);
-		default:  return c;	
-	}
+		encode_pair.code = pgm_read_byte(&led_encode_table[i].code);
+		if (encode_pair.code == c)
+		{
+			i = pgm_read_byte(&led_encode_table[i].segdata);
+			return i;
+		}		
+	}			
+	// No item was found - return default value
+	return  (SEGA | SEGG );
 }
 
 //---------------------------------------------//

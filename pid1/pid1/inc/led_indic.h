@@ -10,6 +10,12 @@
 #define LED_INDIC_H_
 
 
+typedef struct {
+	uint8_t code;
+	uint8_t segdata;
+} encode_7seg_pair;
+
+
 /************************************************
 *					Settings					*
 ************************************************/
