@@ -14,7 +14,7 @@
 #define SYSTICKS_PER_SECOND		(1000 / MENU_UPDATE_INTERVAL)
 
 #define CELSIUS_UDPATE_INTERVAL			4		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 200ms
-#define COUNTER_10SEC_INTERVAL		20//	200		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 10s
+#define COUNTER_10SEC_INTERVAL			200		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 10s
 #define COUNTER_1MIN_INTERVAL			6		// in units of TEMP_ALERT_PROCESS_INTERVALL (10s)	-> 1m
 #define LOG_INTERVAL					2		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 100ms
 

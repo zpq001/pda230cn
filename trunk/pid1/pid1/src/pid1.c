@@ -43,7 +43,7 @@ extern volatile SoftTimer8b_t menuUpdateTimer;
 void init_system_io()
 {
 	// Setup Port D
-	PORTD = 0;// (1<<PD_SYNCA | 1<<PD_SYNCB);
+	PORTD = 0;//(1<<PD_SYNCA | 1<<PD_SYNCB);
 	DDRD = (1<<PD_TXD | 1<<PD_M1 | 1<<PD_M2 | 1<<PD_HEATER | 1<<PD_HEAT_INDIC );
 	
 	// Setup Port B
@@ -55,11 +55,10 @@ void init_system_io()
 
 	// Setup timer0
 	// 1/1024 prescaler, T=64us @16MHz
-//	TCCR0 = (1<<CS02 | 0<<CS01 | 1<<CS00);
-	TCCR0 = 0;
-//	TCNT0 = 0;
+	TCCR0 = (1<<CS02 | 0<<CS01 | 1<<CS00);
+	TCNT0 = 0;
 	// Clear interrupt flag
-//	TIFR |= (1<<TOV0);
+	TIFR |= (1<<TOV0);
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);
 	
@@ -78,7 +77,6 @@ void init_system_io()
 
 	// Setup AC sync comparator
 	// Interrupt on output toggle
-	//ACSR |= (1<<ACI);		// Will be cleared just before sei
 	ACSR = (1<<ACIE | 0<<ACIS1 | 0<<ACIS0);
 	
 	// Setup ADC
@@ -114,7 +112,6 @@ int main(void)
 	char str[10];
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
-	//uint8_t celsiusUpdateCounter = 0;
 	
 	// Initialize MCU IO
 	init_system_io();

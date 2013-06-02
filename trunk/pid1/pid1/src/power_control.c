@@ -224,7 +224,6 @@ ISR(ANA_COMP_vect)
 {
 	// Once triggered, disable further comparator interrupt
 	ACSR &= ~(1<<ACIE);
-	ACSR |= (1<<ACI);
 	// Turn on heater TRIAC
 	if (heater_cnt < ctrl_heater_sync)
 		PORTD |= (1<<PD_HEATER | 1<<PD_HEAT_INDIC);	// Direct heater indication
@@ -232,7 +231,6 @@ ISR(ANA_COMP_vect)
 		PORTD &= ~(1<<PD_HEAT_INDIC);
 	// Reprogram timer0
 	TCNT0 = 256 - TRIAC_IMPULSE_TIME;		// Triac gate impulse time
-	TCCR0 = (1<<CS02 | 0<<CS01 | 1<<CS00);	// 1/1024 prescaler, T=64us @16MHz
 	TIFR |= (1<<TOV0);						// Clear interrupt flag
 	// Modify state	
 	p_state &= ~STATE_MASK;					// Start new state machine cycle
@@ -264,8 +262,6 @@ ISR(TIMER0_OVF_vect)
 			// Clear flag and enable interrupt from analog comparator
 			ACSR |= (1<<ACI);
 			ACSR |= (1<<ACIE);
-			// DEBUG!!!
-			PORTD |= (1<<PD_HEAT_INDIC);
 			break;
 		// SYNC_LOST_TIMEOUT finished
 		case 0x03:
