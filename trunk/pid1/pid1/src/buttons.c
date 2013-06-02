@@ -36,6 +36,8 @@ void process_buttons()
 	uint8_t long_press_mask;
 	uint8_t long_press_event_mask;
 	
+	uint16_t composed_state;
+	
 	raw_delayed = raw_current;
 	raw_delayed_inv = raw_current_inv;
 	raw_current = raw_button_state;
@@ -68,16 +70,17 @@ void process_buttons()
 	button_action_long  = raw_current & long_press_event_mask;
 	
 	// Compose button state
-	button_state = (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE));
+	composed_state = (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE));
 	if (button_action_up_short & BD_MENU)
-		button_state |= BS_MENU;
+		composed_state |= BS_MENU;
 	//if (button_action_up_long & BD_MENU)
 	if (button_action_long & BD_MENU)
-		button_state |= BL_MENU;
+		composed_state |= BL_MENU;
 	if (button_action_rep & BD_UP)
-		button_state |= BR_UP;	
+		composed_state |= BR_UP;	
 	if (button_action_rep & BD_DOWN)
-		button_state |= BR_DOWN;
+		composed_state |= BR_DOWN;
 
+	button_state = composed_state;
 }
 

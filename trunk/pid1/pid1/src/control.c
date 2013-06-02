@@ -27,12 +27,12 @@ EEMEM gParams_t nvParams =
 {
 	.setup_temp_value 	= 50,
 	.rollCycleSet 		= 10,
-	.sound_enable 		= 0,
+	.sound_enable 		= 1,
 	.power_off_timeout 	= 30,
 	.cpoint1 			= 25,
-	.cpoint1_adc 		= 164,
+	.cpoint1_adc 		= 164,	// 765, //
 	.cpoint2 			= 145,
-	.cpoint2_adc 		= 433
+	.cpoint2_adc 		= 433	// 2100 //
 };
 
 
@@ -177,6 +177,7 @@ void processRollControl(void)
 void samplePIDProcessValue(void)
 {
 	PIDsampledADC = getNormalizedRingU16(&ringBufADC);
+	//PIDsampledADC = ringBufADC.summ >> 2;
 }
 
 void heaterInit(void)
@@ -257,13 +258,13 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	
 	//------ Calculate P term --------//
-	if (error > 20)
+	if (error > 20 /*100*/)
 	{
-		p_term = 1000;
+		p_term = 1000 /*2000*/;
 	}
-	else if (error < -20)
+	else if (error < -20 /*100*/)
 	{
-		p_term = -1000;
+		p_term = -1000 /*-2000*/;
 	}
 	else
 	{
@@ -276,21 +277,18 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	{
 		integAcc = 0;
 	}
-	else if (integAcc > 10)
+	else if (integAcc > 10 /*200*/)
 	{
-		integAcc = 10;
+		integAcc = 10 /*200*/;
 	}
 	else if (integAcc < 0)
 	{
 		integAcc = 0;
 	}
 	i_term = integAcc * Ki;
+
 	
-	//------ Calculate D term --------//
-	//lastProcessValue = getNormalizedRingU16(&ringBufDterm);
-	//addToRingU16(&ringBufDterm, processValue);
-	//d_term = Kd * ((int16_t)(lastProcessValue - processValue));
-	
+	//------ Calculate D term --------//	
 	lastProcessValue = ringBufDterm.summ;
 	addToRingU16(&ringBufDterm, processValue);
 	processValue = ringBufDterm.summ;
@@ -400,6 +398,8 @@ void restoreGlobalParams(void)
 //	 cpoint1_adc 	= 164;
 //	 cpoint2 		= 145;
 //	 cpoint2_adc 	= 433;
+
+
 	 
 }
 

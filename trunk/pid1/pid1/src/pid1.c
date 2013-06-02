@@ -141,7 +141,6 @@ int main(void)
 	// When we get here, few ADC counts have been sampled.
 	// Call PID controller function in order to initialize it's internal structures
 	heaterInit();
-	_delay_ms(50);
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
 	// Clear timer
@@ -219,32 +218,19 @@ int main(void)
 			{
 				
 				
-				u16toa_align_right(adc_oversampled,str,6,' ');				// 
+				u16toa_align_right(adc_normalized,str,6,' ');			// Actual temp (ADC)
 				USART_sendstr(str);
 				
-				
-				
-		/*		
-				u16toa_align_right(adc_celsius,str,6,' ');				// Displayed temp, Celsius
-				USART_sendstr(str);
-				
-				u16toa_align_right(adc_normalized,str,6,' ');			// Displayed temp
-				USART_sendstr(str);
-				
-				u16toa_align_right(dbg_SetTempCelsius,str,6,' ');		// Temp setting, Celsius
-				USART_sendstr(str);
+				USART_sendstr("    ");
 				
 				u16toa_align_right(dbg_SetTempPID,str,6,' ');			// Temp setting, as input to PID
-				USART_sendstr(str);
-				
-				u16toa_align_right(dbg_RealTempCelsius,str,8,' ');		// Real temp, sampled for PID input, Celsius
 				USART_sendstr(str);
 				
 				u16toa_align_right(dbg_RealTempPID,str,6,' ');			// Real temp, sampled for PID input
 				USART_sendstr(str);
 				
-				//u16toa_align_right(dbg_RealTempPIDfiltered,str,6,' ');			// Real temp, sampled for PID input, filtered
-				//USART_sendstr(str);
+				u16toa_align_right(dbg_RealTempCelsius,str,6,' ');		// Real temp, sampled for PID input, Celsius
+				USART_sendstr(str);
 				
 				USART_sendstr("    ");
 				
@@ -288,6 +274,8 @@ int main(void)
 					USART_sendstr(str);
 				}
 				
+				USART_sendstr("    ");
+				
 				u16toa_align_right(dbg_PID_output,str,6,' ');			// PID output
 				USART_sendstr(str);
 				
@@ -295,7 +283,7 @@ int main(void)
 				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (PID output, synchronized)
 				USART_sendstr(str);
 				
-*/				
+			
 				USART_sendstr("\n\r");
 				
 				

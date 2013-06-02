@@ -38,7 +38,7 @@ typedef struct
 
 // PID regulator
 #define Kp	15
-#define Ki	15
+#define Ki	15 /*1*/
 #define Kd	80 
 #define SCALING_FACTOR	5
 

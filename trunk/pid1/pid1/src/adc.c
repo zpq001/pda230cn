@@ -36,6 +36,12 @@ uint16_t getNormalizedRingU16(RingBufU16_t* bptr);
 //---------------------------------------------//
 //---------------------------------------------//
 
+/*
+	Oversampled ADC:
+		145 Celsius ->	2100 
+		25 Celsius	->	765
+*/
+
 
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
 {	
@@ -62,6 +68,7 @@ void update_normalized_adc()
 	// Get normalized mean window summ
 	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
 	adc_oversampled = ringBufADC.summ >> 2;
+	//adc_normalized = ringBufADC.summ >> 2;
 	// Enable interrupts from ADC
 	ADCSRA |= (1<<ADIE);
 }
@@ -71,6 +78,7 @@ void update_Celsius(void)
 	// Convert to Celsius degree
 	adc_celsius = conv_ADC_to_Celsius(adc_normalized);
 }
+
 
 
 
