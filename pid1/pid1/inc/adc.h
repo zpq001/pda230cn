@@ -22,9 +22,9 @@ typedef struct {
 } RingBufU16_t;
 
 typedef struct {
-	uint8_t[] coeffs;
 	uint8_t n;
 	uint16_t dc_gain;
+	uint8_t coeffs[];
 } filter8bit_core_t;
 
 
@@ -39,6 +39,7 @@ extern uint16_t adc_celsius;
 extern RingBufU16_t ringBufADC;
 extern uint16_t PIDsampledADC;
 extern uint16_t adc_oversampled;
+extern uint16_t adc_filtered;
 
 void calculateCoeffs(void);
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value);
@@ -48,5 +49,10 @@ void update_Celsius(void);
 
 void addToRingU16(RingBufU16_t* bptr, uint16_t sample);
 uint16_t getNormalizedRingU16(RingBufU16_t* bptr);
+
+uint16_t iir_u16(uint16_t *data, filter8bit_core_t* iir_core);
+
+
+void adcTestFunc(void);
 
 #endif /* ADC_H_ */

@@ -549,8 +549,8 @@ void mf_actpoffLeave(void)
 void mf_calibSelect(void)
 {
 	mf_leafSelect();
-	cpoint1_copy = p.cpoint1;
-	cpoint2_copy = p.cpoint2;
+	cpoint1_copy = cp.cpoint1;
+	cpoint2_copy = cp.cpoint2;
 }
 
 void mf_calib1Do(void)
@@ -620,9 +620,9 @@ void mf_calibDoExit(void)
 void mf_cdone1Select(void)
 {
 	// Save current ADC as calibrating point
-	p.cpoint1_adc = adc_normalized;
+	cp.cpoint1_adc = adc_normalized;
 	// Save current Celsius degree
-	p.cpoint1 = cpoint1_copy;
+	cp.cpoint1 = cpoint1_copy;
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
 	saveCalibrationToEEPROM();
@@ -631,9 +631,9 @@ void mf_cdone1Select(void)
 void mf_cdone2Select(void)
 {
 	// Save current ADC as calibrating point
-	p.cpoint2_adc = adc_normalized;
+	cp.cpoint2_adc = adc_normalized;
 	// Save current Celsius degree
-	p.cpoint2 = cpoint2_copy;
+	cp.cpoint2 = cpoint2_copy;
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
 	saveCalibrationToEEPROM();
