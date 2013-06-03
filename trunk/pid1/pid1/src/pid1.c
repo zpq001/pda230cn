@@ -36,6 +36,9 @@
 
 extern volatile SoftTimer8b_t menuUpdateTimer;
 
+// Functions for log optimization
+static void logU16p(uint16_t *val_ptr);
+static void logI32p(int32_t *val_ptr);
 
 ////// debug ///////
 //extern void powTest(void);
@@ -103,7 +106,6 @@ void init_system_io()
 
 	
 }
-
 
 
 
@@ -217,7 +219,7 @@ int main(void)
 			if (sys_timers.flags & EXPIRED_LOG)
 			{
 				
-				
+				/*
 				u16toa_align_right(adc_normalized,str,6,' ');			// Actual temp (ADC)
 				USART_sendstr(str);
 				
@@ -282,7 +284,19 @@ int main(void)
 				
 				u16toa_align_right(ctrl_heater,str,6,' ');				// Heater control (PID output, synchronized)
 				USART_sendstr(str);
+				*/
 				
+				logU16p(&adc_normalized);				// Actual temp (ADC)
+				USART_sendstr("    ");
+				logU16p(&dbg_SetTempPID);				// Temp setting, as input to PID
+				logU16p(&dbg_RealTempPID);				// Real temp, sampled for PID input
+				logU16p(&dbg_RealTempCelsius);			// Real temp, sampled for PID input, Celsius
+				
+				logI32p(&dbg_PID_p_term);				// p term
+				logI32p(&dbg_PID_d_term);				// d term
+				logI32p(&dbg_PID_i_term);				// i term
+				USART_sendstr("    ");
+				logU16p(&dbg_PID_output);				// PID output
 			
 				USART_sendstr("\n\r");
 				
@@ -298,3 +312,22 @@ int main(void)
 		
     }
 }
+
+
+static void logU16p(uint16_t *val_ptr)
+{
+	char str[6];
+	u16toa_align_right(*val_ptr,str,6,' ');
+	USART_sendstr(str);
+}
+
+static void logI32p(int32_t *val_ptr)
+{
+	char str[12];
+	i32toa_align_right(*val_ptr,str,12);
+	USART_sendstr(str);
+}
+
+
+
+

@@ -625,6 +625,7 @@ void mf_cdone1Select(void)
 	p.cpoint1 = cpoint1_copy;
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
+	saveCalibrationToEEPROM();
 }
 
 void mf_cdone2Select(void)
@@ -635,6 +636,7 @@ void mf_cdone2Select(void)
 	p.cpoint2 = cpoint2_copy;
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
+	saveCalibrationToEEPROM();
 }
 
 void mf_cdoneDo(void)

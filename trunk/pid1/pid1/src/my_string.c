@@ -41,3 +41,33 @@ void u16toa_align_right(uint16_t val, char *buffer, uint8_t len,char fill_char)
 }
 
 
+
+void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
+{
+	uint8_t is_negative = (val < 0) ? 1 : 0;
+	if (is_negative)
+		val = -val;
+		
+	buffer += len;	
+	*buffer = 0;
+	
+	do
+	{
+		*--buffer = val % 10 + '0';
+		val /= 10;
+		len--;
+	}
+	while ((val != 0) && len);
+	
+	if ( (len) && (is_negative) )
+	{
+		*--buffer = '-';
+		len--;	
+	}	
+	
+	// Padding
+	while(len--)
+		*--buffer = ' ';
+	
+}
+
