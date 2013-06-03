@@ -34,9 +34,11 @@ EEMEM gParams_t eeGlobalParams =
 EEMEM cParams_t eeCalibrationParams = 
 {
 	.cpoint1 			= 25,
-	.cpoint1_adc 		= 164,	// 765, //
+	//.cpoint1_adc 		= 164,
+	.cpoint1_adc 		= 765,
 	.cpoint2 			= 145,
-	.cpoint2_adc 		= 433	// 2100 //
+	//.cpoint2_adc 		= 433
+	.cpoint2_adc 		= 2100
 };
 
 
@@ -220,14 +222,18 @@ void processHeaterControl(void)
 	{
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
-		// Process PID
-		pid_output = processPID(set_value_adc,PIDsampledADC);
+		// Process PID 
+		//pid_output = processPID(set_value_adc,PIDsampledADC);
+		pid_output = processPID(set_value_adc,adc_normalized);
 			
 		// Heater control is updated only when flag is set, even if heater must be powered OFF
 		if (heaterState & HEATER_ENABLED)
 			setHeaterControl(pid_output);	// Flag is cleared automatically
 		else
 			setHeaterControl(0);
+			
+		//------- Debug --------//		
+		dbg_RealTempPID = adc_normalized;
 	}	
 		
 	
@@ -245,8 +251,7 @@ void processHeaterControl(void)
 		clearExtraLeds(LED_HEATER);
 	}
 	
-	dbg_RealTempCelsius = conv_ADC_to_Celsius(PIDsampledADC);
-	dbg_RealTempPID = PIDsampledADC;
+	
 }
 
 
@@ -264,13 +269,13 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	
 	//------ Calculate P term --------//
-	if (error > 20 /*100*/)
+	if (error > 150)
 	{
-		p_term = 1000 /*2000*/;
+		p_term = 2000;
 	}
-	else if (error < -20 /*100*/)
+	else if (error < -150)
 	{
-		p_term = -1000 /*-2000*/;
+		p_term = -2000;
 	}
 	else
 	{
@@ -283,9 +288,9 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	{
 		integAcc = 0;
 	}
-	else if (integAcc > 10 /*200*/)
+	else if (integAcc > 200)
 	{
-		integAcc = 10 /*200*/;
+		integAcc = 200;
 	}
 	else if (integAcc < 0)
 	{
@@ -299,6 +304,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	addToRingU16(&ringBufDterm, processValue);
 	processValue = ringBufDterm.summ;
 	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
+	//lastProcessValue = processValue;
 	
 	//--------- Summ terms -----------//
 	temp = (p_term + i_term + d_term) / SCALING_FACTOR;

@@ -31,7 +31,7 @@ MOTOR	________________________________________________|*************************
 // Regulation params
 #define HEATER_REGULATION_PERIODS	50		// Number of whole periods of AC voltage for one heater regulation cycle
 											// Also specifies amount of heater control gradations (0 to HEATER_REGULATION_PERIODS-1)
-#define HEATER_PID_CALL_INTERVAL	4		// Number of heater regulation cycles between PID regulator calls
+#define HEATER_PID_CALL_INTERVAL	3		// Number of heater regulation cycles between PID regulator calls
 
 
 
