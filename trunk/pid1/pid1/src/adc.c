@@ -17,7 +17,7 @@ uint16_t adc_normalized;			// normalized (used for calibration) ADC value
 uint16_t adc_celsius;				// Celsius degree value (used for indication / calibration)
 uint16_t PIDsampledADC;
 uint16_t adc_oversampled;
-//uint16_t adc_filtered;
+uint16_t adc_filtered;
 
 uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC ring buffer
 RingBufU16_t ringBufADC = {
@@ -26,15 +26,15 @@ RingBufU16_t ringBufADC = {
 	.stat = RINIT
 };
 
-/*
+
 uint16_t filter_buffer[20];
 RingBufU16_t ringBufFilter = {
 	.length = 20,
 	.data = filter_buffer,
 	.stat = RINIT
 };
-*/
-/*
+
+
 filter8bit_core_t iir_filter_rect = {
 	.coeffs = {
 		   11,
@@ -59,9 +59,9 @@ filter8bit_core_t iir_filter_rect = {
             2
 	},
 	.n = 20,
-	.dc_gain = 1024
+	.dc_gain = 1014
 };
-*/
+
 
 // Internal variables
 static int32_t k_norm;				// integer, scaled by COEFF_SCALE
@@ -94,8 +94,8 @@ uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
 
 void calculateCoeffs(void)
 {
-	k_norm = ((int32_t)(p.cpoint2 - p.cpoint1) * COEFF_SCALE) / ((int32_t)(p.cpoint2_adc - p.cpoint1_adc));
-	offset_norm = (int32_t)p.cpoint1 * COEFF_SCALE - (int32_t)p.cpoint1_adc * k_norm;
+	k_norm = ((int32_t)(cp.cpoint2 - cp.cpoint1) * COEFF_SCALE) / ((int32_t)(cp.cpoint2_adc - cp.cpoint1_adc));
+	offset_norm = (int32_t)cp.cpoint1 * COEFF_SCALE - (int32_t)cp.cpoint1_adc * k_norm;
 }
 
 
@@ -106,10 +106,10 @@ void update_normalized_adc()
 	// Get normalized mean window summ
 	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
 	adc_oversampled = ringBufADC.summ >> 2;
-/*	// Filter
+	// Filter
 	addToRingU16(&ringBufFilter, adc_oversampled);
-	adc_filtered = iir_u16(&filter_buffer, &iir_filter_rect);	
-*/
+	adc_filtered = iir_u16(filter_buffer, &iir_filter_rect);	
+
 	//adc_normalized = ringBufADC.summ >> 2;
 	// Enable interrupts from ADC
 	ADCSRA |= (1<<ADIE);
@@ -121,9 +121,16 @@ void update_Celsius(void)
 	adc_celsius = conv_ADC_to_Celsius(adc_normalized);
 }
 
-
-
-
+/*
+void adcTestFunc(void)
+{
+	
+	// Add new sample to the ring buffer
+	addToRingU16(&ringBufADC, 1000);
+	update_normalized_adc();
+	
+}
+*/
 
 
 ISR(ADC_vect)
@@ -135,20 +142,20 @@ ISR(ADC_vect)
 }	
 
 
-/*
+
 // IIR digital filter
 uint16_t iir_u16(uint16_t *data, filter8bit_core_t* iir_core)
 {
 	uint32_t summ = 0;
-	uint8_t i = iir_core->n;
+	uint8_t i;
 	
-	do
-		summ += data[i] * iir_core->coeffs[i];
-	while (--n);
+	for (i=0; i<iir_core->n; i++)
+		summ += (uint32_t)data[i] * iir_core->coeffs[i];
 	
-	return summ / iir_core->dc_gain;
+	
+	return (uint16_t)(summ / iir_core->dc_gain);
 }
-*/
+
 
 
 

@@ -76,7 +76,7 @@ extern uint16_t cpoint2_adc;
 */
 
 extern gParams_t p;		// Global params which are saved to and restored from EEPROM
-
+extern cParams_t cp;		// Calibration params
 
 //------- Debug --------//
 extern uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree

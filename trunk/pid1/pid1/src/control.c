@@ -430,7 +430,7 @@ void exitPowerOff(void)
 	cli();
 	
 	// Save parameters to EEPROM
-	eeprom_update_block(&p,&nvParams,sizeof(nvParams));	
+	eeprom_update_block(&p,&eeGlobalParams,sizeof(eeGlobalParams));	
 
 	// DIE!
 	while(1);
