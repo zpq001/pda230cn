@@ -16,11 +16,15 @@ typedef struct
 	uint8_t rollCycleSet;
 	uint8_t sound_enable;
 	uint8_t power_off_timeout;
+} gParams_t;
+
+typedef struct  
+{
 	uint8_t cpoint1;
 	uint8_t cpoint2;
 	uint16_t cpoint1_adc;
 	uint16_t cpoint2_adc;
-} gParams_t;
+} cParams_t;
 
 // Menu items
 #define MAX_SET_TEMP	250
@@ -95,7 +99,7 @@ void processHeaterControl(void);
 void processHeaterAlerts(void);
 void restoreGlobalParams(void);
 void exitPowerOff(void);
-
+void saveCalibrationToEEPROM(void);
 uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 
 

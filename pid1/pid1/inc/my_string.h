@@ -11,6 +11,6 @@
 
 
 void u16toa_align_right(uint16_t val, char *buffer, uint8_t len,char fill_char);
-
+void i32toa_align_right(int32_t val, char *buffer, uint8_t len);
 
 #endif /* MY_STRING_H_ */

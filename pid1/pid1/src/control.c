@@ -23,12 +23,16 @@
 // Global variables - main system control
 
 
-EEMEM gParams_t nvParams = 
+EEMEM gParams_t eeGlobalParams = 
 {
 	.setup_temp_value 	= 50,
 	.rollCycleSet 		= 10,
 	.sound_enable 		= 1,
 	.power_off_timeout 	= 30,
+};
+
+EEMEM cParams_t eeCalibrationParams = 
+{
 	.cpoint1 			= 25,
 	.cpoint1_adc 		= 164,	// 765, //
 	.cpoint2 			= 145,
@@ -38,6 +42,8 @@ EEMEM gParams_t nvParams =
 
 gParams_t p;		// Global params which are saved to and restored from EEPROM
 					// must be restored at system start
+					
+cParams_t cp;		// Calibration params
 
 
 
@@ -391,18 +397,21 @@ void processHeaterAlerts(void)
 
 void restoreGlobalParams(void)
 {
-	 eeprom_read_block(&p,&nvParams,sizeof(nvParams));
-	
+	eeprom_read_block(&p,&eeGlobalParams,sizeof(eeGlobalParams));
+	eeprom_read_block(&cp,&eeCalibrationParams,sizeof(eeCalibrationParams));
 	 
 //	 cpoint1 		= 25;		// TODO: check and remove
 //	 cpoint1_adc 	= 164;
 //	 cpoint2 		= 145;
 //	 cpoint2_adc 	= 433;
-
-
 	 
 }
 
+
+void saveCalibrationToEEPROM(void)
+{
+	eeprom_update_block(&cp,&eeCalibrationParams,sizeof(eeCalibrationParams));	
+}
 
 
 

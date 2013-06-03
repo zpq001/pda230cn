@@ -21,6 +21,12 @@ typedef struct {
 	uint8_t stat;
 } RingBufU16_t;
 
+typedef struct {
+	uint8_t[] coeffs;
+	uint8_t n;
+	uint16_t dc_gain;
+} filter8bit_core_t;
+
 
 
 
