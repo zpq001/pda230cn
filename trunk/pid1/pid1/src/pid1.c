@@ -225,13 +225,12 @@ int main(void)
 			if (sys_timers.flags & EXPIRED_LOG)
 			{
 				
-				logU16p(adc_normalized);				// Actual temp (ADC)
+				logU16p(adc_celsius);					// Actual temp (ADC)
 				logU16p(adc_oversampled);				// Actual temp (ADC), oversampled
 				logU16p(adc_filtered);					// Actual temp (ADC), oversampled, filtered
 				USART_sendstr("    ");
 				logU16p(dbg_SetTempPID);				// Temp setting, as input to PID
 				logU16p(dbg_RealTempPID);				// Real temp, sampled for PID input
-				logU16p(dbg_RealTempCelsius);			// Real temp, sampled for PID input, Celsius
 				
 				logI32p(dbg_PID_p_term);				// p term
 				logI32p(dbg_PID_d_term);				// d term
