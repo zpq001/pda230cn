@@ -6,22 +6,17 @@ if file ~= -1
     fclose(file);
 end
 
-file = fopen('col_6.txt','r');
+file = fopen('col_8.txt','r');
 if file ~= -1
-    p_term = fscanf(file, '%d');
+    pid_output = fscanf(file, '%d');
     fclose(file);
 end
 
-file = fopen('col_7.txt','r');
-if file ~= -1
-    d_term = fscanf(file, '%d');
-    fclose(file);
-end
 
 plot(temp_actual,'r');
 hold on;
 
-%plot(p_term,'b');
+plot(pid_output * 2,'b');
 hold on;
 
 %plot(d_term,'g');
