@@ -222,17 +222,11 @@ void processHeaterControl(void)
 	{
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
-<<<<<<< .mine
+
 		// Process PID
 		//pid_output = processPID(set_value_adc,PIDsampledADC);
 		pid_output = processPID(set_value_adc * 5, adc_filtered);		// oversampled PID control
 					
-=======
-		// Process PID 
-		//pid_output = processPID(set_value_adc,PIDsampledADC);
-		pid_output = processPID(set_value_adc,adc_normalized);
-			
->>>>>>> .r46
 		// Heater control is updated only when flag is set, even if heater must be powered OFF
 		if (heaterState & HEATER_ENABLED)
 			setHeaterControl(pid_output);	// Flag is cleared automatically
@@ -286,17 +280,17 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	ek = setPoint - processValue;
 	
 	// Calculate PID
-	p_term = kc * (xk_1 - processValue);
-	i_term = k0 * ek;
-	d_term = k1 * (2 * xk_1 - processValue - xk_2);
+	p_term = Kp * (xk_1 - processValue);
+	i_term = Ki * ek;
+	d_term = Kd * (processValue - 2 * xk_1 + xk_2);
 	
 	yk += p_term + i_term + d_term;
 	xk_2 = xk_1;
 	xk_1 = processValue;
 	
 	// Limit Yk
-	if (yk > 2000)
-	yk = 2000;
+	if (yk > 1000)
+	yk = 1000;
 	else if (yk < 0)
 	yk = 0;
 	

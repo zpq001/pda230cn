@@ -340,7 +340,46 @@ ISR(TIMER0_OVF_vect)
 }	
 
 
+/*
 
+#define MAX_POWER 100
+
+static int power = 14;
+
+
+static void set_output(int val)
+{
+	if (val)
+		__builtin_sysreg_write(__FLAGREGST,0x80);
+	else
+		__builtin_sysreg_write(__FLAGREGCL,~0x80);	
+}
+
+
+#pragma interrupt;
+static void timer0_isr(void)
+{
+	static int sigma = 0;
+	static int delta = 0;
+	
+	*(int *)0x30000002 = sigma;
+	
+	if (sigma >= MAX_POWER)
+	{
+		set_output(1);
+		delta = -MAX_POWER;	
+	}		
+	else
+	{
+		set_output(0);	
+		delta = 0;
+	}
+	
+	sigma += delta + power;
+	
+	
+}
+*/
 
 
 
