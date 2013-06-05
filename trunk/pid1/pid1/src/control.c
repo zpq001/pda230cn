@@ -222,10 +222,17 @@ void processHeaterControl(void)
 	{
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
+<<<<<<< .mine
+		// Process PID
+		//pid_output = processPID(set_value_adc,PIDsampledADC);
+		pid_output = processPID(set_value_adc * 5, adc_filtered);		// oversampled PID control
+					
+=======
 		// Process PID 
 		//pid_output = processPID(set_value_adc,PIDsampledADC);
 		pid_output = processPID(set_value_adc,adc_normalized);
 			
+>>>>>>> .r46
 		// Heater control is updated only when flag is set, even if heater must be powered OFF
 		if (heaterState & HEATER_ENABLED)
 			setHeaterControl(pid_output);	// Flag is cleared automatically
@@ -259,6 +266,54 @@ void processHeaterControl(void)
 
 
 
+
+
+
+uint8_t processPID(uint16_t setPoint, uint16_t processValue)
+{
+	int16_t ek;					// current error
+	static int16_t yk = 0;		// current PID output
+	static int16_t xk_1 = 0;	// processValue at step -1
+	static int16_t xk_2 = 0;	// processValue at step -2
+	
+	int16_t p_term;
+	int16_t i_term;
+	int16_t d_term;
+	
+	uint16_t pid_output;
+	
+	// Calculate error
+	ek = setPoint - processValue;
+	
+	// Calculate PID
+	p_term = kc * (xk_1 - processValue);
+	i_term = k0 * ek;
+	d_term = k1 * (2 * xk_1 - processValue - xk_2);
+	
+	yk += p_term + i_term + d_term;
+	xk_2 = xk_1;
+	xk_1 = processValue;
+	
+	// Limit Yk
+	if (yk > 2000)
+	yk = 2000;
+	else if (yk < 0)
+	yk = 0;
+	
+	//------- Debug --------//
+	dbg_PID_p_term = p_term;
+	dbg_PID_d_term = d_term;
+	dbg_PID_i_term = i_term;
+	
+	pid_output = yk / INC_SCALING_FACTOR;
+	
+	dbg_PID_output = pid_output;		// full-scale output
+	return pid_output;
+}
+
+
+/*
+
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
 	int16_t error, p_term, i_term, d_term, temp;
@@ -269,13 +324,29 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	
 	//------ Calculate P term --------//
+<<<<<<< .mine
+	if (error > 20 )
+=======
 	if (error > 150)
+>>>>>>> .r46
 	{
+<<<<<<< .mine
+		p_term = 1000;
+=======
 		p_term = 2000;
+>>>>>>> .r46
 	}
+<<<<<<< .mine
+	else if (error < -20 )
+=======
 	else if (error < -150)
+>>>>>>> .r46
 	{
+<<<<<<< .mine
+		p_term = -1000 ;
+=======
 		p_term = -2000;
+>>>>>>> .r46
 	}
 	else
 	{
@@ -288,9 +359,17 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	{
 		integAcc = 0;
 	}
+<<<<<<< .mine
+	else if (integAcc > 25 )
+=======
 	else if (integAcc > 200)
+>>>>>>> .r46
 	{
+<<<<<<< .mine
+		integAcc = 25;
+=======
 		integAcc = 200;
+>>>>>>> .r46
 	}
 	else if (integAcc < 0)
 	{
@@ -330,7 +409,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 }
 
-
+*/
 
 
 
