@@ -34,11 +34,11 @@ EEMEM gParams_t eeGlobalParams =
 EEMEM cParams_t eeCalibrationParams = 
 {
 	.cpoint1 			= 25,
-	//.cpoint1_adc 		= 164,
-	.cpoint1_adc 		= 765,
+	.cpoint1_adc 		= 164,
+	//.cpoint1_adc 		= 765,
 	.cpoint2 			= 145,
-	//.cpoint2_adc 		= 433
-	.cpoint2_adc 		= 2100
+	.cpoint2_adc 		= 433
+	//.cpoint2_adc 		= 2100
 };
 
 
@@ -234,7 +234,7 @@ void processHeaterControl(void)
 			setHeaterControl(0);
 			
 		//------- Debug --------//		
-		dbg_RealTempPID = adc_normalized;
+		dbg_RealTempPID = adc_filtered;
 	}	
 		
 	
@@ -243,7 +243,7 @@ void processHeaterControl(void)
 	{
 		setExtraLeds(LED_HEATER);
 		dbg_SetTempCelsius = p.setup_temp_value;
-		dbg_SetTempPID = set_value_adc;
+		dbg_SetTempPID = set_value_adc * 5;
 	}
 	else
 	{
@@ -289,8 +289,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	xk_1 = processValue;
 	
 	// Limit Yk
-	if (yk > 1000)
-	yk = 1000;
+	if (yk > 5000)
+	yk = 5000;
 	else if (yk < 0)
 	yk = 0;
 	

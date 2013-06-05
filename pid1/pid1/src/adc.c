@@ -104,14 +104,12 @@ void update_normalized_adc()
 	// Disable interrupts from ADC - to save data integrity
 	ADCSRA &= ~(1<<ADIE);	
 	// Get normalized mean window summ
-//	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
+	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
 	adc_oversampled = ringBufADC.summ >> 2;
 	// Filter
 	addToRingU16(&ringBufFilter, adc_oversampled);
 	adc_filtered = iir_u16(filter_buffer, &iir_filter_rect);	
-	adc_normalized = adc_filtered;
 
-	//adc_normalized = ringBufADC.summ >> 2;
 	// Enable interrupts from ADC
 	ADCSRA |= (1<<ADIE);
 }

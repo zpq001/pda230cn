@@ -50,9 +50,9 @@ typedef struct
 //--------------------------------------------//
  
  #define Kp		40
- #define Ki		10
- #define Kd		20
- #define INC_SCALING_FACTOR	20
+ #define Ki		1
+ #define Kd		10
+ #define INC_SCALING_FACTOR	100
  //--------------------------------------------//
 
 #define POFF_MOTOR_TRESHOLD	50				// Below this temperature point motor will stop
