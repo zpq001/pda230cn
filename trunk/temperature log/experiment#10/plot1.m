@@ -1,12 +1,12 @@
 
 % Actual temperature
-file = fopen('col_5.txt','r');
+file = fopen('col_0.txt','r');
 if file ~= -1
     temp_actual = fscanf(file, '%d');
     fclose(file);
 end
 
-file = fopen('col_9.txt','r');
+file = fopen('col_8.txt','r');
 if file ~= -1
     pid_output = fscanf(file, '%d');
     fclose(file);

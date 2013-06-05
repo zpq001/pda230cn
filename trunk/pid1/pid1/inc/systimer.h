@@ -58,6 +58,6 @@ void SetBeeperFreq(uint16_t freq_hz);
 
 void resetAutoPowerOffCounter(void);
 
-
+void processSystemTimers(void);
 
 #endif /* SYSTIMER_H_ */
