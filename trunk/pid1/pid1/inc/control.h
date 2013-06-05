@@ -41,21 +41,18 @@ typedef struct
 
 
 // PID regulator
-#define Kp	15
-#define Ki	5 
-#define Kd	80 
-#define SCALING_FACTOR	5
+//#define Kp	15
+//#define Ki	5 
+//#define Kd	80 
+//#define SCALING_FACTOR	5
 
 
 //--------------------------------------------//
- #define kc	150				// proportional gain
- #define TI	160				// TI = (KC / KI) <= Time - constant integral gain
- #define TD	40				// TD = (KD / KC) <= Time - constant derivative gain
- #define Ts	20				// Sample period, 5 second default
-
- #define k0 8 //	(kc * Ts / TI)	// 4.68 | 20
- #define k1	15 //	(kc * TD / Ts)	// 1200 | 300
- #define INC_SCALING_FACTOR	40
+ 
+ #define Kp		40
+ #define Ki		10
+ #define Kd		20
+ #define INC_SCALING_FACTOR	20
  //--------------------------------------------//
 
 #define POFF_MOTOR_TRESHOLD	50				// Below this temperature point motor will stop
