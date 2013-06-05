@@ -79,8 +79,8 @@ static uint8_t decode_led_char(char c)
 			return i;
 		}		
 	}			
-	// No item was found - return default value
-	return  (SEGA | SEGG );
+	// No item was found - return argument value
+	return  c;
 }
 
 //---------------------------------------------//
