@@ -52,10 +52,42 @@ typedef struct
 
 //--------------------------------------------//
  
- #define Kp		40
- #define Ki		1
- #define Kd		10
- #define INC_SCALING_FACTOR	100
+/* 11_6			T = 5s				<- best
+#define Kp		75
+#define Ki		1
+#define Kd		40
+#define INC_SCALING_FACTOR	100
+*/
+/* 11_7			T = 5s
+#define Kp		75
+#define Ki		2
+#define Kd		30
+#define INC_SCALING_FACTOR	100
+*/
+/* 11_8			T = 5s
+#define Kp		75
+#define Ki		1
+#define Kd		25
+#define INC_SCALING_FACTOR	100
+*/
+/* 11_9			Ts = 5s
+#define Kp		75
+#define Ki		1
+#define Kd		50
+#define INC_SCALING_FACTOR	100
+*/
+/* 11_10
+#define Kp		100
+#define Ki		1
+#define Kd		50
+#define INC_SCALING_FACTOR	100
+*/
+// 11_11
+#define Kp		50
+#define Ki		1
+#define Kd		40
+#define INC_SCALING_FACTOR	100
+
  //--------------------------------------------//
 
 #define POFF_MOTOR_TRESHOLD	50				// Below this temperature point motor will stop
@@ -107,7 +139,7 @@ void processHeaterAlerts(void);
 void restoreGlobalParams(void);
 void exitPowerOff(void);
 void saveCalibrationToEEPROM(void);
-//uint8_t processPID(uint16_t setPoint, uint16_t processValue);
+uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 
 
 #endif /* CONTROL_H_ */

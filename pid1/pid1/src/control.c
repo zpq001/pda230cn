@@ -225,10 +225,10 @@ void processHeaterControl(void)
 		processValue = adc_filtered;		// oversampled PID control
 		
 		// Process PID
-		//pid_output = processPID(setPoint, processValue);		
+		pid_output = processPID(setPoint, processValue);		
 		
 		// DSM test only
-		pid_output = (p.setup_temp_value < 50) ? 0 : p.setup_temp_value - 50;
+		//pid_output = (p.setup_temp_value < 50) ? 0 : p.setup_temp_value - 50;
 					
 		// If heater is disabled, override output
 		if (!(heaterState & HEATER_ENABLED))
@@ -284,15 +284,15 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	// Calculate PID
 	p_term = Kp * (xk_1 - processValue);
 	i_term = Ki * ek;
-	d_term = Kd * (processValue - 2 * xk_1 + xk_2);
+	d_term = Kd * (2 * xk_1 - processValue - xk_2);
 	
 	yk += p_term + i_term + d_term;
 	xk_2 = xk_1;
 	xk_1 = processValue;
 	
 	// Limit Yk
-	if (yk > 5000)
-	yk = 5000;
+	if (yk > 10000)
+	yk = 10000;
 	else if (yk < 0)
 	yk = 0;
 	

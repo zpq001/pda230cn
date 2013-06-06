@@ -16,7 +16,7 @@
 #define COUNTER_10SEC_INTERVAL			200		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 10s
 #define COUNTER_1MIN_INTERVAL			6		// in units of COUNTER_10SEC_INTERVAL (10s)			-> 1m
 #define LOG_INTERVAL					2		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 100ms
-#define PID_UPDATE_INTERVAL			(5 * 2)		// in units of CELSIUS_UDPATE_INTERVAL (200ms)		-> 0.2 to 50 seconds
+#define PID_UPDATE_INTERVAL			(5 * 5)		// in units of CELSIUS_UDPATE_INTERVAL (200ms)		-> 0.2 to 50 seconds
 
 
 // System timers flags
