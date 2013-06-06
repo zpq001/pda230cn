@@ -41,6 +41,9 @@ typedef struct
 
 
 // PID regulator
+
+// PID call interval is defined at module systimer.h
+
 //#define Kp	15
 //#define Ki	5 
 //#define Kd	80 
@@ -64,34 +67,31 @@ typedef struct
 											// TODO - deliver this to menu
 #define TEMP_ALERT_HYST		5				// Hysteresis value for alert range
 
-#define SAFE_TEMP_INTERVAL	10				// Safe interval for growing temperature with heater disabled alert
+#define SAFE_TEMP_INTERVAL	15				// Safe interval for growing temperature with heater disabled alert
 											// in units of Celsius degree
 
 
+// heaterState	bits
+#define HEATER_ENABLED				0x01
+#define CALIBRATION_ACTIVE			0x02
+
+// Auto power off flags
+#define AUTO_POFF_ACTIVE	0x01
+
+
+extern uint8_t heaterState;
 extern uint8_t autoPowerOffState;
 
 
 // Global variables - main system control
-/*
-extern uint16_t setup_temp_value;			// reference temperature
-extern uint8_t rollCycleSet;				// number of rolling cycles
-extern uint8_t sound_enable;				// Global sound enable
-extern uint8_t power_off_timeout;			// Auto power OFF timeout
-extern uint8_t cpoint1;						// Calibration point 1
-extern uint8_t cpoint2;						// Calibration point 2
-extern uint16_t cpoint1_adc;
-extern uint16_t cpoint2_adc;
-*/
-
 extern gParams_t p;		// Global params which are saved to and restored from EEPROM
 extern cParams_t cp;		// Calibration params
 
 //------- Debug --------//
-extern uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
-extern uint16_t dbg_SetTempPID;			// Temperature setting, PID input
-extern uint8_t dbg_RealTempCelsius;		// Real temperature, Celsius degree
-extern uint16_t dbg_RealTempPID;		// Real temperature, PID input
-//extern uint16_t dbg_RealTempPIDfiltered;		// Real temperature, PID input, filtered
+extern uint8_t 		dbg_SetPointCelsius;	// Temperature setting, Celsius degree
+extern uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
+extern uint8_t 		dbg_RealTempCelsius;	// Real temperature, Celsius degree
+extern uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
 
 extern int16_t dbg_PID_p_term;
 extern int16_t dbg_PID_d_term;
@@ -102,13 +102,12 @@ extern int16_t dbg_PID_output;
 
 void processRollControl(void);
 void heaterInit(void);
-void samplePIDProcessValue(void);
 void processHeaterControl(void);
 void processHeaterAlerts(void);
 void restoreGlobalParams(void);
 void exitPowerOff(void);
 void saveCalibrationToEEPROM(void);
-uint8_t processPID(uint16_t setPoint, uint16_t processValue);
+//uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 
 
 #endif /* CONTROL_H_ */

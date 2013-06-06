@@ -37,7 +37,6 @@ typedef struct {
 extern uint16_t adc_normalized;
 extern uint16_t adc_celsius;
 extern RingBufU16_t ringBufADC;
-extern uint16_t PIDsampledADC;
 extern uint16_t adc_oversampled;
 extern uint16_t adc_filtered;
 
