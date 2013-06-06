@@ -14,12 +14,7 @@
 #include "adc.h"
 
 // Heater controls
-uint8_t ctrl_heater = 0;				// Heater duty value
-static uint8_t ctrl_heater_sync = 0;	// Same, but synchronized to heater regulation period
-static uint8_t heater_cnt = 0;			// Counter used to provide heater PWM
-uint8_t heaterState = 0;				// Global heater flags
-uint8_t heater_reg_cnt = 0;
-
+static uint16_t heaterPower = 0;		// Heater power control, [0 : HEATER_MAX_POWER]
 
 // Motor controls
 uint8_t rollState = 0;					// Roll controller state. Use as read-only
@@ -39,33 +34,18 @@ uint8_t p_state = 0x0F;			// default state - if AC line sync is present,
 
 
 // User function to control heater intensity
-void setHeaterControl(uint8_t value)
+void setHeaterPower(uint16_t value)
 {
-	// Disable interrupts from timer0 
-	TIMSK &= ~(1<<TOIE0);
-	
-	ctrl_heater = value;
-	heaterState &= ~READY_TO_UPDATE_HEATER;
-	
-	// Enable interrupts from timer 0
-	TIMSK |= (1<<TOIE0);	
+	// Disable interrupts from analog comparator
+	ACSR &= ~(1<<ACIE);
+	// Update value
+	heaterPower = (value > HEATER_MAX_POWER) ? HEATER_MAX_POWER : value;
+	// Reenable interrupts
+	ACSR |= (1<<ACIE);
 }
 
 
-void forceHeaterControlUpdate(void)
-{
-	// Disable interrupts from timer0 
-	TIMSK &= ~(1<<TOIE0);
-	
-	// Flag READY_TO_UPDATE_HEATER will be set on next on next AC line period
-	heater_cnt = HEATER_REGULATION_PERIODS - 6;
-	heater_reg_cnt = HEATER_PID_CALL_INTERVAL - 1;
-	
-	// Enable interrupts from timer 0
-	TIMSK |= (1<<TOIE0);	
-}
-	
-	
+
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir)
 {
@@ -222,13 +202,25 @@ static inline void controlRolling()
 
 ISR(ANA_COMP_vect)
 {
+	static uint16_t sigma = 0;
+	uint16_t delta;
+	
 	// Once triggered, disable further comparator interrupt
 	ACSR &= ~(1<<ACIE);
-	// Turn on heater TRIAC
-	if (heater_cnt < ctrl_heater_sync)
-		PORTD |= (1<<PD_HEATER | 1<<PD_HEAT_INDIC);	// Direct heater indication
+	
+	// Process heater delta-sigma modulator
+	if (sigma >= HEATER_MAX_POWER)
+	{
+		PORTD |= (1<<PD_HEATER | 1<<PD_HEAT_INDIC);
+		delta = -HEATER_MAX_POWER;	
+	}		
 	else
+	{
 		PORTD &= ~(1<<PD_HEAT_INDIC);
+		delta = 0;
+	}
+	sigma += delta + heaterPower;	
+	
 	// Reprogram timer0
 	TCNT0 = 256 - TRIAC_IMPULSE_TIME;		// Triac gate impulse time
 	TIFR |= (1<<TOV0);						// Clear interrupt flag
@@ -278,8 +270,7 @@ ISR(TIMER0_OVF_vect)
 	// Full period check
 	if ((p_state & (HALF_PERIOD_FLAG | STATE_MASK)) == (HALF_PERIOD_FLAG | 0x01))
 	{
-		// Full AC line period is done. Update controls.
-		
+		// Quater AC line period is done. Update motor controls.
 		temp = PORTD;
 		temp &= ~(1<<PD_M1 | 1<<PD_M2);
 		if ( rollState & SKIP_CURRENT_MOTOR_CTRL )
@@ -296,91 +287,16 @@ ISR(TIMER0_OVF_vect)
 			else if (rollState & ROLL_REV)
 				temp |= (1<<PD_M2);
 			PORTD = temp; 
+			
+			// Call main roll control function
 			controlRolling();
 		}
-			
-
-		// Process heater control 
-		if (heater_cnt == HEATER_REGULATION_PERIODS - 6)
-		{
-			 if (heater_reg_cnt == HEATER_PID_CALL_INTERVAL - 1)
-			 {
-				 heater_reg_cnt = 0;
-				 // Set flag for PID control
-				 heaterState |= READY_TO_UPDATE_HEATER;
-				 // Save temperature measure at current time
-			//	 samplePIDProcessValue();
-			 }
-			 else
-			 {
-				 heater_reg_cnt++;
-			 }
-		}			 
-		
-		
-		if (heater_cnt == HEATER_REGULATION_PERIODS - 1)
-		{
-			heater_cnt = 0;
-			// Copy new output value
-			ctrl_heater_sync = ctrl_heater;
-		}
-		else
-		{
-			heater_cnt++;
-		}
-
-			
-			
 	}
 	
-
+	
 	if ((p_state & STATE_MASK)  != 0x0F)
 		p_state++;
-
 }	
-
-
-/*
-
-#define MAX_POWER 100
-
-static int power = 14;
-
-
-static void set_output(int val)
-{
-	if (val)
-		__builtin_sysreg_write(__FLAGREGST,0x80);
-	else
-		__builtin_sysreg_write(__FLAGREGCL,~0x80);	
-}
-
-
-#pragma interrupt;
-static void timer0_isr(void)
-{
-	static int sigma = 0;
-	static int delta = 0;
-	
-	*(int *)0x30000002 = sigma;
-	
-	if (sigma >= MAX_POWER)
-	{
-		set_output(1);
-		delta = -MAX_POWER;	
-	}		
-	else
-	{
-		set_output(0);	
-		delta = 0;
-	}
-	
-	sigma += delta + power;
-	
-	
-}
-*/
-
 
 
 

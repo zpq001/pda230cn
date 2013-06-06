@@ -68,7 +68,7 @@ void init_system_io()
 	// Setup timer2 as 1ms system frequency generator
 	// 1/64 prescaler, CTC mode, OC2 disconnected
 	TCCR2 = (1<<CS22 | 1<<WGM21);
-	OCR2 = 249;
+	OCR2 = 249;						// 1ms @ 16MHz
 	TIMSK |= (1<<OCIE2);
 	
 	// Setup timer1 as beeper frequency generator
@@ -146,9 +146,12 @@ int main(void)
 	// Beep
 	SetBeeperFreq(1000);
 	StartBeep(200);
+	// ---- TODO: check out when PID will be finished ----//
 	// When we get here, few ADC counts have been sampled.
-	// Call PID controller function in order to initialize it's internal structures
+	update_normalized_adc();
+	// Call PID controler function in order to initialize it's internal structures
 	heaterInit();
+	//----------------------------------------------------//
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
 	// Clear timer
@@ -225,17 +228,19 @@ int main(void)
 			if (sys_timers.flags & EXPIRED_LOG)
 			{
 				
-				logU16p(adc_celsius);					// Actual temp (ADC)
+				logU16p(adc_celsius);					// Actual temp Celsius
 				logU16p(adc_oversampled);				// Actual temp (ADC), oversampled
 				logU16p(adc_filtered);					// Actual temp (ADC), oversampled, filtered
 				USART_sendstr("    ");
-				logU16p(dbg_SetTempPID);				// Temp setting, as input to PID
+				
+				logU16p(dbg_SetPointPID);				// Temp setting, as input to PID
 				logU16p(dbg_RealTempPID);				// Real temp, sampled for PID input
 				
 				logI32p(dbg_PID_p_term);				// p term
 				logI32p(dbg_PID_d_term);				// d term
 				logI32p(dbg_PID_i_term);				// i term
 				USART_sendstr("    ");
+				
 				logU16p(dbg_PID_output);				// PID output
 			
 				USART_sendstr("\n\r");

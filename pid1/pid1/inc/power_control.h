@@ -27,15 +27,8 @@ MOTOR	________________________________________________|*************************
 #define SYNC_LOST_TIMEOUT			32		// in units of 64 us
 
 
-
 // Regulation params
-#define HEATER_REGULATION_PERIODS	50		// Number of whole periods of AC voltage for one heater regulation cycle
-											// Also specifies amount of heater control gradations (0 to HEATER_REGULATION_PERIODS-1)
-#define HEATER_PID_CALL_INTERVAL	2		// Number of heater regulation cycles between PID regulator calls
-
-
-
-
+#define HEATER_MAX_POWER			100		// Heater power control, [0 : HEATER_MAX_POWER]
 
 
 //---------------------------------//
@@ -49,11 +42,6 @@ MOTOR	________________________________________________|*************************
 //---------------------------------//
 // User definitions
 
-// Heater:
-// heaterState	bits
-#define READY_TO_UPDATE_HEATER		0x80
-#define HEATER_ENABLED				0x01
-#define CALIBRATION_ACTIVE			0x02
 
 // rollState bits:
 // Flags:
@@ -65,24 +53,18 @@ MOTOR	________________________________________________|*************************
 #define CYCLE_ROLL_DONE				0x10
 #define ROLL_DIR_CHANGED			0x20	// Set only automatically during cycle rolling
 
-extern uint8_t p_state;				// for read-only
 
-extern uint8_t ctrl_heater;			// for read-only
-extern uint8_t heaterState;
 
-extern uint8_t rollState;
+extern uint8_t p_state;				// For read-only
+extern uint8_t rollState;			
 extern uint8_t activeRollCycle;
 
 
+// User functions to control heater intensity
+void setHeaterPower(uint16_t value);
 
-
-// User function to control motor rotation
+// User functions to control motor rotation
 void setMotorDirection(uint8_t dir);
-// User function to control heater intensity
-void setHeaterControl(uint8_t value);
-// User function to request heater control update on next AC line period
-void forceHeaterControlUpdate(void);
-
 uint8_t startCycleRolling(void);
 void stopCycleRolling(uint8_t doResetPoints);
 uint8_t isTopPointValid(void);

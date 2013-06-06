@@ -49,6 +49,8 @@ cParams_t cp;		// Calibration params
 
 
 
+uint8_t heaterState = 0;				// Global heater flags
+
 uint8_t autoPowerOffState = 0;
 
 
@@ -61,11 +63,10 @@ RingBufU16_t ringBufDterm = {
 
 
 //------- Debug --------//
-uint8_t dbg_SetTempCelsius;		// Temperature setting, Celsius degree
-uint16_t dbg_SetTempPID;		// Temperature setting, PID input
-uint8_t dbg_RealTempCelsius;	// Real temperature, Celsius degree
-uint16_t dbg_RealTempPID;		// Real temperature, PID input
-//uint16_t dbg_RealTempPIDfiltered;		// Real temperature, PID input, filtered
+uint8_t 	dbg_SetPointCelsius;	// Temperature setting, Celsius degree
+uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
+uint8_t 	dbg_RealTempCelsius;	// Real temperature, Celsius degree
+uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
 
 int16_t dbg_PID_p_term;
 int16_t dbg_PID_d_term;
@@ -171,7 +172,7 @@ void processRollControl(void)
 			
 	}
 
-	// Indicate direction by LEDs
+	//----- LED indication ------//
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);
 	if (rollState & ROLL_FWD)
 		setExtraLeds(LED_ROTFWD);
@@ -181,32 +182,28 @@ void processRollControl(void)
 
 
 
-
-void samplePIDProcessValue(void)
-{
-	PIDsampledADC = getNormalizedRingU16(&ringBufADC);
-	//PIDsampledADC = ringBufADC.summ >> 2;
-}
-
 void heaterInit(void)
 {
-	samplePIDProcessValue();
-	processPID(0,PIDsampledADC);
+	//processPID(0,adc_normalized);
+	processPID(0,adc_filtered);			// oversampled PID control
 }
 
 
 void processHeaterControl(void)
 {
-	static uint16_t set_value_adc;		// static for debug
-	static uint16_t pid_output;			// static for debug
+	uint16_t set_value_adc;	
+	uint16_t setPoint;
+	uint16_t processValue;
+	uint16_t pid_output;
 	
+	// TODO: check code size with local copy of heaterState
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
 	{
 		heaterState ^= HEATER_ENABLED;
-		// Make heater controller set update_flag on next call
-		forceHeaterControlUpdate();
+		// Force update heater power
+		sys_timers.flags |= UPDATE_PID;		// Not very good approach if UPDATE_PID flag is used somewhere else
 	}
 	
 	// Process auto power off control
@@ -215,43 +212,48 @@ void processHeaterControl(void)
 		heaterState &= ~HEATER_ENABLED;
 	}		
 	
-	
 	// Check if heater control should be updated
-	// PID call interval is a multiple of AC line periods, computed as HEATER_REGULATION_PERIODS * 20ms * HEATER_PID_CALL_INTERVAL
-	if (heaterState & READY_TO_UPDATE_HEATER)
+	// PID call interval is a multiple of Celsius update interval. 
+	if (sys_timers.flags & UPDATE_PID)
 	{
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
 
+		//setPoint = set_value_adc;
+		//processValue = adc_normalized;		// normal PID control
+		setPoint = set_value_adc * 5;
+		processValue = adc_filtered;		// oversampled PID control
+		
 		// Process PID
-		//pid_output = processPID(set_value_adc,PIDsampledADC);
-		pid_output = processPID(set_value_adc * 5, adc_filtered);		// oversampled PID control
+		//pid_output = processPID(setPoint, processValue);		
+		
+		// DSM test only
+		pid_output = (p.setup_temp_value < 50) ? 0 : p.setup_temp_value - 50;
 					
-		// Heater control is updated only when flag is set, even if heater must be powered OFF
-		if (heaterState & HEATER_ENABLED)
-			setHeaterControl(pid_output);	// Flag is cleared automatically
-		else
-			setHeaterControl(0);
+		// If heater is disabled, override output
+		if (!(heaterState & HEATER_ENABLED))
+			pid_output = 0;
 			
+		// Set new heater power value	
+		setHeaterPower(pid_output);	
+		
 		//------- Debug --------//		
-		dbg_RealTempPID = adc_filtered;
+		// PID input:
+		dbg_SetPointCelsius = (heaterState & HEATER_ENABLED) ? p.setup_temp_value : 0;
+		dbg_SetPointPID = (heaterState & HEATER_ENABLED) ? setPoint : 0;
+		dbg_RealTempCelsius = adc_filtered;
+		dbg_RealTempPID = processValue;
+		// PID output:
+		// updated in PID controller function
+		
 	}	
 		
 	
-	//------- Debug --------//
+	//----- LED indication ------//
 	if (heaterState & HEATER_ENABLED)
-	{
 		setExtraLeds(LED_HEATER);
-		dbg_SetTempCelsius = p.setup_temp_value;
-		dbg_SetTempPID = set_value_adc * 5;
-	}
 	else
-	{
-		dbg_SetTempCelsius = 0;
-		dbg_SetTempPID = 0;
 		clearExtraLeds(LED_HEATER);
-	}
-	
 	
 }
 

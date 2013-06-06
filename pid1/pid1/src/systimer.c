@@ -28,17 +28,13 @@ SoftTimer8b_t menuUpdateTimer = {
 };	
 
 
-// ----------------------- //
-// New timers design
-// ----------------------- //
-
-
 sys_timers_t sys_timers = {
-	.celsius_upd_counter = 1,					// To force Celsius update 
-	.log_counter = 1,							// To force log message
-	.counter_10sec = COUNTER_10SEC_INTERVAL,
-	.counter_1min = COUNTER_1MIN_INTERVAL,
-	.poff_counter = 0
+	.celsius_upd_counter = 1,					// To force Celsius update  - timer is decremental
+	.log_counter = 1,							// To force log message		- timer is decremental
+	.counter_10sec = COUNTER_10SEC_INTERVAL, 	//							- timer is decremental
+	.counter_1min = COUNTER_1MIN_INTERVAL,		//							- timer is decremental
+	.poff_counter = 0,							//							- timer is incremental
+	.pid_update_counter = PID_UPDATE_INTERVAL	//							- timer is decremental
 };
 
 
@@ -52,6 +48,13 @@ void processSystemTimers(void)
 	{
 		sys_timers.celsius_upd_counter = CELSIUS_UDPATE_INTERVAL;
 		sys_timers.flags |= EXPIRED_CELSIUS;
+		
+		// Process PID update counter
+		if (--sys_timers.pid_update_counter == 0)
+		{
+			sys_timers.pid_update_counter = PID_UPDATE_INTERVAL;
+			sys_timers.flags |= UPDATE_PID;
+		}
 	}
 	
 	// Process log counter
@@ -89,6 +92,7 @@ void resetAutoPowerOffCounter(void)
 {
 	sys_timers.poff_counter = 0;
 }
+
 
 // ----------------------- //
 // ----------------------- //
