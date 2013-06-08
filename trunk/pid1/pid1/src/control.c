@@ -219,10 +219,11 @@ void processHeaterControl(void)
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
 
-		//setPoint = set_value_adc;
-		//processValue = adc_normalized;		// normal PID control
 		setPoint = set_value_adc * 5;
-		processValue = adc_filtered;		// oversampled PID control
+		setPoint >>= 1;
+		processValue = adc_filtered >> 1;	// normal PID control
+		//setPoint = set_value_adc * 5;
+		//processValue = adc_filtered;		// oversampled PID control
 		
 		// Process PID
 		pid_output = processPID(setPoint, processValue);		
@@ -264,7 +265,7 @@ void processHeaterControl(void)
 
 
 
-
+/*
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
 	int16_t ek;					// current error
@@ -306,7 +307,107 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	dbg_PID_output = pid_output;		// full-scale output
 	return pid_output;
 }
+*/
 
+uint8_t processPID(uint16_t setPoint, uint16_t processValue)
+{
+	int16_t error, p_term, i_term, d_term, temp;
+	static uint16_t lastProcessValue;
+	static int16_t integAcc = 0;
+	
+	error = setPoint - processValue;
+	
+	
+	//------ Calculate P term --------//
+	
+	if (error > 100 )
+	{
+		p_term = 2000;	
+	}
+	else if (error < -100 )
+	{
+		p_term = -2000 ;	
+	}
+	else
+	{
+		p_term = error * Kp;
+	}
+	
+	//------ Calculate I term --------//
+	/* 12_1
+	integAcc += error;
+	
+	if (integAcc > 1000 )
+	{
+		integAcc = 1000;
+	}
+	else if (integAcc < -1000)
+	{
+		integAcc = -1000;
+	}
+	i_term = integAcc * Ki;
+	i_term /= 100;
+	*/
+	/* 12_3
+		integAcc += error;
+		
+		if (integAcc > 2000 )
+		{
+			integAcc = 2000;
+		}
+		else if (integAcc < -2000)
+		{
+			integAcc = -2000;
+		}
+		i_term = integAcc * Ki;
+		//i_term /= 100;	//12_2
+		i_term /= 50;
+	*/
+	
+	integAcc += error;
+	
+	if (integAcc > 1000 )
+	{
+		integAcc = 1000;
+	}
+	else if (integAcc < -1000)
+	{
+		integAcc = -1000;
+	}
+	i_term = integAcc * Ki;
+	i_term /= 20;
+	
+	
+	//------ Calculate D term --------//
+	lastProcessValue = ringBufDterm.summ;
+	addToRingU16(&ringBufDterm, processValue);
+	processValue = ringBufDterm.summ;
+	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
+
+	
+	//--------- Summ terms -----------//
+	temp = (p_term + i_term + d_term) / SCALING_FACTOR;
+	
+	if (temp > 100)
+	{
+		temp = 100;
+	}
+	else if (temp < 0)
+	{
+		temp = 0;
+	}
+	
+	
+	//------- Debug --------//
+	dbg_PID_p_term = p_term;
+	dbg_PID_d_term = d_term;
+	dbg_PID_i_term = i_term;
+	dbg_PID_output = temp;
+	
+	
+	return temp;
+	
+}
 
 /*
 

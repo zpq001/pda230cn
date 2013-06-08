@@ -76,17 +76,34 @@ typedef struct
 #define Kd		50
 #define INC_SCALING_FACTOR	100
 */
-/* 11_10
+/* 11_10		Ts = 5s
 #define Kp		100
 #define Ki		1
 #define Kd		50
 #define INC_SCALING_FACTOR	100
 */
-// 11_11
+/* 11_11		Ts = 5s
 #define Kp		50
 #define Ki		1
 #define Kd		40
 #define INC_SCALING_FACTOR	100
+*/
+/* 11_12		Ts = 5s				<- not bad
+#define Kp		50
+#define Ki		1
+#define Kd		40
+#define INC_SCALING_FACTOR	100
+*/
+/* 12_1			Ts = 2s
+#define Kp		10
+#define Ki		5
+#define Kd		80
+#define SCALING_FACTOR	5
+*/
+#define Kp		10
+#define Ki		5
+#define Kd		80
+#define SCALING_FACTOR	5
 
  //--------------------------------------------//
 
