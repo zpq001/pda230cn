@@ -100,9 +100,28 @@ typedef struct
 #define Kd		80
 #define SCALING_FACTOR	5
 */
+/*	12_2 12_3 12_4
 #define Kp		10
 #define Ki		5
 #define Kd		80
+#define SCALING_FACTOR	5
+*/
+/*	// 12_5		Ts = 2s
+#define Kp		10
+#define Ki		5
+#define Kd		80
+#define SCALING_FACTOR	5
+*/
+/*		// 12_6
+#define Kp		10
+#define Ki		5
+#define Kd		20
+#define SCALING_FACTOR	5
+*/
+
+#define Kp		10
+#define Ki		5
+#define Kd		50
 #define SCALING_FACTOR	5
 
  //--------------------------------------------//

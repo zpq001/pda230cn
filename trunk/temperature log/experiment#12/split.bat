@@ -1,1 +1,1 @@
-"../tools/TextColumnSplitter.exe" -file "experiment#12_4.log" -split " " -pref "col_" -ext ".txt"
+"../tools/TextColumnSplitter.exe" -file "experiment#12_6.log" -split " " -pref "col_" -ext ".txt"

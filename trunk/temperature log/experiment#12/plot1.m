@@ -6,7 +6,7 @@ if file ~= -1
     fclose(file);
 end
 
-file = fopen('col_8.txt','r');
+file = fopen('col_6.txt','r');
 if file ~= -1
     pid_output = fscanf(file, '%d');
     fclose(file);

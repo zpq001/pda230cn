@@ -154,6 +154,17 @@ uint16_t iir_u16(uint16_t *data, filter8bit_core_t* iir_core)
 	return (uint16_t)(summ / iir_core->dc_gain);
 }
 
+int16_t iir_i16(int16_t *data, filter8bit_core_t* iir_core)
+{
+	int32_t summ = 0;
+	uint8_t i;
+	
+	for (i=0; i<iir_core->n; i++)
+	summ += (int32_t)data[i] * iir_core->coeffs[i];
+	
+	
+	return (int16_t)(summ / iir_core->dc_gain);
+}
 
 
 
