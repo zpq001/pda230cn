@@ -1,0 +1,46 @@
+﻿Build started 10.06.2013 17:29:13.
+     1>Project "E:\vs_projects\RSim\RSim\RSim.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\RSim.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\inc /I.\src /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt RSim.cpp
+         RSim.cpp
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(30): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(31): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(59): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(82): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(87): warning C4244: '=' : conversion from 'int16_t' to 'uint8_t', possible loss of data
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(115): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(116): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(117): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(118): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(119): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>e:\vs_projects\rsim\rsim\rsim.cpp(120): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\vs_projects\RSim\Debug\RSim.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\RSim.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\vs_projects\RSim\Debug\RSim.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\vs_projects\RSim\Debug\RSim.lib" /MACHINE:X86 Debug\RSim.exe.embed.manifest.res
+         Debug\RSim.obj
+         Debug\plant.obj
+         Debug\regul.obj
+         Debug\stdafx.obj
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\RSim.exe.embed.manifest" /manifest Debug\RSim.exe.intermediate.manifest
+         All outputs are up-to-date.
+       LinkEmbedManifest:
+         All outputs are up-to-date.
+         RSim.vcxproj -> E:\vs_projects\RSim\Debug\RSim.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\RSim.unsuccessfulbuild".
+         Touching "Debug\RSim.lastbuildstate".
+     1>Done Building Project "E:\vs_projects\RSim\RSim\RSim.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.35

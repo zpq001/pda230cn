@@ -24,7 +24,7 @@ typedef struct {
 typedef struct {
 	uint8_t n;
 	uint16_t dc_gain;
-	uint8_t coeffs[];
+	int8_t coeffs[];
 } filter8bit_core_t;
 
 
