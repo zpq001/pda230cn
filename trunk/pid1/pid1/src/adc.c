@@ -27,14 +27,8 @@ RingBufU16_t ringBufADC = {
 
 
 uint16_t filter_buffer[20];
-RingBufU16_t ringBufFilter = {
-	.length = 20,
-	.data = filter_buffer,
-	.stat = RINIT
-};
 
-
-filter8bit_core_t iir_filter_rect = {
+filter8bit_core_t fir_filter_rect = {
 	.coeffs = {
 		   11,
            21,
@@ -106,8 +100,7 @@ void update_normalized_adc()
 	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
 	adc_oversampled = ringBufADC.summ >> 2;
 	// Filter
-	addToRingU16(&ringBufFilter, adc_oversampled);
-	adc_filtered = iir_u16(filter_buffer, &iir_filter_rect);	
+	adc_filtered = fir_i16_i8(adc_oversampled, filter_buffer, &fir_filter_rect);	
 
 	// Enable interrupts from ADC
 	ADCSRA |= (1<<ADIE);
@@ -119,16 +112,8 @@ void update_Celsius(void)
 	adc_celsius = conv_ADC_to_Celsius(adc_normalized);
 }
 
-/*
-void adcTestFunc(void)
-{
-	
-	// Add new sample to the ring buffer
-	addToRingU16(&ringBufADC, 1000);
-	update_normalized_adc();
-	
-}
-*/
+
+
 
 
 ISR(ADC_vect)
@@ -141,28 +126,19 @@ ISR(ADC_vect)
 
 
 
-// IIR digital filter
-uint16_t iir_u16(uint16_t *data, filter8bit_core_t* iir_core)
+// FIR digital filter
+int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_core)
 {
-	uint32_t summ = 0;
+	int32_t summ;
 	uint8_t i;
 	
-	for (i=0; i<iir_core->n; i++)
-		summ += (uint32_t)data[i] * iir_core->coeffs[i];
-	
-	
-	return (uint16_t)(summ / iir_core->dc_gain);
-}
-
-int16_t iir_i16(int16_t *data, filter8bit_core_t* iir_core)
-{
-	int32_t summ = 0;
-	uint8_t i;
-	
-	for (i=0; i<iir_core->n; i++)
-	summ += (int32_t)data[i] * iir_core->coeffs[i];
-	
-	
+	summ = new_sample * iir_core->coeffs[0];
+	for (i=iir_core->n-1; i>0; i--)
+	{
+		samples[i] = samples[i-1];
+		summ += (int32_t)samples[i] * iir_core->coeffs[i];
+	}
+	samples[0] = new_sample;
 	return (int16_t)(summ / iir_core->dc_gain);
 }
 

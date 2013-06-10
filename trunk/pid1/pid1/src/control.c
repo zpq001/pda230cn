@@ -54,13 +54,7 @@ uint8_t heaterState = 0;				// Global heater flags
 uint8_t autoPowerOffState = 0;
 
 
-uint16_t pid_dterm_buffer[4];	// PID d-term input buffer
-RingBufU16_t ringBufDterm = {
-	.length = 4,
-	.data = pid_dterm_buffer,
-	.stat = RINIT
-};
-
+int16_t pid_dterm_buffer[4];			// PID d-term filter buffer
 
 filter8bit_core_t dterm_filter_core = {
 	.coeffs = {
@@ -346,36 +340,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	
 	//------ Calculate I term --------//
-	/* 12_1
-	integAcc += error;
-	
-	if (integAcc > 1000 )
-	{
-		integAcc = 1000;
-	}
-	else if (integAcc < -1000)
-	{
-		integAcc = -1000;
-	}
-	i_term = integAcc * Ki;
-	i_term /= 100;
-	*/
-	/* 12_3
-		integAcc += error;
-		
-		if (integAcc > 2000 )
-		{
-			integAcc = 2000;
-		}
-		else if (integAcc < -2000)
-		{
-			integAcc = -2000;
-		}
-		i_term = integAcc * Ki;
-		//i_term /= 100;	//12_2
-		i_term /= 50;
-	*/
-	
+
 	integAcc += error;
 	
 	if (integAcc > 1000 )
@@ -391,16 +356,9 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	
 	//------ Calculate D term --------//
-/*	12_5
-	lastProcessValue = ringBufDterm.summ;
-	addToRingU16(&ringBufDterm, processValue);
-	processValue = ringBufDterm.summ;
-	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
-*/
-	// 12_6
-	addToRingU16(&ringBufDterm, (lastProcessValue - processValue)*10);
+	// 13_1
+	d_term = fir_i16_i8((lastProcessValue - processValue)*10, pid_dterm_buffer, &dterm_filter_core);
 	lastProcessValue = processValue;
-	d_term = iir_i16(pid_dterm_buffer,&dterm_filter_core);
 	d_term = Kd * d_term;
 	
 	//--------- Summ terms -----------//
