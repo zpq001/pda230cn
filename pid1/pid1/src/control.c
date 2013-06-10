@@ -62,6 +62,18 @@ RingBufU16_t ringBufDterm = {
 };
 
 
+filter8bit_core_t dterm_filter_core = {
+	.coeffs = {
+		64,
+		66,
+		64,
+		59
+	},
+	.n = 4,
+	.dc_gain = 256
+};
+
+
 //------- Debug --------//
 uint8_t 	dbg_SetPointCelsius;	// Temperature setting, Celsius degree
 uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
@@ -370,20 +382,26 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	{
 		integAcc = 1000;
 	}
-	else if (integAcc < -1000)
+	else if (integAcc < 0)
 	{
-		integAcc = -1000;
+		integAcc = 0;
 	}
 	i_term = integAcc * Ki;
 	i_term /= 20;
 	
 	
 	//------ Calculate D term --------//
+/*	12_5
 	lastProcessValue = ringBufDterm.summ;
 	addToRingU16(&ringBufDterm, processValue);
 	processValue = ringBufDterm.summ;
 	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
-
+*/
+	// 12_6
+	addToRingU16(&ringBufDterm, (lastProcessValue - processValue)*10);
+	lastProcessValue = processValue;
+	d_term = iir_i16(pid_dterm_buffer,&dterm_filter_core);
+	d_term = Kd * d_term;
 	
 	//--------- Summ terms -----------//
 	temp = (p_term + i_term + d_term) / SCALING_FACTOR;
