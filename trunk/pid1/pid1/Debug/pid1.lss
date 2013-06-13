@@ -19,19 +19,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   7 .debug_aranges 00000408  00000000  00000000  0000293d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_info   00003e7b  00000000  00000000  00002d45  2**0
+  8 .debug_info   00003e81  00000000  00000000  00002d45  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_abbrev 0000142c  00000000  00000000  00006bc0  2**0
+  9 .debug_abbrev 0000142c  00000000  00000000  00006bc6  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_line   000018cf  00000000  00000000  00007fec  2**0
+ 10 .debug_line   000018cf  00000000  00000000  00007ff2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_frame  00000a04  00000000  00000000  000098bc  2**2
+ 11 .debug_frame  00000a04  00000000  00000000  000098c4  2**2
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_str    00001098  00000000  00000000  0000a2c0  2**0
+ 12 .debug_str    00001098  00000000  00000000  0000a2c8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_loc    00001f89  00000000  00000000  0000b358  2**0
+ 13 .debug_loc    00001f89  00000000  00000000  0000b360  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 00000348  00000000  00000000  0000d2e1  2**0
+ 14 .debug_ranges 00000348  00000000  00000000  0000d2e9  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -73,16 +73,16 @@ Disassembly of section .text:
       ba:	27 06                                               '.
 
 000000bc <menuJumpSet>:
-      bc:	01 06 00 03 a8 01 00 01 02 40 01 00 02 05 28 02     .........@....(.
-      cc:	00 01 01 80 03 00 83 01 40 05 00 82 01 00 05 04     ........@.......
-      dc:	00 04 68 05 02 00 07 a8 05 00 01 0b 28 0b 00 83     ..h.........(...
-      ec:	05 28 04 00 82 01 00 04 04 00 06 68 04 02 00 05     .(.........h....
+      bc:	01 c0 00 03 a8 01 00 01 02 40 01 00 02 05 28 02     .........@....(.
+      cc:	00 01 01 80 03 00 83 01 40 05 00 82 01 00 05 80     ........@.......
+      dc:	00 04 68 05 40 00 07 a8 05 00 01 0b 28 0b 00 83     ..h.@.......(...
+      ec:	05 28 04 00 82 01 00 04 80 00 06 68 04 40 00 05     .(.........h.@..
       fc:	a8 04 00 01 0c 28 0c 00 83 04 28 06 00 82 01 00     .....(....(.....
-     10c:	06 04 00 07 68 06 02 00 04 a8 06 00 01 09 00 07     ....h...........
-     11c:	00 82 01 00 07 04 00 05 68 07 02 00 06 a8 07 00     ........h.......
+     10c:	06 80 00 07 68 06 40 00 04 a8 06 00 01 09 00 07     ....h.@.........
+     11c:	00 82 01 00 07 80 00 05 68 07 40 00 06 a8 07 00     ........h.@.....
      12c:	01 0a 00 09 00 02 06 28 09 00 01 08 14 08 00 83     .......(........
      13c:	01 00 0a 00 02 07 28 0a 00 01 0d 14 0d 00 83 01     ......(.........
-     14c:	00 01 00 40 0e 00 02 00 40 0e 00 0e 76 01 01 00     ...@....@...v...
+     14c:	00 01 00 40 0e 00 02 00 40 0e 00 0e d5 01 01 00     ...@....@.......
 
 0000015c <__ctors_end>:
      15c:	11 24       	eor	r1, r1
@@ -713,23 +713,23 @@ ISR(ADC_vect)
 	
 	// Compose button state
 	composed_state = (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE));
-     528:	87 7f       	andi	r24, 0xF7	; 247
+     528:	8d 7f       	andi	r24, 0xFD	; 253
      52a:	90 e0       	ldi	r25, 0x00	; 0
 	if (button_action_up_short & BD_MENU)
-     52c:	20 fd       	sbrc	r18, 0
+     52c:	25 fd       	sbrc	r18, 5
 		composed_state |= BS_MENU;
      52e:	91 60       	ori	r25, 0x01	; 1
 	//if (button_action_up_long & BD_MENU)
 	if (button_action_long & BD_MENU)
-     530:	40 fd       	sbrc	r20, 0
+     530:	45 fd       	sbrc	r20, 5
 		composed_state |= BL_MENU;
      532:	92 60       	ori	r25, 0x02	; 2
 	if (button_action_rep & BD_UP)
-     534:	31 fd       	sbrc	r19, 1
+     534:	36 fd       	sbrc	r19, 6
 		composed_state |= BR_UP;	
      536:	94 60       	ori	r25, 0x04	; 4
 	if (button_action_rep & BD_DOWN)
-     538:	32 fd       	sbrc	r19, 2
+     538:	37 fd       	sbrc	r19, 7
 		composed_state |= BR_DOWN;
      53a:	98 60       	ori	r25, 0x08	; 8
 
@@ -780,7 +780,7 @@ void processRollControl(void)
 		// Control direction by buttons
 		if (button_action_down & BD_ROTFWD)
      56e:	80 91 ef 00 	lds	r24, 0x00EF
-     572:	84 ff       	sbrs	r24, 4
+     572:	82 ff       	sbrs	r24, 2
      574:	04 c0       	rjmp	.+8      	; 0x57e <processRollControl+0x38>
 		{
 			setMotorDirection(ROLL_FWD);	
@@ -791,7 +791,7 @@ void processRollControl(void)
      57c:	13 c0       	rjmp	.+38     	; 0x5a4 <processRollControl+0x5e>
 		}		
 		else if (button_action_down & BD_ROTREV)
-     57e:	85 ff       	sbrs	r24, 5
+     57e:	84 ff       	sbrs	r24, 4
      580:	04 c0       	rjmp	.+8      	; 0x58a <processRollControl+0x44>
 		{
 			setMotorDirection(ROLL_REV);
@@ -803,7 +803,7 @@ void processRollControl(void)
 		}		
 		else if (button_action_long & BD_CYCLE)
      58a:	80 91 ec 00 	lds	r24, 0x00EC
-     58e:	87 ff       	sbrs	r24, 7
+     58e:	83 ff       	sbrs	r24, 3
      590:	04 c0       	rjmp	.+8      	; 0x59a <processRollControl+0x54>
 		{
 			stopCycleRolling(1);		// Reset points and disable CYCLE mode (if was enabled)
@@ -838,7 +838,7 @@ void processRollControl(void)
 			
 		if (button_action_up_short & BD_CYCLE)
      5a8:	80 91 ed 00 	lds	r24, 0x00ED
-     5ac:	87 ff       	sbrs	r24, 7
+     5ac:	83 ff       	sbrs	r24, 3
      5ae:	0e c0       	rjmp	.+28     	; 0x5cc <processRollControl+0x86>
 		{
 			if (rollState & ROLL_CYCLE)
@@ -946,20 +946,20 @@ void processRollControl(void)
 
 	//----- LED indication ------//
 	clearExtraLeds(LED_ROTFWD | LED_ROTREV);
-     620:	80 e3       	ldi	r24, 0x30	; 48
+     620:	88 e1       	ldi	r24, 0x18	; 24
      622:	b1 d2       	rcall	.+1378   	; 0xb86 <clearExtraLeds>
 	if (rollState & ROLL_FWD)
      624:	80 91 10 01 	lds	r24, 0x0110
      628:	80 ff       	sbrs	r24, 0
      62a:	02 c0       	rjmp	.+4      	; 0x630 <processRollControl+0xea>
 		setExtraLeds(LED_ROTFWD);
-     62c:	80 e1       	ldi	r24, 0x10	; 16
+     62c:	88 e0       	ldi	r24, 0x08	; 8
      62e:	03 c0       	rjmp	.+6      	; 0x636 <processRollControl+0xf0>
 	else if (rollState & ROLL_REV)
      630:	81 ff       	sbrs	r24, 1
      632:	03 c0       	rjmp	.+6      	; 0x63a <processRollControl+0xf4>
 		setExtraLeds(LED_ROTREV);
-     634:	80 e2       	ldi	r24, 0x20	; 32
+     634:	80 e1       	ldi	r24, 0x10	; 16
 }
      636:	cf 91       	pop	r28
 	//----- LED indication ------//
@@ -1198,7 +1198,7 @@ void processHeaterControl(void)
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
      75e:	80 91 f0 00 	lds	r24, 0x00F0
-     762:	86 ff       	sbrs	r24, 6
+     762:	80 ff       	sbrs	r24, 0
      764:	0b c0       	rjmp	.+22     	; 0x77c <processHeaterControl+0x26>
 	{
 		heaterState ^= HEATER_ENABLED;
@@ -1326,7 +1326,7 @@ void processHeaterControl(void)
      80e:	80 ff       	sbrs	r24, 0
      810:	06 c0       	rjmp	.+12     	; 0x81e <processHeaterControl+0xc8>
 		setExtraLeds(LED_HEATER);
-     812:	80 e4       	ldi	r24, 0x40	; 64
+     812:	84 e0       	ldi	r24, 0x04	; 4
 	else
 		clearExtraLeds(LED_HEATER);
 	
@@ -1344,7 +1344,7 @@ void processHeaterControl(void)
      81c:	ae c1       	rjmp	.+860    	; 0xb7a <setExtraLeds>
 	else
 		clearExtraLeds(LED_HEATER);
-     81e:	80 e4       	ldi	r24, 0x40	; 64
+     81e:	84 e0       	ldi	r24, 0x04	; 4
 	
 }
      820:	df 91       	pop	r29
@@ -2565,7 +2565,7 @@ void mf_autopoffDo(void)
      cd8:	80 91 f0 00 	lds	r24, 0x00F0
      cdc:	90 91 f1 00 	lds	r25, 0x00F1
      ce0:	9c 01       	movw	r18, r24
-     ce2:	22 70       	andi	r18, 0x02	; 2
+     ce2:	20 74       	andi	r18, 0x40	; 64
      ce4:	34 70       	andi	r19, 0x04	; 4
      ce6:	23 2b       	or	r18, r19
      ce8:	31 f0       	breq	.+12     	; 0xcf6 <mf_autopoffDo+0x44>
@@ -2580,7 +2580,7 @@ void mf_autopoffDo(void)
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
-     cf6:	84 70       	andi	r24, 0x04	; 4
+     cf6:	80 78       	andi	r24, 0x80	; 128
      cf8:	98 70       	andi	r25, 0x08	; 8
      cfa:	89 2b       	or	r24, r25
      cfc:	49 f0       	breq	.+18     	; 0xd10 <mf_autopoffDo+0x5e>
@@ -2737,7 +2737,7 @@ void mf_calib2Do(void)
      dd0:	80 91 f0 00 	lds	r24, 0x00F0
      dd4:	90 91 f1 00 	lds	r25, 0x00F1
      dd8:	9c 01       	movw	r18, r24
-     dda:	22 70       	andi	r18, 0x02	; 2
+     dda:	20 74       	andi	r18, 0x40	; 64
      ddc:	34 70       	andi	r19, 0x04	; 4
      dde:	23 2b       	or	r18, r19
      de0:	31 f0       	breq	.+12     	; 0xdee <mf_calib2Do+0x44>
@@ -2751,7 +2751,7 @@ void mf_calib2Do(void)
      dec:	09 c0       	rjmp	.+18     	; 0xe00 <mf_calib2Do+0x56>
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
-     dee:	84 70       	andi	r24, 0x04	; 4
+     dee:	80 78       	andi	r24, 0x80	; 128
      df0:	98 70       	andi	r25, 0x08	; 8
      df2:	89 2b       	or	r24, r25
      df4:	39 f0       	breq	.+14     	; 0xe04 <mf_calib2Do+0x5a>
@@ -2838,7 +2838,7 @@ void mf_calib1Do(void)
      e6c:	80 91 f0 00 	lds	r24, 0x00F0
      e70:	90 91 f1 00 	lds	r25, 0x00F1
      e74:	9c 01       	movw	r18, r24
-     e76:	22 70       	andi	r18, 0x02	; 2
+     e76:	20 74       	andi	r18, 0x40	; 64
      e78:	34 70       	andi	r19, 0x04	; 4
      e7a:	23 2b       	or	r18, r19
      e7c:	31 f0       	breq	.+12     	; 0xe8a <mf_calib1Do+0x44>
@@ -2852,7 +2852,7 @@ void mf_calib1Do(void)
      e88:	09 c0       	rjmp	.+18     	; 0xe9c <mf_calib1Do+0x56>
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
-     e8a:	84 70       	andi	r24, 0x04	; 4
+     e8a:	80 78       	andi	r24, 0x80	; 128
      e8c:	98 70       	andi	r25, 0x08	; 8
      e8e:	89 2b       	or	r24, r25
      e90:	39 f0       	breq	.+14     	; 0xea0 <mf_calib1Do+0x5a>
@@ -2913,7 +2913,7 @@ void mf_calib1Do(void)
 void mf_actpoffSelect(void)
 {
 	clearExtraLeds(LED_TEMP | LED_ROLL);
-     ee2:	83 e0       	ldi	r24, 0x03	; 3
+     ee2:	80 ec       	ldi	r24, 0xC0	; 192
      ee4:	50 de       	rcall	.-864    	; 0xb86 <clearExtraLeds>
 	autoPowerOffState = AUTO_POFF_ACTIVE;
      ee6:	81 e0       	ldi	r24, 0x01	; 1
@@ -2927,7 +2927,7 @@ void mf_actpoffSelect(void)
 void mf_leafSelect(void)
 {
 	clearExtraLeds(LED_TEMP | LED_ROLL);
-     eee:	83 e0       	ldi	r24, 0x03	; 3
+     eee:	80 ec       	ldi	r24, 0xC0	; 192
      ef0:	4a de       	rcall	.-876    	; 0xb86 <clearExtraLeds>
 	userTimer.FA_GE = 1;	
      ef2:	e9 e0       	ldi	r30, 0x09	; 9
@@ -2960,7 +2960,7 @@ void mf_calibSelect(void)
 void mf_rollLeave(void)
 {
 	clearExtraLeds(LED_ROLL);
-     f12:	82 e0       	ldi	r24, 0x02	; 2
+     f12:	80 e4       	ldi	r24, 0x40	; 64
      f14:	38 de       	rcall	.-912    	; 0xb86 <clearExtraLeds>
 	userTimer.Enabled = 0;
      f16:	e9 e0       	ldi	r30, 0x09	; 9
@@ -2977,7 +2977,7 @@ void mf_rollLeave(void)
 void mf_setTempSelect(void)
 {
 	clearExtraLeds(LED_TEMP);
-     f22:	81 e0       	ldi	r24, 0x01	; 1
+     f22:	80 e8       	ldi	r24, 0x80	; 128
      f24:	30 de       	rcall	.-928    	; 0xb86 <clearExtraLeds>
 	mf_leafSelectAct();		// setup and start timer
      f26:	7f ce       	rjmp	.-770    	; 0xc26 <mf_leafSelectAct>
@@ -2989,7 +2989,7 @@ void mf_setTempSelect(void)
 void mf_realTempLeave(void)
 {
 	clearExtraLeds(LED_TEMP);
-     f28:	81 e0       	ldi	r24, 0x01	; 1
+     f28:	80 e8       	ldi	r24, 0x80	; 128
      f2a:	2d ce       	rjmp	.-934    	; 0xb86 <clearExtraLeds>
 
 00000f2c <mf_sndenDo>:
@@ -3023,7 +3023,7 @@ void mf_sndenDo(void)
 	if (button_state & (BD_UP | BD_DOWN))
      f52:	80 91 f0 00 	lds	r24, 0x00F0
      f56:	90 91 f1 00 	lds	r25, 0x00F1
-     f5a:	86 70       	andi	r24, 0x06	; 6
+     f5a:	80 7c       	andi	r24, 0xC0	; 192
      f5c:	99 27       	eor	r25, r25
      f5e:	89 2b       	or	r24, r25
      f60:	49 f0       	breq	.+18     	; 0xf74 <mf_sndenDo+0x48>
@@ -3128,7 +3128,7 @@ void mf_rollDo(void)
      fdc:	80 91 f0 00 	lds	r24, 0x00F0
      fe0:	90 91 f1 00 	lds	r25, 0x00F1
      fe4:	9c 01       	movw	r18, r24
-     fe6:	22 70       	andi	r18, 0x02	; 2
+     fe6:	20 74       	andi	r18, 0x40	; 64
      fe8:	34 70       	andi	r19, 0x04	; 4
      fea:	23 2b       	or	r18, r19
      fec:	31 f0       	breq	.+12     	; 0xffa <mf_rollDo+0x44>
@@ -3142,7 +3142,7 @@ void mf_rollDo(void)
      ff8:	09 c0       	rjmp	.+18     	; 0x100c <mf_rollDo+0x56>
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
-     ffa:	84 70       	andi	r24, 0x04	; 4
+     ffa:	80 78       	andi	r24, 0x80	; 128
      ffc:	98 70       	andi	r25, 0x08	; 8
      ffe:	89 2b       	or	r24, r25
     1000:	39 f0       	breq	.+14     	; 0x1010 <mf_rollDo+0x5a>
@@ -3235,7 +3235,7 @@ void mf_rollDo(void)
 void mf_rollSelect(void)
 {
 	setExtraLeds(LED_ROLL);
-    1084:	82 e0       	ldi	r24, 0x02	; 2
+    1084:	80 e4       	ldi	r24, 0x40	; 64
     1086:	79 dd       	rcall	.-1294   	; 0xb7a <setExtraLeds>
 	mf_leafSelectAct();		// setup and start timer
     1088:	ce cd       	rjmp	.-1124   	; 0xc26 <mf_leafSelectAct>
@@ -3273,7 +3273,7 @@ void mf_setTempDo(void)
     10b0:	80 91 f0 00 	lds	r24, 0x00F0
     10b4:	90 91 f1 00 	lds	r25, 0x00F1
     10b8:	9c 01       	movw	r18, r24
-    10ba:	22 70       	andi	r18, 0x02	; 2
+    10ba:	20 74       	andi	r18, 0x40	; 64
     10bc:	34 70       	andi	r19, 0x04	; 4
     10be:	23 2b       	or	r18, r19
     10c0:	31 f0       	breq	.+12     	; 0x10ce <mf_setTempDo+0x44>
@@ -3288,7 +3288,7 @@ void mf_setTempDo(void)
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
-    10ce:	84 70       	andi	r24, 0x04	; 4
+    10ce:	80 78       	andi	r24, 0x80	; 128
     10d0:	98 70       	andi	r25, 0x08	; 8
     10d2:	89 2b       	or	r24, r25
     10d4:	49 f0       	breq	.+18     	; 0x10e8 <mf_setTempDo+0x5e>
@@ -3333,12 +3333,12 @@ static void restartMenuTimer(void)
     1108:	84 ff       	sbrs	r24, 4
     110a:	03 c0       	rjmp	.+6      	; 0x1112 <mf_setTempDo+0x88>
 		setExtraLeds(LED_TEMP);
-    110c:	81 e0       	ldi	r24, 0x01	; 1
+    110c:	80 e8       	ldi	r24, 0x80	; 128
     110e:	35 dd       	rcall	.-1430   	; 0xb7a <setExtraLeds>
     1110:	02 c0       	rjmp	.+4      	; 0x1116 <mf_setTempDo+0x8c>
 	else
 		clearExtraLeds(LED_TEMP);
-    1112:	81 e0       	ldi	r24, 0x01	; 1
+    1112:	80 e8       	ldi	r24, 0x80	; 128
     1114:	38 dd       	rcall	.-1424   	; 0xb86 <clearExtraLeds>
 }
     1116:	27 96       	adiw	r28, 0x07	; 7
@@ -3358,7 +3358,7 @@ static void restartMenuTimer(void)
 void mf_realTempSelect(void)
 {
 	setExtraLeds(LED_TEMP);
-    1128:	81 e0       	ldi	r24, 0x01	; 1
+    1128:	80 e8       	ldi	r24, 0x80	; 128
     112a:	27 cd       	rjmp	.-1458   	; 0xb7a <setExtraLeds>
 
 0000112c <getMenuFunctionRecord.constprop.0>:
@@ -4179,7 +4179,7 @@ int main(void)
 			}
 			else if (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_HEATCTRL))
     14c6:	80 91 ef 00 	lds	r24, 0x00EF
-    14ca:	87 74       	andi	r24, 0x47	; 71
+    14ca:	81 7e       	andi	r24, 0xE1	; 225
     14cc:	31 f0       	breq	.+12     	; 0x14da <main+0x9c>
 			{
 				SetBeeperFreq(1000);
