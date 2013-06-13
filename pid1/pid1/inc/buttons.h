@@ -20,13 +20,13 @@
 // BL = Button Long, bit is set when button is released after long period of time
 
 
-#define BD_MENU		0x01
-#define BD_UP		0x02
-#define BD_DOWN		0x04
-#define BD_ROTFWD	0x10
-#define BD_ROTREV	0x20
-#define BD_HEATCTRL	0x40
-#define BD_CYCLE	0x80
+#define BD_MENU		0x20
+#define BD_UP		0x40
+#define BD_DOWN		0x80
+#define BD_ROTFWD	0x04
+#define BD_ROTREV	0x10
+#define BD_HEATCTRL	0x01
+#define BD_CYCLE	0x08
 
 #define BS_MENU		0x0100	// short menu button press
 #define BL_MENU		0x0200	// long menu button press 

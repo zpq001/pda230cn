@@ -972,20 +972,20 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3e7b
+.debug_info     0x00000000     0x3e81
  *(.debug_info)
  .debug_info    0x00000000      0x4b2 src/adc.o
  .debug_info    0x000004b2      0x17f src/buttons.o
- .debug_info    0x00000631      0x956 src/control.o
- .debug_info    0x00000f87      0x98f src/led_indic.o
- .debug_info    0x00001916      0x21c src/led_indic_hw.o
- .debug_info    0x00001b32     0x106e src/menu.o
- .debug_info    0x00002ba0      0x138 src/my_string.o
- .debug_info    0x00002cd8      0x81d src/pid1.o
- .debug_info    0x000034f5      0x348 src/power_control.o
- .debug_info    0x0000383d      0x161 src/soft_timer.o
- .debug_info    0x0000399e      0x3fb src/systimer.o
- .debug_info    0x00003d99       0xe2 src/usart.o
+ .debug_info    0x00000631      0x953 src/control.o
+ .debug_info    0x00000f84      0x98f src/led_indic.o
+ .debug_info    0x00001913      0x21c src/led_indic_hw.o
+ .debug_info    0x00001b2f     0x1077 src/menu.o
+ .debug_info    0x00002ba6      0x138 src/my_string.o
+ .debug_info    0x00002cde      0x81d src/pid1.o
+ .debug_info    0x000034fb      0x348 src/power_control.o
+ .debug_info    0x00003843      0x161 src/soft_timer.o
+ .debug_info    0x000039a4      0x3fb src/systimer.o
+ .debug_info    0x00003d9f       0xe2 src/usart.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev   0x00000000     0x142c
