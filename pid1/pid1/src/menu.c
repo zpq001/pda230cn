@@ -228,7 +228,7 @@ static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCon
 			{
 				nextItem.ItemID = jRecord.NextItem;			// switch to next menu item
 				nextItem.ItemTimeout = jRecord.Flags & TIMEOUT_MASK;
-				nextItem.ShiftRight = (jRecord.Flags & SHIFT_RIGHT) ? 1 : 0;
+				nextItem.ShiftRight = (jRecord.Flags & SHIFT_RIGHT) ? 1 : 0;		// TODO - optimize flags
 				nextItem.ShiftLeft = (jRecord.Flags & SHIFT_LEFT) ? 1 : 0;
 				break;
 			}
@@ -625,7 +625,7 @@ void mf_cdone1Select(void)
 	cp.cpoint1 = cpoint1_copy;
 	// Calculate new coefficient for temperature conversion
 	calculateCoeffs();
-	saveCalibrationToEEPROM();
+	saveCalibrationToEEPROM();		// TODO - optimize calibration functions
 }
 
 void mf_cdone2Select(void)

@@ -12,7 +12,7 @@
 #include "led_indic.h"
 
 
-// Global variable "raw_button_state" is updated in module "led_indic.h"		
+// Global variable "raw_button_state" is updated in module "led_indic.c"		
 
 
 uint16_t button_state = 0;	// global processed button state
@@ -24,7 +24,7 @@ uint8_t button_action_up_short = 0;
 //uint8_t button_action_up_long = 0;
 uint8_t button_action_long = 0;
 
-
+// TODO - add some filtering
 
 void process_buttons()
 {
