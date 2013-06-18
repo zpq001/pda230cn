@@ -202,7 +202,7 @@ void processHeaterControl(void)
 	uint16_t processValue;
 	uint16_t pid_output;
 	
-	// TODO: check code size with local copy of heaterState
+	// TODO: check code size with local copy of heaterState - 18 bytes economy
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)

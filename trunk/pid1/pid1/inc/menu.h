@@ -27,8 +27,7 @@ typedef struct {
 typedef struct {
 	uint8_t ItemID;
 	uint8_t ItemTimeout;
-	uint8_t ShiftLeft : 1;
-	uint8_t ShiftRight : 1;
+	uint8_t ShiftFlags;
 } NextItem_t;
 
 
@@ -92,6 +91,15 @@ void mf_autopoffDo(void);
 void mf_actpoffSelect(void);
 void mf_actpoffDo(void);
 void mf_actpoffLeave(void);
+
+void mf_calibP1Select(void);
+void mf_calibP2Select(void);
+void mf_calibDo(void);
+void mf_calibDoExit(void);
+void mf_cdoneSelect(void);
+void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal);
+void mf_cdoneDo(void);
+/*
 void mf_calibSelect(void);
 void mf_calib1Do(void);
 void mf_calib2Do(void);
@@ -99,6 +107,6 @@ void mf_calibDoExit(void);
 void mf_cdone1Select(void);
 void mf_cdone2Select(void);
 void mf_cdoneDo(void);
-
+*/
 
 

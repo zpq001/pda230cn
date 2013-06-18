@@ -49,8 +49,8 @@ void update_Celsius(void);
 void addToRingU16(RingBufU16_t* bptr, uint16_t sample);
 uint16_t getNormalizedRingU16(RingBufU16_t* bptr);
 
-uint16_t iir_u16(uint16_t *data, filter8bit_core_t* iir_core);
-int16_t iir_i16(int16_t *data, filter8bit_core_t* iir_core);
+
+int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_core);
 
 
 void adcTestFunc(void);

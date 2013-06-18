@@ -29,8 +29,8 @@ static void restartMenuTimer(void);
 static uint8_t selectedMenuItemID;
 static MenuFunctionRecord selectedMenuFunctionRecord;
 
-static uint8_t cpoint1_copy;
-static uint8_t cpoint2_copy;
+static uint8_t cpoint_user_val;
+static uint8_t cpointNum;
 
 static SoftTimer8b_t menuTimer = {		// used for menu state jumps
 	.Timer = 0,	
@@ -95,7 +95,6 @@ const __flash MenuJumpRecord menuJumpSet[] =
  const __flash MenuFunctionRecord menuFunctionSet[]=
 {
 // sizeOf(MenuFunctionRecord) = 7 bytes
-// total 91 byte
 //	|	Item		|	Select func			|	Do func			|		Leave func		|
 	{ mi_REALTEMP,		mf_realTempSelect, 		mf_realTempDo, 		mf_realTempLeave	},
 	{ mi_SETTEMP,  		mf_setTempSelect, 		mf_setTempDo, 		mf_setTempLeave		},
@@ -105,12 +104,12 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_AUTOPOFF,		mf_leafSelect, 			mf_autopoffDo,			0				},
 	{ mi_ACTAUTOPOFF,	mf_leafSelectAct,		mf_autopoffDo,		mf_leafExit			},
 	
-	{ mi_CALIB1,		mf_calibSelect,			mf_calib1Do,			0				},
-	{ mi_DOCALIB1,		mf_leafSelectAct, 		mf_calib1Do,		mf_calibDoExit		},
-	{ mi_CALIB2,		mf_calibSelect,			mf_calib2Do,			0				},
-	{ mi_DOCALIB2,		mf_leafSelectAct, 		mf_calib2Do,		mf_calibDoExit		},
-	{ mi_CDONE1,		mf_cdone1Select, 		mf_cdoneDo,				0				},
-	{ mi_CDONE2,		mf_cdone2Select, 		mf_cdoneDo,				0				},
+	{ mi_CALIB1,		mf_calibP1Select,		mf_calibDo,				0				},
+	{ mi_DOCALIB1,		mf_leafSelectAct, 		mf_calibDo,			mf_calibDoExit		},
+	{ mi_CALIB2,		mf_calibP2Select,		mf_calibDo,				0				},
+	{ mi_DOCALIB2,		mf_leafSelectAct, 		mf_calibDo,			mf_calibDoExit		},
+	{ mi_CDONE1,		mf_cdoneSelect, 		mf_cdoneDo,				0				},
+	{ mi_CDONE2,		mf_cdoneSelect, 		mf_cdoneDo,				0				},
 	
 	{ mi_POFFACT,		mf_actpoffSelect,		mf_actpoffDo,		mf_actpoffLeave		}
 }; 
@@ -167,9 +166,9 @@ void processMenu(void)
 		
 		// If shifting is specified, start it before calling any 
 		//	new menu item functions 
-		if (nextItem.ShiftRight)
+		if (nextItem.ShiftFlags & SHIFT_RIGHT)
 			startShiftingWindowRight();
-		else if (nextItem.ShiftLeft)
+		else if (nextItem.ShiftFlags & SHIFT_LEFT)
 			startShiftingWindowLeft();
 		
 		// Select new item
@@ -228,8 +227,7 @@ static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCon
 			{
 				nextItem.ItemID = jRecord.NextItem;			// switch to next menu item
 				nextItem.ItemTimeout = jRecord.Flags & TIMEOUT_MASK;
-				nextItem.ShiftRight = (jRecord.Flags & SHIFT_RIGHT) ? 1 : 0;		// TODO - optimize flags
-				nextItem.ShiftLeft = (jRecord.Flags & SHIFT_LEFT) ? 1 : 0;
+				nextItem.ShiftFlags = (jRecord.Flags & (SHIFT_LEFT | SHIFT_RIGHT));
 				break;
 			}
 		}
@@ -546,68 +544,48 @@ void mf_actpoffLeave(void)
 
 //---------------------------------------------//
 
-void mf_calibSelect(void)
+
+void mf_calibP1Select(void)
 {
 	mf_leafSelect();
-	cpoint1_copy = cp.cpoint1;
-	cpoint2_copy = cp.cpoint2;
+	cpoint_user_val = cp.cpoint1;	// determine which point to use at select func
+	cpointNum = 1;
+	printLedBuffer(0,"P1    ");
 }
 
-void mf_calib1Do(void)
+void mf_calibP2Select(void)
 {
-	char str[] = {'P','1',' ',' ',' ',' ',0};
-	
+	mf_leafSelect();
+	cpoint_user_val = cp.cpoint2;	// determine which point to use at select func
+	cpointNum = 2;
+	printLedBuffer(0,"P2    ");
+}
+
+void mf_calibDo(void)
+{
+	char str[] = "   ";
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (cpoint1_copy < MAX_CALIB_TEMP)
-			cpoint1_copy += 1;
+		if (cpoint_user_val < MAX_CALIB_TEMP)
+		cpoint_user_val += 1;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (cpoint1_copy > MIN_CALIB_TEMP)
-			cpoint1_copy -= 1;
+		if (cpoint_user_val > MIN_CALIB_TEMP)
+		cpoint_user_val -= 1;
 	}
 	
 	if (userTimer.FA_GE)
 	{
-		u16toa_align_right(cpoint1_copy,str + 3,0x80 | 3,' ');
+		u16toa_align_right(cpoint_user_val,str,3,' ');
 		resetAutoPowerOffCounter();
 		heaterState |= CALIBRATION_ACTIVE;
 	}
 	
-	printLedBuffer(0,str);
-	
+	printLedBuffer(3,str);
 }
 
-//---------------------------------------------//
-
-void mf_calib2Do(void)
-{
-	char str[] = {'P','2',' ',' ',' ',' ',0};
-	
-	
-	if (button_state & (BD_UP | BR_UP))
-	{
-		if (cpoint2_copy < MAX_CALIB_TEMP)
-		cpoint2_copy += 1;
-	}
-	else if (button_state & (BD_DOWN | BR_DOWN))
-	{
-		if (cpoint2_copy > MIN_CALIB_TEMP)
-		cpoint2_copy -= 1;
-	}
-	
-	if (userTimer.FA_GE)
-	{
-		u16toa_align_right(cpoint2_copy,str + 3,0x80 | 3,' ');
-		resetAutoPowerOffCounter();
-		heaterState |= CALIBRATION_ACTIVE;
-	}
-	
-	printLedBuffer(0,str);
-	
-}
 
 void mf_calibDoExit(void)
 {
@@ -617,27 +595,28 @@ void mf_calibDoExit(void)
 
 //---------------------------------------------//
 
-void mf_cdone1Select(void)
+void mf_cdoneSelect(void)
 {
-	// Save current ADC as calibrating point
-	cp.cpoint1_adc = adc_normalized;
-	// Save current Celsius degree
-	cp.cpoint1 = cpoint1_copy;
-	// Calculate new coefficient for temperature conversion
-	calculateCoeffs();
-	saveCalibrationToEEPROM();		// TODO - optimize calibration functions
+	applyCalibrationPoint(cpointNum,cpoint_user_val);
 }
 
-void mf_cdone2Select(void)
+
+void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal)
 {
-	// Save current ADC as calibrating point
-	cp.cpoint2_adc = adc_normalized;
-	// Save current Celsius degree
-	cp.cpoint2 = cpoint2_copy;
-	// Calculate new coefficient for temperature conversion
+	if (cpointNum == 1)
+	{
+		cp.cpoint1_adc = adc_normalized;
+		cp.cpoint1 = cpointVal;
+	}
+	else
+	{
+		cp.cpoint2_adc = adc_normalized;
+		cp.cpoint2 = cpointVal;
+	}
 	calculateCoeffs();
 	saveCalibrationToEEPROM();
 }
+
 
 void mf_cdoneDo(void)
 {

@@ -26,7 +26,7 @@ RingBufU16_t ringBufADC = {
 };
 
 
-uint16_t filter_buffer[20];
+int16_t filter_buffer[20];
 
 filter8bit_core_t fir_filter_rect = {
 	.coeffs = {
