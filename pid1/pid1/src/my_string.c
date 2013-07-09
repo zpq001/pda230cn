@@ -71,3 +71,16 @@ void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
 	
 }
 
+
+// Reads bytes from FLASH into SRAM buffer until \0 is found, or
+// max_length bytes have been read.
+// Maximum count of bytes to read is 256 (in case max_length = 0)
+void read_progmem_string(const __flash char *src, char *dst, uint8_t max_length)
+{
+	char c;
+	do
+		c = pgm_read_byte(src++);
+		*dst++ = c;
+	while ((c) && (--max_length))
+}
+
