@@ -114,7 +114,7 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_POFFACT,		mf_actpoffSelect,		mf_actpoffDo,		mf_actpoffLeave		}
 }; 
 
-
+const __flash 
 
 
 //=================================================================//
