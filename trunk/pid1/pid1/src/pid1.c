@@ -107,13 +107,15 @@ void init_system_io()
 	
 }
 
-
+extern const __flash char str_temp_do[];
 
 int main(void)
 {
-	char str[12];
+	volatile char str[12];
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
+	
+	//read_progmem_string(str_temp_do,(char *)str,7);
 	
 	//adcTestFunc();
 	//volatile int32_t temp32;

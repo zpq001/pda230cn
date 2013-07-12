@@ -19,19 +19,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   7 .debug_aranges 00000408  00000000  00000000  00002889  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_info   00003e80  00000000  00000000  00002c91  2**0
+  8 .debug_info   00003e86  00000000  00000000  00002c91  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_abbrev 00001403  00000000  00000000  00006b11  2**0
+  9 .debug_abbrev 00001412  00000000  00000000  00006b17  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_line   000018c8  00000000  00000000  00007f14  2**0
+ 10 .debug_line   000018c9  00000000  00000000  00007f29  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_frame  000009ec  00000000  00000000  000097dc  2**2
+ 11 .debug_frame  000009ec  00000000  00000000  000097f4  2**2
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_str    0000109d  00000000  00000000  0000a1c8  2**0
+ 12 .debug_str    0000109d  00000000  00000000  0000a1e0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_loc    00001e99  00000000  00000000  0000b265  2**0
+ 13 .debug_loc    00001e99  00000000  00000000  0000b27d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 00000378  00000000  00000000  0000d0fe  2**0
+ 14 .debug_ranges 00000378  00000000  00000000  0000d116  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2517,6 +2517,8 @@ void mf_autopoffDo(void)
      c9a:	0d 92       	st	X+, r0
      c9c:	8a 95       	dec	r24
      c9e:	e1 f7       	brne	.-8      	; 0xc98 <mf_autopoffDo+0x1e>
+	//char str[7];
+	//read_progmem_string(str_off,str,7);
 		
 		
 	if (button_state & (BD_UP | BR_UP))
@@ -2635,6 +2637,9 @@ void mf_realTempDo(void)
      d3c:	0d 92       	st	X+, r0
      d3e:	8a 95       	dec	r24
      d40:	e1 f7       	brne	.-8      	; 0xd3a <mf_realTempDo+0x1e>
+	//char str[7];
+	//read_progmem_string(str_temp_do,str,7);
+		
 	// Output ADC result to LED
 	u16toa_align_right(adc_celsius,str,0x80 | 4,' ');
      d42:	20 e2       	ldi	r18, 0x20	; 32
@@ -2891,6 +2896,8 @@ void mf_sndenDo(void)
      e86:	0d 92       	st	X+, r0
      e88:	8a 95       	dec	r24
      e8a:	e1 f7       	brne	.-8      	; 0xe84 <mf_sndenDo+0x1e>
+	//char str[7];
+	//read_progmem_string(str_snd,str,7);
 		
 	if (button_state & (BD_UP | BD_DOWN))
      e8c:	80 91 ea 00 	lds	r24, 0x00EA
@@ -2995,6 +3002,9 @@ void mf_rollDo(void)
      f10:	0d 92       	st	X+, r0
      f12:	8a 95       	dec	r24
      f14:	e1 f7       	brne	.-8      	; 0xf0e <mf_rollDo+0x1e>
+	//char str[7];
+	//read_progmem_string(str_spaces,str,7);
+	
 		
 	if (button_state & (BD_UP | BR_UP))
      f16:	80 91 ea 00 	lds	r24, 0x00EA
@@ -3139,7 +3149,8 @@ void mf_setTempDo(void)
      fe4:	0d 92       	st	X+, r0
      fe6:	8a 95       	dec	r24
      fe8:	e1 f7       	brne	.-8      	; 0xfe2 <mf_setTempDo+0x1e>
-
+	//char str[10];
+	//read_progmem_string(str_temp_do,str,7);
 	
 	if (button_state & (BD_UP | BR_UP))
      fea:	80 91 ea 00 	lds	r24, 0x00EA
@@ -3949,7 +3960,7 @@ void init_system_io()
 00001392 <main>:
 }
 
-
+extern const __flash char str_temp_do[];
 
 int main(void)
 {
@@ -3958,7 +3969,7 @@ int main(void)
     1396:	1f 92       	push	r1
     1398:	cd b7       	in	r28, 0x3d	; 61
     139a:	de b7       	in	r29, 0x3e	; 62
-	char str[12];
+	volatile char str[12];
 	volatile uint8_t temp8u = 0x00;
     139c:	19 82       	std	Y+1, r1	; 0x01
 	//temp16u = 1200;
