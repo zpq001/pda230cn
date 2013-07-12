@@ -114,7 +114,10 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	{ mi_POFFACT,		mf_actpoffSelect,		mf_actpoffDo,		mf_actpoffLeave		}
 }; 
 
-const __flash 
+//const __flash char str_temp_do[] = {' ',' ',' ',' ',0xB0,'C',0};
+//const __flash char str_spaces[] = {' ',' ',' ',' ',' ',' ',0};
+//const __flash char str_snd[] = {'S','N','D',' ',' ',' ',0};
+//const __flash char str_off[] = {'O','F','F',' ',' ',' ',0};
 
 
 //=================================================================//
@@ -326,6 +329,9 @@ void mf_realTempSelect(void)
 void mf_realTempDo(void)
 {
 	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
+	//char str[7];
+	//read_progmem_string(str_temp_do,str,7);
+		
 	// Output ADC result to LED
 	u16toa_align_right(adc_celsius,str,0x80 | 4,' ');
 	printLedBuffer(0,str);
@@ -350,7 +356,8 @@ void mf_setTempSelect(void)
 void mf_setTempDo(void)
 {
 	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
-
+	//char str[10];
+	//read_progmem_string(str_temp_do,str,7);
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
@@ -393,6 +400,9 @@ void mf_rollSelect(void)
 void mf_rollDo(void)
 {
 	char str[] = {' ',' ',' ',' ',' ',' ',0};
+	//char str[7];
+	//read_progmem_string(str_spaces,str,7);
+	
 		
 	if (button_state & (BD_UP | BR_UP))
 	{
@@ -461,6 +471,8 @@ void mf_leafExit(void)
 void mf_sndenDo(void)
 {
 	char str[] = {'S','N','D',' ',' ',' ',0};
+	//char str[7];
+	//read_progmem_string(str_snd,str,7);
 		
 	if (button_state & (BD_UP | BD_DOWN))
 	{
@@ -494,6 +506,8 @@ void mf_sndenDo(void)
 void mf_autopoffDo(void)
 {
 	char str[] = {'O','F','F',' ',' ',' ',0};
+	//char str[7];
+	//read_progmem_string(str_off,str,7);
 		
 		
 	if (button_state & (BD_UP | BR_UP))

@@ -972,51 +972,51 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3e80
+.debug_info     0x00000000     0x3e86
  *(.debug_info)
  .debug_info    0x00000000      0x4af src/adc.o
  .debug_info    0x000004af      0x17f src/buttons.o
  .debug_info    0x0000062e      0x959 src/control.o
  .debug_info    0x00000f87      0x98f src/led_indic.o
  .debug_info    0x00001916      0x21c src/led_indic_hw.o
- .debug_info    0x00001b32     0x1073 src/menu.o
- .debug_info    0x00002ba5      0x138 src/my_string.o
- .debug_info    0x00002cdd      0x81d src/pid1.o
- .debug_info    0x000034fa      0x348 src/power_control.o
- .debug_info    0x00003842      0x161 src/soft_timer.o
- .debug_info    0x000039a3      0x3fb src/systimer.o
- .debug_info    0x00003d9e       0xe2 src/usart.o
+ .debug_info    0x00001b32     0x1074 src/menu.o
+ .debug_info    0x00002ba6      0x138 src/my_string.o
+ .debug_info    0x00002cde      0x822 src/pid1.o
+ .debug_info    0x00003500      0x348 src/power_control.o
+ .debug_info    0x00003848      0x161 src/soft_timer.o
+ .debug_info    0x000039a9      0x3fb src/systimer.o
+ .debug_info    0x00003da4       0xe2 src/usart.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000     0x1403
+.debug_abbrev   0x00000000     0x1412
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x1cc src/adc.o
  .debug_abbrev  0x000001cc       0x98 src/buttons.o
  .debug_abbrev  0x00000264      0x266 src/control.o
  .debug_abbrev  0x000004ca      0x2bb src/led_indic.o
  .debug_abbrev  0x00000785      0x154 src/led_indic_hw.o
- .debug_abbrev  0x000008d9      0x37a src/menu.o
- .debug_abbrev  0x00000c53       0xb0 src/my_string.o
- .debug_abbrev  0x00000d03      0x22a src/pid1.o
- .debug_abbrev  0x00000f2d      0x195 src/power_control.o
- .debug_abbrev  0x000010c2       0xba src/soft_timer.o
- .debug_abbrev  0x0000117c      0x1d9 src/systimer.o
- .debug_abbrev  0x00001355       0xae src/usart.o
+ .debug_abbrev  0x000008d9      0x389 src/menu.o
+ .debug_abbrev  0x00000c62       0xb0 src/my_string.o
+ .debug_abbrev  0x00000d12      0x22a src/pid1.o
+ .debug_abbrev  0x00000f3c      0x195 src/power_control.o
+ .debug_abbrev  0x000010d1       0xba src/soft_timer.o
+ .debug_abbrev  0x0000118b      0x1d9 src/systimer.o
+ .debug_abbrev  0x00001364       0xae src/usart.o
 
-.debug_line     0x00000000     0x18c8
+.debug_line     0x00000000     0x18c9
  *(.debug_line)
  .debug_line    0x00000000      0x1b2 src/adc.o
  .debug_line    0x000001b2      0x112 src/buttons.o
  .debug_line    0x000002c4      0x386 src/control.o
  .debug_line    0x0000064a      0x34c src/led_indic.o
  .debug_line    0x00000996      0x206 src/led_indic_hw.o
- .debug_line    0x00000b9c      0x3de src/menu.o
- .debug_line    0x00000f7a      0x139 src/my_string.o
- .debug_line    0x000010b3      0x28d src/pid1.o
- .debug_line    0x00001340      0x1d2 src/power_control.o
- .debug_line    0x00001512       0xfe src/soft_timer.o
- .debug_line    0x00001610      0x1c6 src/systimer.o
- .debug_line    0x000017d6       0xf2 src/usart.o
+ .debug_line    0x00000b9c      0x3df src/menu.o
+ .debug_line    0x00000f7b      0x139 src/my_string.o
+ .debug_line    0x000010b4      0x28d src/pid1.o
+ .debug_line    0x00001341      0x1d2 src/power_control.o
+ .debug_line    0x00001513       0xfe src/soft_timer.o
+ .debug_line    0x00001611      0x1c6 src/systimer.o
+ .debug_line    0x000017d7       0xf2 src/usart.o
 
 .debug_frame    0x00000000      0x9ec
  *(.debug_frame)
