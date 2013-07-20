@@ -68,45 +68,36 @@ void processMenu(void);
 
 
 
-void mf_realTempSelect(void);
-void mf_realTempDo(void);
-void mf_realTempLeave(void);
+static void mf_realTempSelect(void);
+static void mf_realTempDo(void);
+static void mf_realTempLeave(void);
 
-void mf_setTempSelect(void);
-void mf_setTempDo(void);
-void mf_setTempLeave(void);
+static void mf_setTempSelect(void);
+static void mf_setTempDo(void);
+static void mf_setTempLeave(void);
 
-void mf_rollSelect(void);
-void mf_rollDo(void);
-void mf_rollLeave(void);
+static void mf_rollSelect(void);
+static void mf_rollDo(void);
+static void mf_rollLeave(void);
 
+static void mf_leafSelect(void);
+static void mf_leafSelectAct(void);
+static void mf_leafExit(void);
 
-void mf_leafSelect(void);
-void mf_leafSelectAct(void);
-void mf_leafExit(void);
+static void mf_sndenDo(void);
+static void mf_autopoffDo(void);
+static void mf_actpoffSelect(void);
+static void mf_actpoffDo(void);
+static void mf_actpoffLeave(void);
 
+static void mf_calibP1Select(void);
+static void mf_calibP2Select(void);
+static void mf_calibDo(void);
+static void mf_calibDoExit(void);
+static void mf_cdoneSelect(void);
+static void mf_cdoneDo(void);
 
-void mf_sndenDo(void);
-void mf_autopoffDo(void);
-void mf_actpoffSelect(void);
-void mf_actpoffDo(void);
-void mf_actpoffLeave(void);
+static void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal);
 
-void mf_calibP1Select(void);
-void mf_calibP2Select(void);
-void mf_calibDo(void);
-void mf_calibDoExit(void);
-void mf_cdoneSelect(void);
-void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal);
-void mf_cdoneDo(void);
-/*
-void mf_calibSelect(void);
-void mf_calib1Do(void);
-void mf_calib2Do(void);
-void mf_calibDoExit(void);
-void mf_cdone1Select(void);
-void mf_cdone2Select(void);
-void mf_cdoneDo(void);
-*/
 
 

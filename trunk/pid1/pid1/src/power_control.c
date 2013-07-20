@@ -56,7 +56,7 @@ void setMotorDirection(uint8_t dir)
 	dirChangedMask = ~ROLL_DIR_CHANGED;
 	
 	if (dir & ROLL_FWD)
-		bottomPoint = rollPoint;
+		bottomPoint = rollPoint;  
 	else if (dir & ROLL_REV)
 		topPoint = rollPoint;
 

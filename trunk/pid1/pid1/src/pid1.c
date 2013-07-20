@@ -151,7 +151,7 @@ int main(void)
 	// ---- TODO: check out when PID will be finished ----//
 	// When we get here, few ADC counts have been sampled.
 	update_normalized_adc();
-	// Call PID controler function in order to initialize it's internal structures
+	// Call PID controller function in order to initialize it's internal structures
 	heaterInit();
 	//----------------------------------------------------//
 	// Start rotating
