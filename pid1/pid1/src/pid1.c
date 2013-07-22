@@ -97,31 +97,15 @@ void init_system_io()
 	// 57600 @16MHz, 2x
 	UBRRH=0x00;
 	UBRRL=0x22;
-	// 38400 @16MHz, 2x
-//	UBRRH=0x00;
-//	UBRRL=0x33;
-	// 19200 @16MHz, 2x
-//	UBRRH=0x00;
-//	UBRRL=0x67;
-
-	
 }
 
-extern const __flash char str_temp_do[];
+
 
 int main(void)
 {
 	volatile char str[12];
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
-	
-	//read_progmem_string(str_temp_do,(char *)str,7);
-	
-	//adcTestFunc();
-	//volatile int32_t temp32;
-	//temp16u = 1200;
-	//logI32p(temp16u);
-	//i32toa_align_right(temp16u,str,12);
 	
 	// Initialize MCU IO
 	init_system_io();

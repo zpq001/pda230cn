@@ -26,6 +26,33 @@ static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctio
 static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr );
 static void restartMenuTimer(void);
 
+
+static void mf_realTempSelect(void);
+static void mf_realTempDo(void);
+static void mf_realTempLeave(void);
+static void mf_setTempSelect(void);
+static void mf_setTempDo(void);
+static void mf_setTempLeave(void);
+static void mf_rollSelect(void);
+static void mf_rollDo(void);
+static void mf_rollLeave(void);
+static void mf_leafSelect(void);
+static void mf_leafSelectAct(void);
+static void mf_leafExit(void);
+static void mf_sndenDo(void);
+static void mf_autopoffDo(void);
+static void mf_actpoffSelect(void);
+static void mf_actpoffDo(void);
+static void mf_actpoffLeave(void);
+static void mf_calibP1Select(void);
+static void mf_calibP2Select(void);
+static void mf_calibDo(void);
+static void mf_calibDoExit(void);
+static void mf_cdoneSelect(void);
+static void mf_cdoneDo(void);
+
+static void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal);
+
 static uint8_t selectedMenuItemID;
 static MenuFunctionRecord selectedMenuFunctionRecord;
 

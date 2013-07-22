@@ -135,7 +135,7 @@ typedef struct
 											// TODO - deliver this to menu
 #define TEMP_ALERT_HYST		5				// Hysteresis value for alert range
 
-#define SAFE_TEMP_INTERVAL	15				// Safe interval for growing temperature with heater disabled alert
+#define SAFE_TEMP_INTERVAL	20				// Safe interval for growing temperature with heater disabled alert
 											// in units of Celsius degree
 
 

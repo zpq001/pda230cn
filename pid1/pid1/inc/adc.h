@@ -9,6 +9,13 @@
 #ifndef ADC_H_
 #define ADC_H_
 
+// adc_status bits:
+#define SENSOR_ERROR_NO_PRESENT	(1<<0)
+#define SENSOR_ERROR_SHORTED	(1<<1)
+
+
+
+
 // ----- Ring buffer ----- //
 #define RINIT	0x01
 #define RNORM	0x00
@@ -39,6 +46,7 @@ extern uint16_t adc_celsius;
 extern RingBufU16_t ringBufADC;
 extern uint16_t adc_oversampled;
 extern uint16_t adc_filtered;
+extern uint8_t adc_status;
 
 void calculateCoeffs(void);
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value);
