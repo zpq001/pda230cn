@@ -33,7 +33,7 @@ typedef struct {
 #define LED_DIGIT_ACT_LVL	0	// Active level for a digit (common pin for all segments)
 #define LED_SEGMENT_ACT_LVL	1	// Active level for segments
 
-//#define CLEAN_OPERATION
+#define CLEAN_OPERATION
 
 #define LED_SHIFT_INTERVAL	10	// in units of processWindowShifter() call period, (Tsystimer * NUM_DIGITS)
 

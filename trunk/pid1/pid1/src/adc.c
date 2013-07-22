@@ -17,6 +17,7 @@ uint16_t adc_normalized;			// normalized (used for calibration) ADC value
 uint16_t adc_celsius;				// Celsius degree value (used for indication / calibration)
 uint16_t adc_oversampled;
 uint16_t adc_filtered;
+uint8_t adc_status;					// Sensor and ADC status
 
 uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC ring buffer
 RingBufU16_t ringBufADC = {
