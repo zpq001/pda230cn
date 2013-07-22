@@ -202,8 +202,6 @@ void processHeaterControl(void)
 	uint16_t processValue;
 	uint16_t pid_output;
 	
-	// TODO: check code size with local copy of heaterState - 18 bytes economy
-	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
 	{
@@ -212,8 +210,8 @@ void processHeaterControl(void)
 		sys_timers.flags |= UPDATE_PID;		// Not very good approach if UPDATE_PID flag is used somewhere else
 	}
 	
-	// Process auto power off control
-	if (autoPowerOffState & AUTO_POFF_ACTIVE)
+	// Process auto power off control and sensor errors
+	if ((autoPowerOffState & AUTO_POFF_ACTIVE) || (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED)))
 	{
 		heaterState &= ~HEATER_ENABLED;
 	}		
@@ -225,17 +223,12 @@ void processHeaterControl(void)
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
 
-		setPoint = set_value_adc * 5;
+		setPoint = set_value_adc * 4;		
 		setPoint >>= 1;
 		processValue = adc_filtered >> 1;	// normal PID control
-		//setPoint = set_value_adc * 5;
-		//processValue = adc_filtered;		// oversampled PID control
 		
 		// Process PID
 		pid_output = processPID(setPoint, processValue);		
-		
-		// DSM test only
-		//pid_output = (p.setup_temp_value < 50) ? 0 : p.setup_temp_value - 50;
 					
 		// If heater is disabled, override output
 		if (!(heaterState & HEATER_ENABLED))
@@ -266,54 +259,6 @@ void processHeaterControl(void)
 
 
 
-
-
-
-
-
-/*
-uint8_t processPID(uint16_t setPoint, uint16_t processValue)
-{
-	int16_t ek;					// current error
-	static int16_t yk = 0;		// current PID output
-	static int16_t xk_1 = 0;	// processValue at step -1
-	static int16_t xk_2 = 0;	// processValue at step -2
-	
-	int16_t p_term;
-	int16_t i_term;
-	int16_t d_term;
-	
-	uint16_t pid_output;
-	
-	// Calculate error
-	ek = setPoint - processValue;
-	
-	// Calculate PID
-	p_term = Kp * (xk_1 - processValue);
-	i_term = Ki * ek;
-	d_term = Kd * (2 * xk_1 - processValue - xk_2);
-	
-	yk += p_term + i_term + d_term;
-	xk_2 = xk_1;
-	xk_1 = processValue;
-	
-	// Limit Yk
-	if (yk > 10000)
-	yk = 10000;
-	else if (yk < 0)
-	yk = 0;
-	
-	//------- Debug --------//
-	dbg_PID_p_term = p_term;
-	dbg_PID_d_term = d_term;
-	dbg_PID_i_term = i_term;
-	
-	pid_output = yk / INC_SCALING_FACTOR;
-	
-	dbg_PID_output = pid_output;		// full-scale output
-	return pid_output;
-}
-*/
 
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
@@ -384,106 +329,6 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	return temp;
 	
 }
-
-/*
-
-uint8_t processPID(uint16_t setPoint, uint16_t processValue)
-{
-	int16_t error, p_term, i_term, d_term, temp;
-	static uint16_t lastProcessValue;
-	static int16_t integAcc = 0;
-	
-	error = setPoint - processValue;
-	
-	
-	//------ Calculate P term --------//
-<<<<<<< .mine
-	if (error > 20 )
-=======
-	if (error > 150)
->>>>>>> .r46
-	{
-<<<<<<< .mine
-		p_term = 1000;
-=======
-		p_term = 2000;
->>>>>>> .r46
-	}
-<<<<<<< .mine
-	else if (error < -20 )
-=======
-	else if (error < -150)
->>>>>>> .r46
-	{
-<<<<<<< .mine
-		p_term = -1000 ;
-=======
-		p_term = -2000;
->>>>>>> .r46
-	}
-	else
-	{
-		p_term = error * Kp;
-	}
-	
-	//------ Calculate I term --------//
-	integAcc += error;
-	if (error <= 0)
-	{
-		integAcc = 0;
-	}
-<<<<<<< .mine
-	else if (integAcc > 25 )
-=======
-	else if (integAcc > 200)
->>>>>>> .r46
-	{
-<<<<<<< .mine
-		integAcc = 25;
-=======
-		integAcc = 200;
->>>>>>> .r46
-	}
-	else if (integAcc < 0)
-	{
-		integAcc = 0;
-	}
-	i_term = integAcc * Ki;
-
-	
-	//------ Calculate D term --------//	
-	lastProcessValue = ringBufDterm.summ;
-	addToRingU16(&ringBufDterm, processValue);
-	processValue = ringBufDterm.summ;
-	d_term = Kd * ((int16_t)(lastProcessValue - processValue));
-	//lastProcessValue = processValue;
-	
-	//--------- Summ terms -----------//
-	temp = (p_term + i_term + d_term) / SCALING_FACTOR;
-	
-	if (temp > 50)
-	{
-		temp = 50;	
-	}		
-	else if (temp < 0)
-	{
-		temp = 0;
-	}
-	
-	
-	//------- Debug --------//
-	dbg_PID_p_term = p_term;
-	dbg_PID_d_term = d_term;
-	dbg_PID_i_term = i_term;
-	dbg_PID_output = temp;
-	
-	
-	return temp;
-	
-}
-
-*/
-
 
 
 

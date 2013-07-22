@@ -20,11 +20,6 @@ uint16_t adc_filtered;
 uint8_t adc_status;					// Sensor and ADC status
 
 uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC ring buffer
-RingBufU16_t ringBufADC = {
-	.length = ADC_BUFFER_LENGTH,
-	.data = raw_adc_buffer,
-	.stat = RINIT
-};
 
 
 int16_t filter_buffer[20];
@@ -61,18 +56,8 @@ filter8bit_core_t fir_filter_rect = {
 static int32_t k_norm;				// integer, scaled by COEFF_SCALE
 static int32_t offset_norm;			// integer, scaled by COEFF_SCALE
 
-// Ring buffer functions
-void addToRingU16(RingBufU16_t* bptr, uint16_t sample);
-uint16_t getNormalizedRingU16(RingBufU16_t* bptr);
-
 //---------------------------------------------//
 //---------------------------------------------//
-
-/*
-	Oversampled ADC:
-		145 Celsius ->	2100 
-		25 Celsius	->	765
-*/
 
 
 uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
@@ -95,16 +80,26 @@ void calculateCoeffs(void)
 
 void update_normalized_adc()
 {
+	uint8_t i;
+	uint16_t adc_raw_summ = 0;
 	// Disable interrupts from ADC - to save data integrity
 	ADCSRA &= ~(1<<ADIE);	
 	// Get normalized mean window summ
-	adc_normalized = (uint16_t)getNormalizedRingU16(&ringBufADC);
-	adc_oversampled = ringBufADC.summ >> 2;
-	// Filter
-	adc_filtered = fir_i16_i8(adc_oversampled, filter_buffer, &fir_filter_rect);	
-
+	for (i=0;i<ADC_BUFFER_LENGTH;i++)
+		adc_raw_summ += raw_adc_buffer[i];
 	// Enable interrupts from ADC
 	ADCSRA |= (1<<ADIE);
+	
+	adc_normalized = adc_raw_summ >> 5;		// ADC_BUFFER_LENGTH = 32 !
+	adc_oversampled = adc_raw_summ >> 3;
+	// Filter
+	adc_filtered = fir_i16_i8(adc_oversampled, filter_buffer, &fir_filter_rect);	
+	// Check sensor
+	adc_status = 0;
+	if (adc_normalized < 50)
+		adc_status |= SENSOR_ERROR_NO_PRESENT;
+	else if (adc_normalized >1000)
+		adc_status |= SENSOR_ERROR_SHORTED;
 }
 
 void update_Celsius(void)
@@ -119,15 +114,23 @@ void update_Celsius(void)
 
 ISR(ADC_vect)
 {
+	static uint8_t adc_buffer_pointer = ADC_BUFFER_LENGTH;
 	// Get new sample
 	uint16_t new_sample = 1024 - ADC;	
-	// Add new sample to the ring buffer
-	addToRingU16(&ringBufADC, new_sample);
+	// Add new sample to the buffer
+	raw_adc_buffer[--adc_buffer_pointer] = new_sample;
+	if (adc_buffer_pointer == 0)
+		adc_buffer_pointer = ADC_BUFFER_LENGTH;
 }	
 
 
 
+
+//---------------------------------------------//
 // FIR digital filter
+// Samples: signed, 16-bit
+// Coeffs:  signed, 8-bit
+//---------------------------------------------//
 int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_core)
 {
 	int32_t summ;
@@ -141,47 +144,6 @@ int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_
 	}
 	samples[0] = new_sample;
 	return (int16_t)(summ / iir_core->dc_gain);
-}
-
-
-
-//---------------------------------------------//
-//---------------------------------------------//
-//---------------------------------------------//
-// Ring buffer implementation
-//---------------------------------------------//
-//---------------------------------------------//
-//---------------------------------------------//
-
-// Ring buffer main function - add new data and update summ
-void addToRingU16(RingBufU16_t* bptr, uint16_t sample)
-{
-	if (bptr->stat == RNORM)
-	{
-		bptr->summ -= bptr->data[bptr->curr_pos];
-	}
-	else
-	{
-		bptr->curr_pos = 0;
-		bptr->summ = 0;
-	}
-	do	
-	{
-		bptr->data[bptr->curr_pos++] = sample;
-		bptr->summ += sample;
-		if (bptr->curr_pos == bptr->length)	
-		{	
-			bptr->curr_pos = 0;	
-			bptr->stat = RNORM;
-		}
-	} 
-	while (bptr->stat != RNORM);
-}
-
-// Get ring buffer normalized value
-uint16_t getNormalizedRingU16(RingBufU16_t* bptr)
-{
-	return 	bptr->summ / bptr->length;
 }
 
 
