@@ -98,7 +98,7 @@ void update_normalized_adc()
 	adc_status = 0;
 	if (adc_normalized < 50)
 		adc_status |= SENSOR_ERROR_NO_PRESENT;
-	else if (adc_normalized >1000)
+	else if (adc_normalized > 1000)
 		adc_status |= SENSOR_ERROR_SHORTED;
 }
 

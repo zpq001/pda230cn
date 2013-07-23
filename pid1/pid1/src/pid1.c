@@ -40,8 +40,6 @@ extern volatile SoftTimer8b_t menuUpdateTimer;
 static void logU16p(uint16_t val);
 static void logI32p(int32_t val);
 
-////// debug ///////
-//extern void powTest(void);
 
 void init_system_io()
 {
@@ -97,6 +95,7 @@ void init_system_io()
 	// 57600 @16MHz, 2x
 	UBRRH=0x00;
 	UBRRL=0x22;
+	
 }
 
 
@@ -118,13 +117,13 @@ int main(void)
 	// Clear comparator interrupt flag to prevent false triggering
 	ACSR |= (1<<ACI);
 	sei();
-	// Safety delay for power part
-	_delay_ms(50);
+	// Safety delay for power part and ADC buffer
+	_delay_ms(100);
 	// Check AC line
 	if(p_state == 0x0F) 	
 	{
 		// Power control state machine has not changed - sync has not been detected
-		printLedBuffer(0,"AC ERR");
+		printLedBuffer(0,"ERR AC");
 		_delay_ms(1000);
 	}
 	// Initialize menu
@@ -132,22 +131,26 @@ int main(void)
 	// Beep
 	SetBeeperFreq(1000);
 	StartBeep(200);
-	// ---- TODO: check out when PID will be finished ----//
-	// When we get here, few ADC counts have been sampled.
+	// When we get here, full ADC buffer have been sampled
+	// Get oversampled and filtered ADC for PID controller
 	update_normalized_adc();
 	// Call PID controller function in order to initialize it's internal structures
 	heaterInit();
-	//----------------------------------------------------//
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
 	// Clear timer
 	menuUpdateTimer.FOvfl = 0;
+	// Enable watchdog
+	wdt_enable(WDTO_1S);
 
     while(1)
     {
 		
 		if (menuUpdateTimer.FOvfl)
 		{
+			// Reset watchdog timer
+			wdt_reset();
+			
 			//--------- BUTTONS ----------//
 			
 			// Get new button state

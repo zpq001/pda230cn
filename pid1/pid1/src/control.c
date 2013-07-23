@@ -84,8 +84,6 @@ int16_t dbg_PID_output;
 void processRollControl(void)
 {	
 	uint8_t beepState = 0;
-//	static uint8_t beepMask = 0x00;
-//	uint8_t nextBeepMask = 0xFF;
 	static uint8_t force_rotate = 0;
 	
 	// Process auto power off control
@@ -101,7 +99,13 @@ void processRollControl(void)
 	else
 	{
 		// Control direction by buttons
-		if (button_action_down & BD_ROTFWD)
+		if ((button_action_down & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
+		{
+			// Stop
+			setMotorDirection(0);
+			beepState |= 0x01;			// Stopped
+		}
+		else if (button_action_down & BD_ROTFWD)
 		{
 			setMotorDirection(ROLL_FWD);	
 			beepState |= 0x01;			// pressed FWD button
