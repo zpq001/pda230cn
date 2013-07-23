@@ -270,7 +270,7 @@ ISR(TIMER0_OVF_vect)
 	// Full period check
 	if ((p_state & (HALF_PERIOD_FLAG | STATE_MASK)) == (HALF_PERIOD_FLAG | 0x01))
 	{
-		// Quater AC line period is done. Update motor controls.
+		// Quarter AC line period is done. Update motor controls.
 		temp = PORTD;
 		temp &= ~(1<<PD_M1 | 1<<PD_M2);
 		if ( rollState & SKIP_CURRENT_MOTOR_CTRL )

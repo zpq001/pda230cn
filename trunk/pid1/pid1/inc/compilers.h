@@ -35,6 +35,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <avr/wdt.h>
 //#include <stdint.h>
 
 #define __save_interrupt() SREG

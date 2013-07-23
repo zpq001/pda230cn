@@ -23,8 +23,8 @@ MOTOR	________________________________________________|*************************
 
 #define TRIAC_IMPULSE_TIME			10		// in units of 64 us
 #define QUATER_PERIOD_TIME			78		// in units of 64 us
-#define SYNC_IGNORE_TIME			140		// in units of 64 us
-#define SYNC_LOST_TIMEOUT			32		// in units of 64 us
+#define SYNC_IGNORE_TIME			125		// in units of 64 us  (125 * 64 = 8000)
+#define SYNC_LOST_TIMEOUT			62		// in units of 64 us  (62 * 64 = 3968)
 
 
 // Regulation params
