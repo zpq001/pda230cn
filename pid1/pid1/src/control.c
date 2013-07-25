@@ -291,16 +291,16 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 
 	integAcc += error;
 	
-	if (integAcc > 1000 )
+	if (integAcc > 2000 )
 	{
-		integAcc = 1000;
+		integAcc = 2000;
 	}
 	else if (integAcc < 0)
 	{
 		integAcc = 0;
 	}
 	i_term = integAcc * Ki;
-	i_term /= 20;
+	i_term /= 40;
 	
 	
 	//------ Calculate D term --------//

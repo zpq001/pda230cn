@@ -89,7 +89,7 @@ void init_system_io()
 	// Setup USART
 	// Double speed
 	UCSRA = (1<<U2X);
-	UCSRB = (1<<RXEN | /*1<<TXEN |*/ 0<<UCSZ2);
+	UCSRB = (1<<RXEN | 1<<TXEN | 0<<UCSZ2);
 	// No parity, 1 stop bit, 8 bit
 	UCSRC = (1<<URSEL | 0<<UPM1 | 0<<UPM0 | 0<<USBS | 1<<UCSZ1 | 1<<UCSZ0);
 	// 57600 @16MHz, 2x
