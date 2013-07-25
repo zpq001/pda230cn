@@ -964,15 +964,15 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
      602:	28 0f       	add	r18, r24
      604:	39 1f       	adc	r19, r25
 	
-	if (integAcc > 1000 )
-     606:	29 3e       	cpi	r18, 0xE9	; 233
-     608:	83 e0       	ldi	r24, 0x03	; 3
+	if (integAcc > 2000 )
+     606:	21 3d       	cpi	r18, 0xD1	; 209
+     608:	87 e0       	ldi	r24, 0x07	; 7
      60a:	38 07       	cpc	r19, r24
      60c:	3c f0       	brlt	.+14     	; 0x61c <processPID+0x5a>
 	{
-		integAcc = 1000;
-     60e:	88 ee       	ldi	r24, 0xE8	; 232
-     610:	93 e0       	ldi	r25, 0x03	; 3
+		integAcc = 2000;
+     60e:	80 ed       	ldi	r24, 0xD0	; 208
+     610:	97 e0       	ldi	r25, 0x07	; 7
      612:	90 93 f8 00 	sts	0x00F8, r25
      616:	80 93 f7 00 	sts	0x00F7, r24
      61a:	0b c0       	rjmp	.+22     	; 0x632 <processPID+0x70>
@@ -990,7 +990,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
      624:	20 93 f7 00 	sts	0x00F7, r18
      628:	04 c0       	rjmp	.+8      	; 0x632 <processPID+0x70>
 	{
-		integAcc = 1000;
+		integAcc = 2000;
 	}
 	else if (integAcc < 0)
 	{
@@ -1007,8 +1007,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
      640:	43 9f       	mul	r20, r19
      642:	90 0d       	add	r25, r0
      644:	11 24       	eor	r1, r1
-	i_term /= 20;
-     646:	64 e1       	ldi	r22, 0x14	; 20
+	i_term /= 40;
+     646:	68 e2       	ldi	r22, 0x28	; 40
      648:	70 e0       	ldi	r23, 0x00	; 0
      64a:	f0 d9       	rcall	.-3104   	; 0xfffffa2c <__eeprom_end+0xff7efa22>
      64c:	7b 01       	movw	r14, r22
@@ -3864,8 +3864,8 @@ void init_system_io()
 	UCSRA = (1<<U2X);
     131c:	82 e0       	ldi	r24, 0x02	; 2
     131e:	8b b9       	out	0x0b, r24	; 11
-	UCSRB = (1<<RXEN | /*1<<TXEN |*/ 0<<UCSZ2);
-    1320:	80 e1       	ldi	r24, 0x10	; 16
+	UCSRB = (1<<RXEN | 1<<TXEN | 0<<UCSZ2);
+    1320:	88 e1       	ldi	r24, 0x18	; 24
     1322:	8a b9       	out	0x0a, r24	; 10
 	// No parity, 1 stop bit, 8 bit
 	UCSRC = (1<<URSEL | 0<<UPM1 | 0<<UPM0 | 0<<USBS | 1<<UCSZ1 | 1<<UCSZ0);
