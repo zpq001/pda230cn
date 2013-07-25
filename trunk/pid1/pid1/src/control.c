@@ -99,11 +99,10 @@ void processRollControl(void)
 	else
 	{
 		// Control direction by buttons
-		if ((button_action_down & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
+		if ((raw_button_state & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
 		{
 			// Stop
 			setMotorDirection(0);
-			beepState |= 0x01;			// Stopped
 		}
 		else if (button_action_down & BD_ROTFWD)
 		{
