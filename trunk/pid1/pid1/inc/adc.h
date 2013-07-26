@@ -9,12 +9,14 @@
 #ifndef ADC_H_
 #define ADC_H_
 
+
+#define ADC_BUFFER_LENGTH 32
+#define COEFF_SCALE	1000
+
+
 // adc_status bits:
 #define SENSOR_ERROR_NO_PRESENT	(1<<0)
 #define SENSOR_ERROR_SHORTED	(1<<1)
-
-
-
 
 
 typedef struct {
@@ -22,11 +24,6 @@ typedef struct {
 	uint16_t dc_gain;
 	int8_t coeffs[];
 } filter8bit_core_t;
-
-
-
-#define ADC_BUFFER_LENGTH 32
-#define COEFF_SCALE	1000
 
 
 extern uint16_t adc_normalized;

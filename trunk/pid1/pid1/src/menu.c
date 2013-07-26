@@ -391,19 +391,30 @@ void mf_setTempDo(void)
 	if (button_state & (BD_UP | BR_UP))
 	{
 		if (p.setup_temp_value < MAX_SET_TEMP)
-			p.setup_temp_value += 5;
+			p.setup_temp_value += TEMP_SET_STEP;
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
 		if (p.setup_temp_value > MIN_SET_TEMP)
-			p.setup_temp_value -= 5;
+			p.setup_temp_value -= TEMP_SET_STEP;
 		restartMenuTimer();
 	}					
 		
-	// Output ADC result to LED
-	u16toa_align_right(p.setup_temp_value,str,0x80 | 4,' ');
-	printLedBuffer(0,str);
+	// Output setting to LED
+	if (p.setup_temp_value < MAX_SET_TEMP)
+	{
+		u16toa_align_right(p.setup_temp_value,str,0x80 | 4,' ');
+		printLedBuffer(0,str);
+	}		
+	else
+	{
+		printLedBuffer(0," UNREG");
+	}
+	
+	
+
+	
 	
 	if (userTimer.FA_GE)
 		setExtraLeds(LED_TEMP);
@@ -433,12 +444,12 @@ void mf_rollDo(void)
 	if (button_state & (BD_UP | BR_UP))
 	{
 		if (p.rollCycleSet < MAX_ROLL_CYCLES)
-			p.rollCycleSet += 1;
+			p.rollCycleSet += ROLL_CYCLES_STEP;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
 		if (p.rollCycleSet > MIN_ROLL_CYCLES)
-			p.rollCycleSet -= 1;
+			p.rollCycleSet -= ROLL_CYCLES_STEP;
 	}	
 		
 	u16toa_align_right(p.rollCycleSet,str + 4,0x80 | 2,' ');
@@ -534,19 +545,19 @@ void mf_autopoffDo(void)
 	if (button_state & (BD_UP | BR_UP))
 	{
 		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
-			p.power_off_timeout += 5;
+			p.power_off_timeout += POWEROFF_SET_STEP;
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
 		if (p.power_off_timeout > MIN_POWEROFF_TIMEOUT)
-			p.power_off_timeout -= 5;
+			p.power_off_timeout -= POWEROFF_SET_STEP;
 		restartMenuTimer();
 	}	
 		
 	if (userTimer.FA_GE)
 	{
-		if (p.power_off_timeout != MAX_POWEROFF_TIMEOUT)
+		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
 			u16toa_align_right(p.power_off_timeout,str + 4,0x80 | 2,' ');	
 		else 
 		{
@@ -563,7 +574,7 @@ void mf_autopoffDo(void)
 void mf_actpoffSelect(void)
 {
 	clearExtraLeds(LED_TEMP | LED_ROLL);
-	autoPowerOffState = AUTO_POFF_ACTIVE;
+	autoPowerOffState = AUTO_POFF_ACTIVE;	// Set global flag
 }
 
 // Indication of power off mode
@@ -603,12 +614,12 @@ void mf_calibDo(void)
 	if (button_state & (BD_UP | BR_UP))
 	{
 		if (cpoint_user_val < MAX_CALIB_TEMP)
-		cpoint_user_val += 1;
+		cpoint_user_val += CALIB_TEMP_STEP;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
 		if (cpoint_user_val > MIN_CALIB_TEMP)
-		cpoint_user_val -= 1;
+		cpoint_user_val -= CALIB_TEMP_STEP;
 	}
 	
 	if (userTimer.FA_GE)
