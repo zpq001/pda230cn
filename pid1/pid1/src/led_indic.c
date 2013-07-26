@@ -55,6 +55,8 @@ const __flash encode_7seg_pair led_encode_table[] = {
 	{ 'D',	(SEGB | SEGC | SEGD | SEGE | SEGG) },
 	{ 'P',	(SEGA | SEGB | SEGE | SEGF | SEGG) },
 	{ 'E',	(SEGA | SEGD | SEGE | SEGF | SEGG) },
+		{ 'U',	(SEGB | SEGC | SEGD | SEGE | SEGF) },
+		{ 'G',	(SEGA | SEGC | SEGD | SEGE | SEGF) },
 	{ 'R',	(SEGE | SEGG) }
 };
 

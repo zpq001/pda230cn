@@ -33,25 +33,22 @@ EEMEM gParams_t eeGlobalParams =
 
 EEMEM cParams_t eeCalibrationParams = 
 {
-	.cpoint1 			= 25,
-	.cpoint1_adc 		= 164,
-	//.cpoint1_adc 		= 765,
+	.cpoint1 			= 25,	// Default Celsius for first point
+	.cpoint1_adc 		= 164,	// Normalized ADC for first point
 	.cpoint2 			= 145,
 	.cpoint2_adc 		= 433
-	//.cpoint2_adc 		= 2100
 };
 
 
 gParams_t p;		// Global params which are saved to and restored from EEPROM
 					// must be restored at system start
-					
 cParams_t cp;		// Calibration params
 
 
 
 uint8_t heaterState = 0;				// Global heater flags
-
-uint8_t autoPowerOffState = 0;
+uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode is active.
+										// Flag is set and cleared in menu module.
 
 
 int16_t pid_dterm_buffer[4];			// PID d-term filter buffer
@@ -79,6 +76,10 @@ int16_t dbg_PID_d_term;
 int16_t dbg_PID_i_term;
 int16_t dbg_PID_output;
 
+static uint8_t processPID(uint16_t setPoint, uint16_t processValue);
+
+
+
 
 // Function to control motor rotation
 void processRollControl(void)
@@ -101,7 +102,8 @@ void processRollControl(void)
 		// Control direction by buttons
 		if ((raw_button_state & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
 		{
-			// Stop
+			// Both Forward and Reverse buttons are pressed - stop
+			// Attention - stopping motor when rollers are hot can possibly damage them
 			setMotorDirection(0);
 		}
 		else if (button_action_down & BD_ROTFWD)
@@ -193,6 +195,7 @@ void processRollControl(void)
 
 void heaterInit(void)
 {
+	// FIXME
 	//processPID(0,adc_normalized);
 	processPID(0,adc_filtered);			// oversampled PID control
 }
@@ -236,9 +239,13 @@ void processHeaterControl(void)
 		// If heater is disabled, override output
 		if (!(heaterState & HEATER_ENABLED))
 			pid_output = 0;
+		// If unregulated mode is selected, set full power
+		else if (p.setup_temp_value >= MAX_SET_TEMP)
+			pid_output = HEATER_MAX_POWER;		// This mode must be used with care for calibration only
 			
 		// Set new heater power value	
 		setHeaterPower(pid_output);	
+		
 		
 		//------- Debug --------//		
 		// PID input:
