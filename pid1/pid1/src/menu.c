@@ -384,9 +384,15 @@ void mf_setTempSelect(void)
 	mf_leafSelectAct();		// setup and start timer
 }
 
+
+//PROGMEM const char ms_setTempDo[] =  {' ',' ',' ',' ',0xB0,'C',0};
+//PROGMEM const char ms_setTempUnreg[] = " UNREG";
+
 void mf_setTempDo(void)
 {
 	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
+	//char str[7];
+	//strcpy_P(str,str1_PM);
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
@@ -411,9 +417,6 @@ void mf_setTempDo(void)
 	{
 		printLedBuffer(0," UNREG");
 	}
-	
-	
-
 	
 	
 	if (userTimer.FA_GE)

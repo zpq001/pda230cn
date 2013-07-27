@@ -55,8 +55,8 @@ const __flash encode_7seg_pair led_encode_table[] = {
 	{ 'D',	(SEGB | SEGC | SEGD | SEGE | SEGG) },
 	{ 'P',	(SEGA | SEGB | SEGE | SEGF | SEGG) },
 	{ 'E',	(SEGA | SEGD | SEGE | SEGF | SEGG) },
-		{ 'U',	(SEGB | SEGC | SEGD | SEGE | SEGF) },
-		{ 'G',	(SEGA | SEGC | SEGD | SEGE | SEGF) },
+	{ 'U',	(SEGB | SEGC | SEGD | SEGE | SEGF) },
+	{ 'G',	(SEGA | SEGC | SEGD | SEGE | SEGF) },
 	{ 'R',	(SEGE | SEGG) }
 };
 
@@ -211,6 +211,7 @@ void processLedIndicator()
 	// Perform regular shift
 	led_clock_pulse(!LED_DIGIT_ACT_LVL);
 	
+	// Switch on active window item position
 	switch (wActivePos)
 	{
 	case 0:
@@ -337,6 +338,28 @@ void fillLedBuffer(int8_t offset, uint8_t length, char c)
 	}
 }
 
+#ifdef USE_SIMPLE_PRINT
+//---------------------------------------------//
+// Prints a string to buffer in circular manner.
+// Arguments:
+//		offset	- buffer index to start with (with respect to bufStartPos)
+//		str - null-terminated char string
+//---------------------------------------------//		
+void printLedBuffer(int8_t offset, char* str)
+{
+	char c;
+	uint8_t decoded_sym;
+	// Ensure index is inside the buffer
+	uint8_t buffer_position = wrap_led_buffer_index((int8_t)bufStartPos + offset);
+	// Output chars
+	while((c = *str++))
+	{
+		decoded_sym = decode_led_char(c);
+		led_data_buffer[buffer_position] = decoded_sym;
+		buffer_position = inc_buffer_position(buffer_position);
+	}
+}
+#else
 //---------------------------------------------//
 // Prints a string to buffer in circular manner.
 // Arguments:
@@ -375,7 +398,7 @@ void printLedBuffer(int8_t offset, char* str)
 		state = (state & 0x01) ? 0x03 : 0x00;		
 	}
 }
-
+#endif
 
 //---------------------------------------------//
 // Sets comma sign in the (bufStartPos + offset) 

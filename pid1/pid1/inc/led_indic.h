@@ -9,6 +9,22 @@
 #ifndef LED_INDIC_H_
 #define LED_INDIC_H_
 
+/*
+                         bufStartPos
+led_data_buffer:             |
+      0     1    2    3    4    5    6    7    8    9
+    ===================================================
+    |    |    |    |    |    |    |    |    |    |    |    <- this is data
+    ===================================================
+              |                        |
+			  |  0    1    2    3    4 |
+              ==========================
+Window:       |    |    |    |    |    |	<- this is actualy displayed
+              ==========================
+Window start position (wStartPos) = 2
+Window length = NUM_DIGITS (of LED display)
+bufStartPos defines start position for writing strings
+*/
 
 typedef struct {
 	uint8_t code;
@@ -20,14 +36,15 @@ typedef struct {
 *					Settings					*
 ************************************************/
 
-#define LED_BUFFER_LENGTH	(12+2)	// Size of LED display buffer - NUM_DIGITS x2 + 2 spaces for shifting
-
 #define NUM_DIGITS			6	// Number of digits of LED display
+#define LED_BUFFER_LENGTH	(NUM_DIGITS * 2 + 2)	
+
 #define SETUP_DELAY_US		5	// Serial data setup time, us
 #define SHIFT_DELAY_US		5	// Serial clock hold time, us
 #define PULLUP_DELAY_US		10	// Delay between disabling segment outputs and reading buttons
 
 #define USE_EXTRA_LED_DIGIT		// Use this if you want to manage some separate LEDs dynamically
+#define USE_SIMPLE_PRINT		// Simplified string print (no comma processing)
 #define EXTRA_DIGIT_NUM		6	// Number of digit with separate LEDs, this value must be <= NUM_DIGITS
 
 #define LED_DIGIT_ACT_LVL	0	// Active level for a digit (common pin for all segments)
