@@ -96,6 +96,13 @@ void processRollControl(void)
 			force_rotate = ROLL_FWD;		// Default direction
 			setMotorDirection(0);			// Stop the motor
 		}
+		else
+		{
+			if (!(rollState & (ROLL_FWD | ROLL_REV)))
+			{
+				setMotorDirection(ROLL_FWD);		// FIXME
+			}
+		}
 	}
 	else
 	{
