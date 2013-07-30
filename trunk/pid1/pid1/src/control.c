@@ -18,6 +18,17 @@
 #include "adc.h"
 
 
+/*
+	TODO: check types
+	
+	Temperature setup (Celsius):		uint8_t
+	Calibration points (Celsius):		uint8_t
+	Measured temperature (Celsius):		int16_t
+	Measured temperature (normalized):	uint16_t
+	
+	PID input: f(adc_filtered) => 	uint16_t
+	PID refer. f(setup_temp_value) => uint16_t
+*/
 
 
 // Global variables - main system control
@@ -90,17 +101,26 @@ void processRollControl(void)
 	// Process auto power off control
 	if (autoPowerOffState & AUTO_POFF_ACTIVE)
 	{
-		stopCycleRolling(1);	
-		if (adc_celsius <= POFF_MOTOR_TRESHOLD)
+		stopCycleRolling(RESET_POINTS);	
+		if ( (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED)) ||
+			 (adc_celsius > (POFF_MOTOR_TRESHOLD + MOTOR_HYST)) )
 		{
-			force_rotate = ROLL_FWD;		// Default direction
-			setMotorDirection(0);			// Stop the motor
-		}
-		else
-		{
+			// If there is any sensor error, or
+			// if temperature is greater than (threshold + some hysteresis) 
 			if (!(rollState & (ROLL_FWD | ROLL_REV)))
 			{
-				setMotorDirection(ROLL_FWD);		// FIXME
+				// If motor is stopped
+				setMotorDirection(ROLL_FWD);		// Start rotating in order to prevent rollers damage
+				force_rotate = 0;					// Do not start motor on power off exit
+			}
+		}
+		else if (adc_celsius <= POFF_MOTOR_TRESHOLD)
+		{
+			if (rollState & (ROLL_FWD | ROLL_REV))
+			{	
+				// If temperature is below threshold and motor is rotating
+				setMotorDirection(0);			// Stop the motor
+				force_rotate = ROLL_FWD;		// Start motor on power-off mode exit
 			}
 		}
 	}
@@ -125,8 +145,8 @@ void processRollControl(void)
 		}		
 		else if (button_action_long & BD_CYCLE)
 		{
-			stopCycleRolling(1);		// Reset points and disable CYCLE mode (if was enabled)
-			beepState |= 0x08;			// reset of points by long pressing of ROLL button
+			stopCycleRolling(RESET_POINTS);		// Reset points and disable CYCLE mode (if was enabled)
+			beepState |= 0x08;					// reset of points by long pressing of ROLL button
 		}
 		else if (force_rotate)
 		{
@@ -140,7 +160,7 @@ void processRollControl(void)
 		{
 			if (rollState & ROLL_CYCLE)
 			{
-				stopCycleRolling(0);
+				stopCycleRolling(DO_NOT_RESET_POINTS);
 				beepState |= 0x20;		// stopped cycle
 			}
 			else if (startCycleRolling())
@@ -152,13 +172,14 @@ void processRollControl(void)
 				beepState |= 0x40;		// failed to start cycle
 			}			
 		}		
-			
+		
+		// ROLL_DIR_CHANGED is set only when direction is changed automaticaly,
+		// not when changed by calling setMotorDirection() function
 		if (rollState & ROLL_DIR_CHANGED)
 		{
 			rollState &= ~ROLL_DIR_CHANGED;
 			beepState |= 0x04;	
 		}
-			
 		if (rollState & CYCLE_ROLL_DONE)
 		{
 			rollState &= ~CYCLE_ROLL_DONE;
@@ -351,6 +372,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 
 
 // Function to process all heater alerts:
+//	- sensor errors
 //	- getting near to desired temperature
 //	- continuous heating when disabled
 void processHeaterAlerts(void)
@@ -358,6 +380,21 @@ void processHeaterAlerts(void)
 	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
 	static uint16_t refCapturedTemp = 0xFFFF;
 	uint16_t currentTemperature = adc_celsius;
+	
+	// ADC sensor errors alert
+	if (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED))
+	{
+		if (sys_timers.flags & EXPIRED_10SEC)
+		{
+			// Enable beeper output regardless of menu setting
+			OverrideSoundDisable();
+			SetBeeperFreq(800);
+			StartBeep(2000);	
+		}
+		
+		// No more alerts should be processed
+		return
+	}
 	
 	
 	// Indicate reaching of desired temperature
@@ -417,14 +454,10 @@ void processHeaterAlerts(void)
 
 void restoreGlobalParams(void)
 {
+	// Restore global parameters - temperature setting, sound enable, etc.
 	eeprom_read_block(&p,&eeGlobalParams,sizeof(eeGlobalParams));
-	eeprom_read_block(&cp,&eeCalibrationParams,sizeof(eeCalibrationParams));
-	 
-//	 cpoint1 		= 25;		// TODO: check and remove
-//	 cpoint1_adc 	= 164;
-//	 cpoint2 		= 145;
-//	 cpoint2_adc 	= 433;
-	 
+	// Restore ADC calibration parameters
+	eeprom_read_block(&cp,&eeCalibrationParams,sizeof(eeCalibrationParams));	 
 }
 
 
@@ -437,7 +470,6 @@ void saveCalibrationToEEPROM(void)
 
 void exitPowerOff(void)
 {
-
 	// Put all ports into HI-Z
 	DDRB = 0x00;
 	PORTB = 0x00;
@@ -449,9 +481,10 @@ void exitPowerOff(void)
 	// Disable all interrupts
 	cli();
 	
-	// Save parameters to EEPROM
+	// Save global parameters to EEPROM
+	// Calibration parameters are only saved after calibrating 
 	eeprom_update_block(&p,&eeGlobalParams,sizeof(eeGlobalParams));	
-
+	
 	// DIE!
 	while(1);
 }

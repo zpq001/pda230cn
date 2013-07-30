@@ -71,6 +71,62 @@ void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
 	
 }
 
+//---------------------------------------------//
+// New version
+
+/*
+#define NO_TERMINATING_ZERO	0x80
+
+void u16toa_align_right(uint16_t val, char *buffer, uint8_t len, char fill_char)
+{
+	i32toa_align_right((int32_t)val, buffer, len);
+}
+
+
+void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
+{
+	uint8_t is_negative = 0;
+	if (!len)	return;
+	
+	if (val < 0)
+	{
+		val = -val;
+		is_negative = 1;
+	}
+	
+	if (len & NO_TERMINATING_ZERO)
+	{
+		len = len & ~NO_TERMINATING_ZERO;
+		buffer += len;	
+	}
+	else
+	{
+		buffer += len;	
+		*buffer = 0;
+	}
+	
+	do
+	{
+		*--buffer = val % 10 + '0';
+		val /= 10;
+		len--;
+	}
+	while ((val != 0) && len);
+	
+	if ( (len) && (is_negative) )
+	{
+		*--buffer = '-';
+		len--;	
+	}	
+	
+	// Padding
+	while(len--)
+		*--buffer = ' ';
+}
+*/
+
+
+
 /*
 // Reads bytes from FLASH into SRAM buffer until \0 is found, or
 // max_length bytes have been read.

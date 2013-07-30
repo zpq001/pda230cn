@@ -53,6 +53,9 @@ MOTOR	________________________________________________|*************************
 #define CYCLE_ROLL_DONE				0x10
 #define ROLL_DIR_CHANGED			0x20	// Set only automatically during cycle rolling
 
+// stopCycleRolling() argument:
+#define RESET_POINTS				0x01	// Resets roll points
+#define DO_NOT_RESET_POINTS			0x00
 
 
 extern uint8_t p_state;				// For read-only
