@@ -153,11 +153,11 @@ typedef struct
 
 
 // Global variables - main system control
-extern gParams_t p;		// Global params which are saved to and restored from EEPROM
-extern cParams_t cp;	// Calibration params
+extern gParams_t p;				// Global params which are saved to and restored from EEPROM
+extern cParams_t cp;			// Calibration params
 
-extern uint8_t heaterState;
-extern uint8_t autoPowerOffState;
+extern uint8_t heaterState;			
+extern uint8_t autoPowerOffState;	
 
 //------- Debug --------//
 extern uint8_t 		dbg_SetPointCelsius;	// Temperature setting, Celsius degree
