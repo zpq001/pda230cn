@@ -11,7 +11,7 @@
 
 
 #define ADC_BUFFER_LENGTH 32
-#define COEFF_SCALE	1000
+#define COEFF_SCALE	1000L
 
 
 // adc_status bits:

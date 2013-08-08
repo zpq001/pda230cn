@@ -249,7 +249,7 @@ int main(void)
 static void logU16p(uint16_t val)
 {
 	char str[6];
-	u16toa_align_right(val,str,6,' ');
+	u16toa_align_right(val,str,6);
 	USART_sendstr(str);
 }
 

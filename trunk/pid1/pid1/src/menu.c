@@ -363,7 +363,7 @@ void mf_realTempDo(void)
 	else
 	{
 		// Output ADC result to LED
-		u16toa_align_right(adc_celsius,str,0x80 | 4,' ');
+		u16toa_align_right(adc_celsius,str,NO_TERMINATING_ZERO | 4);
 		printLedBuffer(0,str);
 	}
 }
@@ -410,7 +410,7 @@ void mf_setTempDo(void)
 	// Output setting to LED
 	if (p.setup_temp_value < MAX_SET_TEMP)
 	{
-		u16toa_align_right(p.setup_temp_value,str,0x80 | 4,' ');
+		u16toa_align_right(p.setup_temp_value,str,NO_TERMINATING_ZERO | 4);
 		printLedBuffer(0,str);
 	}		
 	else
@@ -455,11 +455,11 @@ void mf_rollDo(void)
 			p.rollCycleSet -= ROLL_CYCLES_STEP;
 	}	
 		
-	u16toa_align_right(p.rollCycleSet,str + 4,0x80 | 2,' ');
+	u16toa_align_right(p.rollCycleSet,str + 4,NO_TERMINATING_ZERO | 2);
 	
 	if ((!(rollState & ROLL_CYCLE)) || (userTimer.FA_GE))
 	{
-		u16toa_align_right(activeRollCycle,str + 1,0x80 | 2,' ');
+		u16toa_align_right(activeRollCycle,str + 1,NO_TERMINATING_ZERO | 2);
 	}
 	
 	str[0] = 0;
@@ -561,7 +561,9 @@ void mf_autopoffDo(void)
 	if (userTimer.FA_GE)
 	{
 		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
-			u16toa_align_right(p.power_off_timeout,str + 4,0x80 | 2,' ');	
+		{
+			u16toa_align_right(p.power_off_timeout,str + 4,NO_TERMINATING_ZERO | 2);	
+		}			
 		else 
 		{
 			str[4] = 'N';
@@ -627,7 +629,7 @@ void mf_calibDo(void)
 	
 	if (userTimer.FA_GE)
 	{
-		u16toa_align_right(cpoint_user_val,str,3,' ');
+		u16toa_align_right(cpoint_user_val,str,3);
 		resetAutoPowerOffCounter();
 		heaterState |= CALIBRATION_ACTIVE;
 	}

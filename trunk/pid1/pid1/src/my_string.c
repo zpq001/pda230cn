@@ -7,8 +7,9 @@
 
 
 #include "compilers.h"
+#include "my_string.h"
 
-
+/*
 
 // Converts uint16_t value into decimal string with right alignment
 // len = number of digits output (without terminating '\0')
@@ -70,17 +71,18 @@ void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
 		*--buffer = ' ';
 	
 }
-
+*/
 //---------------------------------------------//
 // New version
 
-/*
-#define NO_TERMINATING_ZERO	0x80
 
-void u16toa_align_right(uint16_t val, char *buffer, uint8_t len, char fill_char)
+
+
+void u16toa_align_right(uint16_t val, char *buffer, uint8_t len)
 {
 	i32toa_align_right((int32_t)val, buffer, len);
 }
+
 
 
 void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
@@ -123,7 +125,7 @@ void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
 	while(len--)
 		*--buffer = ' ';
 }
-*/
+
 
 
 

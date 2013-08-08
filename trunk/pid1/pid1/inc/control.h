@@ -133,6 +133,7 @@ typedef struct
 
 #define POFF_MOTOR_TRESHOLD	50				// Below this temperature point motor will stop
 											// if auto power off mode is active
+#define POFF_MOTOR_HYST		5
 
 // Temperature reaching alert range
 #define TEMP_ALERT_RANGE	5				// Signal will be active when temperature reach
