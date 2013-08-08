@@ -103,7 +103,7 @@ void processRollControl(void)
 	{
 		stopCycleRolling(RESET_POINTS);	
 		if ( (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED)) ||
-			 (adc_celsius > (POFF_MOTOR_TRESHOLD + MOTOR_HYST)) )
+			 (adc_celsius > (POFF_MOTOR_TRESHOLD + POFF_MOTOR_HYST)) )
 		{
 			// If there is any sensor error, or
 			// if temperature is greater than (threshold + some hysteresis) 
@@ -393,7 +393,7 @@ void processHeaterAlerts(void)
 		}
 		
 		// No more alerts should be processed
-		return
+		return;
 	}
 	
 	
