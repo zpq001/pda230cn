@@ -11,15 +11,27 @@
 #include "adc.h"
 #include "control.h"
 
+/*
+	ADC & PID data types:
+	
+	Temperature setup (Celsius):		uint8_t
+	Calibration points (Celsius):		uint8_t
+	Measured temperature (Celsius):		int16_t
+	Measured temperature (normalized):	uint16_t
+	
+	PID input: f(adc_filtered) => 	uint16_t
+	PID refer. f(setup_temp_value) => uint16_t
+*/
+
 
 
 uint16_t adc_normalized;			// normalized (used for calibration) ADC value
-uint16_t adc_celsius;				// Celsius degree value (used for indication / calibration)
-uint16_t adc_oversampled;
-uint16_t adc_filtered;
+int16_t adc_celsius;				// Celsius degree value (used for indication / calibration)
+uint16_t adc_oversampled;			// Oversampled and filtered ADC versions are used for PID
+uint16_t adc_filtered;				//		control only
 uint8_t adc_status;					// Sensor and ADC status
 
-uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC ring buffer
+uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC buffer
 
 
 int16_t filter_buffer[20];
@@ -60,12 +72,12 @@ static int32_t offset_norm;			// integer, scaled by COEFF_SCALE
 //---------------------------------------------//
 
 
-uint16_t conv_ADC_to_Celsius(uint16_t adc_value)
+int16_t conv_ADC_to_Celsius(uint16_t adc_value)
 {	
-	return (uint16_t)(((int32_t)adc_value * k_norm + offset_norm) / (COEFF_SCALE));
+	return (int16_t)(((int32_t)adc_value * k_norm + offset_norm) / (COEFF_SCALE));
 }
 
-uint16_t conv_Celsius_to_ADC(uint16_t degree_value)
+uint16_t conv_Celsius_to_ADC(int16_t degree_value)
 {
 	degree_value += 1;
 	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm) / k_norm);

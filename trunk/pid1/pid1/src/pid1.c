@@ -179,7 +179,7 @@ int main(void)
 			// this function before menu and power controls processing
 			processSystemTimers();
 
-			// Warn user about near auto powering off
+			// Warn user about soon auto powering off
 			if (sys_timers.flags & AUTOPOFF_SOON)
 			{
 				SetBeeperFreq(1200);
