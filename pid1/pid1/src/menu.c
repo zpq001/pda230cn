@@ -363,7 +363,8 @@ void mf_realTempDo(void)
 	else
 	{
 		// Output ADC result to LED
-		u16toa_align_right(adc_celsius,str,NO_TERMINATING_ZERO | 4);
+		//u16toa_align_right(adc_celsius,str,NO_TERMINATING_ZERO | 4);
+		i32toa_align_right((int32_t)adc_celsius,str,NO_TERMINATING_ZERO | 4);
 		printLedBuffer(0,str);
 	}
 }

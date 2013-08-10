@@ -27,16 +27,17 @@ typedef struct {
 
 
 extern uint16_t adc_normalized;
-extern uint16_t adc_celsius;
+extern int16_t adc_celsius;
 extern uint16_t adc_oversampled;
 extern uint16_t adc_filtered;
 extern uint8_t adc_status;
 
-void calculateCoeffs(void);
-uint16_t conv_ADC_to_Celsius(uint16_t adc_value);
-uint16_t conv_Celsius_to_ADC(uint16_t degree_value);
+
 void update_normalized_adc(void);
 void update_Celsius(void);
+void calculateCoeffs(void);
+int16_t conv_ADC_to_Celsius(uint16_t adc_value);
+uint16_t conv_Celsius_to_ADC(int16_t degree_value);
 
 int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_core);
 

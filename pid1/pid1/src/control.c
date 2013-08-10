@@ -18,17 +18,7 @@
 #include "adc.h"
 
 
-/*
-	TODO: check types
-	
-	Temperature setup (Celsius):		uint8_t
-	Calibration points (Celsius):		uint8_t
-	Measured temperature (Celsius):		int16_t
-	Measured temperature (normalized):	uint16_t
-	
-	PID input: f(adc_filtered) => 	uint16_t
-	PID refer. f(setup_temp_value) => uint16_t
-*/
+
 
 
 // Global variables - main system control
@@ -225,7 +215,7 @@ void heaterInit(void)
 {
 	// FIXME
 	//processPID(0,adc_normalized);
-	processPID(0,adc_filtered);			// oversampled PID control
+	//processPID(0,adc_filtered);			// oversampled PID control
 }
 
 
@@ -378,8 +368,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 void processHeaterAlerts(void)
 {
 	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
-	static uint16_t refCapturedTemp = 0xFFFF;
-	uint16_t currentTemperature = adc_celsius;
+	static int16_t refCapturedTemp = INT16_MAX;
+	int16_t currentTemperature = adc_celsius;
 	
 	// ADC sensor errors alert
 	if (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED))
