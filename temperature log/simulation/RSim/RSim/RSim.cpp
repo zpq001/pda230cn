@@ -9,10 +9,9 @@
 #include "stdint.h"
 #include "simulation.h"
 #include "plant.h"
-#include "regul.h"
-
-
-
+extern "C" {
+	#include "pid_controller.h"
+}
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -30,10 +29,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	float k_norm = 0.446;
 	float offset_norm = 48.144;
 
-	float tempSetting = 90;		// Desired temperature
+	float tempSetting = 120;		// Desired temperature
 	
-	initRegulator();
+	
 	initPlant(25.0, 25.0); 
+
+	// Calculate process value
+	plantState = getPlantState();					
+	processF = (plantState + offset_norm) / k_norm;	
+	processF *= 4;
+	//processF /= 2;
+	processValue = (uint16_t)processF;
+	initPID(processValue);	
+
 
 	// Log data
 	float log_state[LOG_SIZE];					// Plant state, float
@@ -43,7 +51,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	int16_t log_i_term[LOG_SIZE];
 	uint8_t log_pid_output[LOG_SIZE];
 	int log_index = 0;
-
+	 
 	//-------------------//
 
 
@@ -58,16 +66,18 @@ int _tmain(int argc, _TCHAR* argv[])
 			// Calculate process value
 			plantState = getPlantState();					
 			processF = (plantState + offset_norm) / k_norm;	
-			processF *= 5;
+			processF *= 4;
+			//processF /= 2;
 			processValue = (uint16_t)processF;
 			
 			// Calculate setpoint
 			setPointF = (tempSetting + offset_norm) / k_norm;
-			setPointF *= 5;
+			setPointF *= 4;
+			//setPointF /= 2;
 			setPoint = (uint16_t)setPointF;	
 			
 			// PID
-			effect = processPID(setPoint/2, processValue/2);
+			effect = processPID(setPoint, processValue);
 			
 			
 			pid_call_timer = 0;

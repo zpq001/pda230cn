@@ -27,13 +27,22 @@
     <ClInclude Include="inc\plant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\regul.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\stdint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\pid_controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\fir_filter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\compilers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\taps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,10 +53,13 @@
     <ClCompile Include="RSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\regul.cpp">
+    <ClCompile Include="src\plant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\plant.cpp">
+    <ClCompile Include="src\fir_filter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pid_controller.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
