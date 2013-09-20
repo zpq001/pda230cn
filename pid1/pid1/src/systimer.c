@@ -161,9 +161,7 @@ void StopBeep()
 
 
 
-
-
-
+// Period is 1ms @ 16MHz
 ISR(TIMER2_COMP_vect)
 {	
 	
@@ -183,5 +181,40 @@ ISR(TIMER2_COMP_vect)
 	ADCSRA |= (1<<ADSC);
 	
 }
+
+//==================================================//
+//				Sound driver						//
+//==================================================//
+
+//void Sound_PlaySong();
+//void Sound_Stop();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

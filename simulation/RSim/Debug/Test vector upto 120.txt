@@ -1,0 +1,5 @@
+.ambient 25
+.state 25
+0 OFF
+10 120
+2000 OFF

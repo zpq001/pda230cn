@@ -16,7 +16,7 @@
 #include "leds.h"
 #include "systimer.h"	
 #include "adc.h"
-
+#include "pid_controller.h"
 
 
 
@@ -51,34 +51,11 @@ uint8_t heaterState = 0;				// Global heater flags
 uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode is active.
 										// Flag is set and cleared in menu module.
 
-
-int16_t pid_dterm_buffer[4];			// PID d-term filter buffer
-
-filter8bit_core_t dterm_filter_core = {
-	.coeffs = {
-		64,
-		66,
-		64,
-		59
-	},
-	.n = 4,
-	.dc_gain = 256
-};
-
-
 //------- Debug --------//
 uint8_t 	dbg_SetPointCelsius;	// Temperature setting, Celsius degree
 uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
 uint8_t 	dbg_RealTempCelsius;	// Real temperature, Celsius degree
 uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
-
-int16_t dbg_PID_p_term;
-int16_t dbg_PID_d_term;
-int16_t dbg_PID_i_term;
-int16_t dbg_PID_output;
-
-static uint8_t processPID(uint16_t setPoint, uint16_t processValue);
-
 
 
 
@@ -214,8 +191,7 @@ void processRollControl(void)
 void heaterInit(void)
 {
 	// FIXME
-	//processPID(0,adc_normalized);
-	//processPID(0,adc_filtered);			// oversampled PID control
+	initPID(adc_filtered >> 1);
 }
 
 
@@ -282,79 +258,6 @@ void processHeaterControl(void)
 		setExtraLeds(LED_HEATER);
 	else
 		clearExtraLeds(LED_HEATER);
-	
-}
-
-
-
-
-uint8_t processPID(uint16_t setPoint, uint16_t processValue)
-{
-	int16_t error, p_term, i_term, d_term, temp;
-	static uint16_t lastProcessValue;
-	static int16_t integAcc = 0;
-	
-	error = setPoint - processValue;
-	
-	
-	//------ Calculate P term --------//
-	
-	if (error > 100 )
-	{
-		p_term = 2000;	
-	}
-	else if (error < -100 )
-	{
-		p_term = -2000 ;	
-	}
-	else
-	{
-		p_term = error * Kp;
-	}
-	
-	//------ Calculate I term --------//
-
-	integAcc += error;
-	
-	if (integAcc > 2000 )
-	{
-		integAcc = 2000;
-	}
-	else if (integAcc < 0)
-	{
-		integAcc = 0;
-	}
-	i_term = integAcc * Ki;
-	i_term /= 40;
-	
-	
-	//------ Calculate D term --------//
-	// 13_1
-	d_term = fir_i16_i8((lastProcessValue - processValue)*10, pid_dterm_buffer, &dterm_filter_core);
-	lastProcessValue = processValue;
-	d_term = Kd * d_term;
-	
-	//--------- Summ terms -----------//
-	temp = (p_term + i_term + d_term) / SCALING_FACTOR;
-	
-	if (temp > 100)
-	{
-		temp = 100;
-	}
-	else if (temp < 0)
-	{
-		temp = 0;
-	}
-	
-	
-	//------- Debug --------//
-	dbg_PID_p_term = p_term;
-	dbg_PID_d_term = d_term;
-	dbg_PID_i_term = i_term;
-	dbg_PID_output = temp;
-	
-	
-	return temp;
 	
 }
 
