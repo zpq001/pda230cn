@@ -8,7 +8,7 @@
 	ISR:	Analog comparator (AC line sync)
 	ISR:	Timer0 (used for power control)
 	ISR:	Timer2 (system timer)
-	ISR:	ADC (ADC conversion is started by Timer0)
+	ISR:	ADC (ADC conversion is started by Timer2 ISR)
  
  */ 
 
@@ -33,6 +33,7 @@
 #include "control.h"
 #include "menu.h"
 #include "my_string.h"
+#include "pid_controller.h"
 
 extern volatile SoftTimer8b_t menuUpdateTimer;
 

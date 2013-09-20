@@ -10,6 +10,7 @@
 #include "port_defs.h"
 #include "adc.h"
 #include "control.h"
+#include "fir_filter.h"
 
 /*
 	ADC & PID data types:
@@ -20,7 +21,7 @@
 	Measured temperature (normalized):	uint16_t
 	
 	PID input: f(adc_filtered) => 	uint16_t
-	PID refer. f(setup_temp_value) => uint16_t
+	PID set point. f(setup_temp_value) => uint16_t
 */
 
 
@@ -89,6 +90,13 @@ void calculateCoeffs(void)
 	offset_norm = (int32_t)cp.cpoint1 * COEFF_SCALE - (int32_t)cp.cpoint1_adc * k_norm;
 }
 
+/*
+	In order to increase ADC resolution oversampling is used.
+	To get result with n extra bits the summ of 4^n samples must be divided by 2^n.
+	If we want 12-bit result from 10-bit raw ADC, we should get 4^2 = 16 samples, summ them and
+	divide by 2^2 = 4 (equal to right-shift by 2)
+*/
+
 
 void update_normalized_adc()
 {
@@ -103,7 +111,7 @@ void update_normalized_adc()
 	ADCSRA |= (1<<ADIE);
 	
 	adc_normalized = adc_raw_summ >> 5;		// ADC_BUFFER_LENGTH = 32 !
-	adc_oversampled = adc_raw_summ >> 3;
+	adc_oversampled = adc_raw_summ >> 3;	// adc_oversampled is 4 times greater than adc_normalized
 	// Filter
 	adc_filtered = fir_i16_i8(adc_oversampled, filter_buffer, &fir_filter_rect);	
 	// Check sensor
@@ -123,7 +131,7 @@ void update_Celsius(void)
 
 
 
-
+// ADC conversion is started by system timer (Timer2 ISR) every 1 ms
 ISR(ADC_vect)
 {
 	static uint8_t adc_buffer_pointer = ADC_BUFFER_LENGTH;
@@ -137,26 +145,6 @@ ISR(ADC_vect)
 
 
 
-
-//---------------------------------------------//
-// FIR digital filter
-// Samples: signed, 16-bit
-// Coeffs:  signed, 8-bit
-//---------------------------------------------//
-int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_core)
-{
-	int32_t summ;
-	uint8_t i;
-	
-	summ = new_sample * iir_core->coeffs[0];
-	for (i=iir_core->n-1; i>0; i--)
-	{
-		samples[i] = samples[i-1];
-		summ += (int32_t)samples[i] * iir_core->coeffs[i];
-	}
-	samples[0] = new_sample;
-	return (int16_t)(summ / iir_core->dc_gain);
-}
 
 
 
