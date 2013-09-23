@@ -186,7 +186,7 @@ ISR(TIMER2_COMP_vect)
 //				Sound driver						//
 //==================================================//
 
-//void Sound_PlaySong();
+//void Sound_Play();
 //void Sound_Stop();
 
 
