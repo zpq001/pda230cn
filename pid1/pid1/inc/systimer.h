@@ -57,4 +57,25 @@ void resetAutoPowerOffCounter(void);
 
 void processSystemTimers(void);
 
+
+//==================================================//
+//				Sound driver						//
+//==================================================//
+/*
+typedef struct
+{
+	uint8_t tone_period;		// in 16us gradation	
+	uint8_t duration;			// in 10ms gradation
+} tone_t;
+
+
+	uint8_t repeats;			// 1 - play once, 2 - play twice and so on
+*/
+
+
+
+
+
+
+
 #endif /* SYSTIMER_H_ */

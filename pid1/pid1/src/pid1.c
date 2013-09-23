@@ -110,6 +110,8 @@ int main(void)
 	// Initialize MCU IO
 	init_system_io();
 	// Restore params from EEPROM
+	// If some values are corrupted, settings and calibration are loaded with default configuration.
+	//temp8u = restoreGlobalParams();
 	restoreGlobalParams();
 	// Calibrate ADC coefficients using restored params
 	calculateCoeffs();
@@ -118,6 +120,15 @@ int main(void)
 	// Clear comparator interrupt flag to prevent false triggering
 	ACSR |= (1<<ACI);
 	sei();
+	// If default values were loaded from EEPROM, inform user
+/*	if (temp8u)
+	{
+		printLedBuffer(0,"ERR EE");
+		// Beep
+		SetBeeperFreq(800);
+		StartBeep(200);
+		_delay_ms(200);
+	} */
 	// Safety delay for power part and ADC buffer
 	_delay_ms(100);
 	// Check AC line
