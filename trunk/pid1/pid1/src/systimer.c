@@ -13,9 +13,6 @@
 #include "adc.h"
 #include "control.h"
 
-static uint16_t beep_cnt = 0;
-static uint8_t enableOverride = 0;
-
 
 SoftTimer8b_t menuUpdateTimer = {
 	.Enabled = 1,
@@ -98,6 +95,37 @@ void resetAutoPowerOffCounter(void)
 // ----------------------- //
 
 
+// Period is 1ms @ 16MHz
+ISR(TIMER2_COMP_vect)
+{	
+	
+	// Manage beeper
+	if (beep_cnt)
+		beep_cnt--;
+	else
+		SetBeepOutput(0);	// done
+	
+	// Manage LED indicator
+	processLedIndicator();
+	
+	// Do sound stuff
+	//Sound_Process();
+	
+	// Process menu update timer
+	processSoftTimer8b(&menuUpdateTimer);	
+	
+	// Start ADC conversion 
+	ADCSRA |= (1<<ADSC);
+	
+}
+
+//==================================================//
+//				Sound driver						//
+//==================================================//
+
+static uint16_t beep_cnt = 0;
+static uint8_t enableOverride = 0;
+
 
 
 // Enable / disable beeper output
@@ -159,35 +187,132 @@ void StopBeep()
 
 
 
+/*
+static uint8_t sound_state = SOUND_OFF;
+static const EEMEM tone_t* current_melody;
+static uint8_t SoundEnable_override = 0;
 
 
-// Period is 1ms @ 16MHz
-ISR(TIMER2_COMP_vect)
-{	
-	
-	// Manage beeper
-	if (beep_cnt)
-		beep_cnt--;
-	else
-		SetBeepOutput(0);	// done
-	
-	// Manage LED indicator
-	processLedIndicator();
-	
-	// Process menu update timer
-	processSoftTimer8b(&menuUpdateTimer);	
-	
-	// Start ADC conversion 
-	ADCSRA |= (1<<ADSC);
-	
+void Sound_Play(const EEMEM tone_t* p_melody)
+{
+	if ((p.sound_enable) || (SoundEnable_override))
+	{
+		// Disable interrupts from timer2 - the possible source of calling Sound_Process()
+		TIMSK &= ~(1<<OCIE2);				
+		current_melody = p_melody;
+		sound_state = SOUND_SET_TONE;
+		SoundEnable_override = 0;
+		// Reenable interrupts
+		TIMSK |= (1<<OCIE2);
+	}
 }
 
-//==================================================//
-//				Sound driver						//
-//==================================================//
+void Sound_Stop(void)
+{
+	// Disable interrupts from timer2 - the possible source of calling Sound_Process()
+	TIMSK &= ~(1<<OCIE2);				
+	sound_state = SOUND_OFF;
+	// Reenable interrupts
+	TIMSK |= (1<<OCIE2);
+}
 
-//void Sound_Play();
-//void Sound_Stop();
+void Sound_OverrideDisable(void)
+{
+	SoundEnable_override = 1;
+}
+
+static inline void GetNextTone(const EEMEM tone_t* p_melody, tone_t* tone)
+{
+	eeprom_read_block(&tone,&p_melody,sizeof(tone_t));	
+}
+
+static inline void Sound_Process(void)
+{
+	static uint16_t note_time_counter;
+	tone_t tone;
+	
+	switch (sound_state)
+	{
+		case SOUND_PLAY:
+			if (--note_time_counter != 0)
+				break;
+			// If current tone time is over, we fall through to state SOUND_SET_TONE 
+		case SOUND_SET_TONE:
+			tone = GetNextTone(*current_melody++);
+			if (tone.duration == 0)
+			{
+				// Last tone will be longer for one Sound_Process call period.
+				// If it is a problem, add disabling timer output here.
+				sound_state = SOUND_OFF;	
+			}
+			else
+			{
+				// Setup period
+				if (tone.tone_period != 0)
+				{
+					// Timer runs at 250kHz (T = 4us), tone_period is set in units of 8us
+					// Output toggles on compare match
+					OCR1A = tone.tone_period - 1;
+					// Toggle OCR1A on compare match
+					TCCR1A |= (1<<COM1A0);
+				}
+				else
+				{
+					// Disable OCR1A output
+					TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+				}
+				note_time_counter = tone.duration * TONE_DURATION_SCALE;
+				sound_state = SOUND_PLAY;
+			}
+			break;
+		default:
+			// Disable OCR1A output
+			TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+			break;
+	}
+}
+
+
+
+
+const EEMEM tone_t[] m_beep_1000Hz_100ms = {
+	{ FREQ(1000),	LAST(1000) },
+	{0,	0}	
+};
+
+const EEMEM tone_t[] m_siren1 = {
+	{ FREQ(800),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1200),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(800),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1200),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(800),	LAST(200) },
+	{0,	0}	
+};
+
+const EEMEM tone_t[] m_siren2 = {
+	{ FREQ(700),	LAST(400) },
+	{ FREQ(900),	LAST(400) },
+	{ FREQ(800),	LAST(400) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(0),		LAST(200) },
+	{ FREQ(900),	LAST(400) },
+	{ FREQ(1000),	LAST(400) },
+	{0,	0}	
+};
+
+*/
 
 
 

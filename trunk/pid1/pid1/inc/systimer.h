@@ -44,6 +44,15 @@ typedef struct {
 extern uint8_t minute_counter;
 extern sys_timers_t sys_timers;
 
+void resetAutoPowerOffCounter(void);
+
+void processSystemTimers(void);
+
+
+//==================================================//
+//				Sound driver						//
+//==================================================//
+
 void StartBeep(uint16_t time_ms);
 void StopBeep();
 void OverrideSoundDisable(void);
@@ -53,24 +62,39 @@ void OverrideSoundDisable(void);
 void SetBeeperPeriod(uint16_t new_period_us);
 void SetBeeperFreq(uint16_t freq_hz);
 
-void resetAutoPowerOffCounter(void);
-
-void processSystemTimers(void);
-
-
-//==================================================//
-//				Sound driver						//
-//==================================================//
 /*
+// Sound driver FSM states
+#define SOUND_OFF	0
+#define SOUND_PLAY	1
+#define SOUND_SET_TONE	2
+
+#define TONE_DURATION_SCALE 10				// Single note duration may be up to 2.55 seconds
+
+#define FREQ(x) (125000 / x)				// Macro for specifying timer period from Hz frequency
+#define LAST(y)	(y/TONE_DURATION_SCALE)		// Macro for specifying tone duration from ms time units
+
 typedef struct
 {
 	uint8_t tone_period;		// in 16us gradation	
 	uint8_t duration;			// in 10ms gradation
 } tone_t;
 
+void Sound_Play(const EEMEM tone_t* p_melody);
+void Sound_Stop(void);
+void Sound_OverrideDisable(void);
 
-	uint8_t repeats;			// 1 - play once, 2 - play twice and so on
+const EEMEM tone_t[] m_beep_1000Hz_100ms;
+const EEMEM tone_t[] m_siren1;
+const EEMEM tone_t[] m_siren2;
+
+// Every melody table must be terminated with tone pair where duration = 0
 */
+
+
+
+
+	
+
 
 
 
