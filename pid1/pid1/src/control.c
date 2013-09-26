@@ -7,7 +7,7 @@
 
 
 #include <avr/eeprom.h>
-//#include <util/crc16.h>
+#include <util/crc16.h>
 #include "compilers.h"
 
 #include "control.h"
@@ -18,53 +18,56 @@
 #include "systimer.h"	
 #include "adc.h"
 #include "pid_controller.h"
+#include "progmem_func.h"
 
 
 
 
 // Global variables - main system control
 // Default values must reside in the FLASH memory - for the case when EEPROM is not programmed at all
-
+// At the very first start after programming MCU default values from FLASH memory are copied to EEPROM and
+// both calibration and global params get protected by 8-bit CRC. EEPROM error message is displayed.
 EEMEM gParams_t eeGlobalParams = 
 {
-	.setup_temp_value 	= 50,
-	.rollCycleSet 		= 10,
-	.sound_enable 		= 1,
-	.power_off_timeout 	= 30,
-//	.crc_byte = 0				// Must be correct CRC
+	.setup_temp_value 	= 0xFF,
+	.rollCycleSet 		= 0xFF,
+	.sound_enable 		= 0xFF,
+	.power_off_timeout 	= 0xFF,
 };
-/*
-PROGMEM gParams_t pmGlobalDefaults = 
-{
-	.setup_temp_value 	= 50,
-	.rollCycleSet 		= 10,
-	.sound_enable 		= 1,
-	.power_off_timeout 	= 30,
-	.crc_byte = 0				// Whatever, will be rewrited with correct value
-};
-*/
+
+EEMEM uint8_t ee_gParamsCRC = 0xFF;
+
 EEMEM cParams_t eeCalibrationParams = 
 {
-	.cpoint1 			= 25,	// Default Celsius for first point
-	.cpoint1_adc 		= 164,	// Normalized ADC for first point
-	.cpoint2 			= 145,
-	.cpoint2_adc 		= 433
-//	.crc_byte = 0				// Must be correct CRC
+	.cpoint1 			= 0xFF,		
+	.cpoint1_adc 		= 0xFFFF,	
+	.cpoint2 			= 0xFF,
+	.cpoint2_adc 		= 0xFFFF
 };
-/*
-PROGMEM cParams_t pmCalibrationDefaults = 
+
+EEMEM uint8_t ee_cParamsCRC = 0xFF;
+
+
+const PROGMEM gParams_t pmGlobalDefaults =
+{
+	.setup_temp_value 	= 50,
+	.rollCycleSet 		= 10,
+	.sound_enable 		= 1,
+	.power_off_timeout 	= 30
+};
+
+const PROGMEM cParams_t pmCalibrationDefaults = 
 {
 	.cpoint1 			= 25,	// Default Celsius for first point
-	.cpoint1_adc 		= 164,	// Normalized ADC for first point
+	.cpoint1_adc 		= 191,	// Normalized ADC for first point
 	.cpoint2 			= 145,
 	.cpoint2_adc 		= 433
-	.crc_byte = 0				// Whatever, will be rewrited with correct value
 };
-*/
+
 
 gParams_t p;		// Global params which are saved to and restored from EEPROM
-					// must be restored at system start
-cParams_t cp;		// Calibration params
+					// The global parameters are saved only when device is disconnected from the AC line 
+cParams_t cp;		// Calibration params are saved only after calibration of any of two calibration points
 
 
 
@@ -161,7 +164,7 @@ void processRollControl(void)
 			}			
 		}		
 		
-		// ROLL_DIR_CHANGED is set only when direction is changed automaticaly,
+		// ROLL_DIR_CHANGED is set only when direction is changed automatically,
 		// not when changed by calling setMotorDirection() function
 		if (rollState & ROLL_DIR_CHANGED)
 		{
@@ -249,7 +252,10 @@ void processHeaterControl(void)
 		processValue = adc_filtered >> 1;	// normal PID control
 		
 		// Process PID
+		// Possibly hold PID in reset while disabled ?
+		// Reset when setting is changed ?
 		pid_output = processPID(setPoint, processValue);		
+					
 					
 		// If heater is disabled, override output
 		if (!(heaterState & HEATER_ENABLED))
@@ -365,88 +371,76 @@ void processHeaterAlerts(void)
 
 }
 
-/*
-static uint8_t getGlobalParamsCRC(gParams_t* params)
-{
-	uint8_t last_crc_byte = 0;
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->setup_temp_value);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->rollCycleSet);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->sound_enable);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->power_off_timeout);
-	return last_crc_byte;
-}
 
-static uint8_t getCalibrationParamsCRC(cParams_t* params)
+static uint8_t getDataCRC(void *p,uint8_t byte_count)
 {
-	uint8_t last_crc_byte = 0;
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->cpoint1);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->cpoint2);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->cpoint1_adc);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->cpoint1_adc >> 8);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->cpoint2);
-	last_crc_byte = _crc_ibutton_update (last_crc_byte, (uint8_t)params->cpoint2_adc >> 8);
-	return last_crc_byte;
-}
-*/
-/*
-// TODO: check and debug, use in menu.c for menu items load
-void readPGM_block(void *dst, void *pgm_src, uint8_t count)
-{
-	uint8_t temp;
-	while(count--)
+	uint8_t crc_byte = 0;
+	while(byte_count--)
 	{
-		temp = pgm_read_byte(src*++);
-		*dsp++ = temp;
+		// Using ibutton CRC function for reason of 8-bit output CRC
+		crc_byte = _crc_ibutton_update (crc_byte, *(uint8_t*)p++);	
 	}
+	return crc_byte;
 }
-*/
 
-//uint8_t restoreGlobalParams(void)
-void restoreGlobalParams(void)
+
+uint8_t restoreGlobalParams(void)
+//void restoreGlobalParams(void)
 {
-//	uint8_t crc_byte;
-//	uint8_t defaults_used = 0;
+	uint8_t crc_byte;
+	uint8_t temp8u;
+	uint8_t defaults_used = 0;
+	
 	// Restore global parameters - temperature setting, sound enable, etc.
-	eeprom_read_block(&p,&eeGlobalParams,sizeof(eeGlobalParams));
-/*	crc_byte = getGlobalParamsCRC(&p);
+	eeprom_read_block(&p,&eeGlobalParams,sizeof(gParams_t));
+	//crc_byte = getGlobalParamsCRC(&p);
+	crc_byte = getDataCRC(&p,sizeof(gParams_t));
+	temp8u = eeprom_read_byte(&ee_gParamsCRC);
 	// Restore global defaults if corrupted
-	if (p.crc_byte != crc_byte)
+	if (temp8u != crc_byte)
 	{
-		p.setup_temp_value = 	pgm_read_byte(&pmGlobalDefaults->setup_temp_value);
-		p.rollCycleSet = 		pgm_read_byte(&pmGlobalDefaults->rollCycleSet);
-		p.sound_enable = 		pgm_read_byte(&pmGlobalDefaults->sound_enable);
-		p.power_off_timeout = 	pgm_read_byte(&pmGlobalDefaults->power_off_timeout);
-		// CRC will be calculated automaticaly before exit
+		PGM_read_block(&p,&pmGlobalDefaults,sizeof(gParams_t));
+		// Save restored default values with correct CRC
+		saveGlobalParamsToEEPROM();
 		defaults_used |= 0x01;
 	}
-*/	
+	
 	// Restore ADC calibration parameters
-	eeprom_read_block(&cp,&eeCalibrationParams,sizeof(eeCalibrationParams));	 
-/*	crc_byte = getCalibrationParamsCRC(&cp);
+	eeprom_read_block(&cp,&eeCalibrationParams,sizeof(cParams_t));	 
+	//crc_byte = getCalibrationParamsCRC(&cp);
+	crc_byte = getDataCRC(&cp,sizeof(cParams_t));
+	temp8u = eeprom_read_byte(&ee_cParamsCRC);
 	// Restore calibration defaults if corrupted
-	if (cp.crc_byte != crc_byte)
+	if (temp8u != crc_byte)
 	{
-		cp.cpoint1 = pgm_read_byte(&pmCalibrationDefaults->cpoint1);
-		cp.cpoint2 = pgm_read_byte(&pmCalibrationDefaults->cpoint2);
-		cp.cpoint1_adc = pgm_read_word(&pmCalibrationDefaults->cpoint1_adc);
-		cp.cpoint2_adc = pgm_read_word(&pmCalibrationDefaults->cpoint2_adc);
-		// CRC will be calculated automaticaly before exit
+		PGM_read_block(&cp,&pmCalibrationDefaults,sizeof(cParams_t));
+		// Save restored default values with correct CRC
+		saveCalibrationToEEPROM();
 		defaults_used |= 0x02;	
 	}
 	
 	return defaults_used;
-	*/
 }
 
 
 void saveCalibrationToEEPROM(void)
 {
-	// Calibration parameters are only saved after calibrating 
-//	cp.crc_byte = getCalibrationParamsCRC(&cp);
-	eeprom_update_block(&cp,&eeCalibrationParams,sizeof(eeCalibrationParams));	
+	// Calibration parameters normally are only saved after calibrating 
+	//cp.crc_byte = getCalibrationParamsCRC(&cp);
+	uint8_t new_crc_byte = getDataCRC(&cp,sizeof(cParams_t));
+	eeprom_update_block(&cp,&eeCalibrationParams,sizeof(cParams_t));	
+	eeprom_update_byte(&ee_cParamsCRC,new_crc_byte);
 }
 
-
+void saveGlobalParamsToEEPROM(void)
+{
+	// Save global parameters to EEPROM
+	// eeprom_update_block() updates only bytes that were changed
+	//p.crc_byte = getGlobalParamsCRC(&p);
+	uint8_t new_crc_byte = getDataCRC(&p,sizeof(gParams_t));
+	eeprom_update_block(&p,&eeGlobalParams,sizeof(gParams_t));
+	eeprom_update_byte(&ee_gParamsCRC,new_crc_byte);
+}
 
 void exitPowerOff(void)
 {
@@ -461,10 +455,7 @@ void exitPowerOff(void)
 	// Disable all interrupts
 	cli();
 	
-	// Save global parameters to EEPROM
-	// eeprom_update_block() updates only bytes that were changed
-//	p.crc_byte = getGlobalParamsCRC(&p);
-	eeprom_update_block(&p,&eeGlobalParams,sizeof(eeGlobalParams));	
+	saveGlobalParamsToEEPROM();
 	
 	// DIE!
 	while(1);

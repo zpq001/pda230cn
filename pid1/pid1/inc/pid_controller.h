@@ -4,7 +4,8 @@
  * Created: 17.09.2013 12:45:24
  *  Author: Avega
  */ 
- 
+  #ifndef PID_CONTROLLER_H_
+  #define PID_CONTROLLER_H_
  
  //--------------------------//
 // PID controller settings
@@ -42,3 +43,4 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 
 
 
+#endif /* PID_CONTROLLER_H_ */

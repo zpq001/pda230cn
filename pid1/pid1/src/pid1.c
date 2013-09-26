@@ -42,7 +42,7 @@ static void logU16p(uint16_t val);
 static void logI32p(int32_t val);
 
 
-void init_system_io()
+static void init_system_io()
 {
 	// Setup Port D
 	PORTD = 0;//(1<<PD_SYNCA | 1<<PD_SYNCB);
@@ -109,10 +109,11 @@ int main(void)
 	
 	// Initialize MCU IO
 	init_system_io();
+
 	// Restore params from EEPROM
-	// If some values are corrupted, settings and calibration are loaded with default configuration.
-	//temp8u = restoreGlobalParams();
-	restoreGlobalParams();
+	// If some values are corrupted, settings or/and calibration are loaded with default configuration.
+	//restoreGlobalParams();
+	temp8u = restoreGlobalParams();
 	// Calibrate ADC coefficients using restored params
 	calculateCoeffs();
 	// Initialize LED indicator
@@ -121,14 +122,22 @@ int main(void)
 	ACSR |= (1<<ACI);
 	sei();
 	// If default values were loaded from EEPROM, inform user
-/*	if (temp8u)
+	if (temp8u)
 	{
-		printLedBuffer(0,"ERR EE");
+		printLedBuffer(0,"ERR E");
+		fillLedBuffer(5,1,temp8u + 0x30);	// error code: E1 - CRC error in global params, E2 - CRC error in calibration, E3 - both
 		// Beep
-		SetBeeperFreq(800);
-		StartBeep(200);
-		_delay_ms(200);
-	} */
+		SetBeeperFreq(700);
+		StartBeep(500);
+		_delay_ms(1000);
+	} 
+	// Dump calibration data over UART - might be useful
+	logU16p(cp.cpoint1);
+	logU16p(cp.cpoint1_adc);
+	logU16p(cp.cpoint2);
+	logU16p(cp.cpoint2_adc);
+	USART_sendstr("\n\r");
+	
 	// Safety delay for power part and ADC buffer
 	_delay_ms(100);
 	// Check AC line

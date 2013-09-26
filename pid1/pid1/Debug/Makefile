@@ -41,12 +41,15 @@ C_SRCS +=  \
 ../src/adc.c \
 ../src/buttons.c \
 ../src/control.c \
+../src/fir_filter.c \
 ../src/led_indic.c \
 ../src/led_indic_hw.c \
 ../src/menu.c \
 ../src/my_string.c \
 ../src/pid1.c \
+../src/pid_controller.c \
 ../src/power_control.c \
+../src/progmem_func.c \
 ../src/soft_timer.c \
 ../src/systimer.c \
 ../src/usart.c
@@ -62,12 +65,15 @@ OBJS +=  \
 src/adc.o \
 src/buttons.o \
 src/control.o \
+src/fir_filter.o \
 src/led_indic.o \
 src/led_indic_hw.o \
 src/menu.o \
 src/my_string.o \
 src/pid1.o \
+src/pid_controller.o \
 src/power_control.o \
+src/progmem_func.o \
 src/soft_timer.o \
 src/systimer.o \
 src/usart.o
@@ -77,12 +83,15 @@ OBJS_AS_ARGS +=  \
 src/adc.o \
 src/buttons.o \
 src/control.o \
+src/fir_filter.o \
 src/led_indic.o \
 src/led_indic_hw.o \
 src/menu.o \
 src/my_string.o \
 src/pid1.o \
+src/pid_controller.o \
 src/power_control.o \
+src/progmem_func.o \
 src/soft_timer.o \
 src/systimer.o \
 src/usart.o
@@ -92,12 +101,15 @@ C_DEPS +=  \
 src/adc.d \
 src/buttons.d \
 src/control.d \
+src/fir_filter.d \
 src/led_indic.d \
 src/led_indic_hw.d \
 src/menu.d \
 src/my_string.d \
 src/pid1.d \
+src/pid_controller.d \
 src/power_control.d \
+src/progmem_func.d \
 src/soft_timer.d \
 src/systimer.d \
 src/usart.d
@@ -107,12 +119,15 @@ C_DEPS_AS_ARGS +=  \
 src/adc.d \
 src/buttons.d \
 src/control.d \
+src/fir_filter.d \
 src/led_indic.d \
 src/led_indic_hw.d \
 src/menu.d \
 src/my_string.d \
 src/pid1.d \
+src/pid_controller.d \
 src/power_control.d \
+src/progmem_func.d \
 src/soft_timer.d \
 src/systimer.d \
 src/usart.d
@@ -129,6 +144,12 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 

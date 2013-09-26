@@ -17,13 +17,14 @@
 #include "soft_timer.h"
 #include "led_indic.h"
 #include "power_control.h"
+#include "progmem_func.h"
 
 
 static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCond);
 static void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRecord );
 static inline void processItemFunction(FuncPtr funcAddr);
-static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctionRecord* resPtr );
-static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr );
+//static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctionRecord* resPtr );
+//static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr );
 static void restartMenuTimer(void);
 
 
@@ -147,7 +148,6 @@ const __flash MenuJumpRecord menuJumpSet[] =
 //=================================================================//
 
 
-
 //-----------------------------------------------------------------//
 //	Menu initialization
 //	Call this function at start of your program before processMenu()
@@ -245,7 +245,8 @@ static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCon
 	
 	for (i = 0; i < sizeof(menuJumpSet)/sizeof(MenuJumpRecord); i++  )
 	{
-		readJumpRecord(&menuJumpSet[i], &jRecord);		// read full jump record
+		//readJumpRecord(&menuJumpSet[i], &jRecord);		// read full jump record
+		PGM_read_block(&jRecord,&menuJumpSet[i],sizeof(MenuJumpRecord));
 		if (jRecord.Item == selectedItemId)				// If ID match,
 		{
 			if ((jRecord.JumpCondition & jmpCond) != 0)		// if any of jump conditions match too,
@@ -275,7 +276,8 @@ static void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRe
 	uint8_t i;
 	for (i = 0; i < sizeof(menuFunctionSet)/sizeof(MenuFunctionRecord); i++  )
 	{
-		readMenuRecord(&menuFunctionSet[i], menuRecord);
+		//readMenuRecord(&menuFunctionSet[i], menuRecord);
+		PGM_read_block(menuRecord,&menuFunctionSet[i],sizeof(MenuFunctionRecord));
 		if (menuRecord->Item == menuItemID)
 			break;
 	}
@@ -295,6 +297,8 @@ static inline void processItemFunction(FuncPtr funcAddr)
 
 
 
+
+/*
 //-----------------------------------------------------------------//
 //	 Reads menu function record from FLASH into SRAM memory
 //	Arguments:
@@ -303,10 +307,11 @@ static inline void processItemFunction(FuncPtr funcAddr)
 //-----------------------------------------------------------------//
 static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctionRecord* resPtr )
 {
-	resPtr->Item = pgm_read_byte(&fRecPtr->Item);
-	resPtr->SelectFunction = (FuncPtr)pgm_read_word(&fRecPtr->SelectFunction);
-	resPtr->RunFunction = (FuncPtr)pgm_read_word(&fRecPtr->RunFunction);
-	resPtr->LeaveFunction = (FuncPtr)pgm_read_word(&fRecPtr->LeaveFunction);
+	//resPtr->Item = pgm_read_byte(&fRecPtr->Item);
+	//resPtr->SelectFunction = (FuncPtr)pgm_read_word(&fRecPtr->SelectFunction);
+	//resPtr->RunFunction = (FuncPtr)pgm_read_word(&fRecPtr->RunFunction);
+	//resPtr->LeaveFunction = (FuncPtr)pgm_read_word(&fRecPtr->LeaveFunction);
+	PGM_read_block(resPtr,fRecPtr,sizeof(MenuFunctionRecord));
 }
 
 
@@ -318,12 +323,13 @@ static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctio
 //-----------------------------------------------------------------//
 static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr )
 {
-	resPtr->Item = pgm_read_byte(&jRecPtr->Item);
-	resPtr->JumpCondition = pgm_read_word(&jRecPtr->JumpCondition);
-	resPtr->NextItem= pgm_read_byte(&jRecPtr->NextItem);
-	resPtr->Flags= pgm_read_byte(&jRecPtr->Flags);
+	//resPtr->Item = pgm_read_byte(&jRecPtr->Item);
+	//resPtr->JumpCondition = pgm_read_word(&jRecPtr->JumpCondition);
+	//resPtr->NextItem= pgm_read_byte(&jRecPtr->NextItem);
+	//resPtr->Flags= pgm_read_byte(&jRecPtr->Flags);
+	PGM_read_block(resPtr,jRecPtr,sizeof(MenuJumpRecord));
 }
-
+*/
 
 //-----------------------------------------------------------------//
 //	 Restarts menu state timeout

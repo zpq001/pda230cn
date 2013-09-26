@@ -35,6 +35,9 @@ sys_timers_t sys_timers = {
 };
 
 
+static uint16_t beep_cnt = 0;
+static uint8_t enableOverride = 0;
+
 
 void processSystemTimers(void)
 {
@@ -95,6 +98,66 @@ void resetAutoPowerOffCounter(void)
 // ----------------------- //
 
 
+
+// Enable / disable beeper output
+inline void SetBeepOutput(uint8_t val)
+{
+	if (val)
+	// Toggle OCR1A on compare match
+	TCCR1A |= (1<<COM1A0);
+	else
+	// Disable OCR1A output
+	TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+}
+
+// Setup beeper period
+void SetBeeperPeriod(uint16_t new_period_us)
+{
+	// Timer1 runs at 250kHz, T = 4us
+	// Output toggles on every compare match
+	if (new_period_us & 0xFFF8)
+	OCR1A = (new_period_us>>3) - 1;
+	else
+	OCR1A = 0x1;
+	TCNT1 = 0;
+}
+
+// Setup beeper frequency (Hz)
+void SetBeeperFreq(uint16_t freq_hz)
+{
+	uint16_t period_us = 1000000 / freq_hz;
+	if (period_us & 0xFFF8)
+	OCR1A = (period_us>>3) - 1;
+	else
+	OCR1A = 0x1;
+	TCNT1 = 0;
+}
+
+// Beep for some time in ms
+void StartBeep(uint16_t time_ms)
+{
+	if ( (p.sound_enable) || (enableOverride) )
+	{
+		beep_cnt = time_ms;
+		SetBeepOutput(1);
+	}
+	enableOverride = 0;
+}
+
+void OverrideSoundDisable(void)
+{
+	enableOverride = 1;
+}
+
+// Stop beeper
+void StopBeep()
+{
+	beep_cnt = 0;
+	SetBeepOutput(0);
+}
+
+
+
 // Period is 1ms @ 16MHz
 ISR(TIMER2_COMP_vect)
 {	
@@ -123,67 +186,8 @@ ISR(TIMER2_COMP_vect)
 //				Sound driver						//
 //==================================================//
 
-static uint16_t beep_cnt = 0;
-static uint8_t enableOverride = 0;
 
 
-
-// Enable / disable beeper output
-inline void SetBeepOutput(uint8_t val)
-{
-	if (val)
-		// Toggle OCR1A on compare match
-		TCCR1A |= (1<<COM1A0);
-	else
-		// Disable OCR1A output
-		TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
-}
-
-// Setup beeper period 
-void SetBeeperPeriod(uint16_t new_period_us)
-{
-	// Timer1 runs at 250kHz, T = 4us
-	// Output toggles on every compare match
-	if (new_period_us & 0xFFF8)
-		OCR1A = (new_period_us>>3) - 1;
-	else
-		OCR1A = 0x1;
-	TCNT1 = 0;
-}
-
-// Setup beeper frequency (Hz)
-void SetBeeperFreq(uint16_t freq_hz)
-{
-	uint16_t period_us = 1000000 / freq_hz;
-	if (period_us & 0xFFF8)
-		OCR1A = (period_us>>3) - 1;
-	else
-		OCR1A = 0x1;
-	TCNT1 = 0;
-}
-
-// Beep for some time in ms
-void StartBeep(uint16_t time_ms)
-{
-	if ( (p.sound_enable) || (enableOverride) )
-	{
-		beep_cnt = time_ms;
-		SetBeepOutput(1);		
-	}
-	enableOverride = 0;
-}
-
-void OverrideSoundDisable(void)
-{
-	enableOverride = 1;
-}
-
-// Stop beeper
-void StopBeep()
-{
-	beep_cnt = 0;
-	SetBeepOutput(0);
-}
 
 //---------------------------------------------//
 
@@ -315,7 +319,7 @@ const EEMEM tone_t[] m_siren2 = {
 */
 
 //---------------------------------------------//
-
+/*
 
 static uint8_t sound_state = SOUND_OFF;
 static const EEMEM tone_t* new_melody;
@@ -425,7 +429,7 @@ static inline void Sound_Process(void)
 }
 
 
-
+*/
 
 
 
