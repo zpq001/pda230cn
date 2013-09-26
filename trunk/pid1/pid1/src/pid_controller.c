@@ -14,9 +14,20 @@ int16_t dbg_PID_d_term;
 int16_t dbg_PID_i_term;
 int16_t dbg_PID_output;
 
-static filter8bit_core_t dterm_filter_core;	// PID d-term filter core
+// PID d-term filter core
+static filter8bit_core_t dterm_filter_core = {	
+	.coeffs = {
+		64,
+		66,
+		64,
+		59
+	},
+	.n = 4,
+	.dc_gain = 25
+};
+
 static int16_t pid_dterm_buffer[4];			// PID d-term buffer	
-static int8_t dterm_coeffs[] = {64,66,64,59};
+//static int8_t dterm_coeffs[] = {64,66,64,59};
 //static int8_t dterm_coeffs[] = {60,64,67,69,67,64,60,57};
 
 static uint16_t lastProcessValue;
@@ -26,12 +37,11 @@ static int16_t integAcc;
 void initPID(uint16_t processValue)
 {
 	uint8_t i;
-	dterm_filter_core.n = 4;
-	dterm_filter_core.dc_gain = 25;
+//	dterm_filter_core.n = 4;
+//	dterm_filter_core.dc_gain = 25;
 	//dterm_filter_core.n = 8;
 	//dterm_filter_core.dc_gain = 512;
-	dterm_filter_core.coeffs = dterm_coeffs;
-
+//	dterm_filter_core.coeffs = dterm_coeffs;
 	for (i=0;i<4;i++)
 	{
 		pid_dterm_buffer[i] = 0;

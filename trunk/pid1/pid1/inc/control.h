@@ -16,7 +16,6 @@ typedef struct
 	uint8_t rollCycleSet;
 	uint8_t sound_enable;
 	uint8_t power_off_timeout;
-	//uint8_t crc_byte;
 } gParams_t;
 
 typedef struct  
@@ -25,7 +24,6 @@ typedef struct
 	uint8_t cpoint2;
 	uint16_t cpoint1_adc;
 	uint16_t cpoint2_adc;
-	//uint8_t crc_byte;
 } cParams_t;
 
 // Limits and params for regulation
@@ -125,12 +123,13 @@ typedef struct
 #define Kd		20
 #define SCALING_FACTOR	5
 */
-
+/*
+// LAST
 #define Kp		10
 #define Ki		5
 #define Kd		50
 #define SCALING_FACTOR	5
-
+*/
  //--------------------------------------------//
 
 #define POFF_MOTOR_TRESHOLD	50				// Below this temperature point motor will stop
@@ -179,11 +178,11 @@ void processRollControl(void);
 void heaterInit(void);
 void processHeaterControl(void);
 void processHeaterAlerts(void);
-//uint8_t restoreGlobalParams(void);		// Returns zero if EEPROM data CRC is correct
-void restoreGlobalParams(void);
+uint8_t restoreGlobalParams(void);		// Returns zero if EEPROM data CRC is correct
+//void restoreGlobalParams(void);
 void exitPowerOff(void);
 void saveCalibrationToEEPROM(void);
-
+void saveGlobalParamsToEEPROM(void);
 
 
 #endif /* CONTROL_H_ */
