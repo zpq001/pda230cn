@@ -66,7 +66,10 @@ void SetBeeperFreq(uint16_t freq_hz);
 // Sound driver FSM states
 #define SOUND_OFF	0
 #define SOUND_PLAY	1
-#define SOUND_SET_TONE	2
+#define SOUND_APPLY_TONE	2
+#define SOUND_START_NEW 3
+#define SOUND_DO_BEEP 4
+#define SOUND_GET_NEXT_TONE 5
 
 #define TONE_DURATION_SCALE 10				// Single note duration may be up to 2.55 seconds
 

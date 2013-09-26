@@ -185,7 +185,7 @@ void StopBeep()
 	SetBeepOutput(0);
 }
 
-
+//---------------------------------------------//
 
 /*
 static uint8_t sound_state = SOUND_OFF;
@@ -236,8 +236,8 @@ static inline void Sound_Process(void)
 		case SOUND_PLAY:
 			if (--note_time_counter != 0)
 				break;
-			// If current tone time is over, we fall through to state SOUND_SET_TONE 
-		case SOUND_SET_TONE:
+			// If current tone time is over, we fall through to state SOUND_APPLY_TONE 
+		case SOUND_APPLY_TONE:
 			tone = GetNextTone(*current_melody++);
 			if (tone.duration == 0)
 			{
@@ -314,6 +314,115 @@ const EEMEM tone_t[] m_siren2 = {
 
 */
 
+//---------------------------------------------//
+
+
+static uint8_t sound_state = SOUND_OFF;
+static const EEMEM tone_t* new_melody;
+static uint8_t SoundEnable_override = 0;
+static uint8_t beep_duration;
+static uint8_t beep_tone_period;
+
+void Sound_Beep(uint16_t freq_hz, uint16_t time_ms)
+{
+	if ((p.sound_enable) || (SoundEnable_override))
+	{
+		beep_duration = LAST(time_ms);		// Maximum is 2550ms
+		beep_tone_period = FREQ(freq_hz);	// Lowest is 500Hz
+		sound_state = SOUND_DO_BEEP;		// No need to disable interrupts - atomic operation
+		SoundEnable_override = 0;
+	}
+}
+
+void Sound_Play(const EEMEM tone_t* p_melody)
+{
+	if ((p.sound_enable) || (SoundEnable_override))
+	{
+		new_melody =  p_melody;
+		sound_state = SOUND_START_NEW;		// No need to disable interrupts - atomic operation
+		SoundEnable_override = 0;
+	}
+}
+
+void Sound_Stop(void)
+{
+	sound_state = SOUND_OFF;
+}
+
+void Sound_OverrideDisable(void)
+{
+	SoundEnable_override = 1;
+}
+
+// Main sound driver function. Called with T = 1ms from system timer ISR.
+// For the reason of speed, this code is pipelined, possibly with some code size overhead.
+static inline void Sound_Process(void)
+{
+	static uint16_t note_time_counter;
+	static tone_t tone;
+	static const EEMEM tone_t* p_melody;
+	uint8_t new_state = sound_state;
+	
+	switch (sound_state)
+	{
+		case SOUND_START_NEW:
+			p_melody = new_melody;
+			new_state = SOUND_GET_NEXT_TONE;
+			break;
+		case SOUND_DO_BEEP:
+			tone.duration = beep_duration;
+			tone.tone_period = beep_tone_period;
+			new_state = SOUND_APPLY_TONE;
+			p_melody = NULL;				// Beeper mode
+			break;
+		case SOUND_PLAY:
+			if (--note_time_counter == 0)
+				new_state = SOUND_GET_NEXT_TONE;
+			break;
+		case SOUND_GET_NEXT_TONE:
+			if (p_melody != NULL)			// If driver is playing melody, not beeping
+			{
+				eeprom_read_block(&tone,&p_melody,sizeof(tone_t));	
+				new_state = SOUND_APPLY_TONE;
+			}
+			else
+			{
+				new_state = SOUND_OFF;
+			}
+			break;
+		case SOUND_APPLY_TONE:
+			if (tone.duration == 0)
+			{
+				// Finished
+				new_state = SOUND_OFF;
+			}
+			else
+			{
+				// Setup period
+				if (tone.tone_period != 0)
+				{
+					// Timer runs at 250kHz (T = 4us), tone_period is set in units of 8us
+					// Output toggles on compare match
+					OCR1A = tone.tone_period - 1;
+					// Toggle OCR1A on compare match
+					TCCR1A |= (1<<COM1A0);
+				}
+				else
+				{
+					// Disable OCR1A output
+					TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+				}
+				note_time_counter = tone.duration * TONE_DURATION_SCALE - 2;
+				new_state = SOUND_PLAY;
+			}
+			break;
+		default:
+			// Disable OCR1A output
+			TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+			break;
+	}
+	sound_state = new_state;
+}
 
 
 
