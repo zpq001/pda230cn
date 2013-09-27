@@ -151,7 +151,10 @@ int main(void)
 	InitMenu();
 	// Beep
 	SetBeeperFreq(1000);
-	StartBeep(200);
+//	StartBeep(200);
+
+	Sound_Play(m_siren2);
+
 	// When we get here, full ADC buffer have been sampled
 	// Get oversampled and filtered ADC for PID controller
 	update_normalized_adc();

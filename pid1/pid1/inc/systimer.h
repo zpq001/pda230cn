@@ -62,7 +62,10 @@ void OverrideSoundDisable(void);
 void SetBeeperPeriod(uint16_t new_period_us);
 void SetBeeperFreq(uint16_t freq_hz);
 
-/*
+
+
+//-------------------------------//
+
 // Sound driver FSM states
 #define SOUND_OFF	0
 #define SOUND_PLAY	1
@@ -82,16 +85,16 @@ typedef struct
 	uint8_t duration;			// in 10ms gradation
 } tone_t;
 
-void Sound_Play(const EEMEM tone_t* p_melody);
+void Sound_Play(const tone_t* p_melody);
 void Sound_Stop(void);
 void Sound_OverrideDisable(void);
 
-const EEMEM tone_t[] m_beep_1000Hz_100ms;
-const EEMEM tone_t[] m_siren1;
-const EEMEM tone_t[] m_siren2;
+extern const tone_t m_beep_1000Hz_100ms[];
+extern const tone_t m_siren1[];
+extern const tone_t m_siren2[];
 
 // Every melody table must be terminated with tone pair where duration = 0
-*/
+
 
 
 

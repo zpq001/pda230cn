@@ -3,35 +3,35 @@ pid1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00001cc0  00000000  00000000  000000b4  2**1
+  0 .text         00001d20  00000000  00000000  000000b4  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000092  00800060  00001cc0  00001d74  2**0
+  1 .data         00000092  00800060  00001d20  00001dd4  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          000000df  008000f2  008000f2  00001e06  2**0
+  2 .bss          000000e6  008000f2  008000f2  00001e66  2**0
                   ALLOC
-  3 .eeprom       0000000c  00810000  00810000  00001e06  2**0
+  3 .eeprom       00000046  00810000  00810000  00001e66  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  4 .stab         00000a50  00000000  00000000  00001e14  2**2
+  4 .stab         00000a50  00000000  00000000  00001eac  2**2
                   CONTENTS, READONLY, DEBUGGING
-  5 .stabstr      00000206  00000000  00000000  00002864  2**0
+  5 .stabstr      00000206  00000000  00000000  000028fc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .comment      0000002f  00000000  00000000  00002a6a  2**0
+  6 .comment      0000002f  00000000  00000000  00002b02  2**0
                   CONTENTS, READONLY
-  7 .debug_aranges 00000450  00000000  00000000  00002a99  2**0
+  7 .debug_aranges 00000458  00000000  00000000  00002b31  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_info   00004377  00000000  00000000  00002ee9  2**0
+  8 .debug_info   00004554  00000000  00000000  00002f89  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_abbrev 000016fc  00000000  00000000  00007260  2**0
+  9 .debug_abbrev 00001772  00000000  00000000  000074dd  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_line   00001c56  00000000  00000000  0000895c  2**0
+ 10 .debug_line   00001d93  00000000  00000000  00008c4f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_frame  00000a0c  00000000  00000000  0000a5b4  2**2
+ 11 .debug_frame  00000a1c  00000000  00000000  0000a9e4  2**2
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_str    0000115d  00000000  00000000  0000afc0  2**0
+ 12 .debug_str    00001204  00000000  00000000  0000b400  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_loc    00001e54  00000000  00000000  0000c11d  2**0
+ 13 .debug_loc    00001e0c  00000000  00000000  0000c604  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 00000360  00000000  00000000  0000df71  2**0
+ 14 .debug_ranges 00000368  00000000  00000000  0000e410  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -40,20 +40,20 @@ Disassembly of section .text:
        0:	b4 c0       	rjmp	.+360    	; 0x16a <__ctors_end>
        2:	ce c0       	rjmp	.+412    	; 0x1a0 <__bad_interrupt>
        4:	cd c0       	rjmp	.+410    	; 0x1a0 <__bad_interrupt>
-       6:	43 cd       	rjmp	.-1402   	; 0xfffffa8e <__eeprom_end+0xff7efa82>
+       6:	10 cd       	rjmp	.-1504   	; 0xfffffa28 <__eeprom_end+0xff7ef9e2>
        8:	cb c0       	rjmp	.+406    	; 0x1a0 <__bad_interrupt>
        a:	ca c0       	rjmp	.+404    	; 0x1a0 <__bad_interrupt>
        c:	c9 c0       	rjmp	.+402    	; 0x1a0 <__bad_interrupt>
        e:	c8 c0       	rjmp	.+400    	; 0x1a0 <__bad_interrupt>
       10:	c7 c0       	rjmp	.+398    	; 0x1a0 <__bad_interrupt>
-      12:	9d cb       	rjmp	.-2246   	; 0xfffff74e <__eeprom_end+0xff7ef742>
+      12:	9d cb       	rjmp	.-2246   	; 0xfffff74e <__eeprom_end+0xff7ef708>
       14:	c5 c0       	rjmp	.+394    	; 0x1a0 <__bad_interrupt>
       16:	c4 c0       	rjmp	.+392    	; 0x1a0 <__bad_interrupt>
       18:	c3 c0       	rjmp	.+390    	; 0x1a0 <__bad_interrupt>
       1a:	c2 c0       	rjmp	.+388    	; 0x1a0 <__bad_interrupt>
       1c:	96 c1       	rjmp	.+812    	; 0x34a <__vector_14>
       1e:	c0 c0       	rjmp	.+384    	; 0x1a0 <__bad_interrupt>
-      20:	58 cb       	rjmp	.-2384   	; 0xfffff6d2 <__eeprom_end+0xff7ef6c6>
+      20:	58 cb       	rjmp	.-2384   	; 0xfffff6d2 <__eeprom_end+0xff7ef68c>
       22:	be c0       	rjmp	.+380    	; 0x1a0 <__bad_interrupt>
       24:	bd c0       	rjmp	.+378    	; 0x1a0 <__bad_interrupt>
 
@@ -102,8 +102,8 @@ Disassembly of section .text:
      176:	10 e0       	ldi	r17, 0x00	; 0
      178:	a0 e6       	ldi	r26, 0x60	; 96
      17a:	b0 e0       	ldi	r27, 0x00	; 0
-     17c:	e0 ec       	ldi	r30, 0xC0	; 192
-     17e:	fc e1       	ldi	r31, 0x1C	; 28
+     17c:	e0 e2       	ldi	r30, 0x20	; 32
+     17e:	fd e1       	ldi	r31, 0x1D	; 29
      180:	02 c0       	rjmp	.+4      	; 0x186 <__do_copy_data+0x10>
      182:	05 90       	lpm	r0, Z+
      184:	0d 92       	st	X+, r0
@@ -121,11 +121,11 @@ Disassembly of section .text:
      194:	1d 92       	st	X+, r1
 
 00000196 <.do_clear_bss_start>:
-     196:	a1 3d       	cpi	r26, 0xD1	; 209
+     196:	a8 3d       	cpi	r26, 0xD8	; 216
      198:	b2 07       	cpc	r27, r18
      19a:	e1 f7       	brne	.-8      	; 0x194 <.do_clear_bss_loop>
-     19c:	5f d8       	rcall	.-3906   	; 0xfffff25c <__eeprom_end+0xff7ef250>
-     19e:	8e cd       	rjmp	.-1252   	; 0xfffffcbc <__eeprom_end+0xff7efcb0>
+     19c:	5f d8       	rcall	.-3906   	; 0xfffff25c <__eeprom_end+0xff7ef216>
+     19e:	be cd       	rjmp	.-1156   	; 0xfffffd1c <__eeprom_end+0xff7efcd6>
 
 000001a0 <__bad_interrupt>:
      1a0:	2f cf       	rjmp	.-418    	; 0x0 <__vectors>
@@ -145,7 +145,7 @@ int16_t conv_ADC_to_Celsius(uint16_t adc_value)
      1ae:	40 91 f4 00 	lds	r20, 0x00F4
      1b2:	50 91 f5 00 	lds	r21, 0x00F5
      1b6:	dc 01       	movw	r26, r24
-     1b8:	09 dd       	rcall	.-1518   	; 0xfffffbcc <__eeprom_end+0xff7efbc0>
+     1b8:	39 dd       	rcall	.-1422   	; 0xfffffc2c <__eeprom_end+0xff7efbe6>
      1ba:	00 91 f6 00 	lds	r16, 0x00F6
      1be:	10 91 f7 00 	lds	r17, 0x00F7
      1c2:	20 91 f8 00 	lds	r18, 0x00F8
@@ -158,7 +158,7 @@ int16_t conv_ADC_to_Celsius(uint16_t adc_value)
      1d4:	33 e0       	ldi	r19, 0x03	; 3
      1d6:	40 e0       	ldi	r20, 0x00	; 0
      1d8:	50 e0       	ldi	r21, 0x00	; 0
-     1da:	c5 dc       	rcall	.-1654   	; 0xfffffb66 <__eeprom_end+0xff7efb5a>
+     1da:	f5 dc       	rcall	.-1558   	; 0xfffffbc6 <__eeprom_end+0xff7efb80>
 }
      1dc:	c9 01       	movw	r24, r18
      1de:	1f 91       	pop	r17
@@ -177,7 +177,7 @@ uint16_t conv_Celsius_to_ADC(int16_t degree_value)
 	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm) / k_norm);
      1ec:	28 ee       	ldi	r18, 0xE8	; 232
      1ee:	33 e0       	ldi	r19, 0x03	; 3
-     1f0:	e7 dc       	rcall	.-1586   	; 0xfffffbc0 <__eeprom_end+0xff7efbb4>
+     1f0:	17 dd       	rcall	.-1490   	; 0xfffffc20 <__eeprom_end+0xff7efbda>
      1f2:	00 91 f6 00 	lds	r16, 0x00F6
      1f6:	10 91 f7 00 	lds	r17, 0x00F7
      1fa:	20 91 f8 00 	lds	r18, 0x00F8
@@ -190,7 +190,7 @@ uint16_t conv_Celsius_to_ADC(int16_t degree_value)
      20e:	30 91 f3 00 	lds	r19, 0x00F3
      212:	40 91 f4 00 	lds	r20, 0x00F4
      216:	50 91 f5 00 	lds	r21, 0x00F5
-     21a:	a5 dc       	rcall	.-1718   	; 0xfffffb66 <__eeprom_end+0xff7efb5a>
+     21a:	d5 dc       	rcall	.-1622   	; 0xfffffbc6 <__eeprom_end+0xff7efb80>
 }
      21c:	c9 01       	movw	r24, r18
      21e:	1f 91       	pop	r17
@@ -212,23 +212,23 @@ void calculateCoeffs(void)
      234:	cf 93       	push	r28
      236:	df 93       	push	r29
 	k_norm = ((int32_t)(cp.cpoint2 - cp.cpoint1) * COEFF_SCALE) / ((int32_t)(cp.cpoint2_adc - cp.cpoint1_adc));
-     238:	f0 90 a7 01 	lds	r15, 0x01A7
-     23c:	a0 91 a8 01 	lds	r26, 0x01A8
+     238:	f0 90 ae 01 	lds	r15, 0x01AE
+     23c:	a0 91 af 01 	lds	r26, 0x01AF
      240:	b0 e0       	ldi	r27, 0x00	; 0
      242:	af 19       	sub	r26, r15
      244:	b1 09       	sbc	r27, r1
-     246:	c0 91 a9 01 	lds	r28, 0x01A9
-     24a:	d0 91 aa 01 	lds	r29, 0x01AA
+     246:	c0 91 b0 01 	lds	r28, 0x01B0
+     24a:	d0 91 b1 01 	lds	r29, 0x01B1
      24e:	28 ee       	ldi	r18, 0xE8	; 232
      250:	33 e0       	ldi	r19, 0x03	; 3
-     252:	b6 dc       	rcall	.-1684   	; 0xfffffbc0 <__eeprom_end+0xff7efbb4>
-     254:	20 91 ab 01 	lds	r18, 0x01AB
-     258:	30 91 ac 01 	lds	r19, 0x01AC
+     252:	e6 dc       	rcall	.-1588   	; 0xfffffc20 <__eeprom_end+0xff7efbda>
+     254:	20 91 b2 01 	lds	r18, 0x01B2
+     258:	30 91 b3 01 	lds	r19, 0x01B3
      25c:	2c 1b       	sub	r18, r28
      25e:	3d 0b       	sbc	r19, r29
      260:	40 e0       	ldi	r20, 0x00	; 0
      262:	50 e0       	ldi	r21, 0x00	; 0
-     264:	80 dc       	rcall	.-1792   	; 0xfffffb66 <__eeprom_end+0xff7efb5a>
+     264:	b0 dc       	rcall	.-1696   	; 0xfffffbc6 <__eeprom_end+0xff7efb80>
      266:	49 01       	movw	r8, r18
      268:	5a 01       	movw	r10, r20
      26a:	20 93 f2 00 	sts	0x00F2, r18
@@ -240,13 +240,13 @@ void calculateCoeffs(void)
      27c:	30 e0       	ldi	r19, 0x00	; 0
      27e:	a8 ee       	ldi	r26, 0xE8	; 232
      280:	b3 e0       	ldi	r27, 0x03	; 3
-     282:	92 dc       	rcall	.-1756   	; 0xfffffba8 <__eeprom_end+0xff7efb9c>
+     282:	c2 dc       	rcall	.-1660   	; 0xfffffc08 <__eeprom_end+0xff7efbc2>
      284:	6b 01       	movw	r12, r22
      286:	7c 01       	movw	r14, r24
      288:	de 01       	movw	r26, r28
      28a:	a5 01       	movw	r20, r10
      28c:	94 01       	movw	r18, r8
-     28e:	9e dc       	rcall	.-1732   	; 0xfffffbcc <__eeprom_end+0xff7efbc0>
+     28e:	ce dc       	rcall	.-1636   	; 0xfffffc2c <__eeprom_end+0xff7efbe6>
      290:	c6 1a       	sub	r12, r22
      292:	d7 0a       	sbc	r13, r23
      294:	e8 0a       	sbc	r14, r24
@@ -276,7 +276,7 @@ void update_normalized_adc()
 	// Disable interrupts from ADC - to save data integrity
 	ADCSRA &= ~(1<<ADIE);	
      2be:	33 98       	cbi	0x06, 3	; 6
-     2c0:	e9 e3       	ldi	r30, 0x39	; 57
+     2c0:	e0 e4       	ldi	r30, 0x40	; 64
      2c2:	f1 e0       	ldi	r31, 0x01	; 1
 
 
@@ -302,7 +302,7 @@ void update_normalized_adc()
 	// Get normalized mean window summ
 	for (i=0;i<ADC_BUFFER_LENGTH;i++)
      2d0:	21 e0       	ldi	r18, 0x01	; 1
-     2d2:	e9 37       	cpi	r30, 0x79	; 121
+     2d2:	e0 38       	cpi	r30, 0x80	; 128
      2d4:	f2 07       	cpc	r31, r18
      2d6:	c1 f7       	brne	.-16     	; 0x2c8 <update_normalized_adc+0xa>
 		adc_raw_summ += raw_adc_buffer[i];
@@ -317,31 +317,31 @@ void update_normalized_adc()
      2e0:	27 95       	ror	r18
      2e2:	4a 95       	dec	r20
      2e4:	e1 f7       	brne	.-8      	; 0x2de <update_normalized_adc+0x20>
-     2e6:	30 93 7a 01 	sts	0x017A, r19
-     2ea:	20 93 79 01 	sts	0x0179, r18
+     2e6:	30 93 81 01 	sts	0x0181, r19
+     2ea:	20 93 80 01 	sts	0x0180, r18
 	adc_oversampled = adc_raw_summ >> 3;	// adc_oversampled is 4 times greater than adc_normalized
      2ee:	53 e0       	ldi	r21, 0x03	; 3
      2f0:	96 95       	lsr	r25
      2f2:	87 95       	ror	r24
      2f4:	5a 95       	dec	r21
      2f6:	e1 f7       	brne	.-8      	; 0x2f0 <update_normalized_adc+0x32>
-     2f8:	90 93 38 01 	sts	0x0138, r25
-     2fc:	80 93 37 01 	sts	0x0137, r24
+     2f8:	90 93 3f 01 	sts	0x013F, r25
+     2fc:	80 93 3e 01 	sts	0x013E, r24
 	// Filter
 	adc_filtered = fir_i16_i8(adc_oversampled, filter_buffer, &fir_filter_rect);	
      300:	40 e6       	ldi	r20, 0x60	; 96
      302:	50 e0       	ldi	r21, 0x00	; 0
-     304:	6e e7       	ldi	r22, 0x7E	; 126
+     304:	65 e8       	ldi	r22, 0x85	; 133
      306:	71 e0       	ldi	r23, 0x01	; 1
      308:	7c d2       	rcall	.+1272   	; 0x802 <fir_i16_i8>
-     30a:	90 93 36 01 	sts	0x0136, r25
-     30e:	80 93 35 01 	sts	0x0135, r24
+     30a:	90 93 3d 01 	sts	0x013D, r25
+     30e:	80 93 3c 01 	sts	0x013C, r24
 	// Check sensor
 	adc_status = 0;
-     312:	10 92 7b 01 	sts	0x017B, r1
+     312:	10 92 82 01 	sts	0x0182, r1
 	if (adc_normalized < 50)
-     316:	80 91 79 01 	lds	r24, 0x0179
-     31a:	90 91 7a 01 	lds	r25, 0x017A
+     316:	80 91 80 01 	lds	r24, 0x0180
+     31a:	90 91 81 01 	lds	r25, 0x0181
      31e:	82 33       	cpi	r24, 0x32	; 50
      320:	91 05       	cpc	r25, r1
      322:	10 f4       	brcc	.+4      	; 0x328 <update_normalized_adc+0x6a>
@@ -354,7 +354,7 @@ void update_normalized_adc()
      32c:	18 f0       	brcs	.+6      	; 0x334 <update_normalized_adc+0x76>
 		adc_status |= SENSOR_ERROR_SHORTED;
      32e:	82 e0       	ldi	r24, 0x02	; 2
-     330:	80 93 7b 01 	sts	0x017B, r24
+     330:	80 93 82 01 	sts	0x0182, r24
      334:	08 95       	ret
 
 00000336 <update_Celsius>:
@@ -364,11 +364,11 @@ void update_Celsius(void)
 {
 	// Convert to Celsius degree
 	adc_celsius = conv_ADC_to_Celsius(adc_normalized);
-     336:	80 91 79 01 	lds	r24, 0x0179
-     33a:	90 91 7a 01 	lds	r25, 0x017A
+     336:	80 91 80 01 	lds	r24, 0x0180
+     33a:	90 91 81 01 	lds	r25, 0x0181
      33e:	31 df       	rcall	.-414    	; 0x1a2 <conv_ADC_to_Celsius>
-     340:	90 93 7d 01 	sts	0x017D, r25
-     344:	80 93 7c 01 	sts	0x017C, r24
+     340:	90 93 84 01 	sts	0x0184, r25
+     344:	80 93 83 01 	sts	0x0183, r24
      348:	08 95       	ret
 
 0000034a <__vector_14>:
@@ -404,7 +404,7 @@ ISR(ADC_vect)
      372:	f0 e0       	ldi	r31, 0x00	; 0
      374:	ee 0f       	add	r30, r30
      376:	ff 1f       	adc	r31, r31
-     378:	e7 5c       	subi	r30, 0xC7	; 199
+     378:	e0 5c       	subi	r30, 0xC0	; 192
      37a:	fe 4f       	sbci	r31, 0xFE	; 254
 // ADC conversion is started by system timer (Timer2 ISR) every 1 ms
 ISR(ADC_vect)
@@ -451,7 +451,7 @@ ISR(ADC_vect)
 	raw_delayed_inv = raw_current_inv;
      3ae:	30 91 78 00 	lds	r19, 0x0078
 	raw_current = raw_button_state;
-     3b2:	90 91 c8 01 	lds	r25, 0x01C8
+     3b2:	90 91 cf 01 	lds	r25, 0x01CF
      3b6:	90 93 00 01 	sts	0x0100, r25
 	raw_current_inv = ~raw_current;
      3ba:	69 2f       	mov	r22, r25
@@ -610,14 +610,14 @@ void processRollControl(void)
 	{
 		stopCycleRolling(RESET_POINTS);	
      45c:	81 e0       	ldi	r24, 0x01	; 1
-     45e:	e5 d8       	rcall	.-3638   	; 0xfffff62a <__eeprom_end+0xff7ef61e>
+     45e:	e5 d8       	rcall	.-3638   	; 0xfffff62a <__eeprom_end+0xff7ef5e4>
 		if ( (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED)) ||
-     460:	80 91 7b 01 	lds	r24, 0x017B
+     460:	80 91 82 01 	lds	r24, 0x0182
      464:	83 70       	andi	r24, 0x03	; 3
      466:	39 f4       	brne	.+14     	; 0x476 <__stack+0x17>
 			 (adc_celsius > (POFF_MOTOR_TRESHOLD + POFF_MOTOR_HYST)) )
-     468:	80 91 7c 01 	lds	r24, 0x017C
-     46c:	90 91 7d 01 	lds	r25, 0x017D
+     468:	80 91 83 01 	lds	r24, 0x0183
+     46c:	90 91 84 01 	lds	r25, 0x0184
 	
 	// Process auto power off control
 	if (autoPowerOffState & AUTO_POFF_ACTIVE)
@@ -640,7 +640,7 @@ void processRollControl(void)
 				// If motor is stopped
 				setMotorDirection(ROLL_FWD);		// Start rotating in order to prevent rollers damage
      480:	81 e0       	ldi	r24, 0x01	; 1
-     482:	b2 d8       	rcall	.-3740   	; 0xfffff5e8 <__eeprom_end+0xff7ef5dc>
+     482:	b2 d8       	rcall	.-3740   	; 0xfffff5e8 <__eeprom_end+0xff7ef5a2>
 				force_rotate = 0;					// Do not start motor on power off exit
      484:	10 92 04 01 	sts	0x0104, r1
      488:	6e c0       	rjmp	.+220    	; 0x566 <__stack+0x107>
@@ -660,7 +660,7 @@ void processRollControl(void)
 				// If temperature is below threshold and motor is rotating
 				setMotorDirection(0);			// Stop the motor
      49a:	80 e0       	ldi	r24, 0x00	; 0
-     49c:	a5 d8       	rcall	.-3766   	; 0xfffff5e8 <__eeprom_end+0xff7ef5dc>
+     49c:	a5 d8       	rcall	.-3766   	; 0xfffff5e8 <__eeprom_end+0xff7ef5a2>
 				force_rotate = ROLL_FWD;		// Start motor on power-off mode exit
      49e:	81 e0       	ldi	r24, 0x01	; 1
      4a0:	80 93 04 01 	sts	0x0104, r24
@@ -671,7 +671,7 @@ void processRollControl(void)
 	{
 		// Control direction by buttons
 		if ((raw_button_state & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
-     4a6:	80 91 c8 01 	lds	r24, 0x01C8
+     4a6:	80 91 cf 01 	lds	r24, 0x01CF
      4aa:	84 71       	andi	r24, 0x14	; 20
      4ac:	84 31       	cpi	r24, 0x14	; 20
      4ae:	11 f4       	brne	.+4      	; 0x4b4 <__stack+0x55>
@@ -689,7 +689,7 @@ void processRollControl(void)
 		{
 			setMotorDirection(ROLL_FWD);	
      4bc:	81 e0       	ldi	r24, 0x01	; 1
-     4be:	94 d8       	rcall	.-3800   	; 0xfffff5e8 <__eeprom_end+0xff7ef5dc>
+     4be:	94 d8       	rcall	.-3800   	; 0xfffff5e8 <__eeprom_end+0xff7ef5a2>
 			beepState |= 0x01;			// pressed FWD button
      4c0:	c1 e0       	ldi	r28, 0x01	; 1
      4c2:	13 c0       	rjmp	.+38     	; 0x4ea <__stack+0x8b>
@@ -700,7 +700,7 @@ void processRollControl(void)
 		{
 			setMotorDirection(ROLL_REV);
      4c8:	82 e0       	ldi	r24, 0x02	; 2
-     4ca:	8e d8       	rcall	.-3812   	; 0xfffff5e8 <__eeprom_end+0xff7ef5dc>
+     4ca:	8e d8       	rcall	.-3812   	; 0xfffff5e8 <__eeprom_end+0xff7ef5a2>
 			beepState |= 0x02;			// pressed REV button
      4cc:	c2 e0       	ldi	r28, 0x02	; 2
      4ce:	0d c0       	rjmp	.+26     	; 0x4ea <__stack+0x8b>
@@ -712,7 +712,7 @@ void processRollControl(void)
 		{
 			stopCycleRolling(RESET_POINTS);		// Reset points and disable CYCLE mode (if was enabled)
      4d8:	81 e0       	ldi	r24, 0x01	; 1
-     4da:	a7 d8       	rcall	.-3762   	; 0xfffff62a <__eeprom_end+0xff7ef61e>
+     4da:	a7 d8       	rcall	.-3762   	; 0xfffff62a <__eeprom_end+0xff7ef5e4>
 			beepState |= 0x08;					// reset of points by long pressing of ROLL button
      4dc:	c8 e0       	ldi	r28, 0x08	; 8
      4de:	05 c0       	rjmp	.+10     	; 0x4ea <__stack+0x8b>
@@ -724,7 +724,7 @@ void processRollControl(void)
 			// Auto power off mode was exited by pressing some other button, not direction buttons
 			// Start roll, but do not beep in this case
 			setMotorDirection(force_rotate);
-     4e6:	80 d8       	rcall	.-3840   	; 0xfffff5e8 <__eeprom_end+0xff7ef5dc>
+     4e6:	80 d8       	rcall	.-3840   	; 0xfffff5e8 <__eeprom_end+0xff7ef5a2>
 
 
 // Function to control motor rotation
@@ -752,13 +752,13 @@ void processRollControl(void)
 			{
 				stopCycleRolling(DO_NOT_RESET_POINTS);
      4fe:	80 e0       	ldi	r24, 0x00	; 0
-     500:	94 d8       	rcall	.-3800   	; 0xfffff62a <__eeprom_end+0xff7ef61e>
+     500:	94 d8       	rcall	.-3800   	; 0xfffff62a <__eeprom_end+0xff7ef5e4>
 				beepState |= 0x20;		// stopped cycle
      502:	c0 62       	ori	r28, 0x20	; 32
      504:	06 c0       	rjmp	.+12     	; 0x512 <__stack+0xb3>
 			}
 			else if (startCycleRolling())
-     506:	cd d8       	rcall	.-3686   	; 0xfffff6a2 <__eeprom_end+0xff7ef696>
+     506:	cd d8       	rcall	.-3686   	; 0xfffff6a2 <__eeprom_end+0xff7ef65c>
      508:	88 23       	and	r24, r24
      50a:	11 f0       	breq	.+4      	; 0x510 <__stack+0xb1>
 			{
@@ -773,7 +773,7 @@ void processRollControl(void)
 			}			
 		}		
 		
-		// ROLL_DIR_CHANGED is set only when direction is changed automaticaly,
+		// ROLL_DIR_CHANGED is set only when direction is changed automatically,
 		// not when changed by calling setMotorDirection() function
 		if (rollState & ROLL_DIR_CHANGED)
      512:	80 91 26 01 	lds	r24, 0x0126
@@ -807,7 +807,7 @@ void processRollControl(void)
 			SetBeeperFreq(1000);
      536:	88 ee       	ldi	r24, 0xE8	; 232
      538:	93 e0       	ldi	r25, 0x03	; 3
-     53a:	73 da       	rcall	.-2842   	; 0xfffffa22 <__eeprom_end+0xff7efa16>
+     53a:	73 da       	rcall	.-2842   	; 0xfffffa22 <__eeprom_end+0xff7ef9dc>
 			StartBeep(200);
      53c:	88 ec       	ldi	r24, 0xC8	; 200
      53e:	90 e0       	ldi	r25, 0x00	; 0
@@ -840,11 +840,11 @@ void processRollControl(void)
 			SetBeeperFreq(1000);
      55a:	88 ee       	ldi	r24, 0xE8	; 232
      55c:	93 e0       	ldi	r25, 0x03	; 3
-     55e:	61 da       	rcall	.-2878   	; 0xfffffa22 <__eeprom_end+0xff7efa16>
+     55e:	61 da       	rcall	.-2878   	; 0xfffffa22 <__eeprom_end+0xff7ef9dc>
 			StartBeep(50);	
      560:	82 e3       	ldi	r24, 0x32	; 50
      562:	90 e0       	ldi	r25, 0x00	; 0
-     564:	7e da       	rcall	.-2820   	; 0xfffffa62 <__eeprom_end+0xff7efa56>
+     564:	5f da       	rcall	.-2882   	; 0xfffffa24 <__eeprom_end+0xff7ef9de>
 		}			
 			
 	}
@@ -885,8 +885,8 @@ void heaterInit(void)
 {
 	// FIXME
 	initPID(adc_filtered >> 1);
-     584:	80 91 35 01 	lds	r24, 0x0135
-     588:	90 91 36 01 	lds	r25, 0x0136
+     584:	80 91 3c 01 	lds	r24, 0x013C
+     588:	90 91 3d 01 	lds	r25, 0x013D
      58c:	96 95       	lsr	r25
      58e:	87 95       	ror	r24
      590:	80 c7       	rjmp	.+3840   	; 0x1492 <initPID>
@@ -928,7 +928,7 @@ void processHeaterControl(void)
      5b8:	80 91 02 01 	lds	r24, 0x0102
      5bc:	80 fd       	sbrc	r24, 0
      5be:	04 c0       	rjmp	.+8      	; 0x5c8 <processHeaterControl+0x36>
-     5c0:	80 91 7b 01 	lds	r24, 0x017B
+     5c0:	80 91 82 01 	lds	r24, 0x0182
      5c4:	83 70       	andi	r24, 0x03	; 3
      5c6:	29 f0       	breq	.+10     	; 0x5d2 <processHeaterControl+0x40>
 	{
@@ -947,7 +947,7 @@ void processHeaterControl(void)
 	{
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
-     5da:	80 91 ad 01 	lds	r24, 0x01AD
+     5da:	80 91 b4 01 	lds	r24, 0x01B4
      5de:	90 e0       	ldi	r25, 0x00	; 0
      5e0:	01 de       	rcall	.-1022   	; 0x1e4 <conv_Celsius_to_ADC>
 
@@ -961,16 +961,19 @@ void processHeaterControl(void)
      5ec:	d6 95       	lsr	r29
      5ee:	c7 95       	ror	r28
 		processValue = adc_filtered >> 1;	// normal PID control
-     5f0:	00 91 35 01 	lds	r16, 0x0135
-     5f4:	10 91 36 01 	lds	r17, 0x0136
+     5f0:	00 91 3c 01 	lds	r16, 0x013C
+     5f4:	10 91 3d 01 	lds	r17, 0x013D
      5f8:	16 95       	lsr	r17
      5fa:	07 95       	ror	r16
 		
 		// Process PID
+		// Possibly hold PID in reset while disabled ?
+		// Reset when setting is changed ?
 		pid_output = processPID(setPoint, processValue);		
      5fc:	b8 01       	movw	r22, r16
      5fe:	ce 01       	movw	r24, r28
      600:	61 d7       	rcall	.+3778   	; 0x14c4 <processPID>
+					
 					
 		// If heater is disabled, override output
 		if (!(heaterState & HEATER_ENABLED))
@@ -980,17 +983,18 @@ void processHeaterControl(void)
 			pid_output = 0;
 		// If unregulated mode is selected, set full power
 		else if (p.setup_temp_value >= MAX_SET_TEMP)
-     60a:	90 91 ad 01 	lds	r25, 0x01AD
+     60a:	90 91 b4 01 	lds	r25, 0x01B4
      60e:	9f 3f       	cpi	r25, 0xFF	; 255
      610:	29 f0       	breq	.+10     	; 0x61c <processHeaterControl+0x8a>
-		setPoint = set_value_adc * 4;		
-		setPoint >>= 1;
 		processValue = adc_filtered >> 1;	// normal PID control
 		
 		// Process PID
+		// Possibly hold PID in reset while disabled ?
+		// Reset when setting is changed ?
 		pid_output = processPID(setPoint, processValue);		
      612:	90 e0       	ldi	r25, 0x00	; 0
      614:	05 c0       	rjmp	.+10     	; 0x620 <processHeaterControl+0x8e>
+					
 					
 		// If heater is disabled, override output
 		if (!(heaterState & HEATER_ENABLED))
@@ -1017,23 +1021,23 @@ void processHeaterControl(void)
      628:	91 70       	andi	r25, 0x01	; 1
      62a:	80 ff       	sbrs	r24, 0
      62c:	03 c0       	rjmp	.+6      	; 0x634 <processHeaterControl+0xa2>
-     62e:	80 91 ad 01 	lds	r24, 0x01AD
+     62e:	80 91 b4 01 	lds	r24, 0x01B4
      632:	01 c0       	rjmp	.+2      	; 0x636 <processHeaterControl+0xa4>
      634:	80 e0       	ldi	r24, 0x00	; 0
-     636:	80 93 a6 01 	sts	0x01A6, r24
+     636:	80 93 ad 01 	sts	0x01AD, r24
 		dbg_SetPointPID = (heaterState & HEATER_ENABLED) ? setPoint : 0;
      63a:	91 11       	cpse	r25, r1
      63c:	02 c0       	rjmp	.+4      	; 0x642 <processHeaterControl+0xb0>
      63e:	c0 e0       	ldi	r28, 0x00	; 0
      640:	d0 e0       	ldi	r29, 0x00	; 0
-     642:	d0 93 b4 01 	sts	0x01B4, r29
-     646:	c0 93 b3 01 	sts	0x01B3, r28
+     642:	d0 93 bb 01 	sts	0x01BB, r29
+     646:	c0 93 ba 01 	sts	0x01BA, r28
 		dbg_RealTempCelsius = adc_filtered;
-     64a:	80 91 35 01 	lds	r24, 0x0135
-     64e:	80 93 b5 01 	sts	0x01B5, r24
+     64a:	80 91 3c 01 	lds	r24, 0x013C
+     64e:	80 93 bc 01 	sts	0x01BC, r24
 		dbg_RealTempPID = processValue;
-     652:	10 93 b2 01 	sts	0x01B2, r17
-     656:	00 93 b1 01 	sts	0x01B1, r16
+     652:	10 93 b9 01 	sts	0x01B9, r17
+     656:	00 93 b8 01 	sts	0x01B8, r16
 		
 	}	
 		
@@ -1089,12 +1093,12 @@ void processHeaterAlerts(void)
 	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
 	static int16_t refCapturedTemp = INT16_MAX;
 	int16_t currentTemperature = adc_celsius;
-     67e:	c0 91 7c 01 	lds	r28, 0x017C
-     682:	d0 91 7d 01 	lds	r29, 0x017D
+     67e:	c0 91 83 01 	lds	r28, 0x0183
+     682:	d0 91 84 01 	lds	r29, 0x0184
 	
 	// ADC sensor errors alert
 	if (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED))
-     686:	80 91 7b 01 	lds	r24, 0x017B
+     686:	80 91 82 01 	lds	r24, 0x0182
      68a:	83 70       	andi	r24, 0x03	; 3
      68c:	59 f0       	breq	.+22     	; 0x6a4 <processHeaterAlerts+0x2a>
 	{
@@ -1105,11 +1109,11 @@ void processHeaterAlerts(void)
 		{
 			// Enable beeper output regardless of menu setting
 			OverrideSoundDisable();
-     696:	f7 d9       	rcall	.-3090   	; 0xfffffa86 <__eeprom_end+0xff7efa7a>
+     696:	c7 d9       	rcall	.-3186   	; 0xfffffa26 <__eeprom_end+0xff7ef9e0>
 			SetBeeperFreq(800);
      698:	80 e2       	ldi	r24, 0x20	; 32
      69a:	93 e0       	ldi	r25, 0x03	; 3
-     69c:	c2 d9       	rcall	.-3196   	; 0xfffffa22 <__eeprom_end+0xff7efa16>
+     69c:	c2 d9       	rcall	.-3196   	; 0xfffffa22 <__eeprom_end+0xff7ef9dc>
 			StartBeep(2000);	
      69e:	80 ed       	ldi	r24, 0xD0	; 208
      6a0:	97 e0       	ldi	r25, 0x07	; 7
@@ -1120,7 +1124,7 @@ void processHeaterAlerts(void)
 	
 	// Indicate reaching of desired temperature
 	if ( (currentTemperature > p.setup_temp_value - tempAlertRange) && (currentTemperature < p.setup_temp_value + tempAlertRange) )
-     6a4:	20 91 ad 01 	lds	r18, 0x01AD
+     6a4:	20 91 b4 01 	lds	r18, 0x01B4
      6a8:	30 e0       	ldi	r19, 0x00	; 0
      6aa:	60 91 79 00 	lds	r22, 0x0079
      6ae:	86 2f       	mov	r24, r22
@@ -1147,11 +1151,11 @@ void processHeaterAlerts(void)
 			SetBeeperFreq(1000);
      6d4:	88 ee       	ldi	r24, 0xE8	; 232
      6d6:	93 e0       	ldi	r25, 0x03	; 3
-     6d8:	a4 d9       	rcall	.-3256   	; 0xfffffa22 <__eeprom_end+0xff7efa16>
+     6d8:	a4 d9       	rcall	.-3256   	; 0xfffffa22 <__eeprom_end+0xff7ef9dc>
 			StartBeep(400);
      6da:	80 e9       	ldi	r24, 0x90	; 144
      6dc:	91 e0       	ldi	r25, 0x01	; 1
-     6de:	c1 d9       	rcall	.-3198   	; 0xfffffa62 <__eeprom_end+0xff7efa56>
+     6de:	a2 d9       	rcall	.-3260   	; 0xfffffa24 <__eeprom_end+0xff7ef9de>
 		}
 		// Add some hysteresis
 		tempAlertRange = TEMP_ALERT_RANGE + TEMP_ALERT_HYST;
@@ -1209,11 +1213,11 @@ void processHeaterAlerts(void)
 			{
 				// Enable beeper output regardless of menu setting
 				OverrideSoundDisable();
-     71c:	b4 d9       	rcall	.-3224   	; 0xfffffa86 <__eeprom_end+0xff7efa7a>
+     71c:	84 d9       	rcall	.-3320   	; 0xfffffa26 <__eeprom_end+0xff7ef9e0>
 				SetBeeperFreq(1500);
      71e:	8c ed       	ldi	r24, 0xDC	; 220
      720:	95 e0       	ldi	r25, 0x05	; 5
-     722:	7f d9       	rcall	.-3330   	; 0xfffffa22 <__eeprom_end+0xff7efa16>
+     722:	7f d9       	rcall	.-3330   	; 0xfffffa22 <__eeprom_end+0xff7ef9dc>
 				StartBeep(5000);	
      724:	88 e8       	ldi	r24, 0x88	; 136
      726:	93 e1       	ldi	r25, 0x13	; 19
@@ -1231,7 +1235,7 @@ void processHeaterAlerts(void)
 				OverrideSoundDisable();
 				SetBeeperFreq(1500);
 				StartBeep(5000);	
-     72c:	9a c9       	rjmp	.-3276   	; 0xfffffa62 <__eeprom_end+0xff7efa56>
+     72c:	7b c9       	rjmp	.-3338   	; 0xfffffa24 <__eeprom_end+0xff7ef9de>
 			}
 		}
 	}
@@ -1250,11 +1254,11 @@ void processHeaterAlerts(void)
 void saveCalibrationToEEPROM(void)
 {
      734:	cf 93       	push	r28
-	// Calibration parameters are only saved after calibrating 
+	// Calibration parameters normally are only saved after calibrating 
 	//cp.crc_byte = getCalibrationParamsCRC(&cp);
 	uint8_t new_crc_byte = getDataCRC(&cp,sizeof(cParams_t));
      736:	66 e0       	ldi	r22, 0x06	; 6
-     738:	87 ea       	ldi	r24, 0xA7	; 167
+     738:	8e ea       	ldi	r24, 0xAE	; 174
      73a:	91 e0       	ldi	r25, 0x01	; 1
      73c:	7b de       	rcall	.-778    	; 0x434 <getDataCRC>
      73e:	c8 2f       	mov	r28, r24
@@ -1263,9 +1267,9 @@ void saveCalibrationToEEPROM(void)
      742:	50 e0       	ldi	r21, 0x00	; 0
      744:	61 e0       	ldi	r22, 0x01	; 1
      746:	70 e0       	ldi	r23, 0x00	; 0
-     748:	87 ea       	ldi	r24, 0xA7	; 167
+     748:	8e ea       	ldi	r24, 0xAE	; 174
      74a:	91 e0       	ldi	r25, 0x01	; 1
-     74c:	97 da       	rcall	.-2770   	; 0xfffffc7c <__eeprom_end+0xff7efc70>
+     74c:	c7 da       	rcall	.-2674   	; 0xfffffcdc <__eeprom_end+0xff7efc96>
 	eeprom_update_byte(&ee_cParamsCRC,new_crc_byte);
      74e:	6c 2f       	mov	r22, r28
      750:	80 e0       	ldi	r24, 0x00	; 0
@@ -1273,12 +1277,12 @@ void saveCalibrationToEEPROM(void)
 }
      754:	cf 91       	pop	r28
 {
-	// Calibration parameters are only saved after calibrating 
+	// Calibration parameters normally are only saved after calibrating 
 	//cp.crc_byte = getCalibrationParamsCRC(&cp);
 	uint8_t new_crc_byte = getDataCRC(&cp,sizeof(cParams_t));
 	eeprom_update_block(&cp,&eeCalibrationParams,sizeof(cParams_t));	
 	eeprom_update_byte(&ee_cParamsCRC,new_crc_byte);
-     756:	a1 ca       	rjmp	.-2750   	; 0xfffffc9a <__eeprom_end+0xff7efc8e>
+     756:	d1 ca       	rjmp	.-2654   	; 0xfffffcfa <__eeprom_end+0xff7efcb4>
 
 00000758 <saveGlobalParamsToEEPROM>:
 }
@@ -1291,7 +1295,7 @@ void saveGlobalParamsToEEPROM(void)
 	//p.crc_byte = getGlobalParamsCRC(&p);
 	uint8_t new_crc_byte = getDataCRC(&p,sizeof(gParams_t));
      75a:	64 e0       	ldi	r22, 0x04	; 4
-     75c:	8d ea       	ldi	r24, 0xAD	; 173
+     75c:	84 eb       	ldi	r24, 0xB4	; 180
      75e:	91 e0       	ldi	r25, 0x01	; 1
      760:	69 de       	rcall	.-814    	; 0x434 <getDataCRC>
      762:	c8 2f       	mov	r28, r24
@@ -1300,9 +1304,9 @@ void saveGlobalParamsToEEPROM(void)
      766:	50 e0       	ldi	r21, 0x00	; 0
      768:	68 e0       	ldi	r22, 0x08	; 8
      76a:	70 e0       	ldi	r23, 0x00	; 0
-     76c:	8d ea       	ldi	r24, 0xAD	; 173
+     76c:	84 eb       	ldi	r24, 0xB4	; 180
      76e:	91 e0       	ldi	r25, 0x01	; 1
-     770:	85 da       	rcall	.-2806   	; 0xfffffc7c <__eeprom_end+0xff7efc70>
+     770:	b5 da       	rcall	.-2710   	; 0xfffffcdc <__eeprom_end+0xff7efc96>
 	eeprom_update_byte(&ee_gParamsCRC,new_crc_byte);
      772:	6c 2f       	mov	r22, r28
      774:	87 e0       	ldi	r24, 0x07	; 7
@@ -1315,7 +1319,7 @@ void saveGlobalParamsToEEPROM(void)
 	uint8_t new_crc_byte = getDataCRC(&p,sizeof(gParams_t));
 	eeprom_update_block(&p,&eeGlobalParams,sizeof(gParams_t));
 	eeprom_update_byte(&ee_gParamsCRC,new_crc_byte);
-     77a:	8f ca       	rjmp	.-2786   	; 0xfffffc9a <__eeprom_end+0xff7efc8e>
+     77a:	bf ca       	rjmp	.-2690   	; 0xfffffcfa <__eeprom_end+0xff7efcb4>
 
 0000077c <restoreGlobalParams>:
 }
@@ -1336,20 +1340,20 @@ uint8_t restoreGlobalParams(void)
      782:	50 e0       	ldi	r21, 0x00	; 0
      784:	68 e0       	ldi	r22, 0x08	; 8
      786:	70 e0       	ldi	r23, 0x00	; 0
-     788:	8d ea       	ldi	r24, 0xAD	; 173
+     788:	84 eb       	ldi	r24, 0xB4	; 180
      78a:	91 e0       	ldi	r25, 0x01	; 1
-     78c:	5f da       	rcall	.-2882   	; 0xfffffc4c <__eeprom_end+0xff7efc40>
+     78c:	8f da       	rcall	.-2786   	; 0xfffffcac <__eeprom_end+0xff7efc66>
 	//crc_byte = getGlobalParamsCRC(&p);
 	crc_byte = getDataCRC(&p,sizeof(gParams_t));
      78e:	64 e0       	ldi	r22, 0x04	; 4
-     790:	8d ea       	ldi	r24, 0xAD	; 173
+     790:	84 eb       	ldi	r24, 0xB4	; 180
      792:	91 e0       	ldi	r25, 0x01	; 1
      794:	4f de       	rcall	.-866    	; 0x434 <getDataCRC>
      796:	c8 2f       	mov	r28, r24
 	temp8u = eeprom_read_byte(&ee_gParamsCRC);
      798:	87 e0       	ldi	r24, 0x07	; 7
      79a:	90 e0       	ldi	r25, 0x00	; 0
-     79c:	67 da       	rcall	.-2866   	; 0xfffffc6c <__eeprom_end+0xff7efc60>
+     79c:	97 da       	rcall	.-2770   	; 0xfffffccc <__eeprom_end+0xff7efc86>
 	// Restore global defaults if corrupted
 	if (temp8u != crc_byte)
      79e:	8c 17       	cp	r24, r28
@@ -1359,9 +1363,9 @@ uint8_t restoreGlobalParams(void)
      7a2:	44 e0       	ldi	r20, 0x04	; 4
      7a4:	6c e2       	ldi	r22, 0x2C	; 44
      7a6:	70 e0       	ldi	r23, 0x00	; 0
-     7a8:	8d ea       	ldi	r24, 0xAD	; 173
+     7a8:	84 eb       	ldi	r24, 0xB4	; 180
      7aa:	91 e0       	ldi	r25, 0x01	; 1
-     7ac:	99 d8       	rcall	.-3790   	; 0xfffff8e0 <__eeprom_end+0xff7ef8d4>
+     7ac:	99 d8       	rcall	.-3790   	; 0xfffff8e0 <__eeprom_end+0xff7ef89a>
 		// Save restored default values with correct CRC
 		saveGlobalParamsToEEPROM();
      7ae:	d4 df       	rcall	.-88     	; 0x758 <saveGlobalParamsToEEPROM>
@@ -1385,20 +1389,20 @@ uint8_t restoreGlobalParams(void)
      7b8:	50 e0       	ldi	r21, 0x00	; 0
      7ba:	61 e0       	ldi	r22, 0x01	; 1
      7bc:	70 e0       	ldi	r23, 0x00	; 0
-     7be:	87 ea       	ldi	r24, 0xA7	; 167
+     7be:	8e ea       	ldi	r24, 0xAE	; 174
      7c0:	91 e0       	ldi	r25, 0x01	; 1
-     7c2:	44 da       	rcall	.-2936   	; 0xfffffc4c <__eeprom_end+0xff7efc40>
+     7c2:	74 da       	rcall	.-2840   	; 0xfffffcac <__eeprom_end+0xff7efc66>
 	//crc_byte = getCalibrationParamsCRC(&cp);
 	crc_byte = getDataCRC(&cp,sizeof(cParams_t));
      7c4:	66 e0       	ldi	r22, 0x06	; 6
-     7c6:	87 ea       	ldi	r24, 0xA7	; 167
+     7c6:	8e ea       	ldi	r24, 0xAE	; 174
      7c8:	91 e0       	ldi	r25, 0x01	; 1
      7ca:	34 de       	rcall	.-920    	; 0x434 <getDataCRC>
      7cc:	d8 2f       	mov	r29, r24
 	temp8u = eeprom_read_byte(&ee_cParamsCRC);
      7ce:	80 e0       	ldi	r24, 0x00	; 0
      7d0:	90 e0       	ldi	r25, 0x00	; 0
-     7d2:	4c da       	rcall	.-2920   	; 0xfffffc6c <__eeprom_end+0xff7efc60>
+     7d2:	7c da       	rcall	.-2824   	; 0xfffffccc <__eeprom_end+0xff7efc86>
 	// Restore calibration defaults if corrupted
 	if (temp8u != crc_byte)
      7d4:	8d 17       	cp	r24, r29
@@ -1408,9 +1412,9 @@ uint8_t restoreGlobalParams(void)
      7d8:	46 e0       	ldi	r20, 0x06	; 6
      7da:	66 e2       	ldi	r22, 0x26	; 38
      7dc:	70 e0       	ldi	r23, 0x00	; 0
-     7de:	87 ea       	ldi	r24, 0xA7	; 167
+     7de:	8e ea       	ldi	r24, 0xAE	; 174
      7e0:	91 e0       	ldi	r25, 0x01	; 1
-     7e2:	7e d8       	rcall	.-3844   	; 0xfffff8e0 <__eeprom_end+0xff7ef8d4>
+     7e2:	7e d8       	rcall	.-3844   	; 0xfffff8e0 <__eeprom_end+0xff7ef89a>
 		// Save restored default values with correct CRC
 		saveCalibrationToEEPROM();
      7e4:	a7 df       	rcall	.-178    	; 0x734 <saveCalibrationToEEPROM>
@@ -1515,7 +1519,7 @@ int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_
      85c:	bb 27       	eor	r27, r27
      85e:	a7 fd       	sbrc	r26, 7
      860:	b0 95       	com	r27
-     862:	9c d9       	rcall	.-3272   	; 0xfffffb9c <__eeprom_end+0xff7efb90>
+     862:	cc d9       	rcall	.-3176   	; 0xfffffbfc <__eeprom_end+0xff7efbb6>
      864:	c6 0e       	add	r12, r22
      866:	d7 1e       	adc	r13, r23
      868:	e8 1e       	adc	r14, r24
@@ -1542,7 +1546,7 @@ int16_t fir_i16_i8(int16_t new_sample, int16_t *samples, filter8bit_core_t* iir_
      87a:	50 e0       	ldi	r21, 0x00	; 0
      87c:	c7 01       	movw	r24, r14
      87e:	b6 01       	movw	r22, r12
-     880:	72 d9       	rcall	.-3356   	; 0xfffffb66 <__eeprom_end+0xff7efb5a>
+     880:	a2 d9       	rcall	.-3260   	; 0xfffffbc6 <__eeprom_end+0xff7efb80>
 }
      882:	c9 01       	movw	r24, r18
      884:	df 91       	pop	r29
@@ -1622,7 +1626,7 @@ static uint8_t wrap_led_buffer_index(int8_t buf_index)
      8ca:	18 f0       	brcs	.+6      	; 0x8d2 <wrap_led_buffer_index+0x10>
 		new_index_u = new_index_u % LED_BUFFER_LENGTH;
      8cc:	6e e0       	ldi	r22, 0x0E	; 14
-     8ce:	2c d9       	rcall	.-3496   	; 0xfffffb28 <__eeprom_end+0xff7efb1c>
+     8ce:	5c d9       	rcall	.-3400   	; 0xfffffb88 <__eeprom_end+0xff7efb42>
      8d0:	89 2f       	mov	r24, r25
 	new_index_u = ((buf_index >= 0) || (new_index_u == 0)) ? new_index_u :  LED_BUFFER_LENGTH - new_index_u ;
      8d2:	27 ff       	sbrs	r18, 7
@@ -1695,7 +1699,7 @@ void processLedIndicator()
      906:	e4 d0       	rcall	.+456    	; 0xad0 <led_clock_pulse>
 		// Always start new cycle from specified buffer start position
 		bufActivePos = wStartPos;
-     908:	80 91 b7 01 	lds	r24, 0x01B7
+     908:	80 91 be 01 	lds	r24, 0x01BE
      90c:	80 93 05 01 	sts	0x0105, r24
 		next_wActivePos = wActivePos + 1;
      910:	c0 91 06 01 	lds	r28, 0x0106
@@ -1706,7 +1710,7 @@ void processLedIndicator()
 static void processWindowShifter(void)
 {
 	if (shifterState == LED_SHIFT_DONE)
-     916:	80 91 b8 01 	lds	r24, 0x01B8
+     916:	80 91 bf 01 	lds	r24, 0x01BF
      91a:	81 11       	cpse	r24, r1
      91c:	01 c0       	rjmp	.+2      	; 0x920 <processLedIndicator+0x3e>
      91e:	1b c0       	rjmp	.+54     	; 0x956 <processLedIndicator+0x74>
@@ -1725,18 +1729,18 @@ static void processWindowShifter(void)
 	{
 		// Check if finished
 		if (wStartPos == bufStartPos)	
-     92e:	80 91 b7 01 	lds	r24, 0x01B7
-     932:	90 91 b9 01 	lds	r25, 0x01B9
+     92e:	80 91 be 01 	lds	r24, 0x01BE
+     932:	90 91 c0 01 	lds	r25, 0x01C0
      936:	89 13       	cpse	r24, r25
      938:	03 c0       	rjmp	.+6      	; 0x940 <processLedIndicator+0x5e>
 		{
 			// Update state
 			shifterState = LED_SHIFT_DONE;
-     93a:	10 92 b8 01 	sts	0x01B8, r1
+     93a:	10 92 bf 01 	sts	0x01BF, r1
      93e:	0b c0       	rjmp	.+22     	; 0x956 <processLedIndicator+0x74>
 		}
 		else if (shifterState == LED_SHIFT_RIGHT)
-     940:	90 91 b8 01 	lds	r25, 0x01B8
+     940:	90 91 bf 01 	lds	r25, 0x01BF
      944:	92 30       	cpi	r25, 0x02	; 2
      946:	49 f4       	brne	.+18     	; 0x95a <processLedIndicator+0x78>
 // Increments index. If index falls out of buffer range,
@@ -1756,7 +1760,7 @@ static inline uint8_t inc_buffer_position(uint8_t position)
 		else if (shifterState == LED_SHIFT_RIGHT)
 		{
 			wStartPos = inc_buffer_position(wStartPos);	
-     952:	80 93 b7 01 	sts	0x01B7, r24
+     952:	80 93 be 01 	sts	0x01BE, r24
 		// Always start new cycle from specified buffer start position
 		bufActivePos = wStartPos;
 		next_wActivePos = wActivePos + 1;
@@ -1795,7 +1799,7 @@ static inline uint8_t dec_buffer_position(uint8_t position)
 	{
 		// Output separate LEDs state
 		set_led_segments(extra_led_state);
-     970:	80 91 b6 01 	lds	r24, 0x01B6
+     970:	80 91 bd 01 	lds	r24, 0x01BD
      974:	bd d0       	rcall	.+378    	; 0xaf0 <set_led_segments>
      976:	10 c0       	rjmp	.+32     	; 0x998 <processLedIndicator+0xb6>
 	}
@@ -1806,7 +1810,7 @@ static inline uint8_t dec_buffer_position(uint8_t position)
 		set_led_segments(led_data_buffer[bufActivePos]);
      978:	e0 91 05 01 	lds	r30, 0x0105
      97c:	f0 e0       	ldi	r31, 0x00	; 0
-     97e:	e6 54       	subi	r30, 0x46	; 70
+     97e:	ef 53       	subi	r30, 0x3F	; 63
      980:	fe 4f       	sbci	r31, 0xFE	; 254
      982:	80 81       	ld	r24, Z
      984:	b5 d0       	rcall	.+362    	; 0xaf0 <set_led_segments>
@@ -1872,7 +1876,7 @@ void fillLedBuffer(int8_t offset, uint8_t length, char c)
      9b6:	08 2f       	mov	r16, r24
 	// Ensure index is inside the buffer
 	uint8_t position = wrap_led_buffer_index((int8_t)bufStartPos + offset);
-     9b8:	80 91 b9 01 	lds	r24, 0x01B9
+     9b8:	80 91 c0 01 	lds	r24, 0x01C0
      9bc:	81 0f       	add	r24, r17
      9be:	81 df       	rcall	.-254    	; 0x8c2 <wrap_led_buffer_index>
 	while(length--)
@@ -1882,7 +1886,7 @@ void fillLedBuffer(int8_t offset, uint8_t length, char c)
 		led_data_buffer[position] = val;
      9c4:	e8 2f       	mov	r30, r24
      9c6:	f0 e0       	ldi	r31, 0x00	; 0
-     9c8:	e6 54       	subi	r30, 0x46	; 70
+     9c8:	ef 53       	subi	r30, 0x3F	; 63
      9ca:	fe 4f       	sbci	r31, 0xFE	; 254
      9cc:	00 83       	st	Z, r16
 // Increments index. If index falls out of buffer range,
@@ -1929,14 +1933,14 @@ void startShiftingWindowLeft(void)
      9ee:	d8 df       	rcall	.-80     	; 0x9a0 <fillLedBuffer>
 	// Set new buffer position for writing
 	bufStartPos = wrap_led_buffer_index( (int8_t)bufStartPos - (NUM_DIGITS + 2) );
-     9f0:	80 91 b9 01 	lds	r24, 0x01B9
+     9f0:	80 91 c0 01 	lds	r24, 0x01C0
      9f4:	88 50       	subi	r24, 0x08	; 8
      9f6:	65 df       	rcall	.-310    	; 0x8c2 <wrap_led_buffer_index>
-     9f8:	80 93 b9 01 	sts	0x01B9, r24
+     9f8:	80 93 c0 01 	sts	0x01C0, r24
 	// Set shifter state
 	shifterState = LED_SHIFT_LEFT;
      9fc:	81 e0       	ldi	r24, 0x01	; 1
-     9fe:	80 93 b8 01 	sts	0x01B8, r24
+     9fe:	80 93 bf 01 	sts	0x01BF, r24
      a02:	08 95       	ret
 
 00000a04 <startShiftingWindowRight>:
@@ -1952,14 +1956,14 @@ void startShiftingWindowRight(void)
      a0a:	ca df       	rcall	.-108    	; 0x9a0 <fillLedBuffer>
 	// Set new buffer position for writing
 	bufStartPos = wrap_led_buffer_index( (int8_t)bufStartPos + NUM_DIGITS + 2 );
-     a0c:	80 91 b9 01 	lds	r24, 0x01B9
+     a0c:	80 91 c0 01 	lds	r24, 0x01C0
      a10:	88 5f       	subi	r24, 0xF8	; 248
      a12:	57 df       	rcall	.-338    	; 0x8c2 <wrap_led_buffer_index>
-     a14:	80 93 b9 01 	sts	0x01B9, r24
+     a14:	80 93 c0 01 	sts	0x01C0, r24
 	// Set shifter state
 	shifterState = LED_SHIFT_RIGHT;
      a18:	82 e0       	ldi	r24, 0x02	; 2
-     a1a:	80 93 b8 01 	sts	0x01B8, r24
+     a1a:	80 93 bf 01 	sts	0x01BF, r24
      a1e:	08 95       	ret
 
 00000a20 <initLedIndicator>:
@@ -1998,16 +2002,16 @@ void initLedIndicator()
 	
 	// Reset pointers
 	wStartPos = 0;
-     a30:	10 92 b7 01 	sts	0x01B7, r1
+     a30:	10 92 be 01 	sts	0x01BE, r1
 	bufStartPos = 0;
-     a34:	10 92 b9 01 	sts	0x01B9, r1
+     a34:	10 92 c0 01 	sts	0x01C0, r1
 	bufActivePos = 0;
      a38:	10 92 05 01 	sts	0x0105, r1
 	wActivePos = 0;
      a3c:	10 92 06 01 	sts	0x0106, r1
 	#ifdef 	USE_EXTRA_LED_DIGIT
 	extra_led_state = 0;
-     a40:	10 92 b6 01 	sts	0x01B6, r1
+     a40:	10 92 bd 01 	sts	0x01BD, r1
 	#endif
 	
 	// Clear the buffer 
@@ -2020,7 +2024,7 @@ void initLedIndicator()
 	// Initialize shift timer - always enabled, but 
 	//	processed only when shifting is active
 	shifterState = LED_SHIFT_DONE;
-     a4c:	10 92 b8 01 	sts	0x01B8, r1
+     a4c:	10 92 bf 01 	sts	0x01BF, r1
 	shiftTimer.Enabled = 1;
      a50:	80 91 07 01 	lds	r24, 0x0107
 	shiftTimer.RunOnce = 0;
@@ -2049,7 +2053,7 @@ void printLedBuffer(int8_t offset, char* str)
 	uint8_t decoded_sym;
 	// Ensure index is inside the buffer
 	uint8_t buffer_position = wrap_led_buffer_index((int8_t)bufStartPos + offset);
-     a6e:	90 91 b9 01 	lds	r25, 0x01B9
+     a6e:	90 91 c0 01 	lds	r25, 0x01C0
      a72:	89 0f       	add	r24, r25
      a74:	26 df       	rcall	.-436    	; 0x8c2 <wrap_led_buffer_index>
      a76:	18 2f       	mov	r17, r24
@@ -2062,7 +2066,7 @@ void printLedBuffer(int8_t offset, char* str)
 		led_data_buffer[buffer_position] = decoded_sym;
      a7c:	e1 2f       	mov	r30, r17
      a7e:	f0 e0       	ldi	r31, 0x00	; 0
-     a80:	e6 54       	subi	r30, 0x46	; 70
+     a80:	ef 53       	subi	r30, 0x3F	; 63
      a82:	fe 4f       	sbci	r31, 0xFE	; 254
      a84:	80 83       	st	Z, r24
 // Increments index. If index falls out of buffer range,
@@ -2103,13 +2107,13 @@ void setComma(int8_t offset)
 {
 	// Ensure index is inside the buffer
 	uint8_t position = wrap_led_buffer_index((int8_t)bufStartPos + offset);
-     a9e:	90 91 b9 01 	lds	r25, 0x01B9
+     a9e:	90 91 c0 01 	lds	r25, 0x01C0
      aa2:	89 0f       	add	r24, r25
      aa4:	0e df       	rcall	.-484    	; 0x8c2 <wrap_led_buffer_index>
 	led_data_buffer[position] |= (SEGH);
      aa6:	e8 2f       	mov	r30, r24
      aa8:	f0 e0       	ldi	r31, 0x00	; 0
-     aaa:	e6 54       	subi	r30, 0x46	; 70
+     aaa:	ef 53       	subi	r30, 0x3F	; 63
      aac:	fe 4f       	sbci	r31, 0xFE	; 254
      aae:	80 81       	ld	r24, Z
      ab0:	80 68       	ori	r24, 0x80	; 128
@@ -2123,9 +2127,9 @@ inline void setExtraLeds(uint8_t leds_set_value)
 {
 		//asm("cli");
 		extra_led_state |= leds_set_value;
-     ab6:	90 91 b6 01 	lds	r25, 0x01B6
+     ab6:	90 91 bd 01 	lds	r25, 0x01BD
      aba:	98 2b       	or	r25, r24
-     abc:	90 93 b6 01 	sts	0x01B6, r25
+     abc:	90 93 bd 01 	sts	0x01BD, r25
      ac0:	08 95       	ret
 
 00000ac2 <clearExtraLeds>:
@@ -2135,10 +2139,10 @@ inline void clearExtraLeds(uint8_t leds_clear_value)
 {
 		//asm("cli");
 		extra_led_state &= ~leds_clear_value;
-     ac2:	90 91 b6 01 	lds	r25, 0x01B6
+     ac2:	90 91 bd 01 	lds	r25, 0x01BD
      ac6:	80 95       	com	r24
      ac8:	89 23       	and	r24, r25
-     aca:	80 93 b6 01 	sts	0x01B6, r24
+     aca:	80 93 bd 01 	sts	0x01BD, r24
      ace:	08 95       	ret
 
 00000ad0 <led_clock_pulse>:
@@ -2292,7 +2296,7 @@ void capture_button_state()
      b42:	89 2b       	or	r24, r25
 	raw_button_state = pdat ^ RAW_BUTTONS_INVERSE_MASK;
      b44:	80 95       	com	r24
-     b46:	80 93 c8 01 	sts	0x01C8, r24
+     b46:	80 93 cf 01 	sts	0x01CF, r24
      b4a:	08 95       	ret
 
 00000b4c <processItemFunction>:
@@ -2455,7 +2459,7 @@ void mf_calibP2Select(void)
 	mf_leafSelect();
      bd2:	f7 df       	rcall	.-18     	; 0xbc2 <mf_leafSelect>
 	cpoint_user_val = cp.cpoint2;	// determine which point to use at select func
-     bd4:	80 91 a8 01 	lds	r24, 0x01A8
+     bd4:	80 91 af 01 	lds	r24, 0x01AF
      bd8:	80 93 13 01 	sts	0x0113, r24
 	cpointNum = 2;
      bdc:	82 e0       	ldi	r24, 0x02	; 2
@@ -2475,7 +2479,7 @@ void mf_calibP1Select(void)
 	mf_leafSelect();
      bea:	eb df       	rcall	.-42     	; 0xbc2 <mf_leafSelect>
 	cpoint_user_val = cp.cpoint1;	// determine which point to use at select func
-     bec:	80 91 a7 01 	lds	r24, 0x01A7
+     bec:	80 91 ae 01 	lds	r24, 0x01AE
      bf0:	80 93 13 01 	sts	0x0113, r24
 	cpointNum = 1;
      bf4:	81 e0       	ldi	r24, 0x01	; 1
@@ -2540,25 +2544,25 @@ void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal)
 {
 	if (cpointNum == 1)
      c20:	30 91 14 01 	lds	r19, 0x0114
-     c24:	80 91 79 01 	lds	r24, 0x0179
-     c28:	90 91 7a 01 	lds	r25, 0x017A
+     c24:	80 91 80 01 	lds	r24, 0x0180
+     c28:	90 91 81 01 	lds	r25, 0x0181
      c2c:	31 30       	cpi	r19, 0x01	; 1
      c2e:	39 f4       	brne	.+14     	; 0xc3e <mf_cdoneSelect+0x22>
 	{
 		cp.cpoint1_adc = adc_normalized;
-     c30:	90 93 aa 01 	sts	0x01AA, r25
-     c34:	80 93 a9 01 	sts	0x01A9, r24
+     c30:	90 93 b1 01 	sts	0x01B1, r25
+     c34:	80 93 b0 01 	sts	0x01B0, r24
 		cp.cpoint1 = cpointVal;
-     c38:	20 93 a7 01 	sts	0x01A7, r18
+     c38:	20 93 ae 01 	sts	0x01AE, r18
      c3c:	06 c0       	rjmp	.+12     	; 0xc4a <mf_cdoneSelect+0x2e>
 	}
 	else
 	{
 		cp.cpoint2_adc = adc_normalized;
-     c3e:	90 93 ac 01 	sts	0x01AC, r25
-     c42:	80 93 ab 01 	sts	0x01AB, r24
+     c3e:	90 93 b3 01 	sts	0x01B3, r25
+     c42:	80 93 b2 01 	sts	0x01B2, r24
 		cp.cpoint2 = cpointVal;
-     c46:	20 93 a8 01 	sts	0x01A8, r18
+     c46:	20 93 af 01 	sts	0x01AF, r18
 	}
 	calculateCoeffs();
      c4a:	ec da       	rcall	.-2600   	; 0x224 <calculateCoeffs>
@@ -2603,7 +2607,7 @@ void mf_autopoffDo(void)
      c84:	31 f0       	breq	.+12     	; 0xc92 <mf_autopoffDo+0x44>
 	{
 		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
-     c86:	80 91 b0 01 	lds	r24, 0x01B0
+     c86:	80 91 b7 01 	lds	r24, 0x01B7
      c8a:	8f 35       	cpi	r24, 0x5F	; 95
      c8c:	68 f4       	brcc	.+26     	; 0xca8 <mf_autopoffDo+0x5a>
 			p.power_off_timeout += POWEROFF_SET_STEP;
@@ -2618,12 +2622,12 @@ void mf_autopoffDo(void)
      c98:	49 f0       	breq	.+18     	; 0xcac <mf_autopoffDo+0x5e>
 	{
 		if (p.power_off_timeout > MIN_POWEROFF_TIMEOUT)
-     c9a:	80 91 b0 01 	lds	r24, 0x01B0
+     c9a:	80 91 b7 01 	lds	r24, 0x01B7
      c9e:	86 30       	cpi	r24, 0x06	; 6
      ca0:	18 f0       	brcs	.+6      	; 0xca8 <mf_autopoffDo+0x5a>
 			p.power_off_timeout -= POWEROFF_SET_STEP;
      ca2:	85 50       	subi	r24, 0x05	; 5
-     ca4:	80 93 b0 01 	sts	0x01B0, r24
+     ca4:	80 93 b7 01 	sts	0x01B7, r24
 //	 Restarts menu state timeout
 //	Should be used in RUN function when control buttons are pressed.
 //-----------------------------------------------------------------//
@@ -2642,7 +2646,7 @@ static void restartMenuTimer(void)
      cb2:	0f c0       	rjmp	.+30     	; 0xcd2 <mf_autopoffDo+0x84>
 	{
 		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
-     cb4:	80 91 b0 01 	lds	r24, 0x01B0
+     cb4:	80 91 b7 01 	lds	r24, 0x01B7
      cb8:	8f 35       	cpi	r24, 0x5F	; 95
      cba:	38 f4       	brcc	.+14     	; 0xcca <mf_autopoffDo+0x7c>
 		{
@@ -2812,10 +2816,10 @@ void mf_sndenDo(void)
 	{
 		p.sound_enable = !p.sound_enable;
      db0:	81 e0       	ldi	r24, 0x01	; 1
-     db2:	90 91 af 01 	lds	r25, 0x01AF
+     db2:	90 91 b6 01 	lds	r25, 0x01B6
      db6:	91 11       	cpse	r25, r1
      db8:	80 e0       	ldi	r24, 0x00	; 0
-     dba:	80 93 af 01 	sts	0x01AF, r24
+     dba:	80 93 b6 01 	sts	0x01B6, r24
 //	 Restarts menu state timeout
 //	Should be used in RUN function when control buttons are pressed.
 //-----------------------------------------------------------------//
@@ -2834,7 +2838,7 @@ static void restartMenuTimer(void)
      dc8:	0d c0       	rjmp	.+26     	; 0xde4 <mf_sndenDo+0x6a>
 	{
 		if (p.sound_enable)		
-     dca:	80 91 af 01 	lds	r24, 0x01AF
+     dca:	80 91 b6 01 	lds	r24, 0x01B6
      dce:	88 23       	and	r24, r24
      dd0:	21 f0       	breq	.+8      	; 0xdda <mf_sndenDo+0x60>
 		{
@@ -2916,7 +2920,7 @@ void mf_rollDo(void)
      e3a:	31 f0       	breq	.+12     	; 0xe48 <mf_rollDo+0x44>
 	{
 		if (p.rollCycleSet < MAX_ROLL_CYCLES)
-     e3c:	80 91 ae 01 	lds	r24, 0x01AE
+     e3c:	80 91 b5 01 	lds	r24, 0x01B5
      e40:	83 36       	cpi	r24, 0x63	; 99
      e42:	68 f4       	brcc	.+26     	; 0xe5e <mf_rollDo+0x5a>
 			p.rollCycleSet += ROLL_CYCLES_STEP;
@@ -2930,12 +2934,12 @@ void mf_rollDo(void)
      e4e:	39 f0       	breq	.+14     	; 0xe5e <mf_rollDo+0x5a>
 	{
 		if (p.rollCycleSet > MIN_ROLL_CYCLES)
-     e50:	80 91 ae 01 	lds	r24, 0x01AE
+     e50:	80 91 b5 01 	lds	r24, 0x01B5
      e54:	82 30       	cpi	r24, 0x02	; 2
      e56:	18 f0       	brcs	.+6      	; 0xe5e <mf_rollDo+0x5a>
 			p.rollCycleSet -= ROLL_CYCLES_STEP;
      e58:	81 50       	subi	r24, 0x01	; 1
-     e5a:	80 93 ae 01 	sts	0x01AE, r24
+     e5a:	80 93 b5 01 	sts	0x01B5, r24
 	}	
 		
 	u16toa_align_right(p.rollCycleSet,str + 4,NO_TERMINATING_ZERO | 2);
@@ -2943,7 +2947,7 @@ void mf_rollDo(void)
      e60:	be 01       	movw	r22, r28
      e62:	6b 5f       	subi	r22, 0xFB	; 251
      e64:	7f 4f       	sbci	r23, 0xFF	; 255
-     e66:	80 91 ae 01 	lds	r24, 0x01AE
+     e66:	80 91 b5 01 	lds	r24, 0x01B5
      e6a:	90 e0       	ldi	r25, 0x00	; 0
      e6c:	bd d1       	rcall	.+890    	; 0x11e8 <u16toa_align_right>
 	
@@ -3060,7 +3064,7 @@ void mf_setTempDo(void)
      f0a:	31 f0       	breq	.+12     	; 0xf18 <mf_setTempDo+0x44>
 	{
 		if (p.setup_temp_value < MAX_SET_TEMP)
-     f0c:	80 91 ad 01 	lds	r24, 0x01AD
+     f0c:	80 91 b4 01 	lds	r24, 0x01B4
      f10:	8f 3f       	cpi	r24, 0xFF	; 255
      f12:	69 f0       	breq	.+26     	; 0xf2e <mf_setTempDo+0x5a>
 			p.setup_temp_value += TEMP_SET_STEP;
@@ -3075,12 +3079,12 @@ void mf_setTempDo(void)
      f1e:	49 f0       	breq	.+18     	; 0xf32 <mf_setTempDo+0x5e>
 	{
 		if (p.setup_temp_value > MIN_SET_TEMP)
-     f20:	80 91 ad 01 	lds	r24, 0x01AD
+     f20:	80 91 b4 01 	lds	r24, 0x01B4
      f24:	8f 31       	cpi	r24, 0x1F	; 31
      f26:	18 f0       	brcs	.+6      	; 0xf2e <mf_setTempDo+0x5a>
 			p.setup_temp_value -= TEMP_SET_STEP;
      f28:	85 50       	subi	r24, 0x05	; 5
-     f2a:	80 93 ad 01 	sts	0x01AD, r24
+     f2a:	80 93 b4 01 	sts	0x01B4, r24
 //	 Restarts menu state timeout
 //	Should be used in RUN function when control buttons are pressed.
 //-----------------------------------------------------------------//
@@ -3094,7 +3098,7 @@ static void restartMenuTimer(void)
 		
 	// Output setting to LED
 	if (p.setup_temp_value < MAX_SET_TEMP)
-     f32:	80 91 ad 01 	lds	r24, 0x01AD
+     f32:	80 91 b4 01 	lds	r24, 0x01B4
      f36:	8f 3f       	cpi	r24, 0xFF	; 255
      f38:	51 f0       	breq	.+20     	; 0xf4e <mf_setTempDo+0x7a>
 	{
@@ -3181,7 +3185,7 @@ void mf_realTempDo(void)
      fa2:	e1 f7       	brne	.-8      	; 0xf9c <mf_realTempDo+0x1e>
 
 	if (adc_status & (SENSOR_ERROR_NO_PRESENT))
-     fa4:	80 91 7b 01 	lds	r24, 0x017B
+     fa4:	80 91 82 01 	lds	r24, 0x0182
      fa8:	80 ff       	sbrs	r24, 0
      faa:	03 c0       	rjmp	.+6      	; 0xfb2 <mf_realTempDo+0x34>
 	{
@@ -3204,8 +3208,8 @@ void mf_realTempDo(void)
 		// Output ADC result to LED
 		//u16toa_align_right(adc_celsius,str,NO_TERMINATING_ZERO | 4);
 		i32toa_align_right((int32_t)adc_celsius,str,NO_TERMINATING_ZERO | 4);
-     fbc:	60 91 7c 01 	lds	r22, 0x017C
-     fc0:	70 91 7d 01 	lds	r23, 0x017D
+     fbc:	60 91 83 01 	lds	r22, 0x0183
+     fc0:	70 91 84 01 	lds	r23, 0x0184
      fc4:	88 27       	eor	r24, r24
      fc6:	77 fd       	sbrc	r23, 7
      fc8:	80 95       	com	r24
@@ -3584,7 +3588,7 @@ void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
     119a:	f1 2c       	mov	r15, r1
     119c:	a7 01       	movw	r20, r14
     119e:	96 01       	movw	r18, r12
-    11a0:	e2 d4       	rcall	.+2500   	; 0x1b66 <__divmodsi4>
+    11a0:	12 d5       	rcall	.+2596   	; 0x1bc6 <__divmodsi4>
     11a2:	60 5d       	subi	r22, 0xD0	; 208
     11a4:	6a 93       	st	-Y, r22
 		val /= 10;
@@ -3686,7 +3690,7 @@ static void logI32p(int32_t val)
 	USART_sendstr(str);
     1214:	ce 01       	movw	r24, r28
     1216:	01 96       	adiw	r24, 0x01	; 1
-    1218:	75 d4       	rcall	.+2282   	; 0x1b04 <USART_sendstr>
+    1218:	a5 d4       	rcall	.+2378   	; 0x1b64 <USART_sendstr>
 }
     121a:	2c 96       	adiw	r28, 0x0c	; 12
     121c:	0f b6       	in	r0, 0x3f	; 63
@@ -3722,7 +3726,7 @@ static void logU16p(uint16_t val)
 	USART_sendstr(str);
     1244:	ce 01       	movw	r24, r28
     1246:	01 96       	adiw	r24, 0x01	; 1
-    1248:	5d d4       	rcall	.+2234   	; 0x1b04 <USART_sendstr>
+    1248:	8d d4       	rcall	.+2330   	; 0x1b64 <USART_sendstr>
 }
     124a:	26 96       	adiw	r28, 0x06	; 6
     124c:	0f b6       	in	r0, 0x3f	; 63
@@ -3862,7 +3866,7 @@ static void init_system_io()
     12c8:	89 83       	std	Y+1, r24	; 0x01
 	// Calibrate ADC coefficients using restored params
 	calculateCoeffs();
-    12ca:	ac d7       	rcall	.+3928   	; 0x2224 <__data_load_end+0x4d2>
+    12ca:	ac d7       	rcall	.+3928   	; 0x2224 <__data_load_end+0x472>
 	// Initialize LED indicator
 	initLedIndicator();
     12cc:	a9 db       	rcall	.-2222   	; 0xa20 <initLedIndicator>
@@ -3896,7 +3900,7 @@ static void init_system_io()
 		StartBeep(500);
     12f0:	84 ef       	ldi	r24, 0xF4	; 244
     12f2:	91 e0       	ldi	r25, 0x01	; 1
-    12f4:	b6 d3       	rcall	.+1900   	; 0x1a62 <StartBeep>
+    12f4:	97 d3       	rcall	.+1838   	; 0x1a24 <StartBeep>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
@@ -3916,25 +3920,25 @@ static void init_system_io()
 	} 
 	// Dump calibration data over UART - might be useful
 	logU16p(cp.cpoint1);
-    1308:	80 91 a7 01 	lds	r24, 0x01A7
+    1308:	80 91 ae 01 	lds	r24, 0x01AE
     130c:	90 e0       	ldi	r25, 0x00	; 0
     130e:	8e df       	rcall	.-228    	; 0x122c <logU16p>
 	logU16p(cp.cpoint1_adc);
-    1310:	80 91 a9 01 	lds	r24, 0x01A9
-    1314:	90 91 aa 01 	lds	r25, 0x01AA
+    1310:	80 91 b0 01 	lds	r24, 0x01B0
+    1314:	90 91 b1 01 	lds	r25, 0x01B1
     1318:	89 df       	rcall	.-238    	; 0x122c <logU16p>
 	logU16p(cp.cpoint2);
-    131a:	80 91 a8 01 	lds	r24, 0x01A8
+    131a:	80 91 af 01 	lds	r24, 0x01AF
     131e:	90 e0       	ldi	r25, 0x00	; 0
     1320:	85 df       	rcall	.-246    	; 0x122c <logU16p>
 	logU16p(cp.cpoint2_adc);
-    1322:	80 91 ab 01 	lds	r24, 0x01AB
-    1326:	90 91 ac 01 	lds	r25, 0x01AC
+    1322:	80 91 b2 01 	lds	r24, 0x01B2
+    1326:	90 91 b3 01 	lds	r25, 0x01B3
     132a:	80 df       	rcall	.-256    	; 0x122c <logU16p>
 	USART_sendstr("\n\r");
     132c:	87 ee       	ldi	r24, 0xE7	; 231
     132e:	90 e0       	ldi	r25, 0x00	; 0
-    1330:	e9 d3       	rcall	.+2002   	; 0x1b04 <USART_sendstr>
+    1330:	19 d4       	rcall	.+2098   	; 0x1b64 <USART_sendstr>
     1332:	2f ef       	ldi	r18, 0xFF	; 255
     1334:	81 ee       	ldi	r24, 0xE1	; 225
     1336:	94 e0       	ldi	r25, 0x04	; 4
@@ -3978,14 +3982,17 @@ static void init_system_io()
     1368:	88 ee       	ldi	r24, 0xE8	; 232
     136a:	93 e0       	ldi	r25, 0x03	; 3
     136c:	5a d3       	rcall	.+1716   	; 0x1a22 <SetBeeperFreq>
-	StartBeep(200);
-    136e:	88 ec       	ldi	r24, 0xC8	; 200
+//	StartBeep(200);
+
+	Sound_Play(m_siren2);
+    136e:	8c e0       	ldi	r24, 0x0C	; 12
     1370:	90 e0       	ldi	r25, 0x00	; 0
-    1372:	77 d3       	rcall	.+1774   	; 0x1a62 <StartBeep>
+    1372:	e1 d3       	rcall	.+1986   	; 0x1b36 <Sound_Play>
+
 	// When we get here, full ADC buffer have been sampled
 	// Get oversampled and filtered ADC for PID controller
 	update_normalized_adc();
-    1374:	a4 d7       	rcall	.+3912   	; 0x22be <__data_load_end+0x56c>
+    1374:	a4 d7       	rcall	.+3912   	; 0x22be <__data_load_end+0x50c>
 	// Call PID controller function in order to initialize it's internal structures
 	heaterInit();
     1376:	06 d9       	rcall	.-3572   	; 0x584 <heaterInit>
@@ -4053,7 +4060,7 @@ static void init_system_io()
 				StartBeep(40);
     13c4:	88 e2       	ldi	r24, 0x28	; 40
     13c6:	90 e0       	ldi	r25, 0x00	; 0
-    13c8:	4c d3       	rcall	.+1688   	; 0x1a62 <StartBeep>
+    13c8:	2d d3       	rcall	.+1626   	; 0x1a24 <StartBeep>
 			}	
 			// Direction control buttons sounds get special processing at processRollControl()
 			
@@ -4084,21 +4091,21 @@ static void init_system_io()
 				StartBeep(200);
     13e2:	88 ec       	ldi	r24, 0xC8	; 200
     13e4:	90 e0       	ldi	r25, 0x00	; 0
-    13e6:	3d d3       	rcall	.+1658   	; 0x1a62 <StartBeep>
+    13e6:	1e d3       	rcall	.+1596   	; 0x1a24 <StartBeep>
 			}		
 			
 			//----------- ADC ------------//
 			
 			// Get new temperature measurement
 			update_normalized_adc();			
-    13e8:	6a d7       	rcall	.+3796   	; 0x22be <__data_load_end+0x56c>
+    13e8:	6a d7       	rcall	.+3796   	; 0x22be <__data_load_end+0x50c>
 		
 			// Update indicated Celsius degree
 			if (sys_timers.flags & EXPIRED_CELSIUS)
     13ea:	80 91 8f 00 	lds	r24, 0x008F
     13ee:	80 fd       	sbrc	r24, 0
 				update_Celsius();		
-    13f0:	a2 d7       	rcall	.+3908   	; 0x2336 <__data_load_end+0x5e4>
+    13f0:	a2 d7       	rcall	.+3908   	; 0x2336 <__data_load_end+0x584>
 			
 			//----------- MENU -----------//		
 				
@@ -4130,50 +4137,50 @@ static void init_system_io()
 			{
 				
 				logU16p(adc_celsius);					// Actual temp Celsius
-    1402:	80 91 7c 01 	lds	r24, 0x017C
-    1406:	90 91 7d 01 	lds	r25, 0x017D
+    1402:	80 91 83 01 	lds	r24, 0x0183
+    1406:	90 91 84 01 	lds	r25, 0x0184
     140a:	10 df       	rcall	.-480    	; 0x122c <logU16p>
 				logU16p(adc_oversampled);				// Actual temp (ADC), oversampled
-    140c:	80 91 37 01 	lds	r24, 0x0137
-    1410:	90 91 38 01 	lds	r25, 0x0138
+    140c:	80 91 3e 01 	lds	r24, 0x013E
+    1410:	90 91 3f 01 	lds	r25, 0x013F
     1414:	0b df       	rcall	.-490    	; 0x122c <logU16p>
 				logU16p(adc_filtered);					// Actual temp (ADC), oversampled, filtered
-    1416:	80 91 35 01 	lds	r24, 0x0135
-    141a:	90 91 36 01 	lds	r25, 0x0136
+    1416:	80 91 3c 01 	lds	r24, 0x013C
+    141a:	90 91 3d 01 	lds	r25, 0x013D
     141e:	06 df       	rcall	.-500    	; 0x122c <logU16p>
 				USART_sendstr("    ");
     1420:	87 ec       	ldi	r24, 0xC7	; 199
     1422:	90 e0       	ldi	r25, 0x00	; 0
-    1424:	6f d3       	rcall	.+1758   	; 0x1b04 <USART_sendstr>
+    1424:	9f d3       	rcall	.+1854   	; 0x1b64 <USART_sendstr>
 				
 				logU16p(dbg_SetPointPID);				// Temp setting, as input to PID
-    1426:	80 91 b3 01 	lds	r24, 0x01B3
-    142a:	90 91 b4 01 	lds	r25, 0x01B4
+    1426:	80 91 ba 01 	lds	r24, 0x01BA
+    142a:	90 91 bb 01 	lds	r25, 0x01BB
     142e:	fe de       	rcall	.-516    	; 0x122c <logU16p>
 				logU16p(dbg_RealTempPID);				// Real temp, sampled for PID input
-    1430:	80 91 b1 01 	lds	r24, 0x01B1
-    1434:	90 91 b2 01 	lds	r25, 0x01B2
+    1430:	80 91 b8 01 	lds	r24, 0x01B8
+    1434:	90 91 b9 01 	lds	r25, 0x01B9
     1438:	f9 de       	rcall	.-526    	; 0x122c <logU16p>
 				
 				logI32p(dbg_PID_p_term);				// p term
-    143a:	60 91 cb 01 	lds	r22, 0x01CB
-    143e:	70 91 cc 01 	lds	r23, 0x01CC
+    143a:	60 91 d2 01 	lds	r22, 0x01D2
+    143e:	70 91 d3 01 	lds	r23, 0x01D3
     1442:	88 27       	eor	r24, r24
     1444:	77 fd       	sbrc	r23, 7
     1446:	80 95       	com	r24
     1448:	98 2f       	mov	r25, r24
     144a:	d5 de       	rcall	.-598    	; 0x11f6 <logI32p>
 				logI32p(dbg_PID_d_term);				// d term
-    144c:	60 91 cf 01 	lds	r22, 0x01CF
-    1450:	70 91 d0 01 	lds	r23, 0x01D0
+    144c:	60 91 d6 01 	lds	r22, 0x01D6
+    1450:	70 91 d7 01 	lds	r23, 0x01D7
     1454:	88 27       	eor	r24, r24
     1456:	77 fd       	sbrc	r23, 7
     1458:	80 95       	com	r24
     145a:	98 2f       	mov	r25, r24
     145c:	cc de       	rcall	.-616    	; 0x11f6 <logI32p>
 				logI32p(dbg_PID_i_term);				// i term
-    145e:	60 91 cd 01 	lds	r22, 0x01CD
-    1462:	70 91 ce 01 	lds	r23, 0x01CE
+    145e:	60 91 d4 01 	lds	r22, 0x01D4
+    1462:	70 91 d5 01 	lds	r23, 0x01D5
     1466:	88 27       	eor	r24, r24
     1468:	77 fd       	sbrc	r23, 7
     146a:	80 95       	com	r24
@@ -4182,17 +4189,17 @@ static void init_system_io()
 				USART_sendstr("    ");
     1470:	87 ec       	ldi	r24, 0xC7	; 199
     1472:	90 e0       	ldi	r25, 0x00	; 0
-    1474:	47 d3       	rcall	.+1678   	; 0x1b04 <USART_sendstr>
+    1474:	77 d3       	rcall	.+1774   	; 0x1b64 <USART_sendstr>
 				
 				logU16p(dbg_PID_output);				// PID output
-    1476:	80 91 c9 01 	lds	r24, 0x01C9
-    147a:	90 91 ca 01 	lds	r25, 0x01CA
+    1476:	80 91 d0 01 	lds	r24, 0x01D0
+    147a:	90 91 d1 01 	lds	r25, 0x01D1
     147e:	d6 de       	rcall	.-596    	; 0x122c <logU16p>
 			
 				USART_sendstr("\n\r");
     1480:	87 ee       	ldi	r24, 0xE7	; 231
     1482:	90 e0       	ldi	r25, 0x00	; 0
-    1484:	3f d3       	rcall	.+1662   	; 0x1b04 <USART_sendstr>
+    1484:	6f d3       	rcall	.+1758   	; 0x1b64 <USART_sendstr>
 				//---------------------------------//
 				
 			}
@@ -4343,7 +4350,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
     1544:	90 91 24 01 	lds	r25, 0x0124
     1548:	68 e2       	ldi	r22, 0x28	; 40
     154a:	70 e0       	ldi	r23, 0x00	; 0
-    154c:	f9 d2       	rcall	.+1522   	; 0x1b40 <__divmodhi4>
+    154c:	29 d3       	rcall	.+1618   	; 0x1ba0 <__divmodhi4>
     154e:	7b 01       	movw	r14, r22
 
 	//------ Calculate D term --------//
@@ -4378,7 +4385,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
     1582:	9f 1f       	adc	r25, r31
     1584:	65 e0       	ldi	r22, 0x05	; 5
     1586:	70 e0       	ldi	r23, 0x00	; 0
-    1588:	db d2       	rcall	.+1462   	; 0x1b40 <__divmodhi4>
+    1588:	0b d3       	rcall	.+1558   	; 0x1ba0 <__divmodhi4>
     158a:	9b 01       	movw	r18, r22
     158c:	77 ff       	sbrs	r23, 7
     158e:	02 c0       	rjmp	.+4      	; 0x1594 <processPID+0xd0>
@@ -4396,17 +4403,17 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	
 	//------- Debug --------//
 	dbg_PID_p_term = p_term;
-    15a0:	d0 93 cc 01 	sts	0x01CC, r29
-    15a4:	c0 93 cb 01 	sts	0x01CB, r28
+    15a0:	d0 93 d3 01 	sts	0x01D3, r29
+    15a4:	c0 93 d2 01 	sts	0x01D2, r28
 	dbg_PID_d_term = d_term;
-    15a8:	f0 93 d0 01 	sts	0x01D0, r31
-    15ac:	e0 93 cf 01 	sts	0x01CF, r30
+    15a8:	f0 93 d7 01 	sts	0x01D7, r31
+    15ac:	e0 93 d6 01 	sts	0x01D6, r30
 	dbg_PID_i_term = i_term;
-    15b0:	f0 92 ce 01 	sts	0x01CE, r15
-    15b4:	e0 92 cd 01 	sts	0x01CD, r14
+    15b0:	f0 92 d5 01 	sts	0x01D5, r15
+    15b4:	e0 92 d4 01 	sts	0x01D4, r14
 	dbg_PID_output = temp;
-    15b8:	90 93 ca 01 	sts	0x01CA, r25
-    15bc:	80 93 c9 01 	sts	0x01C9, r24
+    15b8:	90 93 d1 01 	sts	0x01D1, r25
+    15bc:	80 93 d0 01 	sts	0x01D0, r24
 	
 	
 	return temp;
@@ -4845,7 +4852,7 @@ static inline uint8_t reachedTopPoint(void)
 			{
 				if (activeRollCycle >= p.rollCycleSet)	
     17fa:	80 91 25 01 	lds	r24, 0x0125
-    17fe:	90 91 ae 01 	lds	r25, 0x01AE
+    17fe:	90 91 b5 01 	lds	r25, 0x01B5
     1802:	89 17       	cp	r24, r25
     1804:	28 f0       	brcs	.+10     	; 0x1810 <__vector_9+0xc2>
 				{
@@ -4890,7 +4897,7 @@ static inline uint8_t reachedBottomPoint(void)
 			{
 				if (activeRollCycle >= p.rollCycleSet)	
     1834:	80 91 25 01 	lds	r24, 0x0125
-    1838:	90 91 ae 01 	lds	r25, 0x01AE
+    1838:	90 91 b5 01 	lds	r25, 0x01B5
     183c:	89 17       	cp	r24, r25
     183e:	30 f0       	brcs	.+12     	; 0x184c <__vector_9+0xfe>
 				{
@@ -5218,7 +5225,7 @@ void processSystemTimers(void)
     19ea:	80 93 8c 00 	sts	0x008C, r24
 			if (sys_timers.poff_counter == p.power_off_timeout - 1)
     19ee:	60 91 8c 00 	lds	r22, 0x008C
-    19f2:	50 91 b0 01 	lds	r21, 0x01B0
+    19f2:	50 91 b7 01 	lds	r21, 0x01B7
     19f6:	26 2f       	mov	r18, r22
     19f8:	30 e0       	ldi	r19, 0x00	; 0
     19fa:	85 2f       	mov	r24, r21
@@ -5252,492 +5259,577 @@ void resetAutoPowerOffCounter(void)
 00001a22 <SetBeeperFreq>:
 }
 
-// Setup beeper frequency (Hz)
+*/
+
 void SetBeeperFreq(uint16_t freq_hz)
 {
-	uint16_t period_us = 1000000 / freq_hz;
-    1a22:	9c 01       	movw	r18, r24
-    1a24:	40 e0       	ldi	r20, 0x00	; 0
-    1a26:	50 e0       	ldi	r21, 0x00	; 0
-    1a28:	60 e4       	ldi	r22, 0x40	; 64
-    1a2a:	72 e4       	ldi	r23, 0x42	; 66
-    1a2c:	8f e0       	ldi	r24, 0x0F	; 15
-    1a2e:	90 e0       	ldi	r25, 0x00	; 0
-    1a30:	9a d0       	rcall	.+308    	; 0x1b66 <__divmodsi4>
-	if (period_us & 0xFFF8)
-    1a32:	da 01       	movw	r26, r20
-    1a34:	c9 01       	movw	r24, r18
-    1a36:	88 7f       	andi	r24, 0xF8	; 248
-    1a38:	aa 27       	eor	r26, r26
-    1a3a:	bb 27       	eor	r27, r27
-    1a3c:	89 2b       	or	r24, r25
-    1a3e:	51 f0       	breq	.+20     	; 0x1a54 <SetBeeperFreq+0x32>
-	OCR1A = (period_us>>3) - 1;
-    1a40:	43 e0       	ldi	r20, 0x03	; 3
-    1a42:	36 95       	lsr	r19
-    1a44:	27 95       	ror	r18
-    1a46:	4a 95       	dec	r20
-    1a48:	e1 f7       	brne	.-8      	; 0x1a42 <SetBeeperFreq+0x20>
-    1a4a:	21 50       	subi	r18, 0x01	; 1
-    1a4c:	31 09       	sbc	r19, r1
-    1a4e:	3b bd       	out	0x2b, r19	; 43
-    1a50:	2a bd       	out	0x2a, r18	; 42
-    1a52:	04 c0       	rjmp	.+8      	; 0x1a5c <SetBeeperFreq+0x3a>
-	else
-	OCR1A = 0x1;
-    1a54:	81 e0       	ldi	r24, 0x01	; 1
-    1a56:	90 e0       	ldi	r25, 0x00	; 0
-    1a58:	9b bd       	out	0x2b, r25	; 43
-    1a5a:	8a bd       	out	0x2a, r24	; 42
-	TCNT1 = 0;
-    1a5c:	1d bc       	out	0x2d, r1	; 45
-    1a5e:	1c bc       	out	0x2c, r1	; 44
-    1a60:	08 95       	ret
+    1a22:	08 95       	ret
 
-00001a62 <StartBeep>:
+00001a24 <StartBeep>:
 }
-
-// Beep for some time in ms
+	
 void StartBeep(uint16_t time_ms)
 {
-	if ( (p.sound_enable) || (enableOverride) )
-    1a62:	20 91 af 01 	lds	r18, 0x01AF
-    1a66:	21 11       	cpse	r18, r1
-    1a68:	04 c0       	rjmp	.+8      	; 0x1a72 <StartBeep+0x10>
-    1a6a:	20 91 32 01 	lds	r18, 0x0132
-    1a6e:	22 23       	and	r18, r18
-    1a70:	39 f0       	breq	.+14     	; 0x1a80 <StartBeep+0x1e>
-	{
-		beep_cnt = time_ms;
-    1a72:	90 93 34 01 	sts	0x0134, r25
-    1a76:	80 93 33 01 	sts	0x0133, r24
-// Enable / disable beeper output
-inline void SetBeepOutput(uint8_t val)
-{
-	if (val)
-	// Toggle OCR1A on compare match
-	TCCR1A |= (1<<COM1A0);
-    1a7a:	8f b5       	in	r24, 0x2f	; 47
-    1a7c:	80 64       	ori	r24, 0x40	; 64
-    1a7e:	8f bd       	out	0x2f, r24	; 47
-	if ( (p.sound_enable) || (enableOverride) )
-	{
-		beep_cnt = time_ms;
-		SetBeepOutput(1);
-	}
-	enableOverride = 0;
-    1a80:	10 92 32 01 	sts	0x0132, r1
-    1a84:	08 95       	ret
+    1a24:	08 95       	ret
 
-00001a86 <OverrideSoundDisable>:
-}
+00001a26 <OverrideSoundDisable>:
+}		
 
 void OverrideSoundDisable(void)
 {
-	enableOverride = 1;
-    1a86:	81 e0       	ldi	r24, 0x01	; 1
-    1a88:	80 93 32 01 	sts	0x0132, r24
-    1a8c:	08 95       	ret
+    1a26:	08 95       	ret
 
-00001a8e <__vector_3>:
-
-
+00001a28 <__vector_3>:
+}
 
 // Period is 1ms @ 16MHz
 ISR(TIMER2_COMP_vect)
 {	
-    1a8e:	1f 92       	push	r1
-    1a90:	0f 92       	push	r0
-    1a92:	0f b6       	in	r0, 0x3f	; 63
-    1a94:	0f 92       	push	r0
-    1a96:	11 24       	eor	r1, r1
-    1a98:	2f 93       	push	r18
-    1a9a:	3f 93       	push	r19
-    1a9c:	4f 93       	push	r20
-    1a9e:	5f 93       	push	r21
-    1aa0:	6f 93       	push	r22
-    1aa2:	7f 93       	push	r23
-    1aa4:	8f 93       	push	r24
-    1aa6:	9f 93       	push	r25
-    1aa8:	af 93       	push	r26
-    1aaa:	bf 93       	push	r27
-    1aac:	ef 93       	push	r30
-    1aae:	ff 93       	push	r31
-	
-	// Manage beeper
-	if (beep_cnt)
-    1ab0:	80 91 33 01 	lds	r24, 0x0133
-    1ab4:	90 91 34 01 	lds	r25, 0x0134
-    1ab8:	00 97       	sbiw	r24, 0x00	; 0
-    1aba:	31 f0       	breq	.+12     	; 0x1ac8 <__vector_3+0x3a>
-		beep_cnt--;
-    1abc:	01 97       	sbiw	r24, 0x01	; 1
-    1abe:	90 93 34 01 	sts	0x0134, r25
-    1ac2:	80 93 33 01 	sts	0x0133, r24
-    1ac6:	03 c0       	rjmp	.+6      	; 0x1ace <__vector_3+0x40>
-	if (val)
-	// Toggle OCR1A on compare match
-	TCCR1A |= (1<<COM1A0);
-	else
-	// Disable OCR1A output
-	TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
-    1ac8:	8f b5       	in	r24, 0x2f	; 47
-    1aca:	8f 73       	andi	r24, 0x3F	; 63
-    1acc:	8f bd       	out	0x2f, r24	; 47
+    1a28:	1f 92       	push	r1
+    1a2a:	0f 92       	push	r0
+    1a2c:	0f b6       	in	r0, 0x3f	; 63
+    1a2e:	0f 92       	push	r0
+    1a30:	11 24       	eor	r1, r1
+    1a32:	2f 93       	push	r18
+    1a34:	3f 93       	push	r19
+    1a36:	4f 93       	push	r20
+    1a38:	5f 93       	push	r21
+    1a3a:	6f 93       	push	r22
+    1a3c:	7f 93       	push	r23
+    1a3e:	8f 93       	push	r24
+    1a40:	9f 93       	push	r25
+    1a42:	af 93       	push	r26
+    1a44:	bf 93       	push	r27
+    1a46:	ef 93       	push	r30
+    1a48:	ff 93       	push	r31
 		beep_cnt--;
 	else
 		SetBeepOutput(0);	// done
-	
+*/	
 	// Manage LED indicator
 	processLedIndicator();
-    1ace:	09 d7       	rcall	.+3602   	; 0x28e2 <__data_load_end+0xb90>
+    1a4a:	4b d7       	rcall	.+3734   	; 0x28e2 <__data_load_end+0xb30>
+static inline void Sound_Process(void)
+{
+	static uint16_t note_time_counter;
+	static tone_t tone;
+	static const tone_t* p_melody;
+	uint8_t new_state = sound_state;
+    1a4c:	20 91 32 01 	lds	r18, 0x0132
+	
+	switch (sound_state)
+    1a50:	22 30       	cpi	r18, 0x02	; 2
+    1a52:	a1 f1       	breq	.+104    	; 0x1abc <__vector_3+0x94>
+    1a54:	20 f4       	brcc	.+8      	; 0x1a5e <__vector_3+0x36>
+    1a56:	21 30       	cpi	r18, 0x01	; 1
+    1a58:	09 f0       	breq	.+2      	; 0x1a5c <__vector_3+0x34>
+    1a5a:	4f c0       	rjmp	.+158    	; 0x1afa <__vector_3+0xd2>
+    1a5c:	0f c0       	rjmp	.+30     	; 0x1a7c <__vector_3+0x54>
+    1a5e:	23 30       	cpi	r18, 0x03	; 3
+    1a60:	21 f0       	breq	.+8      	; 0x1a6a <__vector_3+0x42>
+    1a62:	25 30       	cpi	r18, 0x05	; 5
+    1a64:	09 f0       	breq	.+2      	; 0x1a68 <__vector_3+0x40>
+    1a66:	49 c0       	rjmp	.+146    	; 0x1afa <__vector_3+0xd2>
+    1a68:	15 c0       	rjmp	.+42     	; 0x1a94 <__vector_3+0x6c>
+	{
+		case SOUND_START_NEW:
+			p_melody = new_melody;
+    1a6a:	80 91 33 01 	lds	r24, 0x0133
+    1a6e:	90 91 34 01 	lds	r25, 0x0134
+    1a72:	90 93 36 01 	sts	0x0136, r25
+    1a76:	80 93 35 01 	sts	0x0135, r24
+    1a7a:	43 c0       	rjmp	.+134    	; 0x1b02 <__vector_3+0xda>
+			tone.tone_period = beep_tone_period;
+			new_state = SOUND_APPLY_TONE;
+			p_melody = NULL;				// Beeper mode
+			break; */
+		case SOUND_PLAY:
+			if (--note_time_counter == 0)
+    1a7c:	80 91 37 01 	lds	r24, 0x0137
+    1a80:	90 91 38 01 	lds	r25, 0x0138
+    1a84:	01 97       	sbiw	r24, 0x01	; 1
+    1a86:	90 93 38 01 	sts	0x0138, r25
+    1a8a:	80 93 37 01 	sts	0x0137, r24
+    1a8e:	89 2b       	or	r24, r25
+    1a90:	c1 f1       	breq	.+112    	; 0x1b02 <__vector_3+0xda>
+    1a92:	3a c0       	rjmp	.+116    	; 0x1b08 <__vector_3+0xe0>
+				new_state = SOUND_GET_NEXT_TONE;
+			break;
+		case SOUND_GET_NEXT_TONE:
+			if (p_melody != NULL)			// If driver is playing melody, not beeping
+    1a94:	60 91 35 01 	lds	r22, 0x0135
+    1a98:	70 91 36 01 	lds	r23, 0x0136
+    1a9c:	61 15       	cp	r22, r1
+    1a9e:	71 05       	cpc	r23, r1
+    1aa0:	91 f1       	breq	.+100    	; 0x1b06 <__vector_3+0xde>
+			{
+				eeprom_read_block(&tone,p_melody++,sizeof(tone_t));	
+    1aa2:	cb 01       	movw	r24, r22
+    1aa4:	02 96       	adiw	r24, 0x02	; 2
+    1aa6:	90 93 36 01 	sts	0x0136, r25
+    1aaa:	80 93 35 01 	sts	0x0135, r24
+    1aae:	42 e0       	ldi	r20, 0x02	; 2
+    1ab0:	50 e0       	ldi	r21, 0x00	; 0
+    1ab2:	89 e3       	ldi	r24, 0x39	; 57
+    1ab4:	91 e0       	ldi	r25, 0x01	; 1
+    1ab6:	fa d0       	rcall	.+500    	; 0x1cac <__eerd_block_m8>
+				new_state = SOUND_APPLY_TONE;
+    1ab8:	22 e0       	ldi	r18, 0x02	; 2
+    1aba:	26 c0       	rjmp	.+76     	; 0x1b08 <__vector_3+0xe0>
+			{
+				new_state = SOUND_OFF;
+			}
+			break;
+		case SOUND_APPLY_TONE:
+			if (tone.duration == 0)
+    1abc:	80 91 3a 01 	lds	r24, 0x013A
+    1ac0:	88 23       	and	r24, r24
+    1ac2:	09 f1       	breq	.+66     	; 0x1b06 <__vector_3+0xde>
+				new_state = SOUND_OFF;
+			}
+			else
+			{
+				// Setup period
+				if (tone.tone_period != 0)
+    1ac4:	80 91 39 01 	lds	r24, 0x0139
+    1ac8:	88 23       	and	r24, r24
+    1aca:	39 f0       	breq	.+14     	; 0x1ada <__vector_3+0xb2>
+				{
+					// Timer runs at 250kHz (T = 4us), tone_period is set in units of 8us
+					// Output toggles on compare match
+					OCR1A = tone.tone_period - 1;
+    1acc:	90 e0       	ldi	r25, 0x00	; 0
+    1ace:	01 97       	sbiw	r24, 0x01	; 1
+    1ad0:	9b bd       	out	0x2b, r25	; 43
+    1ad2:	8a bd       	out	0x2a, r24	; 42
+					// Toggle OCR1A on compare match
+					TCCR1A |= (1<<COM1A0);
+    1ad4:	8f b5       	in	r24, 0x2f	; 47
+    1ad6:	80 64       	ori	r24, 0x40	; 64
+    1ad8:	02 c0       	rjmp	.+4      	; 0x1ade <__vector_3+0xb6>
+				}
+				else
+				{
+					// Disable OCR1A output
+					TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+    1ada:	8f b5       	in	r24, 0x2f	; 47
+    1adc:	8f 73       	andi	r24, 0x3F	; 63
+    1ade:	8f bd       	out	0x2f, r24	; 47
+				}
+				note_time_counter = (uint16_t)tone.duration * TONE_DURATION_SCALE - 2;
+    1ae0:	80 91 3a 01 	lds	r24, 0x013A
+    1ae4:	2a e0       	ldi	r18, 0x0A	; 10
+    1ae6:	82 9f       	mul	r24, r18
+    1ae8:	c0 01       	movw	r24, r0
+    1aea:	11 24       	eor	r1, r1
+    1aec:	02 97       	sbiw	r24, 0x02	; 2
+    1aee:	90 93 38 01 	sts	0x0138, r25
+    1af2:	80 93 37 01 	sts	0x0137, r24
+				new_state = SOUND_PLAY;
+    1af6:	21 e0       	ldi	r18, 0x01	; 1
+    1af8:	07 c0       	rjmp	.+14     	; 0x1b08 <__vector_3+0xe0>
+			}
+			break;
+		default:
+			// Disable OCR1A output
+			TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+    1afa:	8f b5       	in	r24, 0x2f	; 47
+    1afc:	8f 73       	andi	r24, 0x3F	; 63
+    1afe:	8f bd       	out	0x2f, r24	; 47
+    1b00:	03 c0       	rjmp	.+6      	; 0x1b08 <__vector_3+0xe0>
+			new_state = SOUND_APPLY_TONE;
+			p_melody = NULL;				// Beeper mode
+			break; */
+		case SOUND_PLAY:
+			if (--note_time_counter == 0)
+				new_state = SOUND_GET_NEXT_TONE;
+    1b02:	25 e0       	ldi	r18, 0x05	; 5
+    1b04:	01 c0       	rjmp	.+2      	; 0x1b08 <__vector_3+0xe0>
+				eeprom_read_block(&tone,p_melody++,sizeof(tone_t));	
+				new_state = SOUND_APPLY_TONE;
+			}
+			else
+			{
+				new_state = SOUND_OFF;
+    1b06:	20 e0       	ldi	r18, 0x00	; 0
+		default:
+			// Disable OCR1A output
+			TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
+			break;
+	}
+	sound_state = new_state;
+    1b08:	20 93 32 01 	sts	0x0132, r18
 	
 	// Do sound stuff
-	//Sound_Process();
+	Sound_Process();
 	
 	// Process menu update timer
 	processSoftTimer8b(&menuUpdateTimer);	
-    1ad0:	80 e9       	ldi	r24, 0x90	; 144
-    1ad2:	90 e0       	ldi	r25, 0x00	; 0
-    1ad4:	10 df       	rcall	.-480    	; 0x18f6 <processSoftTimer8b>
+    1b0c:	80 e9       	ldi	r24, 0x90	; 144
+    1b0e:	90 e0       	ldi	r25, 0x00	; 0
+    1b10:	f2 de       	rcall	.-540    	; 0x18f6 <processSoftTimer8b>
 	
 	// Start ADC conversion 
 	ADCSRA |= (1<<ADSC);
-    1ad6:	36 9a       	sbi	0x06, 6	; 6
+    1b12:	36 9a       	sbi	0x06, 6	; 6
 	
 }
-    1ad8:	ff 91       	pop	r31
-    1ada:	ef 91       	pop	r30
-    1adc:	bf 91       	pop	r27
-    1ade:	af 91       	pop	r26
-    1ae0:	9f 91       	pop	r25
-    1ae2:	8f 91       	pop	r24
-    1ae4:	7f 91       	pop	r23
-    1ae6:	6f 91       	pop	r22
-    1ae8:	5f 91       	pop	r21
-    1aea:	4f 91       	pop	r20
-    1aec:	3f 91       	pop	r19
-    1aee:	2f 91       	pop	r18
-    1af0:	0f 90       	pop	r0
-    1af2:	0f be       	out	0x3f, r0	; 63
-    1af4:	0f 90       	pop	r0
-    1af6:	1f 90       	pop	r1
-    1af8:	18 95       	reti
+    1b14:	ff 91       	pop	r31
+    1b16:	ef 91       	pop	r30
+    1b18:	bf 91       	pop	r27
+    1b1a:	af 91       	pop	r26
+    1b1c:	9f 91       	pop	r25
+    1b1e:	8f 91       	pop	r24
+    1b20:	7f 91       	pop	r23
+    1b22:	6f 91       	pop	r22
+    1b24:	5f 91       	pop	r21
+    1b26:	4f 91       	pop	r20
+    1b28:	3f 91       	pop	r19
+    1b2a:	2f 91       	pop	r18
+    1b2c:	0f 90       	pop	r0
+    1b2e:	0f be       	out	0x3f, r0	; 63
+    1b30:	0f 90       	pop	r0
+    1b32:	1f 90       	pop	r1
+    1b34:	18 95       	reti
 
-00001afa <USART_send>:
+00001b36 <Sound_Play>:
+	}
+}
+*/
+void Sound_Play(const tone_t* p_melody)
+{
+	if ((p.sound_enable) || (SoundEnable_override))
+    1b36:	20 91 b6 01 	lds	r18, 0x01B6
+    1b3a:	21 11       	cpse	r18, r1
+    1b3c:	04 c0       	rjmp	.+8      	; 0x1b46 <Sound_Play+0x10>
+    1b3e:	20 91 3b 01 	lds	r18, 0x013B
+    1b42:	22 23       	and	r18, r18
+    1b44:	49 f0       	breq	.+18     	; 0x1b58 <Sound_Play+0x22>
+	{
+		new_melody =  p_melody;
+    1b46:	90 93 34 01 	sts	0x0134, r25
+    1b4a:	80 93 33 01 	sts	0x0133, r24
+		sound_state = SOUND_START_NEW;		// No need to disable interrupts - atomic operation
+    1b4e:	83 e0       	ldi	r24, 0x03	; 3
+    1b50:	80 93 32 01 	sts	0x0132, r24
+		SoundEnable_override = 0;
+    1b54:	10 92 3b 01 	sts	0x013B, r1
+    1b58:	08 95       	ret
+
+00001b5a <USART_send>:
 
 
 
 void USART_send( uint8_t data )
 {
 	UCSRA |= (1<<TXC);                 // Clear flag
-    1afa:	5e 9a       	sbi	0x0b, 6	; 11
+    1b5a:	5e 9a       	sbi	0x0b, 6	; 11
 	UDR = data;
-    1afc:	8c b9       	out	0x0c, r24	; 12
+    1b5c:	8c b9       	out	0x0c, r24	; 12
 	while ( !(UCSRA & (1<<TXC)) );  // Wait
-    1afe:	5e 9b       	sbis	0x0b, 6	; 11
-    1b00:	fe cf       	rjmp	.-4      	; 0x1afe <USART_send+0x4>
+    1b5e:	5e 9b       	sbis	0x0b, 6	; 11
+    1b60:	fe cf       	rjmp	.-4      	; 0x1b5e <USART_send+0x4>
 }
-    1b02:	08 95       	ret
+    1b62:	08 95       	ret
 
-00001b04 <USART_sendstr>:
+00001b64 <USART_sendstr>:
 
 
 void USART_sendstr(char* str)
 {
-    1b04:	1f 93       	push	r17
-    1b06:	cf 93       	push	r28
-    1b08:	df 93       	push	r29
-    1b0a:	ec 01       	movw	r28, r24
+    1b64:	1f 93       	push	r17
+    1b66:	cf 93       	push	r28
+    1b68:	df 93       	push	r29
+    1b6a:	ec 01       	movw	r28, r24
 	uint8_t i = 0;
-    1b0c:	10 e0       	ldi	r17, 0x00	; 0
+    1b6c:	10 e0       	ldi	r17, 0x00	; 0
 	while (str[i])
-    1b0e:	02 c0       	rjmp	.+4      	; 0x1b14 <USART_sendstr+0x10>
+    1b6e:	02 c0       	rjmp	.+4      	; 0x1b74 <USART_sendstr+0x10>
 	{
 		USART_send(str[i++]);
-    1b10:	1f 5f       	subi	r17, 0xFF	; 255
-    1b12:	f3 df       	rcall	.-26     	; 0x1afa <USART_send>
+    1b70:	1f 5f       	subi	r17, 0xFF	; 255
+    1b72:	f3 df       	rcall	.-26     	; 0x1b5a <USART_send>
 
 
 void USART_sendstr(char* str)
 {
 	uint8_t i = 0;
 	while (str[i])
-    1b14:	fe 01       	movw	r30, r28
-    1b16:	e1 0f       	add	r30, r17
-    1b18:	f1 1d       	adc	r31, r1
-    1b1a:	80 81       	ld	r24, Z
-    1b1c:	81 11       	cpse	r24, r1
-    1b1e:	f8 cf       	rjmp	.-16     	; 0x1b10 <USART_sendstr+0xc>
+    1b74:	fe 01       	movw	r30, r28
+    1b76:	e1 0f       	add	r30, r17
+    1b78:	f1 1d       	adc	r31, r1
+    1b7a:	80 81       	ld	r24, Z
+    1b7c:	81 11       	cpse	r24, r1
+    1b7e:	f8 cf       	rjmp	.-16     	; 0x1b70 <USART_sendstr+0xc>
 	{
 		USART_send(str[i++]);
 	}
 }
-    1b20:	df 91       	pop	r29
-    1b22:	cf 91       	pop	r28
-    1b24:	1f 91       	pop	r17
-    1b26:	08 95       	ret
+    1b80:	df 91       	pop	r29
+    1b82:	cf 91       	pop	r28
+    1b84:	1f 91       	pop	r17
+    1b86:	08 95       	ret
 
-00001b28 <__udivmodqi4>:
-    1b28:	99 1b       	sub	r25, r25
-    1b2a:	79 e0       	ldi	r23, 0x09	; 9
-    1b2c:	04 c0       	rjmp	.+8      	; 0x1b36 <__udivmodqi4_ep>
+00001b88 <__udivmodqi4>:
+    1b88:	99 1b       	sub	r25, r25
+    1b8a:	79 e0       	ldi	r23, 0x09	; 9
+    1b8c:	04 c0       	rjmp	.+8      	; 0x1b96 <__udivmodqi4_ep>
 
-00001b2e <__udivmodqi4_loop>:
-    1b2e:	99 1f       	adc	r25, r25
-    1b30:	96 17       	cp	r25, r22
-    1b32:	08 f0       	brcs	.+2      	; 0x1b36 <__udivmodqi4_ep>
-    1b34:	96 1b       	sub	r25, r22
+00001b8e <__udivmodqi4_loop>:
+    1b8e:	99 1f       	adc	r25, r25
+    1b90:	96 17       	cp	r25, r22
+    1b92:	08 f0       	brcs	.+2      	; 0x1b96 <__udivmodqi4_ep>
+    1b94:	96 1b       	sub	r25, r22
 
-00001b36 <__udivmodqi4_ep>:
-    1b36:	88 1f       	adc	r24, r24
-    1b38:	7a 95       	dec	r23
-    1b3a:	c9 f7       	brne	.-14     	; 0x1b2e <__udivmodqi4_loop>
-    1b3c:	80 95       	com	r24
-    1b3e:	08 95       	ret
+00001b96 <__udivmodqi4_ep>:
+    1b96:	88 1f       	adc	r24, r24
+    1b98:	7a 95       	dec	r23
+    1b9a:	c9 f7       	brne	.-14     	; 0x1b8e <__udivmodqi4_loop>
+    1b9c:	80 95       	com	r24
+    1b9e:	08 95       	ret
 
-00001b40 <__divmodhi4>:
-    1b40:	97 fb       	bst	r25, 7
-    1b42:	07 2e       	mov	r0, r23
-    1b44:	16 f4       	brtc	.+4      	; 0x1b4a <__divmodhi4+0xa>
-    1b46:	00 94       	com	r0
-    1b48:	06 d0       	rcall	.+12     	; 0x1b56 <__divmodhi4_neg1>
-    1b4a:	77 fd       	sbrc	r23, 7
-    1b4c:	08 d0       	rcall	.+16     	; 0x1b5e <__divmodhi4_neg2>
-    1b4e:	48 d0       	rcall	.+144    	; 0x1be0 <__udivmodhi4>
-    1b50:	07 fc       	sbrc	r0, 7
-    1b52:	05 d0       	rcall	.+10     	; 0x1b5e <__divmodhi4_neg2>
-    1b54:	3e f4       	brtc	.+14     	; 0x1b64 <__divmodhi4_exit>
+00001ba0 <__divmodhi4>:
+    1ba0:	97 fb       	bst	r25, 7
+    1ba2:	07 2e       	mov	r0, r23
+    1ba4:	16 f4       	brtc	.+4      	; 0x1baa <__divmodhi4+0xa>
+    1ba6:	00 94       	com	r0
+    1ba8:	06 d0       	rcall	.+12     	; 0x1bb6 <__divmodhi4_neg1>
+    1baa:	77 fd       	sbrc	r23, 7
+    1bac:	08 d0       	rcall	.+16     	; 0x1bbe <__divmodhi4_neg2>
+    1bae:	48 d0       	rcall	.+144    	; 0x1c40 <__udivmodhi4>
+    1bb0:	07 fc       	sbrc	r0, 7
+    1bb2:	05 d0       	rcall	.+10     	; 0x1bbe <__divmodhi4_neg2>
+    1bb4:	3e f4       	brtc	.+14     	; 0x1bc4 <__divmodhi4_exit>
 
-00001b56 <__divmodhi4_neg1>:
-    1b56:	90 95       	com	r25
-    1b58:	81 95       	neg	r24
-    1b5a:	9f 4f       	sbci	r25, 0xFF	; 255
-    1b5c:	08 95       	ret
+00001bb6 <__divmodhi4_neg1>:
+    1bb6:	90 95       	com	r25
+    1bb8:	81 95       	neg	r24
+    1bba:	9f 4f       	sbci	r25, 0xFF	; 255
+    1bbc:	08 95       	ret
 
-00001b5e <__divmodhi4_neg2>:
-    1b5e:	70 95       	com	r23
-    1b60:	61 95       	neg	r22
-    1b62:	7f 4f       	sbci	r23, 0xFF	; 255
+00001bbe <__divmodhi4_neg2>:
+    1bbe:	70 95       	com	r23
+    1bc0:	61 95       	neg	r22
+    1bc2:	7f 4f       	sbci	r23, 0xFF	; 255
 
-00001b64 <__divmodhi4_exit>:
-    1b64:	08 95       	ret
-
-00001b66 <__divmodsi4>:
-    1b66:	05 2e       	mov	r0, r21
-    1b68:	97 fb       	bst	r25, 7
-    1b6a:	16 f4       	brtc	.+4      	; 0x1b70 <__divmodsi4+0xa>
-    1b6c:	00 94       	com	r0
-    1b6e:	06 d0       	rcall	.+12     	; 0x1b7c <__divmodsi4_neg1>
-    1b70:	57 fd       	sbrc	r21, 7
-    1b72:	0c d0       	rcall	.+24     	; 0x1b8c <__divmodsi4_neg2>
-    1b74:	49 d0       	rcall	.+146    	; 0x1c08 <__udivmodsi4>
-    1b76:	07 fc       	sbrc	r0, 7
-    1b78:	09 d0       	rcall	.+18     	; 0x1b8c <__divmodsi4_neg2>
-    1b7a:	7e f4       	brtc	.+30     	; 0x1b9a <__divmodsi4_exit>
-
-00001b7c <__divmodsi4_neg1>:
-    1b7c:	90 95       	com	r25
-    1b7e:	80 95       	com	r24
-    1b80:	70 95       	com	r23
-    1b82:	61 95       	neg	r22
-    1b84:	7f 4f       	sbci	r23, 0xFF	; 255
-    1b86:	8f 4f       	sbci	r24, 0xFF	; 255
-    1b88:	9f 4f       	sbci	r25, 0xFF	; 255
-    1b8a:	08 95       	ret
-
-00001b8c <__divmodsi4_neg2>:
-    1b8c:	50 95       	com	r21
-    1b8e:	40 95       	com	r20
-    1b90:	30 95       	com	r19
-    1b92:	21 95       	neg	r18
-    1b94:	3f 4f       	sbci	r19, 0xFF	; 255
-    1b96:	4f 4f       	sbci	r20, 0xFF	; 255
-    1b98:	5f 4f       	sbci	r21, 0xFF	; 255
-
-00001b9a <__divmodsi4_exit>:
-    1b9a:	08 95       	ret
-
-00001b9c <__mulhisi3>:
-    1b9c:	05 d0       	rcall	.+10     	; 0x1ba8 <__umulhisi3>
-    1b9e:	33 23       	and	r19, r19
-    1ba0:	12 f4       	brpl	.+4      	; 0x1ba6 <__mulhisi3+0xa>
-    1ba2:	8a 1b       	sub	r24, r26
-    1ba4:	9b 0b       	sbc	r25, r27
-    1ba6:	0d c0       	rjmp	.+26     	; 0x1bc2 <__usmulhisi3_tail>
-
-00001ba8 <__umulhisi3>:
-    1ba8:	a2 9f       	mul	r26, r18
-    1baa:	b0 01       	movw	r22, r0
-    1bac:	b3 9f       	mul	r27, r19
-    1bae:	c0 01       	movw	r24, r0
-    1bb0:	a3 9f       	mul	r26, r19
-    1bb2:	01 d0       	rcall	.+2      	; 0x1bb6 <__umulhisi3+0xe>
-    1bb4:	b2 9f       	mul	r27, r18
-    1bb6:	70 0d       	add	r23, r0
-    1bb8:	81 1d       	adc	r24, r1
-    1bba:	11 24       	eor	r1, r1
-    1bbc:	91 1d       	adc	r25, r1
-    1bbe:	08 95       	ret
-
-00001bc0 <__usmulhisi3>:
-    1bc0:	f3 df       	rcall	.-26     	; 0x1ba8 <__umulhisi3>
-
-00001bc2 <__usmulhisi3_tail>:
-    1bc2:	b7 ff       	sbrs	r27, 7
+00001bc4 <__divmodhi4_exit>:
     1bc4:	08 95       	ret
-    1bc6:	82 1b       	sub	r24, r18
-    1bc8:	93 0b       	sbc	r25, r19
-    1bca:	08 95       	ret
 
-00001bcc <__muluhisi3>:
-    1bcc:	ed df       	rcall	.-38     	; 0x1ba8 <__umulhisi3>
-    1bce:	a5 9f       	mul	r26, r21
-    1bd0:	90 0d       	add	r25, r0
-    1bd2:	b4 9f       	mul	r27, r20
-    1bd4:	90 0d       	add	r25, r0
-    1bd6:	a4 9f       	mul	r26, r20
-    1bd8:	80 0d       	add	r24, r0
-    1bda:	91 1d       	adc	r25, r1
-    1bdc:	11 24       	eor	r1, r1
-    1bde:	08 95       	ret
+00001bc6 <__divmodsi4>:
+    1bc6:	05 2e       	mov	r0, r21
+    1bc8:	97 fb       	bst	r25, 7
+    1bca:	16 f4       	brtc	.+4      	; 0x1bd0 <__divmodsi4+0xa>
+    1bcc:	00 94       	com	r0
+    1bce:	06 d0       	rcall	.+12     	; 0x1bdc <__divmodsi4_neg1>
+    1bd0:	57 fd       	sbrc	r21, 7
+    1bd2:	0c d0       	rcall	.+24     	; 0x1bec <__divmodsi4_neg2>
+    1bd4:	49 d0       	rcall	.+146    	; 0x1c68 <__udivmodsi4>
+    1bd6:	07 fc       	sbrc	r0, 7
+    1bd8:	09 d0       	rcall	.+18     	; 0x1bec <__divmodsi4_neg2>
+    1bda:	7e f4       	brtc	.+30     	; 0x1bfa <__divmodsi4_exit>
 
-00001be0 <__udivmodhi4>:
-    1be0:	aa 1b       	sub	r26, r26
-    1be2:	bb 1b       	sub	r27, r27
-    1be4:	51 e1       	ldi	r21, 0x11	; 17
-    1be6:	07 c0       	rjmp	.+14     	; 0x1bf6 <__udivmodhi4_ep>
+00001bdc <__divmodsi4_neg1>:
+    1bdc:	90 95       	com	r25
+    1bde:	80 95       	com	r24
+    1be0:	70 95       	com	r23
+    1be2:	61 95       	neg	r22
+    1be4:	7f 4f       	sbci	r23, 0xFF	; 255
+    1be6:	8f 4f       	sbci	r24, 0xFF	; 255
+    1be8:	9f 4f       	sbci	r25, 0xFF	; 255
+    1bea:	08 95       	ret
 
-00001be8 <__udivmodhi4_loop>:
-    1be8:	aa 1f       	adc	r26, r26
-    1bea:	bb 1f       	adc	r27, r27
-    1bec:	a6 17       	cp	r26, r22
-    1bee:	b7 07       	cpc	r27, r23
-    1bf0:	10 f0       	brcs	.+4      	; 0x1bf6 <__udivmodhi4_ep>
-    1bf2:	a6 1b       	sub	r26, r22
-    1bf4:	b7 0b       	sbc	r27, r23
+00001bec <__divmodsi4_neg2>:
+    1bec:	50 95       	com	r21
+    1bee:	40 95       	com	r20
+    1bf0:	30 95       	com	r19
+    1bf2:	21 95       	neg	r18
+    1bf4:	3f 4f       	sbci	r19, 0xFF	; 255
+    1bf6:	4f 4f       	sbci	r20, 0xFF	; 255
+    1bf8:	5f 4f       	sbci	r21, 0xFF	; 255
 
-00001bf6 <__udivmodhi4_ep>:
-    1bf6:	88 1f       	adc	r24, r24
-    1bf8:	99 1f       	adc	r25, r25
-    1bfa:	5a 95       	dec	r21
-    1bfc:	a9 f7       	brne	.-22     	; 0x1be8 <__udivmodhi4_loop>
-    1bfe:	80 95       	com	r24
-    1c00:	90 95       	com	r25
-    1c02:	bc 01       	movw	r22, r24
-    1c04:	cd 01       	movw	r24, r26
-    1c06:	08 95       	ret
+00001bfa <__divmodsi4_exit>:
+    1bfa:	08 95       	ret
 
-00001c08 <__udivmodsi4>:
-    1c08:	a1 e2       	ldi	r26, 0x21	; 33
-    1c0a:	1a 2e       	mov	r1, r26
-    1c0c:	aa 1b       	sub	r26, r26
-    1c0e:	bb 1b       	sub	r27, r27
-    1c10:	fd 01       	movw	r30, r26
-    1c12:	0d c0       	rjmp	.+26     	; 0x1c2e <__udivmodsi4_ep>
+00001bfc <__mulhisi3>:
+    1bfc:	05 d0       	rcall	.+10     	; 0x1c08 <__umulhisi3>
+    1bfe:	33 23       	and	r19, r19
+    1c00:	12 f4       	brpl	.+4      	; 0x1c06 <__mulhisi3+0xa>
+    1c02:	8a 1b       	sub	r24, r26
+    1c04:	9b 0b       	sbc	r25, r27
+    1c06:	0d c0       	rjmp	.+26     	; 0x1c22 <__usmulhisi3_tail>
 
-00001c14 <__udivmodsi4_loop>:
-    1c14:	aa 1f       	adc	r26, r26
-    1c16:	bb 1f       	adc	r27, r27
-    1c18:	ee 1f       	adc	r30, r30
-    1c1a:	ff 1f       	adc	r31, r31
-    1c1c:	a2 17       	cp	r26, r18
-    1c1e:	b3 07       	cpc	r27, r19
-    1c20:	e4 07       	cpc	r30, r20
-    1c22:	f5 07       	cpc	r31, r21
-    1c24:	20 f0       	brcs	.+8      	; 0x1c2e <__udivmodsi4_ep>
-    1c26:	a2 1b       	sub	r26, r18
-    1c28:	b3 0b       	sbc	r27, r19
-    1c2a:	e4 0b       	sbc	r30, r20
-    1c2c:	f5 0b       	sbc	r31, r21
+00001c08 <__umulhisi3>:
+    1c08:	a2 9f       	mul	r26, r18
+    1c0a:	b0 01       	movw	r22, r0
+    1c0c:	b3 9f       	mul	r27, r19
+    1c0e:	c0 01       	movw	r24, r0
+    1c10:	a3 9f       	mul	r26, r19
+    1c12:	01 d0       	rcall	.+2      	; 0x1c16 <__umulhisi3+0xe>
+    1c14:	b2 9f       	mul	r27, r18
+    1c16:	70 0d       	add	r23, r0
+    1c18:	81 1d       	adc	r24, r1
+    1c1a:	11 24       	eor	r1, r1
+    1c1c:	91 1d       	adc	r25, r1
+    1c1e:	08 95       	ret
 
-00001c2e <__udivmodsi4_ep>:
-    1c2e:	66 1f       	adc	r22, r22
-    1c30:	77 1f       	adc	r23, r23
-    1c32:	88 1f       	adc	r24, r24
-    1c34:	99 1f       	adc	r25, r25
-    1c36:	1a 94       	dec	r1
-    1c38:	69 f7       	brne	.-38     	; 0x1c14 <__udivmodsi4_loop>
-    1c3a:	60 95       	com	r22
-    1c3c:	70 95       	com	r23
-    1c3e:	80 95       	com	r24
-    1c40:	90 95       	com	r25
-    1c42:	9b 01       	movw	r18, r22
-    1c44:	ac 01       	movw	r20, r24
-    1c46:	bd 01       	movw	r22, r26
-    1c48:	cf 01       	movw	r24, r30
-    1c4a:	08 95       	ret
+00001c20 <__usmulhisi3>:
+    1c20:	f3 df       	rcall	.-26     	; 0x1c08 <__umulhisi3>
 
-00001c4c <__eerd_block_m8>:
-    1c4c:	dc 01       	movw	r26, r24
-    1c4e:	cb 01       	movw	r24, r22
+00001c22 <__usmulhisi3_tail>:
+    1c22:	b7 ff       	sbrs	r27, 7
+    1c24:	08 95       	ret
+    1c26:	82 1b       	sub	r24, r18
+    1c28:	93 0b       	sbc	r25, r19
+    1c2a:	08 95       	ret
 
-00001c50 <__eerd_blraw_m8>:
-    1c50:	fc 01       	movw	r30, r24
-    1c52:	e1 99       	sbic	0x1c, 1	; 28
-    1c54:	fe cf       	rjmp	.-4      	; 0x1c52 <__eerd_blraw_m8+0x2>
-    1c56:	06 c0       	rjmp	.+12     	; 0x1c64 <__eerd_blraw_m8+0x14>
-    1c58:	ff bb       	out	0x1f, r31	; 31
-    1c5a:	ee bb       	out	0x1e, r30	; 30
-    1c5c:	e0 9a       	sbi	0x1c, 0	; 28
-    1c5e:	31 96       	adiw	r30, 0x01	; 1
-    1c60:	0d b2       	in	r0, 0x1d	; 29
-    1c62:	0d 92       	st	X+, r0
-    1c64:	41 50       	subi	r20, 0x01	; 1
-    1c66:	50 40       	sbci	r21, 0x00	; 0
-    1c68:	b8 f7       	brcc	.-18     	; 0x1c58 <__eerd_blraw_m8+0x8>
-    1c6a:	08 95       	ret
+00001c2c <__muluhisi3>:
+    1c2c:	ed df       	rcall	.-38     	; 0x1c08 <__umulhisi3>
+    1c2e:	a5 9f       	mul	r26, r21
+    1c30:	90 0d       	add	r25, r0
+    1c32:	b4 9f       	mul	r27, r20
+    1c34:	90 0d       	add	r25, r0
+    1c36:	a4 9f       	mul	r26, r20
+    1c38:	80 0d       	add	r24, r0
+    1c3a:	91 1d       	adc	r25, r1
+    1c3c:	11 24       	eor	r1, r1
+    1c3e:	08 95       	ret
 
-00001c6c <__eerd_byte_m8>:
-    1c6c:	e1 99       	sbic	0x1c, 1	; 28
-    1c6e:	fe cf       	rjmp	.-4      	; 0x1c6c <__eerd_byte_m8>
-    1c70:	9f bb       	out	0x1f, r25	; 31
-    1c72:	8e bb       	out	0x1e, r24	; 30
-    1c74:	e0 9a       	sbi	0x1c, 0	; 28
-    1c76:	99 27       	eor	r25, r25
-    1c78:	8d b3       	in	r24, 0x1d	; 29
-    1c7a:	08 95       	ret
+00001c40 <__udivmodhi4>:
+    1c40:	aa 1b       	sub	r26, r26
+    1c42:	bb 1b       	sub	r27, r27
+    1c44:	51 e1       	ldi	r21, 0x11	; 17
+    1c46:	07 c0       	rjmp	.+14     	; 0x1c56 <__udivmodhi4_ep>
 
-00001c7c <__eeupd_block_m8>:
-    1c7c:	dc 01       	movw	r26, r24
-    1c7e:	a4 0f       	add	r26, r20
-    1c80:	b5 1f       	adc	r27, r21
-    1c82:	41 50       	subi	r20, 0x01	; 1
-    1c84:	50 40       	sbci	r21, 0x00	; 0
-    1c86:	40 f0       	brcs	.+16     	; 0x1c98 <__eeupd_block_m8+0x1c>
-    1c88:	cb 01       	movw	r24, r22
-    1c8a:	84 0f       	add	r24, r20
-    1c8c:	95 1f       	adc	r25, r21
-    1c8e:	2e 91       	ld	r18, -X
-    1c90:	05 d0       	rcall	.+10     	; 0x1c9c <__eeupd_r18_m8>
-    1c92:	41 50       	subi	r20, 0x01	; 1
-    1c94:	50 40       	sbci	r21, 0x00	; 0
-    1c96:	d8 f7       	brcc	.-10     	; 0x1c8e <__eeupd_block_m8+0x12>
-    1c98:	08 95       	ret
+00001c48 <__udivmodhi4_loop>:
+    1c48:	aa 1f       	adc	r26, r26
+    1c4a:	bb 1f       	adc	r27, r27
+    1c4c:	a6 17       	cp	r26, r22
+    1c4e:	b7 07       	cpc	r27, r23
+    1c50:	10 f0       	brcs	.+4      	; 0x1c56 <__udivmodhi4_ep>
+    1c52:	a6 1b       	sub	r26, r22
+    1c54:	b7 0b       	sbc	r27, r23
 
-00001c9a <__eeupd_byte_m8>:
-    1c9a:	26 2f       	mov	r18, r22
+00001c56 <__udivmodhi4_ep>:
+    1c56:	88 1f       	adc	r24, r24
+    1c58:	99 1f       	adc	r25, r25
+    1c5a:	5a 95       	dec	r21
+    1c5c:	a9 f7       	brne	.-22     	; 0x1c48 <__udivmodhi4_loop>
+    1c5e:	80 95       	com	r24
+    1c60:	90 95       	com	r25
+    1c62:	bc 01       	movw	r22, r24
+    1c64:	cd 01       	movw	r24, r26
+    1c66:	08 95       	ret
 
-00001c9c <__eeupd_r18_m8>:
-    1c9c:	e1 99       	sbic	0x1c, 1	; 28
-    1c9e:	fe cf       	rjmp	.-4      	; 0x1c9c <__eeupd_r18_m8>
-    1ca0:	9f bb       	out	0x1f, r25	; 31
-    1ca2:	8e bb       	out	0x1e, r24	; 30
-    1ca4:	e0 9a       	sbi	0x1c, 0	; 28
-    1ca6:	01 97       	sbiw	r24, 0x01	; 1
-    1ca8:	0d b2       	in	r0, 0x1d	; 29
-    1caa:	02 16       	cp	r0, r18
-    1cac:	31 f0       	breq	.+12     	; 0x1cba <__eeupd_r18_m8+0x1e>
-    1cae:	2d bb       	out	0x1d, r18	; 29
-    1cb0:	0f b6       	in	r0, 0x3f	; 63
-    1cb2:	f8 94       	cli
-    1cb4:	e2 9a       	sbi	0x1c, 2	; 28
-    1cb6:	e1 9a       	sbi	0x1c, 1	; 28
-    1cb8:	0f be       	out	0x3f, r0	; 63
-    1cba:	08 95       	ret
+00001c68 <__udivmodsi4>:
+    1c68:	a1 e2       	ldi	r26, 0x21	; 33
+    1c6a:	1a 2e       	mov	r1, r26
+    1c6c:	aa 1b       	sub	r26, r26
+    1c6e:	bb 1b       	sub	r27, r27
+    1c70:	fd 01       	movw	r30, r26
+    1c72:	0d c0       	rjmp	.+26     	; 0x1c8e <__udivmodsi4_ep>
 
-00001cbc <_exit>:
-    1cbc:	f8 94       	cli
+00001c74 <__udivmodsi4_loop>:
+    1c74:	aa 1f       	adc	r26, r26
+    1c76:	bb 1f       	adc	r27, r27
+    1c78:	ee 1f       	adc	r30, r30
+    1c7a:	ff 1f       	adc	r31, r31
+    1c7c:	a2 17       	cp	r26, r18
+    1c7e:	b3 07       	cpc	r27, r19
+    1c80:	e4 07       	cpc	r30, r20
+    1c82:	f5 07       	cpc	r31, r21
+    1c84:	20 f0       	brcs	.+8      	; 0x1c8e <__udivmodsi4_ep>
+    1c86:	a2 1b       	sub	r26, r18
+    1c88:	b3 0b       	sbc	r27, r19
+    1c8a:	e4 0b       	sbc	r30, r20
+    1c8c:	f5 0b       	sbc	r31, r21
 
-00001cbe <__stop_program>:
-    1cbe:	ff cf       	rjmp	.-2      	; 0x1cbe <__stop_program>
+00001c8e <__udivmodsi4_ep>:
+    1c8e:	66 1f       	adc	r22, r22
+    1c90:	77 1f       	adc	r23, r23
+    1c92:	88 1f       	adc	r24, r24
+    1c94:	99 1f       	adc	r25, r25
+    1c96:	1a 94       	dec	r1
+    1c98:	69 f7       	brne	.-38     	; 0x1c74 <__udivmodsi4_loop>
+    1c9a:	60 95       	com	r22
+    1c9c:	70 95       	com	r23
+    1c9e:	80 95       	com	r24
+    1ca0:	90 95       	com	r25
+    1ca2:	9b 01       	movw	r18, r22
+    1ca4:	ac 01       	movw	r20, r24
+    1ca6:	bd 01       	movw	r22, r26
+    1ca8:	cf 01       	movw	r24, r30
+    1caa:	08 95       	ret
+
+00001cac <__eerd_block_m8>:
+    1cac:	dc 01       	movw	r26, r24
+    1cae:	cb 01       	movw	r24, r22
+
+00001cb0 <__eerd_blraw_m8>:
+    1cb0:	fc 01       	movw	r30, r24
+    1cb2:	e1 99       	sbic	0x1c, 1	; 28
+    1cb4:	fe cf       	rjmp	.-4      	; 0x1cb2 <__eerd_blraw_m8+0x2>
+    1cb6:	06 c0       	rjmp	.+12     	; 0x1cc4 <__eerd_blraw_m8+0x14>
+    1cb8:	ff bb       	out	0x1f, r31	; 31
+    1cba:	ee bb       	out	0x1e, r30	; 30
+    1cbc:	e0 9a       	sbi	0x1c, 0	; 28
+    1cbe:	31 96       	adiw	r30, 0x01	; 1
+    1cc0:	0d b2       	in	r0, 0x1d	; 29
+    1cc2:	0d 92       	st	X+, r0
+    1cc4:	41 50       	subi	r20, 0x01	; 1
+    1cc6:	50 40       	sbci	r21, 0x00	; 0
+    1cc8:	b8 f7       	brcc	.-18     	; 0x1cb8 <__eerd_blraw_m8+0x8>
+    1cca:	08 95       	ret
+
+00001ccc <__eerd_byte_m8>:
+    1ccc:	e1 99       	sbic	0x1c, 1	; 28
+    1cce:	fe cf       	rjmp	.-4      	; 0x1ccc <__eerd_byte_m8>
+    1cd0:	9f bb       	out	0x1f, r25	; 31
+    1cd2:	8e bb       	out	0x1e, r24	; 30
+    1cd4:	e0 9a       	sbi	0x1c, 0	; 28
+    1cd6:	99 27       	eor	r25, r25
+    1cd8:	8d b3       	in	r24, 0x1d	; 29
+    1cda:	08 95       	ret
+
+00001cdc <__eeupd_block_m8>:
+    1cdc:	dc 01       	movw	r26, r24
+    1cde:	a4 0f       	add	r26, r20
+    1ce0:	b5 1f       	adc	r27, r21
+    1ce2:	41 50       	subi	r20, 0x01	; 1
+    1ce4:	50 40       	sbci	r21, 0x00	; 0
+    1ce6:	40 f0       	brcs	.+16     	; 0x1cf8 <__eeupd_block_m8+0x1c>
+    1ce8:	cb 01       	movw	r24, r22
+    1cea:	84 0f       	add	r24, r20
+    1cec:	95 1f       	adc	r25, r21
+    1cee:	2e 91       	ld	r18, -X
+    1cf0:	05 d0       	rcall	.+10     	; 0x1cfc <__eeupd_r18_m8>
+    1cf2:	41 50       	subi	r20, 0x01	; 1
+    1cf4:	50 40       	sbci	r21, 0x00	; 0
+    1cf6:	d8 f7       	brcc	.-10     	; 0x1cee <__eeupd_block_m8+0x12>
+    1cf8:	08 95       	ret
+
+00001cfa <__eeupd_byte_m8>:
+    1cfa:	26 2f       	mov	r18, r22
+
+00001cfc <__eeupd_r18_m8>:
+    1cfc:	e1 99       	sbic	0x1c, 1	; 28
+    1cfe:	fe cf       	rjmp	.-4      	; 0x1cfc <__eeupd_r18_m8>
+    1d00:	9f bb       	out	0x1f, r25	; 31
+    1d02:	8e bb       	out	0x1e, r24	; 30
+    1d04:	e0 9a       	sbi	0x1c, 0	; 28
+    1d06:	01 97       	sbiw	r24, 0x01	; 1
+    1d08:	0d b2       	in	r0, 0x1d	; 29
+    1d0a:	02 16       	cp	r0, r18
+    1d0c:	31 f0       	breq	.+12     	; 0x1d1a <__eeupd_r18_m8+0x1e>
+    1d0e:	2d bb       	out	0x1d, r18	; 29
+    1d10:	0f b6       	in	r0, 0x3f	; 63
+    1d12:	f8 94       	cli
+    1d14:	e2 9a       	sbi	0x1c, 2	; 28
+    1d16:	e1 9a       	sbi	0x1c, 1	; 28
+    1d18:	0f be       	out	0x3f, r0	; 63
+    1d1a:	08 95       	ret
+
+00001d1c <_exit>:
+    1d1c:	f8 94       	cli
+
+00001d1e <__stop_program>:
+    1d1e:	ff cf       	rjmp	.-2      	; 0x1d1e <__stop_program>
