@@ -79,6 +79,8 @@ void SetBeeperFreq(uint16_t freq_hz);
 #define FREQ(x) (125000 / x)				// Macro for specifying timer period from Hz frequency
 #define LAST(y)	(y/TONE_DURATION_SCALE)		// Macro for specifying tone duration from ms time units
 
+//#define USE_BEEP_FUNCTION					// If defined, Sound_Beep(freq, time) function is supported
+
 typedef struct
 {
 	uint8_t tone_period;		// in 16us gradation	
