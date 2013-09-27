@@ -5,7 +5,8 @@
  *  Author: Avega
  */ 
 
-
+#include "compilers.h"
+#include <avr/eeprom.h>
 #include <avr/interrupt.h>
 #include "soft_timer.h"
 #include "systimer.h"
@@ -13,6 +14,7 @@
 #include "adc.h"
 #include "control.h"
 
+static inline void Sound_Process(void);
 
 SoftTimer8b_t menuUpdateTimer = {
 	.Enabled = 1,
@@ -97,7 +99,7 @@ void resetAutoPowerOffCounter(void)
 // ----------------------- //
 // ----------------------- //
 
-
+/*
 
 // Enable / disable beeper output
 inline void SetBeepOutput(uint8_t val)
@@ -156,23 +158,35 @@ void StopBeep()
 	SetBeepOutput(0);
 }
 
+*/
 
+void SetBeeperFreq(uint16_t freq_hz)
+{
+}
+	
+void StartBeep(uint16_t time_ms)
+{
+}		
+
+void OverrideSoundDisable(void)
+{
+}
 
 // Period is 1ms @ 16MHz
 ISR(TIMER2_COMP_vect)
 {	
 	
 	// Manage beeper
-	if (beep_cnt)
+/*	if (beep_cnt)
 		beep_cnt--;
 	else
 		SetBeepOutput(0);	// done
-	
+*/	
 	// Manage LED indicator
 	processLedIndicator();
 	
 	// Do sound stuff
-	//Sound_Process();
+	Sound_Process();
 	
 	// Process menu update timer
 	processSoftTimer8b(&menuUpdateTimer);	
@@ -276,57 +290,58 @@ static inline void Sound_Process(void)
 	}
 }
 
-
-
-
-const EEMEM tone_t[] m_beep_1000Hz_100ms = {
-	{ FREQ(1000),	LAST(1000) },
-	{0,	0}	
-};
-
-const EEMEM tone_t[] m_siren1 = {
-	{ FREQ(800),	LAST(200) },
-	{ FREQ(900),	LAST(200) },
-	{ FREQ(1000),	LAST(200) },
-	{ FREQ(1100),	LAST(200) },
-	{ FREQ(1200),	LAST(200) },
-	{ FREQ(1100),	LAST(200) },
-	{ FREQ(1000),	LAST(200) },
-	{ FREQ(900),	LAST(200) },
-	{ FREQ(800),	LAST(200) },
-	{ FREQ(900),	LAST(200) },
-	{ FREQ(1000),	LAST(200) },
-	{ FREQ(1100),	LAST(200) },
-	{ FREQ(1200),	LAST(200) },
-	{ FREQ(1100),	LAST(200) },
-	{ FREQ(1000),	LAST(200) },
-	{ FREQ(900),	LAST(200) },
-	{ FREQ(800),	LAST(200) },
-	{0,	0}	
-};
-
-const EEMEM tone_t[] m_siren2 = {
-	{ FREQ(700),	LAST(400) },
-	{ FREQ(900),	LAST(400) },
-	{ FREQ(800),	LAST(400) },
-	{ FREQ(1000),	LAST(200) },
-	{ FREQ(0),		LAST(200) },
-	{ FREQ(900),	LAST(400) },
-	{ FREQ(1000),	LAST(400) },
-	{0,	0}	
-};
-
 */
 
+
+const EEMEM tone_t m_beep_1000Hz_100ms[] = {
+	{ FREQ(1000),	LAST(2500) },
+	{ FREQ(1100),	LAST(2500) },
+	{0,	0}	
+};
+
+const EEMEM tone_t m_siren1[] = {
+	{ FREQ(800),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1200),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(800),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1200),	LAST(200) },
+	{ FREQ(1100),	LAST(200) },
+	{ FREQ(1000),	LAST(200) },
+	{ FREQ(900),	LAST(200) },
+	{ FREQ(800),	LAST(200) },
+	{0,	0}	
+};
+
+const EEMEM tone_t m_siren2[] = {
+	{ FREQ(700),	LAST(250) },
+	{ FREQ(900),	LAST(250) },
+	{ FREQ(800),	LAST(250) },
+	{ FREQ(1000),	LAST(250) },
+	{ 0,			LAST(250) },
+	{ FREQ(900),	LAST(250) },
+	{ FREQ(1000),	LAST(500) },
+	{0,	0}	
+};
+
+
+
 //---------------------------------------------//
-/*
+
 
 static uint8_t sound_state = SOUND_OFF;
-static const EEMEM tone_t* new_melody;
+static const tone_t* new_melody;
 static uint8_t SoundEnable_override = 0;
 static uint8_t beep_duration;
 static uint8_t beep_tone_period;
-
+/*
 void Sound_Beep(uint16_t freq_hz, uint16_t time_ms)
 {
 	if ((p.sound_enable) || (SoundEnable_override))
@@ -337,8 +352,8 @@ void Sound_Beep(uint16_t freq_hz, uint16_t time_ms)
 		SoundEnable_override = 0;
 	}
 }
-
-void Sound_Play(const EEMEM tone_t* p_melody)
+*/
+void Sound_Play(const tone_t* p_melody)
 {
 	if ((p.sound_enable) || (SoundEnable_override))
 	{
@@ -364,7 +379,7 @@ static inline void Sound_Process(void)
 {
 	static uint16_t note_time_counter;
 	static tone_t tone;
-	static const EEMEM tone_t* p_melody;
+	static const tone_t* p_melody;
 	uint8_t new_state = sound_state;
 	
 	switch (sound_state)
@@ -373,12 +388,12 @@ static inline void Sound_Process(void)
 			p_melody = new_melody;
 			new_state = SOUND_GET_NEXT_TONE;
 			break;
-		case SOUND_DO_BEEP:
+	/*	case SOUND_DO_BEEP:
 			tone.duration = beep_duration;
 			tone.tone_period = beep_tone_period;
 			new_state = SOUND_APPLY_TONE;
 			p_melody = NULL;				// Beeper mode
-			break;
+			break; */
 		case SOUND_PLAY:
 			if (--note_time_counter == 0)
 				new_state = SOUND_GET_NEXT_TONE;
@@ -386,7 +401,7 @@ static inline void Sound_Process(void)
 		case SOUND_GET_NEXT_TONE:
 			if (p_melody != NULL)			// If driver is playing melody, not beeping
 			{
-				eeprom_read_block(&tone,&p_melody,sizeof(tone_t));	
+				eeprom_read_block(&tone,p_melody++,sizeof(tone_t));	
 				new_state = SOUND_APPLY_TONE;
 			}
 			else
@@ -416,7 +431,7 @@ static inline void Sound_Process(void)
 					// Disable OCR1A output
 					TCCR1A &= ~(1<<COM1A0 | 1<<COM1A1);
 				}
-				note_time_counter = tone.duration * TONE_DURATION_SCALE - 2;
+				note_time_counter = (uint16_t)tone.duration * TONE_DURATION_SCALE - 2;
 				new_state = SOUND_PLAY;
 			}
 			break;
@@ -429,7 +444,7 @@ static inline void Sound_Process(void)
 }
 
 
-*/
+
 
 
 
