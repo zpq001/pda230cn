@@ -271,6 +271,7 @@ static inline void Sound_Process(void)
 					// Timer runs at 250kHz (T = 4us), tone_period is set in units of 8us
 					// Output toggles on compare match
 					OCR1A = tone.tone_period - 1;
+					TCNT1 = 0;
 					// Toggle OCR1A on compare match
 					TCCR1A |= (1<<COM1A0);
 				}
@@ -341,7 +342,8 @@ static const tone_t* new_melody;
 static uint8_t SoundEnable_override = 0;
 static uint8_t beep_duration;
 static uint8_t beep_tone_period;
-/*
+
+#ifdef USE_BEEP_FUNCTION
 void Sound_Beep(uint16_t freq_hz, uint16_t time_ms)
 {
 	if ((p.sound_enable) || (SoundEnable_override))
@@ -352,7 +354,8 @@ void Sound_Beep(uint16_t freq_hz, uint16_t time_ms)
 		SoundEnable_override = 0;
 	}
 }
-*/
+#endif
+
 void Sound_Play(const tone_t* p_melody)
 {
 	if ((p.sound_enable) || (SoundEnable_override))
@@ -388,26 +391,32 @@ static inline void Sound_Process(void)
 			p_melody = new_melody;
 			new_state = SOUND_GET_NEXT_TONE;
 			break;
-	/*	case SOUND_DO_BEEP:
+		#ifdef USE_BEEP_FUNCTION
+		case SOUND_DO_BEEP:
 			tone.duration = beep_duration;
 			tone.tone_period = beep_tone_period;
 			new_state = SOUND_APPLY_TONE;
 			p_melody = NULL;				// Beeper mode
-			break; */
+			break; 
+		#endif
 		case SOUND_PLAY:
 			if (--note_time_counter == 0)
 				new_state = SOUND_GET_NEXT_TONE;
 			break;
 		case SOUND_GET_NEXT_TONE:
+			#ifdef USE_BEEP_FUNCTION
 			if (p_melody != NULL)			// If driver is playing melody, not beeping
 			{
+			#endif
 				eeprom_read_block(&tone,p_melody++,sizeof(tone_t));	
 				new_state = SOUND_APPLY_TONE;
+			#ifdef USE_BEEP_FUNCTION
 			}
 			else
 			{
 				new_state = SOUND_OFF;
 			}
+			#endif
 			break;
 		case SOUND_APPLY_TONE:
 			if (tone.duration == 0)
@@ -423,6 +432,7 @@ static inline void Sound_Process(void)
 					// Timer runs at 250kHz (T = 4us), tone_period is set in units of 8us
 					// Output toggles on compare match
 					OCR1A = tone.tone_period - 1;
+					TCNT1 = 0;
 					// Toggle OCR1A on compare match
 					TCCR1A |= (1<<COM1A0);
 				}
