@@ -153,6 +153,7 @@ typedef struct
 #define AUTO_POFF_ACTIVE	0x01
 
 
+#define USE_EEPROM_CRC
 
 // Global variables - main system control
 extern gParams_t p;				// Global params which are saved to and restored from EEPROM

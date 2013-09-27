@@ -24,9 +24,11 @@
 
 
 // Global variables - main system control
-// Default values must reside in the FLASH memory - for the case when EEPROM is not programmed at all
-// At the very first start after programming MCU default values from FLASH memory are copied to EEPROM and
-// both calibration and global params get protected by 8-bit CRC. EEPROM error message is displayed.
+// #ifdef USE_EEPROM_CRC
+//   Default values must reside in the FLASH memory - for the case when EEPROM is not programmed at all
+//   At the very first start after programming MCU default values from FLASH memory are copied to EEPROM and
+//   both calibration and global params get protected by 8-bit CRC. EEPROM error message is displayed.
+// #endif
 EEMEM gParams_t eeGlobalParams = 
 {
 	.setup_temp_value 	= 0xFF,
@@ -35,7 +37,7 @@ EEMEM gParams_t eeGlobalParams =
 	.power_off_timeout 	= 0xFF,
 };
 
-EEMEM uint8_t ee_gParamsCRC = 0xFF;
+EEMEM uint8_t ee_gParamsCRC = 0xFF;		// Used only when USE_EEPROM_CRC is defined
 
 EEMEM cParams_t eeCalibrationParams = 
 {
@@ -45,9 +47,9 @@ EEMEM cParams_t eeCalibrationParams =
 	.cpoint2_adc 		= 0xFFFF
 };
 
-EEMEM uint8_t ee_cParamsCRC = 0xFF;
+EEMEM uint8_t ee_cParamsCRC = 0xFF;		// Used only when USE_EEPROM_CRC is defined
 
-
+#ifdef USE_EEPROM_CRC
 const PROGMEM gParams_t pmGlobalDefaults =
 {
 	.setup_temp_value 	= 50,
@@ -63,7 +65,7 @@ const PROGMEM cParams_t pmCalibrationDefaults =
 	.cpoint2 			= 145,
 	.cpoint2_adc 		= 433
 };
-
+#endif
 
 gParams_t p;		// Global params which are saved to and restored from EEPROM
 					// The global parameters are saved only when device is disconnected from the AC line 
@@ -385,15 +387,19 @@ static uint8_t getDataCRC(void *p,uint8_t byte_count)
 
 
 uint8_t restoreGlobalParams(void)
-//void restoreGlobalParams(void)
-{
-	uint8_t crc_byte;
-	uint8_t temp8u;
+{	
 	uint8_t defaults_used = 0;
 	
 	// Restore global parameters - temperature setting, sound enable, etc.
 	eeprom_read_block(&p,&eeGlobalParams,sizeof(gParams_t));
-	//crc_byte = getGlobalParamsCRC(&p);
+	// Restore ADC calibration parameters
+	eeprom_read_block(&cp,&eeCalibrationParams,sizeof(cParams_t));
+	
+	#ifdef USE_EEPROM_CRC
+	uint8_t crc_byte;
+	uint8_t temp8u;
+	
+	//------- Check global params -------//
 	crc_byte = getDataCRC(&p,sizeof(gParams_t));
 	temp8u = eeprom_read_byte(&ee_gParamsCRC);
 	// Restore global defaults if corrupted
@@ -405,9 +411,7 @@ uint8_t restoreGlobalParams(void)
 		defaults_used |= 0x01;
 	}
 	
-	// Restore ADC calibration parameters
-	eeprom_read_block(&cp,&eeCalibrationParams,sizeof(cParams_t));	 
-	//crc_byte = getCalibrationParamsCRC(&cp);
+	//----- Check calibration params -----//
 	crc_byte = getDataCRC(&cp,sizeof(cParams_t));
 	temp8u = eeprom_read_byte(&ee_cParamsCRC);
 	// Restore calibration defaults if corrupted
@@ -418,6 +422,7 @@ uint8_t restoreGlobalParams(void)
 		saveCalibrationToEEPROM();
 		defaults_used |= 0x02;	
 	}
+	#endif
 	
 	return defaults_used;
 }
@@ -426,20 +431,22 @@ uint8_t restoreGlobalParams(void)
 void saveCalibrationToEEPROM(void)
 {
 	// Calibration parameters normally are only saved after calibrating 
-	//cp.crc_byte = getCalibrationParamsCRC(&cp);
-	uint8_t new_crc_byte = getDataCRC(&cp,sizeof(cParams_t));
 	eeprom_update_block(&cp,&eeCalibrationParams,sizeof(cParams_t));	
+	#ifdef USE_EEPROM_CRC
+	uint8_t new_crc_byte = getDataCRC(&cp,sizeof(cParams_t));
 	eeprom_update_byte(&ee_cParamsCRC,new_crc_byte);
+	#endif
 }
 
 void saveGlobalParamsToEEPROM(void)
 {
 	// Save global parameters to EEPROM
 	// eeprom_update_block() updates only bytes that were changed
-	//p.crc_byte = getGlobalParamsCRC(&p);
-	uint8_t new_crc_byte = getDataCRC(&p,sizeof(gParams_t));
 	eeprom_update_block(&p,&eeGlobalParams,sizeof(gParams_t));
+	#ifdef USE_EEPROM_CRC
+	uint8_t new_crc_byte = getDataCRC(&p,sizeof(gParams_t));
 	eeprom_update_byte(&ee_gParamsCRC,new_crc_byte);
+	#endif
 }
 
 void exitPowerOff(void)

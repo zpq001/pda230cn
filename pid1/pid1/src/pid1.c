@@ -112,7 +112,6 @@ int main(void)
 
 	// Restore params from EEPROM
 	// If some values are corrupted, settings or/and calibration are loaded with default configuration.
-	//restoreGlobalParams();
 	temp8u = restoreGlobalParams();
 	// Calibrate ADC coefficients using restored params
 	calculateCoeffs();
@@ -122,6 +121,7 @@ int main(void)
 	ACSR |= (1<<ACI);
 	sei();
 	// If default values were loaded from EEPROM, inform user
+	#ifdef USE_EEPROM_CRC
 	if (temp8u)
 	{
 		printLedBuffer(0,"ERR E");
@@ -131,6 +131,7 @@ int main(void)
 		StartBeep(500);
 		_delay_ms(1000);
 	} 
+	#endif
 	// Dump calibration data over UART - might be useful
 	logU16p(cp.cpoint1);
 	logU16p(cp.cpoint1_adc);
