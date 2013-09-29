@@ -1,0 +1,2 @@
+Started at 22 Celsius
+Disabled heater at 160 Celsius

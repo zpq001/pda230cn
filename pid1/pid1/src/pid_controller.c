@@ -72,7 +72,11 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	
 	//------ Calculate I term --------//
-	integAcc += error * Ki;	
+	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
+		integAcc += error * Ki;	
+	else
+		integAcc = 0;	
+		
 	if (integAcc > INTEGRATOR_MAX )
 	{
 		integAcc = INTEGRATOR_MAX;

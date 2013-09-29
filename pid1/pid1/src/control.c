@@ -6,7 +6,6 @@
  */ 
 
 
-#include <avr/eeprom.h>
 #include <util/crc16.h>
 #include "compilers.h"
 
@@ -18,7 +17,6 @@
 #include "systimer.h"	
 #include "adc.h"
 #include "pid_controller.h"
-#include "progmem_func.h"
 
 
 
@@ -31,23 +29,22 @@
 // #endif
 EEMEM gParams_t eeGlobalParams = 
 {
-	.setup_temp_value 	= 0xFF,
-	.rollCycleSet 		= 0xFF,
-	.sound_enable 		= 0xFF,
-	.power_off_timeout 	= 0xFF,
+	.setup_temp_value 	= 50, 
+	.rollCycleSet 		= 10,
+	.sound_enable 		= 1,
+	.power_off_timeout 	= 30,
 };
-
-EEMEM uint8_t ee_gParamsCRC = 0xFF;		// Used only when USE_EEPROM_CRC is defined
 
 EEMEM cParams_t eeCalibrationParams = 
 {
-	.cpoint1 			= 0xFF,		
-	.cpoint1_adc 		= 0xFFFF,	
-	.cpoint2 			= 0xFF,
-	.cpoint2_adc 		= 0xFFFF
+	.cpoint1 			= 22,		
+	.cpoint1_adc 		= 195,	
+	.cpoint2 			= 120,
+	.cpoint2_adc 		= 401
 };
 
-EEMEM uint8_t ee_cParamsCRC = 0xFF;		// Used only when USE_EEPROM_CRC is defined
+EEMEM uint8_t ee_gParamsCRC = 0xFF;		// Used only when USE_EEPROM_CRC is defined
+EEMEM uint8_t ee_cParamsCRC = 0xFF;		// Always declared to avoid changes in EEPROM data map
 
 #ifdef USE_EEPROM_CRC
 const PROGMEM gParams_t pmGlobalDefaults =
@@ -60,10 +57,10 @@ const PROGMEM gParams_t pmGlobalDefaults =
 
 const PROGMEM cParams_t pmCalibrationDefaults = 
 {
-	.cpoint1 			= 25,	// Default Celsius for first point
-	.cpoint1_adc 		= 191,	// Normalized ADC for first point
-	.cpoint2 			= 145,
-	.cpoint2_adc 		= 433
+	.cpoint1 			= 22,	// Default Celsius for first point
+	.cpoint1_adc 		= 195,	// Normalized ADC for first point
+	.cpoint2 			= 120,
+	.cpoint2_adc 		= 401
 };
 #endif
 
@@ -183,23 +180,19 @@ void processRollControl(void)
 			
 		if (beepState & 0x80)		// Roll cycle done
 		{
-			SetBeeperFreq(1000);
-			StartBeep(200);
+			Sound_Play(m_beep_1000Hz_200ms);	
 		}		
 		else if (beepState & 0x40)	// Roll cycle start fail
 		{
-			SetBeeperFreq(500);
-			StartBeep(50);
+			Sound_Play(m_beep_500Hz_40ms);	
 		} 
 		else if (beepState & 0x08)	// Reset points
 		{
-			SetBeeperFreq(800);
-			StartBeep(50);
+			Sound_Play(m_beep_800Hz_40ms);	
 		}							// Other
 		else if ( beepState & (0x01 | 0x02 | 0x10 | 0x20 | 0x04) )
 		{
-			SetBeeperFreq(1000);
-			StartBeep(50);	
+			Sound_Play(m_beep_1000Hz_40ms);	
 		}			
 			
 	}
@@ -226,7 +219,7 @@ void processHeaterControl(void)
 	uint16_t set_value_adc;	
 	uint16_t setPoint;
 	uint16_t processValue;
-	uint16_t pid_output;
+	uint16_t pid_output = 0;
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BD_HEATCTRL)
@@ -256,8 +249,10 @@ void processHeaterControl(void)
 		// Process PID
 		// Possibly hold PID in reset while disabled ?
 		// Reset when setting is changed ?
-		pid_output = processPID(setPoint, processValue);		
-					
+		if (heaterState & HEATER_ENABLED)
+			pid_output = processPID(setPoint, processValue);		
+		else
+			initPID(processValue);
 					
 		// If heater is disabled, override output
 		if (!(heaterState & HEATER_ENABLED))
@@ -309,9 +304,8 @@ void processHeaterAlerts(void)
 		if (sys_timers.flags & EXPIRED_10SEC)
 		{
 			// Enable beeper output regardless of menu setting
-			OverrideSoundDisable();
-			SetBeeperFreq(800);
-			StartBeep(2000);	
+			Sound_OverrideDisable();
+			Sound_Play(m_siren3);
 		}
 		
 		// No more alerts should be processed
@@ -324,8 +318,7 @@ void processHeaterAlerts(void)
 	{
 		if ((tempAlertRange == TEMP_ALERT_RANGE) && (heaterState & HEATER_ENABLED))
 		{
-			SetBeeperFreq(1000);
-			StartBeep(400);
+			Sound_Play(m_siren1);
 		}
 		// Add some hysteresis
 		tempAlertRange = TEMP_ALERT_RANGE + TEMP_ALERT_HYST;
@@ -363,9 +356,8 @@ void processHeaterAlerts(void)
 			if (currentTemperature >= (refCapturedTemp + SAFE_TEMP_INTERVAL))
 			{
 				// Enable beeper output regardless of menu setting
-				OverrideSoundDisable();
-				SetBeeperFreq(1500);
-				StartBeep(5000);	
+				Sound_OverrideDisable();
+				Sound_Play(m_siren2);
 			}
 		}
 	}
@@ -405,7 +397,8 @@ uint8_t restoreGlobalParams(void)
 	// Restore global defaults if corrupted
 	if (temp8u != crc_byte)
 	{
-		PGM_read_block(&p,&pmGlobalDefaults,sizeof(gParams_t));
+		//PGM_read_block(&p,&pmGlobalDefaults,sizeof(gParams_t));
+		memcpy_P(&p,&pmGlobalDefaults,sizeof(gParams_t));
 		// Save restored default values with correct CRC
 		saveGlobalParamsToEEPROM();
 		defaults_used |= 0x01;
@@ -417,7 +410,8 @@ uint8_t restoreGlobalParams(void)
 	// Restore calibration defaults if corrupted
 	if (temp8u != crc_byte)
 	{
-		PGM_read_block(&cp,&pmCalibrationDefaults,sizeof(cParams_t));
+		//PGM_read_block(&cp,&pmCalibrationDefaults,sizeof(cParams_t));
+		memcpy_P(&cp,&pmCalibrationDefaults,sizeof(cParams_t));
 		// Save restored default values with correct CRC
 		saveCalibrationToEEPROM();
 		defaults_used |= 0x02;	

@@ -49,7 +49,6 @@ C_SRCS +=  \
 ../src/pid1.c \
 ../src/pid_controller.c \
 ../src/power_control.c \
-../src/progmem_func.c \
 ../src/soft_timer.c \
 ../src/systimer.c \
 ../src/usart.c
@@ -73,7 +72,6 @@ src/my_string.o \
 src/pid1.o \
 src/pid_controller.o \
 src/power_control.o \
-src/progmem_func.o \
 src/soft_timer.o \
 src/systimer.o \
 src/usart.o
@@ -91,7 +89,6 @@ src/my_string.o \
 src/pid1.o \
 src/pid_controller.o \
 src/power_control.o \
-src/progmem_func.o \
 src/soft_timer.o \
 src/systimer.o \
 src/usart.o
@@ -109,7 +106,6 @@ src/my_string.d \
 src/pid1.d \
 src/pid_controller.d \
 src/power_control.d \
-src/progmem_func.d \
 src/soft_timer.d \
 src/systimer.d \
 src/usart.d
@@ -127,7 +123,6 @@ src/my_string.d \
 src/pid1.d \
 src/pid_controller.d \
 src/power_control.d \
-src/progmem_func.d \
 src/soft_timer.d \
 src/systimer.d \
 src/usart.d
@@ -144,8 +139,6 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
-
-
 
 
 

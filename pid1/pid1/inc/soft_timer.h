@@ -5,7 +5,8 @@
  *  Author: Avega
  */
  
- 
+   #ifndef SOFT_TIMER_H_
+   #define SOFT_TIMER_H_
 
 typedef struct {
 	uint8_t		Enabled	: 1;
@@ -25,5 +26,7 @@ typedef struct {
  void processSoftTimer8b(SoftTimer8b_t *tmr);
  
  
+ 
+ #endif
  
  
