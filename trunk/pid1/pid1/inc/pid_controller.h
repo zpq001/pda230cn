@@ -10,7 +10,7 @@
  //--------------------------//
 // PID controller settings
 // Proportional
-#define Kp		15
+#define Kp		10
 #define PROP_MAX 2000		// Limits are pretty arbitrary
 #define PROP_MIN -2000
 
@@ -20,6 +20,7 @@
 #define INTEGRATOR_MAX 20000
 #define INTEGRATOR_MIN 0
 #define INTEGRATOR_SCALE 40
+#define INTEGRATOR_ENABLE_RANGE	40	// 10 C degree
 
 // Differential
 #define Kd		50

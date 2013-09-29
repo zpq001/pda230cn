@@ -156,9 +156,6 @@
     <Compile Include="inc\power_control.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="inc\progmem_func.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="inc\soft_timer.h">
       <SubType>compile</SubType>
     </Compile>
@@ -199,9 +196,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\power_control.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\progmem_func.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\soft_timer.c">

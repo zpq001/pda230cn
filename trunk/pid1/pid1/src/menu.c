@@ -17,14 +17,11 @@
 #include "soft_timer.h"
 #include "led_indic.h"
 #include "power_control.h"
-#include "progmem_func.h"
 
 
 static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCond);
 static void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRecord );
 static inline void processItemFunction(FuncPtr funcAddr);
-//static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctionRecord* resPtr );
-//static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr );
 static void restartMenuTimer(void);
 
 
@@ -40,8 +37,12 @@ static void mf_rollLeave(void);
 static void mf_leafSelect(void);
 static void mf_leafSelectAct(void);
 static void mf_leafExit(void);
+static void mf_sndenSelect(void);
 static void mf_sndenDo(void);
+static void mf_sndenLeave(void);
+static void mf_autopoffSelect(void);
 static void mf_autopoffDo(void);
+static void mf_autopoffLeave(void);
 static void mf_actpoffSelect(void);
 static void mf_actpoffDo(void);
 static void mf_actpoffLeave(void);
@@ -56,8 +57,9 @@ static void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal);
 
 static uint8_t selectedMenuItemID;
 static MenuFunctionRecord selectedMenuFunctionRecord;
+static uint8_t jumpFlags;
+static uint8_t setupValue_u8;
 
-static uint8_t cpoint_user_val;
 static uint8_t cpointNum;
 
 static SoftTimer8b_t menuTimer = {		// used for menu state jumps
@@ -74,44 +76,48 @@ static SoftTimer8b_t userTimer = {		// used for display blinking
 
 
 
-const __flash MenuJumpRecord menuJumpSet[] = 
+const PROGMEM MenuJumpRecord menuJumpSet[] = 
 {
 // sizeOf(MenuJumpRecord) = 5 bytes	
 //	|	Item		|		Jump condition		|	Next item	|	Flags/Timeout		|
 	// Real temperature indication
-	{ mi_REALTEMP, 	BD_UP | BD_DOWN,				mi_SETTEMP,		SHIFT_LEFT	|	40	},
+	{ mi_REALTEMP, 	BD_UP | BD_DOWN,				mi_SETTEMP,		SHIFT_LEFT	|	10	},
 	{ mi_REALTEMP, 	BS_MENU,						mi_ROLL,		SHIFT_RIGHT	|	0	},
-	{ mi_REALTEMP, 	BL_MENU,						mi_SNDEN,						40	},	
+	{ mi_REALTEMP, 	BL_MENU,						mi_SNDEN,						10	},	
 	// Rolling
 	{ mi_ROLL, 		BS_MENU,						mi_REALTEMP,	SHIFT_LEFT	|	0	},
+	{ mi_ROLL, 		BL_MENU,						mi_SNDEN,						10	},
 	// Temperature control
-	{ mi_SETTEMP, 	BS_MENU | BL_MENU | TMR_EXP,	mi_REALTEMP,	SHIFT_RIGHT	| 	0	},
+	{ mi_SETTEMP, 	BS_MENU | TMR_EXP,				mi_REALTEMP,	SHIFT_RIGHT	| 	0	},
+	{ mi_SETTEMP, 	BL_MENU,						mi_REALTEMP,	SHIFT_RIGHT	| DISCARD_CHANGES	| 	0		},
 	// Sound enable/disable
 	{ mi_SNDEN, 	BL_MENU | TMR_EXP,				mi_REALTEMP,					0	},
-	{ mi_SNDEN, 	BD_DOWN,						mi_AUTOPOFF,	SHIFT_RIGHT	|	40	},
-	{ mi_SNDEN, 	BD_UP,							mi_CALIB2,		SHIFT_LEFT	|	40	},
-	{ mi_SNDEN, 	BS_MENU,						mi_ACTSNDEN,					40	},
-	{ mi_ACTSNDEN, 	BS_MENU | BL_MENU |  TMR_EXP,	mi_SNDEN,						40	},
+	{ mi_SNDEN, 	BD_DOWN,						mi_AUTOPOFF,	SHIFT_RIGHT	|	10	},
+	{ mi_SNDEN, 	BD_UP,							mi_CALIB2,		SHIFT_LEFT	|	10	},
+	{ mi_SNDEN, 	BS_MENU,						mi_ACTSNDEN,					10	},
+	{ mi_ACTSNDEN, 	BS_MENU |  TMR_EXP,				mi_SNDEN,						10	},
+	{ mi_ACTSNDEN, 	BL_MENU,						mi_SNDEN,		DISCARD_CHANGES	|	10	},
 	// Auto power off timeout
 	{ mi_AUTOPOFF, 	BL_MENU | TMR_EXP,				mi_REALTEMP,					0	},
-	{ mi_AUTOPOFF, 	BD_DOWN,						mi_CALIB1,		SHIFT_RIGHT	|	40	},
-	{ mi_AUTOPOFF, 	BD_UP,							mi_SNDEN,		SHIFT_LEFT	|	40	},
-	{ mi_AUTOPOFF,		BS_MENU,					mi_ACTAUTOPOFF,					40	},
-	{ mi_ACTAUTOPOFF,	BS_MENU | BL_MENU | TMR_EXP,	mi_AUTOPOFF,				40	},
+	{ mi_AUTOPOFF, 	BD_DOWN,						mi_CALIB1,		SHIFT_RIGHT	|	10	},
+	{ mi_AUTOPOFF, 	BD_UP,							mi_SNDEN,		SHIFT_LEFT	|	10	},
+	{ mi_AUTOPOFF,		BS_MENU,					mi_ACTAUTOPOFF,					10	},
+	{ mi_ACTAUTOPOFF,	BS_MENU | TMR_EXP,			mi_AUTOPOFF,				10	},
+	{ mi_ACTAUTOPOFF,	BL_MENU,					mi_AUTOPOFF,	DISCARD_CHANGES	|	10	},
 	// Calibration
 	{ mi_CALIB1, 	BL_MENU | TMR_EXP,				mi_REALTEMP,					0	},
-	{ mi_CALIB1, 	BD_DOWN,						mi_CALIB2,		SHIFT_RIGHT	|	40	},
-	{ mi_CALIB1, 	BD_UP,							mi_AUTOPOFF,	SHIFT_LEFT	|	40	},
+	{ mi_CALIB1, 	BD_DOWN,						mi_CALIB2,		SHIFT_RIGHT	|	10	},
+	{ mi_CALIB1, 	BD_UP,							mi_AUTOPOFF,	SHIFT_LEFT	|	10	},
 	{ mi_CALIB1, 	BS_MENU,						mi_DOCALIB1,					0	},
 	{ mi_CALIB2, 	BL_MENU | TMR_EXP,				mi_REALTEMP,					0	},
-	{ mi_CALIB2, 	BD_DOWN,						mi_SNDEN,		SHIFT_RIGHT	|	40	},
-	{ mi_CALIB2, 	BD_UP,							mi_CALIB1,		SHIFT_LEFT	|	40	},
+	{ mi_CALIB2, 	BD_DOWN,						mi_SNDEN,		SHIFT_RIGHT	|	10	},
+	{ mi_CALIB2, 	BD_UP,							mi_CALIB1,		SHIFT_LEFT	|	10	},
 	{ mi_CALIB2, 	BS_MENU,						mi_DOCALIB2,					0	},
-	{ mi_DOCALIB1, 	BL_MENU,						mi_CALIB1,						40	},
-	{ mi_DOCALIB1, 	BS_MENU,						mi_CDONE1,						20	},
+	{ mi_DOCALIB1, 	BL_MENU,						mi_CALIB1,						10	},
+	{ mi_DOCALIB1, 	BS_MENU,						mi_CDONE1,						5	},
 	{ mi_CDONE1, 	BS_MENU | BL_MENU | TMR_EXP,	mi_REALTEMP,					0	},
-	{ mi_DOCALIB2, 	BL_MENU,						mi_CALIB2,						40	},
-	{ mi_DOCALIB2, 	BS_MENU,						mi_CDONE2,						20	},
+	{ mi_DOCALIB2, 	BL_MENU,						mi_CALIB2,						10	},
+	{ mi_DOCALIB2, 	BS_MENU,						mi_CDONE2,						5	},
 	{ mi_CDONE2, 	BS_MENU | BL_MENU | TMR_EXP,	mi_REALTEMP,					0	},
 	// Auto power off jumps - only from states without timeout, excluding calibration
 	{ mi_REALTEMP, 	GOTO_POFF,						mi_POFFACT,						0	},	
@@ -120,17 +126,17 @@ const __flash MenuJumpRecord menuJumpSet[] =
  };
  
 
- const __flash MenuFunctionRecord menuFunctionSet[]=
+ const PROGMEM MenuFunctionRecord menuFunctionSet[]=
 {
 // sizeOf(MenuFunctionRecord) = 7 bytes
 //	|	Item		|	Select func			|	Do func			|		Leave func		|
 	{ mi_REALTEMP,		mf_realTempSelect, 		mf_realTempDo, 		mf_realTempLeave	},
 	{ mi_SETTEMP,  		mf_setTempSelect, 		mf_setTempDo, 		mf_setTempLeave		},
 	{ mi_ROLL, 			mf_rollSelect, 			mf_rollDo, 			mf_rollLeave		},
-	{ mi_SNDEN,			mf_leafSelect, 			mf_sndenDo,				0				},
-	{ mi_ACTSNDEN,		mf_leafSelectAct, 		mf_sndenDo,			mf_leafExit			},
-	{ mi_AUTOPOFF,		mf_leafSelect, 			mf_autopoffDo,			0				},
-	{ mi_ACTAUTOPOFF,	mf_leafSelectAct,		mf_autopoffDo,		mf_leafExit			},
+	{ mi_SNDEN,			mf_sndenSelect, 		mf_sndenDo,				0				},
+	{ mi_ACTSNDEN,		mf_leafSelectAct, 		mf_sndenDo,			mf_sndenLeave		},
+	{ mi_AUTOPOFF,		mf_autopoffSelect, 		mf_autopoffDo,			0				},
+	{ mi_ACTAUTOPOFF,	mf_leafSelectAct,		mf_autopoffDo,		mf_autopoffLeave	},
 	
 	{ mi_CALIB1,		mf_calibP1Select,		mf_calibDo,				0				},
 	{ mi_DOCALIB1,		mf_leafSelectAct, 		mf_calibDo,			mf_calibDoExit		},
@@ -141,6 +147,15 @@ const __flash MenuJumpRecord menuJumpSet[] =
 	
 	{ mi_POFFACT,		mf_actpoffSelect,		mf_actpoffDo,		mf_actpoffLeave		}
 }; 
+
+const PROGMEM char ms_realTempDo[] =	{' ',' ',' ',' ',0xB0,'C',0};
+//const PROGMEM char ms_setTempDo[] =	{' ',' ',' ',' ',0xB0,'C',0};
+const PROGMEM char ms_rollDo[] =		{' ',' ',' ',' ',' ',' ',0};
+const PROGMEM char ms_soundEnDo[] =		{'S','N','D',' ',' ',' ',0};
+const PROGMEM char ms_autoPoffDo[] =	{'O','F','F',' ',' ',' ',0};
+const PROGMEM char ms_calibDo[] =		{' ',' ',' ',0};
+
+char temp_str[10];
 
 
 //=================================================================//
@@ -186,14 +201,15 @@ void processMenu(void)
 	// If next item differs from current
 	if (nextItem.ItemID != selectedMenuItemID)
 	{		
+		jumpFlags = nextItem.Flags;
 		// Call exit function for current item
 		processItemFunction(selectedMenuFunctionRecord.LeaveFunction);
 		
 		// If shifting is specified, start it before calling any 
 		//	new menu item functions 
-		if (nextItem.ShiftFlags & SHIFT_RIGHT)
+		if (nextItem.Flags & SHIFT_RIGHT)
 			startShiftingWindowRight();
-		else if (nextItem.ShiftFlags & SHIFT_LEFT)
+		else if (nextItem.Flags & SHIFT_LEFT)
 			startShiftingWindowLeft();
 		
 		// Select new item
@@ -209,8 +225,7 @@ void processMenu(void)
 			menuTimer.Top = nextItem.ItemTimeout * MENU_TIMEOUT_MULT;
 			menuTimer.Timer = 0;
 			menuTimer.Enabled = 1;	
-		}
-		
+		}	
 	}
 	else
 	{
@@ -245,15 +260,14 @@ static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCon
 	
 	for (i = 0; i < sizeof(menuJumpSet)/sizeof(MenuJumpRecord); i++  )
 	{
-		//readJumpRecord(&menuJumpSet[i], &jRecord);		// read full jump record
-		PGM_read_block(&jRecord,&menuJumpSet[i],sizeof(MenuJumpRecord));
+		memcpy_P(&jRecord,&menuJumpSet[i],sizeof(MenuJumpRecord));
 		if (jRecord.Item == selectedItemId)				// If ID match,
 		{
 			if ((jRecord.JumpCondition & jmpCond) != 0)		// if any of jump conditions match too,
 			{
 				nextItem.ItemID = jRecord.NextItem;			// switch to next menu item
 				nextItem.ItemTimeout = jRecord.Flags & TIMEOUT_MASK;
-				nextItem.ShiftFlags = (jRecord.Flags & (SHIFT_LEFT | SHIFT_RIGHT));
+				nextItem.Flags = jRecord.Flags & ~TIMEOUT_MASK;
 				break;
 			}
 		}
@@ -276,8 +290,7 @@ static void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRe
 	uint8_t i;
 	for (i = 0; i < sizeof(menuFunctionSet)/sizeof(MenuFunctionRecord); i++  )
 	{
-		//readMenuRecord(&menuFunctionSet[i], menuRecord);
-		PGM_read_block(menuRecord,&menuFunctionSet[i],sizeof(MenuFunctionRecord));
+		memcpy_P(menuRecord,&menuFunctionSet[i],sizeof(MenuFunctionRecord));
 		if (menuRecord->Item == menuItemID)
 			break;
 	}
@@ -295,41 +308,6 @@ static inline void processItemFunction(FuncPtr funcAddr)
 		((FuncPtr)funcAddr)();
 }
 
-
-
-
-/*
-//-----------------------------------------------------------------//
-//	 Reads menu function record from FLASH into SRAM memory
-//	Arguments:
-//		fRecPtr		- address of the function record in the FLASH
-//		resPtr		- address of the record to fill in the SRAM
-//-----------------------------------------------------------------//
-static inline void readMenuRecord(const MenuFunctionRecord* fRecPtr, MenuFunctionRecord* resPtr )
-{
-	//resPtr->Item = pgm_read_byte(&fRecPtr->Item);
-	//resPtr->SelectFunction = (FuncPtr)pgm_read_word(&fRecPtr->SelectFunction);
-	//resPtr->RunFunction = (FuncPtr)pgm_read_word(&fRecPtr->RunFunction);
-	//resPtr->LeaveFunction = (FuncPtr)pgm_read_word(&fRecPtr->LeaveFunction);
-	PGM_read_block(resPtr,fRecPtr,sizeof(MenuFunctionRecord));
-}
-
-
-//-----------------------------------------------------------------//
-//	 Reads jump record from FLASH into SRAM memory
-//	Arguments:
-//		jRecPtr		- address of the jump record in the FLASH
-//		resPtr		- address of the record to fill in the SRAM
-//-----------------------------------------------------------------//
-static inline void readJumpRecord(const MenuJumpRecord* jRecPtr, MenuJumpRecord* resPtr )
-{
-	//resPtr->Item = pgm_read_byte(&jRecPtr->Item);
-	//resPtr->JumpCondition = pgm_read_word(&jRecPtr->JumpCondition);
-	//resPtr->NextItem= pgm_read_byte(&jRecPtr->NextItem);
-	//resPtr->Flags= pgm_read_byte(&jRecPtr->Flags);
-	PGM_read_block(resPtr,jRecPtr,sizeof(MenuJumpRecord));
-}
-*/
 
 //-----------------------------------------------------------------//
 //	 Restarts menu state timeout
@@ -349,6 +327,10 @@ static void restartMenuTimer(void)
 //=================================================================//
 
 
+//------------------------------------------------//
+// Menu item "Real temperature indication"
+// TOP level
+//------------------------------------------------//
 void mf_realTempSelect(void)
 {
 	setExtraLeds(LED_TEMP);
@@ -356,8 +338,9 @@ void mf_realTempSelect(void)
 
 void mf_realTempDo(void)
 {
-	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
-
+	char *str = (char *)&temp_str;
+	memcpy_P(str,&ms_realTempDo,7);
+	
 	if (adc_status & (SENSOR_ERROR_NO_PRESENT))
 	{
 		printLedBuffer(0,"ERR 01");
@@ -369,7 +352,6 @@ void mf_realTempDo(void)
 	else
 	{
 		// Output ADC result to LED
-		//u16toa_align_right(adc_celsius,str,NO_TERMINATING_ZERO | 4);
 		i32toa_align_right((int32_t)adc_celsius,str,NO_TERMINATING_ZERO | 4);
 		printLedBuffer(0,str);
 	}
@@ -380,51 +362,46 @@ void mf_realTempLeave(void)
 	clearExtraLeds(LED_TEMP);
 }
 
-//---------------------------------------------//
-//---------------------------------------------//
-//---------------------------------------------//
 
-
+//------------------------------------------------//
+// Menu item "Temperature setting"
+// TOP level
+//------------------------------------------------//
 void mf_setTempSelect(void)
 {
 	clearExtraLeds(LED_TEMP);
-	mf_leafSelectAct();		// setup and start timer
+	mf_leafSelectAct();						// setup and start timer
+	setupValue_u8 = p.setup_temp_value;		// Make a copy of parameter being changed
 }
-
-
-//PROGMEM const char ms_setTempDo[] =  {' ',' ',' ',' ',0xB0,'C',0};
-//PROGMEM const char ms_setTempUnreg[] = " UNREG";
 
 void mf_setTempDo(void)
 {
-	char str[] = {' ',' ',' ',' ',0xB0,'C',0};
-	//char str[7];
-	//strcpy_P(str,str1_PM);
+	char *str = (char *)&temp_str;
+	memcpy_P(str,&ms_realTempDo,7);
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (p.setup_temp_value < MAX_SET_TEMP)
-			p.setup_temp_value += TEMP_SET_STEP;
+		if (setupValue_u8 < MAX_SET_TEMP)
+			setupValue_u8 += TEMP_SET_STEP;
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (p.setup_temp_value > MIN_SET_TEMP)
-			p.setup_temp_value -= TEMP_SET_STEP;
+		if (setupValue_u8 > MIN_SET_TEMP)
+			setupValue_u8 -= TEMP_SET_STEP;
 		restartMenuTimer();
 	}					
 		
 	// Output setting to LED
-	if (p.setup_temp_value < MAX_SET_TEMP)
+	if (setupValue_u8 < MAX_SET_TEMP)
 	{
-		u16toa_align_right(p.setup_temp_value,str,NO_TERMINATING_ZERO | 4);
+		u16toa_align_right(setupValue_u8,str,NO_TERMINATING_ZERO | 4);
 		printLedBuffer(0,str);
 	}		
 	else
 	{
 		printLedBuffer(0," UNREG");
 	}
-	
 	
 	if (userTimer.FA_GE)
 		setExtraLeds(LED_TEMP);
@@ -434,22 +411,28 @@ void mf_setTempDo(void)
 
 void mf_setTempLeave(void)
 {
-	userTimer.Enabled = 0;
+	mf_leafExit();
+	if (!(jumpFlags & DISCARD_CHANGES))
+	{
+		p.setup_temp_value = setupValue_u8;		// Apply changes		
+	}	
 }
 
-//---------------------------------------------//
-//---------------------------------------------//
-//---------------------------------------------//
+//------------------------------------------------//
+// Menu item "Cyclic rolling"
+// TOP level
+//------------------------------------------------//
 
 void mf_rollSelect(void)
 {
-	setExtraLeds(LED_ROLL);
 	mf_leafSelectAct();		// setup and start timer
+	setExtraLeds(LED_ROLL);
 }
 
 void mf_rollDo(void)
 {
-	char str[] = {' ',' ',' ',' ',' ',' ',0};
+	char *str = (char *)&temp_str;
+	memcpy_P(str,&ms_rollDo,7);
 		
 	if (button_state & (BD_UP | BR_UP))
 	{
@@ -482,8 +465,8 @@ void mf_rollDo(void)
 
 void mf_rollLeave(void)
 {
+	mf_leafExit();
 	clearExtraLeds(LED_ROLL);
-	userTimer.Enabled = 0;
 }
 
 //---------------------------------------------//
@@ -515,19 +498,29 @@ void mf_leafExit(void)
 //---------------------------------------------//
 
 
+//------------------------------------------------//
+// Menu item "Sound enable/disable"
+//------------------------------------------------//
+void mf_sndenSelect(void)
+{
+	mf_leafSelect();					
+	setupValue_u8 = p.sound_enable;		// Make a copy of parameter being changed
+}
+
 void mf_sndenDo(void)
 {
-	char str[] = {'S','N','D',' ',' ',' ',0};
+	char *str = (char *)&temp_str;
+	memcpy_P(str,&ms_soundEnDo,7);	
 		
 	if (button_state & (BD_UP | BD_DOWN))
 	{
-		p.sound_enable = !p.sound_enable;
+		setupValue_u8 = !setupValue_u8;
 		restartMenuTimer();
 	}			
 		
 	if (userTimer.FA_GE)
 	{
-		if (p.sound_enable)		
+		if (setupValue_u8)		
 		{
 			str[4] = 'O';
 			str[5] = 'N';
@@ -544,32 +537,48 @@ void mf_sndenDo(void)
 	setComma(2);
 }
 
+void mf_sndenLeave(void)
+{
+	mf_leafExit();
+	if (!(jumpFlags & DISCARD_CHANGES))
+	{
+		p.sound_enable = setupValue_u8;		// Apply changes
+	}
+}
 
-//---------------------------------------------//
 
+//------------------------------------------------//
+// Menu item "Auto power off setup"
+//------------------------------------------------//
+void mf_autopoffSelect(void)
+{
+	mf_leafSelect();						
+	setupValue_u8 = p.power_off_timeout;	// Make a copy of parameter being changed
+}
 
 void mf_autopoffDo(void)
 {
-	char str[] = {'O','F','F',' ',' ',' ',0};
+	char *str = (char *)&temp_str;
+	memcpy_P(str,&ms_autoPoffDo,7);	
 		
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
-			p.power_off_timeout += POWEROFF_SET_STEP;
+		if (setupValue_u8 < MAX_POWEROFF_TIMEOUT)
+			setupValue_u8 += POWEROFF_SET_STEP;
 		restartMenuTimer();
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (p.power_off_timeout > MIN_POWEROFF_TIMEOUT)
-			p.power_off_timeout -= POWEROFF_SET_STEP;
+		if (setupValue_u8 > MIN_POWEROFF_TIMEOUT)
+			setupValue_u8 -= POWEROFF_SET_STEP;
 		restartMenuTimer();
 	}	
 		
 	if (userTimer.FA_GE)
 	{
-		if (p.power_off_timeout < MAX_POWEROFF_TIMEOUT)
+		if (setupValue_u8 < MAX_POWEROFF_TIMEOUT)
 		{
-			u16toa_align_right(p.power_off_timeout,str + 4,NO_TERMINATING_ZERO | 2);	
+			u16toa_align_right(setupValue_u8,str + 4,NO_TERMINATING_ZERO | 2);	
 		}			
 		else 
 		{
@@ -581,8 +590,20 @@ void mf_autopoffDo(void)
 	printLedBuffer(0,str);
 }
 
+void mf_autopoffLeave(void)
+{
+	mf_leafExit();
+	if (!(jumpFlags & DISCARD_CHANGES))
+	{
+		p.power_off_timeout = setupValue_u8;		// Apply changes
+	}
+}
 
 
+//------------------------------------------------//
+// Menu item "Active power off"
+// Specific menu item - used as indicator of system state
+//------------------------------------------------//
 void mf_actpoffSelect(void)
 {
 	clearExtraLeds(LED_TEMP | LED_ROLL);
@@ -600,13 +621,18 @@ void mf_actpoffLeave(void)
 	autoPowerOffState = 0;	
 }
 
-//---------------------------------------------//
 
 
+
+//------------------------------------------------//
+// Menu item "Calibration"
+// There are two calibration points - the menu item is 
+// same for both.
+//------------------------------------------------//
 void mf_calibP1Select(void)
 {
 	mf_leafSelect();
-	cpoint_user_val = cp.cpoint1;	// determine which point to use at select func
+	setupValue_u8 = cp.cpoint1;	// determine which point to use at select func
 	cpointNum = 1;
 	printLedBuffer(0,"P1    ");
 }
@@ -614,29 +640,30 @@ void mf_calibP1Select(void)
 void mf_calibP2Select(void)
 {
 	mf_leafSelect();
-	cpoint_user_val = cp.cpoint2;	// determine which point to use at select func
+	setupValue_u8 = cp.cpoint2;	// determine which point to use at select func
 	cpointNum = 2;
 	printLedBuffer(0,"P2    ");
 }
 
 void mf_calibDo(void)
 {
-	char str[] = "   ";
+	char *str = (char *)&temp_str;
+	memcpy_P(str,&ms_calibDo,4);
 	
 	if (button_state & (BD_UP | BR_UP))
 	{
-		if (cpoint_user_val < MAX_CALIB_TEMP)
-		cpoint_user_val += CALIB_TEMP_STEP;
+		if (setupValue_u8 < MAX_CALIB_TEMP)
+		setupValue_u8 += CALIB_TEMP_STEP;
 	}
 	else if (button_state & (BD_DOWN | BR_DOWN))
 	{
-		if (cpoint_user_val > MIN_CALIB_TEMP)
-		cpoint_user_val -= CALIB_TEMP_STEP;
+		if (setupValue_u8 > MIN_CALIB_TEMP)
+		setupValue_u8 -= CALIB_TEMP_STEP;
 	}
 	
 	if (userTimer.FA_GE)
 	{
-		u16toa_align_right(cpoint_user_val,str,3);
+		u16toa_align_right(setupValue_u8,str,3);
 		resetAutoPowerOffCounter();
 		heaterState |= CALIBRATION_ACTIVE;
 	}
@@ -651,13 +678,17 @@ void mf_calibDoExit(void)
 	heaterState &= ~CALIBRATION_ACTIVE;
 }
 
-//---------------------------------------------//
 
+
+//------------------------------------------------//
+// Menu item "Calibration done"
+// There are two calibration points - the menu item is
+// same for both.
+//------------------------------------------------//
 void mf_cdoneSelect(void)
 {
-	applyCalibrationPoint(cpointNum,cpoint_user_val);
+	applyCalibrationPoint(cpointNum,setupValue_u8);
 }
-
 
 void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal)
 {
@@ -674,7 +705,6 @@ void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal)
 	calculateCoeffs();
 	saveCalibrationToEEPROM();
 }
-
 
 void mf_cdoneDo(void)
 {

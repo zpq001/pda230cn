@@ -27,7 +27,7 @@ typedef struct {
 typedef struct {
 	uint8_t ItemID;
 	uint8_t ItemTimeout;
-	uint8_t ShiftFlags;
+	uint8_t Flags;
 } NextItem_t;
 
 
@@ -50,7 +50,8 @@ typedef struct {
 // MenuJumpRecord flags:
 #define 	SHIFT_LEFT		0x80
 #define 	SHIFT_RIGHT		0x40
-#define 	TIMEOUT_MASK	0x3F	// timeouts = 0 to 63 (in units of processMenu() call period)
+#define		DISCARD_CHANGES	0x20
+#define 	TIMEOUT_MASK	0x0F	// timeouts = 0 to 15 (in units of 4x processMenu() call period)
 
 // Jump condition flags:
 #define		TMR_EXP			0x8000
@@ -58,7 +59,7 @@ typedef struct {
 
 
 // Time intervals
-#define MENU_TIMEOUT_MULT	2		// multiplier of menu item timeouts (1 to 4)
+#define MENU_TIMEOUT_MULT	8		// multiplier of menu item timeouts (1 to 16)
 #define BLINK_PERIOD		8		// in units of processMenu() call period
 
 

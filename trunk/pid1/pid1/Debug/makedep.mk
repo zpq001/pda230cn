@@ -24,8 +24,6 @@ src\pid_controller.c
 
 src\power_control.c
 
-src\progmem_func.c
-
 src\soft_timer.c
 
 src\systimer.c

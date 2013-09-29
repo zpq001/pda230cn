@@ -28,8 +28,6 @@
 #define EXPIRED_LOG			0x20
 #define UPDATE_PID			0x40
 
-
-
 typedef struct {
 	uint8_t celsius_upd_counter;			// about 200ms
 	uint8_t counter_10sec;		
@@ -45,26 +43,12 @@ extern uint8_t minute_counter;
 extern sys_timers_t sys_timers;
 
 void resetAutoPowerOffCounter(void);
-
 void processSystemTimers(void);
 
 
 //==================================================//
 //				Sound driver						//
 //==================================================//
-
-void StartBeep(uint16_t time_ms);
-void StopBeep();
-void OverrideSoundDisable(void);
-
-// Use either one to setup beeper frequency
-// Beeper frequency is not precise !!!
-void SetBeeperPeriod(uint16_t new_period_us);
-void SetBeeperFreq(uint16_t freq_hz);
-
-
-
-//-------------------------------//
 
 // Sound driver FSM states
 #define SOUND_OFF	0
@@ -91,14 +75,23 @@ void Sound_Play(const tone_t* p_melody);
 void Sound_Stop(void);
 void Sound_OverrideDisable(void);
 
+extern const tone_t m_beep_1000Hz_200ms[];
 extern const tone_t m_beep_1000Hz_100ms[];
+extern const tone_t m_beep_1000Hz_40ms[];
+extern const tone_t m_beep_800Hz_40ms[];
+extern const tone_t m_beep_500Hz_40ms[];
+extern const tone_t m_beep_err1[];
 extern const tone_t m_siren1[];
 extern const tone_t m_siren2[];
+extern const tone_t m_siren3[];
+extern const tone_t m_beep_warn_poff[];
 
 // Every melody table must be terminated with tone pair where duration = 0
 
 
 
+
+//-------------------------------//
 
 
 	

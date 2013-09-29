@@ -14,13 +14,6 @@
 
 
 
-//#include <avr/io.h>
-//#include <util/setbaud.h>
-//#include <avr/interrupt.h>
-
-//#include <stdlib.h>
-//#include <stdio.h>
-
 #include "compilers.h"
 #include "soft_timer.h"	
 #include "systimer.h"	
@@ -35,7 +28,7 @@
 #include "my_string.h"
 #include "pid_controller.h"
 
-extern volatile SoftTimer8b_t menuUpdateTimer;
+extern volatile SoftTimer8b_t menuUpdateTimer;	// Must be declared volatile here
 
 // Functions for log optimization
 static void logU16p(uint16_t val);
@@ -100,16 +93,14 @@ static void init_system_io()
 }
 
 
+char str[20];
 
 int main(void)
 {
-	volatile char str[12];
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
-	
 	// Initialize MCU IO
 	init_system_io();
-
 	// Restore params from EEPROM
 	// If some values are corrupted, settings or/and calibration are loaded with default configuration.
 	temp8u = restoreGlobalParams();
@@ -126,19 +117,16 @@ int main(void)
 	{
 		printLedBuffer(0,"ERR E");
 		fillLedBuffer(5,1,temp8u + 0x30);	// error code: E1 - CRC error in global params, E2 - CRC error in calibration, E3 - both
-		// Beep
-		SetBeeperFreq(700);
-		StartBeep(500);
+		Sound_Play(m_beep_err1);
 		_delay_ms(1000);
 	} 
 	#endif
-	// Dump calibration data over UART - might be useful
+	// Dump calibration data over UART - might be useful for debug
 	logU16p(cp.cpoint1);
 	logU16p(cp.cpoint1_adc);
 	logU16p(cp.cpoint2);
 	logU16p(cp.cpoint2_adc);
 	USART_sendstr("\n\r");
-	
 	// Safety delay for power part and ADC buffer
 	_delay_ms(100);
 	// Check AC line
@@ -151,16 +139,14 @@ int main(void)
 	// Initialize menu
 	InitMenu();
 	// Beep
-	SetBeeperFreq(1000);
-//	StartBeep(200);
-
-	Sound_Play(m_siren2);
-
+	Sound_Play(m_beep_1000Hz_100ms);
 	// When we get here, full ADC buffer have been sampled
 	// Get oversampled and filtered ADC for PID controller
 	update_normalized_adc();
+	
 	// Call PID controller function in order to initialize it's internal structures
-	heaterInit();
+	heaterInit();	// Possibly useless?
+	
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
 	// Clear timer
@@ -170,7 +156,6 @@ int main(void)
 
     while(1)
     {
-		
 		if (menuUpdateTimer.FOvfl)
 		{
 			// Reset watchdog timer
@@ -184,13 +169,11 @@ int main(void)
 			// Give sound feedback
 			if (button_state & BL_MENU)
 			{
-				SetBeeperFreq(800);
-				StartBeep(40);
+				Sound_Play(m_beep_800Hz_40ms);
 			}
 			else if (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_HEATCTRL))
 			{
-				SetBeeperFreq(1000);
-				StartBeep(40);
+				Sound_Play(m_beep_1000Hz_40ms);
 			}	
 			// Direction control buttons sounds get special processing at processRollControl()
 			
@@ -207,8 +190,7 @@ int main(void)
 			// Warn user about soon auto powering off
 			if (sys_timers.flags & AUTOPOFF_SOON)
 			{
-				SetBeeperFreq(1200);
-				StartBeep(200);
+				Sound_Play(m_beep_warn_poff);
 			}		
 			
 			//----------- ADC ------------//
@@ -273,14 +255,12 @@ int main(void)
 
 static void logU16p(uint16_t val)
 {
-	char str[6];
 	u16toa_align_right(val,str,6);
 	USART_sendstr(str);
 }
 
 static void logI32p(int32_t val)
 {
-	char str[12];
 	i32toa_align_right(val,str,12);
 	USART_sendstr(str);
 }
