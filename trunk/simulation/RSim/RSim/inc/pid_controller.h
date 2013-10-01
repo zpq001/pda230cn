@@ -5,8 +5,8 @@
  *  Author: Avega
  */ 
 
-//#define PID_DIRECT
-#define PID_INCREMENTAL
+#define PID_DIRECT
+//#define PID_INCREMENTAL
  
 #ifdef PID_INCREMENTAL 
 
@@ -38,22 +38,24 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
  //--------------------------//
 // PID controller settings
 // Proportional
-#define Kp	15	//15
-#define PROP_MAX 2000		// Limits are pretty arbitrary
-#define PROP_MIN -2000
+#define Kp	5	//15
+#define PROP_MAX 500		
+#define PROP_MIN -500
 
 // Integral term is computed as: i_term = (integAcc += Ki * error)/INTEGRATOR_SCALE;
 // integAcc is limited by INTEGRATOR_MAX and INTEGRATOR_MIN
-#define Ki 7//7
+#define Ki 3//7
 #define INTEGRATOR_MAX 20000
 #define INTEGRATOR_MIN 0
 #define INTEGRATOR_SCALE 40
+#define INTEGRATOR_ENABLE_RANGE	120	// 40(80) is about 10 C degree
+#define INTEGRATOR_RANGE_LIMT
 
 // Differential
-#define Kd	25//	25
+#define Kd	0//	25
 
 // Common scaling for summ of all terms
-#define SCALING_FACTOR	5
+#define SCALING_FACTOR	5 
 // Output limits
 #define PID_OUTPUT_MIN 0
 #define PID_OUTPUT_MAX 100

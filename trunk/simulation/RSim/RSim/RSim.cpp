@@ -8,6 +8,7 @@
 #include <string>
 
 #include "vector_reader.h"
+#include "ArgParser.h"
 
 #include "stdafx.h"
 #include "stdint.h"
@@ -17,11 +18,17 @@ extern "C" {
 	#include "pid_controller.h"
 }
 
+
+enum SimulationMode {SIM_PLANT_STEP_RESPONSE, SIM_NORMAL};
+
+
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	VectorReader myVectorReader;
 	VectorRecord_t currentVector;
-	
+	ArgParser myArgParser;
+
 	unsigned long seconds_counter = 0;
 	unsigned long steps_counter = 0;
 	bool update_vector = false;
@@ -43,18 +50,63 @@ int _tmain(int argc, _TCHAR* argv[])
 	bool reg_enabled;								// Heater ON/OFF
 
 	
-	
-	// Log data files
-	LPCSTR outDir = "output\\";
-	char* fname_state_int =	    "output\\col_0.txt";
-	char* fname_state_float =	"output\\col_0f.txt";
-	char* fname_setting =		"output\\setting.txt";
-	char* fname_p_term =		"output\\col_5.txt";
-	char* fname_d_term =		"output\\col_6.txt";
-	char* fname_i_term =		"output\\col_7.txt";
-	char* fname_pid_output =	"output\\col_8.txt";
+	char *input_fname;
+	char *output_dir;
+	char *tmp_arg_str;
+	int simulation_mode;
 
-	if (!CreateDirectory(outDir,NULL))
+	char tmp_buf_char[100];
+
+	//--------------------------------------------//
+	// Command line arguments parsing
+
+	myArgParser.Parse(argc, (char **)argv);
+	 //myArgParser.PrintOptions();
+	 //std::cin.get();
+	 //return 0;
+
+	if (!(input_fname = myArgParser.GetOptionValue("-input")))
+	{
+		std::cout << "Expected test vector file (-input <file>)" << std::endl;
+		std::cin.get();
+		return 0;
+	}
+	
+	if (!(output_dir = myArgParser.GetOptionValue("-outdir")))
+	{
+		std::cout << "Expected output directory (-outdir <directory>)" << std::endl;
+		std::cin.get();
+		return 0;
+	}
+
+	if (!(tmp_arg_str = myArgParser.GetOptionValue("-mode")))
+	{
+		std::cout << "Expected simulation mode (-mode <PLANT_STEP / NORMAL>)" << std::endl;
+		std::cin.get();
+		return 0;
+	}
+	simulation_mode = (strcmp(tmp_arg_str, "PLANT_STEP") == 0) ? SIM_PLANT_STEP_RESPONSE : SIM_NORMAL;
+
+	//--------------------------------------------//
+
+
+
+	//-----------------------------//
+	// Reading test vector file
+	if (myVectorReader.ReadVectorFile(input_fname) == false)
+	{
+		std::cout << "Cannot read test vector file. Press any key to exit." << std::endl;
+		std::cin.get();
+		return 0;
+	}
+
+	std::cout << "Test vector file OK. Starting simulation." << std::endl;
+
+
+	//-----------------------------//
+	// Initializing simulation
+	
+	if (!CreateDirectory(output_dir,NULL))
 	{
 		if (GetLastError() != ERROR_ALREADY_EXISTS)
 		{
@@ -64,38 +116,38 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 	}
 
-
-	//-----------------------------//
-	// Reading test vector file
-	
-	// Check arguments
-	if (argc != 2)	// First argument - execution string
-	{
-		std::cout << "Input vector file name expected!" << std::endl;
-		std::cin.get();
-		return 0;
-	}
-	// Read test vector from file
-	if (myVectorReader.ReadVectorFile((char *)argv[1]) == false)
-	{
-		std::cout << "Cannot parse test vector file. Press any key to exit." << std::endl;
-		std::cin.get();
-		return 0;
-	}
-
-	std::cout << "Test vector file OK. Starting simulation." << std::endl;
-
-	//-----------------------------//
-	// Initializing simulation
-	
 	// Open LOG files
-	FILE *f_state_float = fopen( fname_state_float, "w" ); 
-	FILE *f_state_int =	fopen( fname_state_int, "w" ); 
-	FILE *f_setting = fopen( fname_setting, "w" );
-	FILE *f_p_term = fopen( fname_p_term, "w" ); 
-	FILE *f_d_term = fopen( fname_d_term, "w" ); 
-	FILE *f_i_term = fopen( fname_i_term, "w" ); 
-	FILE *f_pid_output = fopen( fname_pid_output, "w" ); 
+	FILE *f_state_float;
+	FILE *f_state_int;
+	FILE *f_setting;
+	FILE *f_p_term;
+	FILE *f_d_term;
+	FILE *f_i_term;
+	FILE *f_pid_output;
+
+	// Create log data files:
+
+	// Plant state float
+	sprintf_s(tmp_buf_char, 100, "%s%s", output_dir, "col_0f.txt");
+	fopen_s( &f_state_float, tmp_buf_char, "w" ); 
+	// Plant state integer
+	sprintf_s(tmp_buf_char, 100, "%s%s", output_dir, "col_0.txt");
+	fopen_s( &f_state_int, tmp_buf_char, "w" ); 
+	// Set value
+	sprintf_s(tmp_buf_char, 100, "%s%s", output_dir, "setting.txt");
+	fopen_s( &f_setting, tmp_buf_char, "w" ); 
+	// P-term of PID controller
+	sprintf_s(tmp_buf_char, 100, "%s%s", output_dir, "col_5.txt");
+	fopen_s( &f_p_term, tmp_buf_char, "w" ); 
+	// D-term of PID controller
+	sprintf_s(tmp_buf_char, 100, "%s%s", output_dir, "col_6.txt");
+	fopen_s( &f_d_term, tmp_buf_char, "w" ); 
+	// I-term of PID controller
+	sprintf_s(tmp_buf_char, 100, "%s%s", output_dir, "col_7.txt");
+	fopen_s( &f_i_term, tmp_buf_char, "w" ); 
+	// Output of PID controller
+	sprintf_s(tmp_buf_char, 100, "%s%s", output_dir, "col_8.txt");
+	fopen_s( &f_pid_output, tmp_buf_char, "w" ); 
 	
 
 	// Set ambient temperature and plant internal state
@@ -171,37 +223,46 @@ int _tmain(int argc, _TCHAR* argv[])
 		processPlant(effect);	
 		
 		// Process regulator 
-
-		if (!reg_enabled)
+		if (simulation_mode == SIM_PLANT_STEP_RESPONSE)
 		{
-#ifdef PID_INCREMENTAL
-			initPID(0);
-#endif
+				if (reg_enabled)
+					effect = 100;
+				else
+					effect = 0;
 		}
-		else if (update_PID_control)
-		{	
-			// Calculate process value
-			plantState = (float)getPlantState();					
-			processF = (plantState + offset_norm) / k_norm;	
-			processF *= 4;
-			//processF /= 2;
-			processValue = (uint16_t)processF;
+		else
+		{
+				if (!reg_enabled)
+				{
+					#ifdef PID_INCREMENTAL
+					initPID(0);
+					#endif
+				}
+				else if (update_PID_control)
+				{	
+					// Calculate process value
+					plantState = (float)getPlantState();					
+					processF = (plantState + offset_norm) / k_norm;	
+					processF *= 4;
+					//processF /= 2;
+					processValue = (uint16_t)processF;
 			
-			// Calculate setpoint
-			setPointF = (tempSetting + offset_norm) / k_norm;
-			setPointF *= 4;
-			//setPointF /= 2;
-			setPoint = (uint16_t)setPointF;	
+					// Calculate setpoint
+					setPointF = (tempSetting + offset_norm) / k_norm;
+					setPointF *= 4;
+					//setPointF /= 2;
+					setPoint = (uint16_t)setPointF;	
 			
-			// PID
-#ifdef PID_INCREMENTAL
-			if (setPoint != setPoint_old)
-			{
-				initPID(0);
-				setPoint_old = setPoint;
-			}
-#endif
-			effect = processPID(setPoint, processValue);
+					// PID
+					#ifdef PID_INCREMENTAL
+					if (setPoint != setPoint_old)
+					{
+						initPID(0);
+						setPoint_old = setPoint;
+					}
+					#endif
+					effect = processPID(setPoint, processValue);
+				}
 		}
 		
 

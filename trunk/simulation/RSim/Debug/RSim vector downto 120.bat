@@ -1,2 +1,1 @@
-set	FILE="Test vector downto 120.txt"
-RSim.exe %FILE%
+RSim.exe -input "Test vector downto 120.txt" -outdir .\output\\ -mode NORMAL

@@ -1,0 +1,6 @@
+.ambient 22
+.state 22
+0 OFF
+2 100
+617 OFF
+7547 OFF

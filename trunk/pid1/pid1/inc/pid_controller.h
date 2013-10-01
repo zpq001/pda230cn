@@ -10,20 +10,21 @@
  //--------------------------//
 // PID controller settings
 // Proportional
-#define Kp		10
-#define PROP_MAX 2000		// Limits are pretty arbitrary
-#define PROP_MIN -2000
+#define Kp		5
+#define PROP_MAX 500		// Limits are pretty arbitrary
+#define PROP_MIN -500
 
 // Integral term is computed as: i_term = (integAcc += Ki * error)/INTEGRATOR_SCALE;
 // integAcc is limited by INTEGRATOR_MAX and INTEGRATOR_MIN
-#define Ki 5
+#define Ki 3
 #define INTEGRATOR_MAX 20000
 #define INTEGRATOR_MIN 0
 #define INTEGRATOR_SCALE 40
-#define INTEGRATOR_ENABLE_RANGE	40	// 10 C degree
+#define INTEGRATOR_ENABLE_RANGE	120	// 40(80) is about 10 C degree
+#define INTEGRATOR_RANGE_LIMT
 
 // Differential
-#define Kd		50
+#define Kd		0
 
 // Common scaling for summ of all terms
 #define SCALING_FACTOR	5

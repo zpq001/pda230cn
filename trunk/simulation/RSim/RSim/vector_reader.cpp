@@ -13,7 +13,7 @@ using namespace std;
 #include "vector_reader.h"
 
 vector<VectorRecord_t> formedForceVector;
-int VectorPtr;
+unsigned int VectorPtr;
 
 
 bool VectorReader::GetNextVector(VectorRecord_t *rec)
@@ -126,7 +126,7 @@ vector<char*> VectorReader::SplitByDelims(char source[], char delims[] )
 	while( token != NULL )
 	{
       vec_String_Lines.push_back(token);
-      token = strtok( NULL, delims );
+      token = strtok( NULL, delims ); 
 	}
 
 	return vec_String_Lines;

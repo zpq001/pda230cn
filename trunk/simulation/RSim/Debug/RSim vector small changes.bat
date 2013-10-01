@@ -1,0 +1,1 @@
+RSim -input "Test vector small changes.txt" -outdir .\output\\ -mode NORMAL
