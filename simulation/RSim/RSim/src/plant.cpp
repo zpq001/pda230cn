@@ -67,9 +67,9 @@ static double plantAmbient;
 static double plantState;
 static double plantStateFiltered;
 
-static double k_amb = 0.15;
-static double k_eff = 0.45;
-static double timeConst = 0.006 * TIMESTEP;
+static double k_amb = 0.07;
+static double k_eff = 0.38;
+static double timeConst = 0.007 * TIMESTEP;
 
 
 void initPlant(double ambient, double state)

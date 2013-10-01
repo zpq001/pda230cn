@@ -210,7 +210,7 @@ void processRollControl(void)
 void heaterInit(void)
 {
 	// FIXME
-	initPID(adc_filtered >> 1);
+	//initPID(adc_filtered >> 1);
 }
 
 
@@ -243,8 +243,9 @@ void processHeaterControl(void)
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
 
 		setPoint = set_value_adc * 4;		
-		setPoint >>= 1;
-		processValue = adc_filtered >> 1;	// normal PID control
+		//setPoint >>= 1;
+		//processValue = adc_filtered >> 1;	// normal PID control
+		processValue = adc_filtered;
 		
 		// Process PID
 		// Possibly hold PID in reset while disabled ?

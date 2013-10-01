@@ -6,6 +6,7 @@
  */ 
 
 #include "compilers.h"
+#include "math.h"
 #include "pid_controller.h"
 #include "fir_filter.h"
 
@@ -140,6 +141,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
 	int16_t error, p_term, i_term, d_term, temp;
 	
+	static int16_t error_p;
+
 	// Get the error
 	error = setPoint - processValue;
 	
@@ -158,7 +161,15 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	
 	//------ Calculate I term --------//
+	#ifdef INTEGRATOR_RANGE_LIMT
+	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
+		integAcc += error * Ki;	
+	else
+		integAcc = 0;	
+	#else
 	integAcc += error * Ki;	
+	#endif
+
 	if (integAcc > INTEGRATOR_MAX )
 	{
 		integAcc = INTEGRATOR_MAX;
@@ -187,6 +198,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 		temp = PID_OUTPUT_MIN;
 	}
 	
+	error_p = error;
 	
 	//------- Debug --------//
 	dbg_PID_p_term = p_term;

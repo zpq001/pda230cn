@@ -1,2 +1,1 @@
-set	FILE="Test vector 1.txt"
-RSim.exe %FILE%
+RSim -input "Test vector 1.txt" -outdir .\output\\ -mode NORMAL

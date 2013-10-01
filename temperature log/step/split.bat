@@ -1,0 +1,1 @@
+"../tools/TextColumnSplitter.exe" -file "cycle.log" -split " " -pref "col_" -ext ".txt"

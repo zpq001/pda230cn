@@ -3,6 +3,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerDebuggerType>Auto</LocalDebuggerDebuggerType>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>"Test vector 1.txt"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-input "Step 1.txt" -outdir .\outstep\\ -mode PLANT_STEP</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

@@ -1,0 +1,1 @@
+RSim.exe -input "Test vector upto 160.txt" -outdir .\output\\ -mode NORMAL
