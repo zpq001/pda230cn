@@ -229,6 +229,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					effect = 100;
 				else
 					effect = 0;
+				dbg_PID_output = (int16_t)effect;
 		}
 		else
 		{
