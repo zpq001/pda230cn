@@ -6,6 +6,12 @@ if file ~= -1
     fclose(file);
 end
 
+file = fopen('col_7.txt','r');
+if file ~= -1
+    i_term = fscanf(file, '%d');
+    fclose(file);
+end
+
 file = fopen('col_8.txt','r');
 if file ~= -1
     pid_output = fscanf(file, '%d');
@@ -19,8 +25,9 @@ hold on;
 plot(pid_output,'b');
 hold on;
 
-%plot(d_term,'g');
+plot(i_term/4.9,'c');
 hold on;
+
 
 
 grid on;

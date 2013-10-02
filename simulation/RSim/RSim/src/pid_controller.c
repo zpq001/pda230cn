@@ -117,7 +117,7 @@ static int8_t dterm_coeffs[] = {64,66,64,59};
 //static int8_t dterm_coeffs[] = {60,64,67,69,67,64,60,57};
 
 static uint16_t lastProcessValue;
-static int16_t integAcc;
+static int32_t integAcc;
 
 
 void initPID(uint16_t processValue)
@@ -126,7 +126,7 @@ void initPID(uint16_t processValue)
 	dterm_filter_core.n = 4;
 	dterm_filter_core.dc_gain = 25;
 	//dterm_filter_core.n = 8;
-	//dterm_filter_core.dc_gain = 512;
+	//dterm_filter_core.dc_gain = 51;
 	dterm_filter_core.coeffs = dterm_coeffs;
 
 	for (i=0;i<4;i++)
@@ -161,7 +161,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	
 	//------ Calculate I term --------//
-	#ifdef INTEGRATOR_RANGE_LIMT
+	#ifdef INTEGRATOR_RANGE_LIMIT
 	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
 		integAcc += error * Ki;	
 	else
@@ -178,16 +178,17 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	{
 		integAcc = INTEGRATOR_MIN;
 	}
-	i_term = integAcc / INTEGRATOR_SCALE;
+	i_term = (int16_t)(integAcc / INTEGRATOR_SCALE);	// Sould not exceed MAXINT16
 
 	//------ Calculate D term --------//
-	d_term = fir_i16_i8((lastProcessValue - processValue), pid_dterm_buffer, &dterm_filter_core);
+	//d_term = fir_i16_i8((lastProcessValue - processValue), pid_dterm_buffer, &dterm_filter_core);
+	d_term = lastProcessValue - processValue;
 	d_term = Kd * d_term;
 
 	lastProcessValue = processValue;
 	
 	//--------- Summ terms -----------//
-	temp = (p_term + i_term + d_term) / SCALING_FACTOR;
+	temp = (int16_t)( ((int32_t)p_term + (int32_t)i_term + (int32_t)d_term) / SCALING_FACTOR );
 	
 	if (temp > PID_OUTPUT_MAX)
 	{
@@ -207,7 +208,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	dbg_PID_output = temp;
 	
 	
-	return temp;
+	return (uint8_t)temp;
 	
 }
 

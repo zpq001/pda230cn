@@ -4,15 +4,18 @@
 #include "plant.h"
 #include "simulation.h"
 
- 
- /**************************************************************
+
+
+
+
+/**************************************************************
 WinFilter version 0.8
 http://www.winfilter.20m.com
 akundert@hotmail.com
 
 Filter type: Low Pass
 Filter model: Butterworth
-Filter order: 2
+Filter order: 5
 Sampling Frequency: 500 Hz
 Cut Frequency: 1.000000 Hz
 Coefficents Quantization: float
@@ -20,30 +23,39 @@ Coefficents Quantization: float
 Z domain Zeros
 z = -1.000000 + j 0.000000
 z = -1.000000 + j 0.000000
+z = -1.000000 + j 0.000000
+z = -1.000000 + j 0.000000
+z = -1.000000 + j 0.000000
 
 Z domain Poles
-z = 0.991114 + j -0.008807
-z = 0.991114 + j 0.008807
+z = 0.985283 + j -0.004173
+z = 0.985283 + j 0.004173
+z = 0.994441 + j -0.015128
+z = 0.994441 + j 0.015128
+z = 0.999887 + j -0.000000
 ***************************************************************/
-#define NCoef 2
+#define NCoef 4
+static double y[NCoef+1]; //output samples
+static double x[NCoef+1]; //input samples
 
- static float y[NCoef+1]; //output samples
- static float x[NCoef+1]; //input samples
-
-float iir(float NewSample) {
-    float ACoef[NCoef+1] = {
-        0.00000994703743556282,
-        0.00001989407487112564,
-        0.00000994703743556282
+double iir(double NewSample) {
+    double ACoef[NCoef+1] = {
+        0.00000000067117469390,
+        0.00000000268469877561,
+        0.00000000402704816342,
+        0.00000000268469877561,
+        0.00000000067117469390
     };
 
-    float BCoef[NCoef+1] = {
+    double BCoef[NCoef+1] = {
         1.00000000000000000000,
-        -1.99111429220165360000,
-        0.99115359586893537000
+        -3.97263546992882950000,
+        5.91828019705741950000,
+        -3.91865100043767800000,
+        0.97300628517191312000
     };
 
-   
+    
     int n;
 
     //shift the old samples
@@ -60,7 +72,6 @@ float iir(float NewSample) {
     
     return y[0];
 }
-
  
 
 static double plantAmbient;
@@ -68,8 +79,9 @@ static double plantState;
 static double plantStateFiltered;
 
 static double k_amb = 0.07;
-static double k_eff = 0.38;
-static double timeConst = 0.007 * TIMESTEP;
+static double k_amb2 = 0;//0.00005;
+static double k_eff = 0.55;
+static double timeConst = 0.0055 * TIMESTEP;
 
 
 void initPlant(double ambient, double state)
@@ -88,8 +100,9 @@ void initPlant(double ambient, double state)
 void processPlant(double effect)
 {
 	// Simple 1st order model
-	plantState += (k_amb * (plantAmbient - plantState) + k_eff * effect) * timeConst;
+	plantState += (k_amb * (plantAmbient - plantState) + k_eff * effect + k_amb2 * (plantAmbient - plantState) * (plantAmbient - plantState) ) * timeConst;
 	plantStateFiltered = iir(plantState);
+	
 }
 
 
