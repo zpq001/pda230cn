@@ -34,7 +34,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 
 #ifdef PID_DIRECT
 
-/*
+
 //--------------------------//
 // PI controller settings
 // Proportional
@@ -63,10 +63,10 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 #define PID_OUTPUT_MIN 0
 #define PID_OUTPUT_MAX 100
 //--------------------------//
-*/
 
 
-/* 4 sec variant */
+
+/* 4 sec variant 
 //--------------------------//
 // PID controller settings
 // Proportional
@@ -79,7 +79,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 // Restrictions:
 //	 INTEGRATOR_MAX / INTEGRATOR_SCALE <= INT16_MAX (type of i_term)
 //	(INTEGRATOR_MAX / INTEGRATOR_SCALE) / SCALING_FACTOR <= PID_OUTPUT_MAX
-#define Ki	80  //	13
+#define Ki	60  //	13
 #define INTEGRATOR_MAX 200000
 #define INTEGRATOR_MIN 0
 #define INTEGRATOR_SCALE 40
@@ -95,7 +95,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 #define PID_OUTPUT_MIN 0
 #define PID_OUTPUT_MAX 100
 //--------------------------//
-
+*/
 
 
 extern int16_t dbg_PID_p_term;
