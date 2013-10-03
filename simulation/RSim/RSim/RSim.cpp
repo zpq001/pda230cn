@@ -156,8 +156,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	if (!myVectorReader.StartConditions.StateValid)
 		myVectorReader.StartConditions.SystemState = 25;
 	initPlant((float)myVectorReader.StartConditions.Ambient, (float)myVectorReader.StartConditions.SystemState); 
+	processPlant(0);
 
 	// Initialize PID controller
+	// Calculate process value
 	plantState = (float)getPlantState();					
 	processF = (plantState + offset_norm) / k_norm;	
 	processF *= 4;
