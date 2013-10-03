@@ -31,7 +31,7 @@ static int16_t pid_dterm_buffer[4];			// PID d-term buffer
 //static int8_t dterm_coeffs[] = {60,64,67,69,67,64,60,57};
 
 static uint16_t lastProcessValue;
-static int16_t integAcc;
+static int32_t integAcc;
 
 
 void initPID(uint16_t processValue)
@@ -72,13 +72,13 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	}
 	
 	//------ Calculate I term --------//
-	#ifdef INTEGRATOR_RANGE_LIMT
+	#ifdef INTEGRATOR_RANGE_LIMIT
 	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
-		integAcc += error * Ki;	
+		integAcc += (int32_t)error * Ki;	
 	else
 		integAcc = 0;	
 	#else
-	integAcc += error * Ki;	
+	integAcc += (int32_t)error * Ki;	
 	#endif
 		
 	if (integAcc > INTEGRATOR_MAX )
@@ -89,10 +89,11 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	{
 		integAcc = INTEGRATOR_MIN;
 	}
-	i_term = integAcc / INTEGRATOR_SCALE;
+	i_term = (int16_t)( integAcc / INTEGRATOR_SCALE );
 
 	//------ Calculate D term --------//
-	d_term = fir_i16_i8((lastProcessValue - processValue), pid_dterm_buffer, &dterm_filter_core);
+	//d_term = fir_i16_i8((lastProcessValue - processValue), pid_dterm_buffer, &dterm_filter_core);
+	d_term = lastProcessValue - processValue;
 	d_term = Kd * d_term;
 
 	lastProcessValue = processValue;

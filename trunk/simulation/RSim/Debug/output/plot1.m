@@ -33,7 +33,7 @@ hold on;
 plot(temp_setting,'g');
 hold on;
 
-plot(i_term/49,'c');
+plot(i_term/99,'c');
 hold on;
 
 
