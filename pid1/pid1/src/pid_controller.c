@@ -53,6 +53,8 @@ void initPID(uint16_t processValue)
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
 	int16_t error, p_term, i_term, d_term, temp;
+	//////
+	int32_t integ_max;
 	
 	// Get the error
 	error = setPoint - processValue;
@@ -74,13 +76,35 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	//------ Calculate I term --------//
 	#ifdef INTEGRATOR_RANGE_LIMIT
 	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
-		integAcc += (int32_t)error * Ki;	
+	integAcc += error * Ki;
 	else
-		integAcc = 0;	
+	integAcc = 0;
 	#else
-	integAcc += (int32_t)error * Ki;	
+	integAcc += error * Ki;
 	#endif
-		
+
+	#ifdef INTEGRATOR_SOFT_LIMIT
+	// Get the limit value
+	//integ_max = (error > INTEGRATOR_SOFT_RANGE) ? INTEGRATOR_SOFT_MAX : INTEGRATOR_MAX;
+	if (error > 100)
+		integ_max = 0;
+	else if (error < 0)
+		integ_max = INTEGRATOR_MAX;
+	else
+	{
+		integ_max = (200 - (int32_t)error) * 500;
+
+	}
+
+	if (integAcc > integ_max )
+	{
+		integAcc = integ_max;
+	}
+	else if (integAcc < INTEGRATOR_MIN)
+	{
+		integAcc = INTEGRATOR_MIN;
+	}
+	#else
 	if (integAcc > INTEGRATOR_MAX )
 	{
 		integAcc = INTEGRATOR_MAX;
@@ -89,7 +113,9 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	{
 		integAcc = INTEGRATOR_MIN;
 	}
-	i_term = (int16_t)( integAcc / INTEGRATOR_SCALE );
+	#endif
+	
+	i_term = (int16_t)(integAcc / INTEGRATOR_SCALE);	// Sould not exceed MAXINT16
 
 	//------ Calculate D term --------//
 	//d_term = fir_i16_i8((lastProcessValue - processValue), pid_dterm_buffer, &dterm_filter_core);
