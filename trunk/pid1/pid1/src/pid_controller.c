@@ -76,9 +76,9 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	//------ Calculate I term --------//
 	#ifdef INTEGRATOR_RANGE_LIMIT
 	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
-	integAcc += error * Ki;
+		integAcc += error * Ki;
 	else
-	integAcc = 0;
+		integAcc = 0;
 	#else
 	integAcc += error * Ki;
 	#endif
@@ -86,13 +86,13 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	#ifdef INTEGRATOR_SOFT_LIMIT
 	// Get the limit value
 	//integ_max = (error > INTEGRATOR_SOFT_RANGE) ? INTEGRATOR_SOFT_MAX : INTEGRATOR_MAX;
-	if (error > 100)
+	if (error > INTEGRATOR_SOFT_RANGE)
 		integ_max = 0;
 	else if (error < 0)
 		integ_max = INTEGRATOR_MAX;
 	else
 	{
-		integ_max = (200 - (int32_t)error) * 500;
+		integ_max = (INTEGRATOR_SOFT_RANGE - (int32_t)error) * INTEGRATOR_SOFT_K;
 
 	}
 
@@ -116,11 +116,16 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	#endif
 	
 	i_term = (int16_t)(integAcc / INTEGRATOR_SCALE);	// Sould not exceed MAXINT16
-
+	
 	//------ Calculate D term --------//
 	//d_term = fir_i16_i8((lastProcessValue - processValue), pid_dterm_buffer, &dterm_filter_core);
 	d_term = lastProcessValue - processValue;
 	d_term = Kd * d_term;
+
+	if (d_term > DIFF_MAX)
+		d_term = DIFF_MAX;
+	else if (d_term < DIFF_MIN)
+		d_term = DIFF_MIN;
 
 	lastProcessValue = processValue;
 	

@@ -87,6 +87,7 @@
     <ClInclude Include="ArgParser.h" />
     <ClInclude Include="inc\compilers.h" />
     <ClInclude Include="inc\fir_filter.h" />
+    <ClInclude Include="inc\iir_filter.h" />
     <ClInclude Include="inc\pid_controller.h" />
     <ClInclude Include="inc\plant.h" />
     <ClInclude Include="inc\simulation.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="ArgParser.cpp" />
     <ClCompile Include="RSim.cpp" />
     <ClCompile Include="src\fir_filter.c" />
+    <ClCompile Include="src\iir_filter.cpp" />
     <ClCompile Include="src\pid_controller.c" />
     <ClCompile Include="src\plant.cpp" />
     <ClCompile Include="stdafx.cpp" />

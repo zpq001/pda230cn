@@ -3,7 +3,7 @@
 #include "stdint.h"
 #include "plant.h"
 #include "simulation.h"
-
+#include "iir_filter.h"
 
 
 
@@ -34,12 +34,11 @@ z = 0.994441 + j -0.015128
 z = 0.994441 + j 0.015128
 z = 0.999887 + j -0.000000
 ***************************************************************/
-#define NCoef 4
-static double y[NCoef+1]; //output samples
-static double x[NCoef+1]; //input samples
+#define plant_NCoef 4
+static double plant_y[plant_NCoef+1]; //output samples
+static double plant_x[plant_NCoef+1]; //input samples
 
-double iir(double NewSample) {
-    double ACoef[NCoef+1] = {
+double plant_ACoef[plant_NCoef+1] = {
         0.00000000067117469390,
         0.00000000268469877561,
         0.00000000402704816342,
@@ -47,7 +46,7 @@ double iir(double NewSample) {
         0.00000000067117469390
     };
 
-    double BCoef[NCoef+1] = {
+    double plant_BCoef[plant_NCoef+1] = {
         1.00000000000000000000,
         -3.97263546992882950000,
         5.91828019705741950000,
@@ -55,54 +54,115 @@ double iir(double NewSample) {
         0.97300628517191312000
     };
 
-    
-    int n;
+static iir_double_core_t plant_iir_core;
 
-    //shift the old samples
-    for(n=NCoef; n>0; n--) {
-       x[n] = x[n-1];
-       y[n] = y[n-1];
-    }
 
-    //Calculate the new output
-    x[0] = NewSample;
-    y[0] = ACoef[0] * x[0];
-    for(n=1; n<=NCoef; n++)
-        y[0] += ACoef[n] * x[n] - BCoef[n] * y[n];
-    
-    return y[0];
-}
- 
 
+//----------------------------//
+/*  good
+#define eff_NCoef 4
+static double eff_y[eff_NCoef+1]; //output samples
+static double eff_x[eff_NCoef+1]; //input samples
+
+double eff_ACoef[eff_NCoef+1] = {
+        0.00000000005929847418,
+        0.00000000023719389671,
+        0.00000000035579084507,
+        0.00000000023719389671,
+        0.00000000005929847418
+    };
+
+    double eff_BCoef[eff_NCoef+1] = {
+        1.00000000000000000000,
+        -3.99397387738456230000,
+        5.98197913518426280000,
+        -3.98203645370192310000,
+        0.99403119633051884000
+    };
+*/
+
+/* too big delay
+#define eff_NCoef 3
+static double eff_y[eff_NCoef+1]; //output samples
+static double eff_x[eff_NCoef+1]; //input samples
+
+double eff_ACoef[eff_NCoef+1] = {
+        0.00000000931329148875,
+        0.00000002793987446626,
+        0.00000002793987446626,
+        0.00000000931329148875
+    };
+
+    double eff_BCoef[eff_NCoef+1] = {
+        1.00000000000000000000,
+        -2.99688763931455470000,
+        2.99378750508951930000,
+        -0.99689985056499619000
+    };
+*/
+
+#define eff_NCoef 3
+static double eff_y[eff_NCoef+1]; //output samples
+static double eff_x[eff_NCoef+1]; //input samples
+
+double eff_ACoef[eff_NCoef+1] = {
+        0.00000001159228067557,
+        0.00000003477684202670,
+        0.00000003477684202670,
+        0.00000001159228067557
+    };
+
+    double eff_BCoef[eff_NCoef+1] = {
+        1.00000000000000000000,
+        -2.99584690314718530000,
+        2.99171554448822490000,
+        -0.99586860530641597000
+    };
+
+static iir_double_core_t eff_iir_core;
+//--------------------------//
+	
 static double plantAmbient;
 static double plantState;
 static double plantStateFiltered;
 
-static double k_amb = 0.07;
-static double k_amb2 = 0;//0.00005;
-static double k_eff = 0.55;
+//static double k_amb = 0.07; // both good and big delay
+static double k_amb = 0.1; 
+//static double k_eff = 0.25; // good
+//static double k_eff = 0.113; // too big delay
+static double k_eff = 0.218;
 static double timeConst = 0.0055 * TIMESTEP;
+
+
 
 
 void initPlant(double ambient, double state)
 {
-	int i;
 	plantAmbient = ambient;
 	plantState = state;
-	// Initialize filter
-	for (i=0;i<=NCoef;i++)
-	{
-		y[i] = plantState;
-		x[i] = plantState;
-	}
+	// Initialize plant filter
+	plant_iir_core.NCoef = plant_NCoef;
+	plant_iir_core.ACoef_p = plant_ACoef;
+	plant_iir_core.BCoef_p = plant_BCoef;
+	plant_iir_core.x_p = plant_x;
+	plant_iir_core.y_p = plant_y;
+	iir_double_init(state,&plant_iir_core);
+
+	eff_iir_core.NCoef = eff_NCoef;
+	eff_iir_core.ACoef_p = eff_ACoef;
+	eff_iir_core.BCoef_p = eff_BCoef;
+	eff_iir_core.x_p = eff_x;
+	eff_iir_core.y_p = eff_y;
+	iir_double_init(0,&eff_iir_core);
 }
 
 void processPlant(double effect)
 {
 	// Simple 1st order model
-	plantState += (k_amb * (plantAmbient - plantState) + k_eff * effect + k_amb2 * (plantAmbient - plantState) * (plantAmbient - plantState) ) * timeConst;
-	plantStateFiltered = iir(plantState);
-	
+	double effect_filtered = iir_double(effect, &eff_iir_core);
+	plantState += (k_amb * (plantAmbient - plantState) + k_eff * effect_filtered ) * timeConst;
+	plantStateFiltered = iir_double(plantState, &plant_iir_core);
+
 }
 
 
