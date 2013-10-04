@@ -101,44 +101,36 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 //--------------------------//
 */
 
-//
+// Nice new model
 //--------------------------//
-// PID controller settings
+// PID controller settings:
 // Proportional
-#define Kp	50 //	30			// Restrictions:
-#define PROP_MAX 10000		//	PROP_MAX <= INT16_MAX (type of p_term)
-#define PROP_MIN -10000		//	PROP_MAX / SCALING_FACTOR = PID_OUTPUT_MAX
+#define Kp	43 //	30		// Restrictions:
+#define PROP_MAX 15000		//	PROP_MAX <= INT16_MAX (type of p_term)
+#define PROP_MIN -15000		//	PROP_MAX / SCALING_FACTOR >= PID_OUTPUT_MAX
 
 // Integral term is computed as: i_term = (integAcc += Ki * error)/INTEGRATOR_SCALE;
 // integAcc is limited by INTEGRATOR_MAX and INTEGRATOR_MIN
 // Restrictions:
 //	 INTEGRATOR_MAX / INTEGRATOR_SCALE <= INT16_MAX (type of i_term)
 //	(INTEGRATOR_MAX / INTEGRATOR_SCALE) / SCALING_FACTOR <= PID_OUTPUT_MAX
-#define Ki	40  //	13
-#define INTEGRATOR_MAX 200000
+#define Ki	35  //	13
+#define INTEGRATOR_MAX (50 * 10000)	//500000
 #define INTEGRATOR_MIN 0
-#define INTEGRATOR_SCALE 40
+#define INTEGRATOR_SCALE 100 // (x2.5)
 
 //#define INTEGRATOR_RANGE_LIMIT
-//#define INTEGRATOR_ENABLE_RANGE	160		// 1 count ~ 0.125 Celsius degree
-
+#define INTEGRATOR_ENABLE_RANGE	((PROP_MAX ) / Kp)		// PID input: 1 count ~ 0.125 Celsius degree
 
 #define INTEGRATOR_SOFT_LIMIT
-// 50C
-//#define INTEGRATOR_SOFT_RANGE	80		
-//#define INTEGRATOR_SOFT_MAX		40000 // 10%
-// 90C
-#define INTEGRATOR_SOFT_RANGE	((PROP_MAX / 2) / Kp)		
-//#define INTEGRATOR_SOFT_MAX		80000	// 20%
-#define INTEGRATOR_SOFT_MAX		40000	// 10%
-// 160C
-//#define INTEGRATOR_SOFT_RANGE	160		
-//#define INTEGRATOR_SOFT_MAX		100000 // 25%
+#define INTEGRATOR_SOFT_RANGE	((PROP_MAX/* / 2*/) / Kp)		// Start integrating when p_term is at 50% (error value)
+#define INTEGRATOR_SOFT_MAX		(30 * 10000)					// Intergator maximum when error = 0		
+#define INTEGRATOR_SOFT_K	(INTEGRATOR_SOFT_MAX / INTEGRATOR_SOFT_RANGE)
 
 // Differential
-#define Kd  0//300 //	0
-#define DIFF_MAX	2000
-#define DIFF_MIN	-2000
+#define Kd  400 //	0
+#define DIFF_MAX	3000
+#define DIFF_MIN	-3000
 
 // Common scaling for summ of all terms
 #define SCALING_FACTOR	100
@@ -147,6 +139,53 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue);
 #define PID_OUTPUT_MAX 100
 //--------------------------//
 
+
+/* 15_9
+  //--------------------------//
+  // PID controller settings
+  // Proportional
+  #define Kp	40 //	30			// Restrictions:
+  #define PROP_MAX 10000		//	PROP_MAX <= INT16_MAX (type of p_term)
+  #define PROP_MIN -10000		//	PROP_MAX / SCALING_FACTOR = PID_OUTPUT_MAX
+
+  // Integral term is computed as: i_term = (integAcc += Ki * error)/INTEGRATOR_SCALE;
+  // integAcc is limited by INTEGRATOR_MAX and INTEGRATOR_MIN
+  // Restrictions:
+  //	 INTEGRATOR_MAX / INTEGRATOR_SCALE <= INT16_MAX (type of i_term)
+  //	(INTEGRATOR_MAX / INTEGRATOR_SCALE) / SCALING_FACTOR <= PID_OUTPUT_MAX
+  #define Ki	15  //	13
+  #define INTEGRATOR_MAX 200000
+  #define INTEGRATOR_MIN 0
+  #define INTEGRATOR_SCALE 40
+
+  //#define INTEGRATOR_RANGE_LIMIT
+  //#define INTEGRATOR_ENABLE_RANGE	160		// 1 count ~ 0.125 Celsius degree
+
+
+  #define INTEGRATOR_SOFT_LIMIT
+  // 50C
+  //#define INTEGRATOR_SOFT_RANGE	80
+  //#define INTEGRATOR_SOFT_MAX		40000 // 10%
+  // 90C
+  #define INTEGRATOR_SOFT_RANGE	((PROP_MAX / 2) / Kp)
+  //#define INTEGRATOR_SOFT_MAX		80000	// 20%
+  #define INTEGRATOR_SOFT_MAX		40000	// 10%
+  // 160C
+  //#define INTEGRATOR_SOFT_RANGE	160
+  //#define INTEGRATOR_SOFT_MAX		100000 // 25%
+
+  // Differential
+  #define Kd  0//300 //	0
+  #define DIFF_MAX	2000
+  #define DIFF_MIN	-2000
+
+  // Common scaling for summ of all terms
+  #define SCALING_FACTOR	100
+  // Output limits
+  #define PID_OUTPUT_MIN 0
+  #define PID_OUTPUT_MAX 100
+  //--------------------------//
+  */
 
 extern int16_t dbg_PID_p_term;
 extern int16_t dbg_PID_d_term;

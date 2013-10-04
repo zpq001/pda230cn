@@ -207,6 +207,7 @@ void initPID(uint16_t processValue)
 		mbuf[i] = 0;
 }						
  
+// Nice new model
 uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 {
 	int16_t error, p_term, i_term, d_term, temp;
@@ -236,23 +237,23 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	//------ Calculate I term --------//
 	#ifdef INTEGRATOR_RANGE_LIMIT
 	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
-		integAcc += error * Ki;	
+		integAcc += error * Ki;
 	else
-		integAcc = 0;	
+		integAcc = 0;
 	#else
-		integAcc += error * Ki;	
+	integAcc += error * Ki;
 	#endif
 
 	#ifdef INTEGRATOR_SOFT_LIMIT
 	// Get the limit value
 	//integ_max = (error > INTEGRATOR_SOFT_RANGE) ? INTEGRATOR_SOFT_MAX : INTEGRATOR_MAX;
-	if (error > 200)
+	if (error > INTEGRATOR_SOFT_RANGE)
 		integ_max = 0;
 	else if (error < 0)
 		integ_max = INTEGRATOR_MAX;
 	else
 	{
-		integ_max = (200 - error) * 500;
+		integ_max = (INTEGRATOR_SOFT_RANGE - (int32_t)error) * INTEGRATOR_SOFT_K;
 
 	}
 
@@ -263,7 +264,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	else if (integAcc < INTEGRATOR_MIN)
 	{
 		integAcc = INTEGRATOR_MIN;
-	}		
+	}
 	#else
 	if (integAcc > INTEGRATOR_MAX )
 	{
@@ -272,7 +273,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	else if (integAcc < INTEGRATOR_MIN)
 	{
 		integAcc = INTEGRATOR_MIN;
-	}		
+	}
 	#endif
 	
 	i_term = (int16_t)(integAcc / INTEGRATOR_SCALE);	// Sould not exceed MAXINT16
@@ -315,6 +316,127 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue)
 	return (uint8_t)temp;
 	
 }
+
+/*
+int32_t integ_soft_k;
+
+// Sets maximum integrator value for particular temperature setting point in order to reduce wind-up
+// Argument is Cesius degree
+// Call this function every time when the set point is changed and once during initialization
+void setIntegratorLimit(uint8_t set_temp)
+{
+	uint8_t lim_percent;
+	if (set_temp < 60)
+		lim_percent = 20;
+	else
+		lim_percent = set_temp / 3;	// 20% for 60C, 30% for 90C, about 53% for 160C
+
+	integ_soft_k = ((int32_t)lim_percent * 10000) / INTEGRATOR_SOFT_RANGE;
+}
+*/
+
+/*
+uint8_t processPID(uint16_t setPoint, uint16_t processValue)
+{
+	int16_t error, p_term, i_term, d_term, temp;
+	//////
+	int32_t integ_max;
+	
+	// Get the error
+	error = setPoint - processValue;
+	
+	//------ Calculate P term --------//
+	if (error > (PROP_MAX / Kp))			// Compare before multiplication to avoid overflow
+	{
+		p_term = PROP_MAX;	
+	}
+	else if (error < (PROP_MIN / Kp))
+	{
+		p_term = PROP_MIN;	
+	}
+	else
+	{
+		p_term = error * Kp;
+	}
+	
+	//------ Calculate I term --------//
+	#ifdef INTEGRATOR_RANGE_LIMIT
+	if ((error >= -INTEGRATOR_ENABLE_RANGE) &&	(error <= INTEGRATOR_ENABLE_RANGE))
+	integAcc += error * Ki;
+	else
+	integAcc = 0;
+	#else
+	integAcc += error * Ki;
+	#endif
+
+	#ifdef INTEGRATOR_SOFT_LIMIT
+	// Get the limit value
+	//integ_max = (error > INTEGRATOR_SOFT_RANGE) ? INTEGRATOR_SOFT_MAX : INTEGRATOR_MAX;
+	if (error > 100)
+		integ_max = 0;
+	else if (error < 0)
+		integ_max = INTEGRATOR_MAX;
+	else
+	{
+		integ_max = (200 - (int32_t)error) * 500;
+
+	}
+
+	if (integAcc > integ_max )
+	{
+		integAcc = integ_max;
+	}
+	else if (integAcc < INTEGRATOR_MIN)
+	{
+		integAcc = INTEGRATOR_MIN;
+	}
+	#else
+	if (integAcc > INTEGRATOR_MAX )
+	{
+		integAcc = INTEGRATOR_MAX;
+	}
+	else if (integAcc < INTEGRATOR_MIN)
+	{
+		integAcc = INTEGRATOR_MIN;
+	}
+	#endif
+	
+	i_term = (int16_t)(integAcc / INTEGRATOR_SCALE);	// Sould not exceed MAXINT16
+
+	//------ Calculate D term --------//
+	//d_term = fir_i16_i8((lastProcessValue - processValue), pid_dterm_buffer, &dterm_filter_core);
+	d_term = lastProcessValue - processValue;
+	d_term = Kd * d_term;
+
+	lastProcessValue = processValue;
+	
+	//--------- Summ terms -----------//
+	temp = (p_term + i_term + d_term) / SCALING_FACTOR;
+	
+	if (temp > PID_OUTPUT_MAX)
+	{
+		temp = PID_OUTPUT_MAX;
+	}
+	else if (temp < PID_OUTPUT_MIN)
+	{
+		temp = PID_OUTPUT_MIN;
+	}
+	
+	
+	//------- Debug --------//
+	dbg_PID_p_term = p_term;
+	dbg_PID_d_term = d_term;
+	dbg_PID_i_term = i_term;
+	dbg_PID_output = temp;
+	
+	
+	return temp;
+	
+}
+*/
+
+
+
 
 #endif
 
