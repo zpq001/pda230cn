@@ -99,7 +99,7 @@
 //	 INTEGRATOR_MAX / INTEGRATOR_SCALE <= INT16_MAX (type of i_term)
 //	(INTEGRATOR_MAX / INTEGRATOR_SCALE) / SCALING_FACTOR <= PID_OUTPUT_MAX
 #define Ki	35  //	13
-#define INTEGRATOR_MAX (50 * 10000)	//500000
+#define INTEGRATOR_MAX (50 * 10000L)		//500000
 #define INTEGRATOR_MIN 0
 #define INTEGRATOR_SCALE 100 // (x2.5)
 
@@ -108,7 +108,7 @@
 
 #define INTEGRATOR_SOFT_LIMIT
 #define INTEGRATOR_SOFT_RANGE	((PROP_MAX/* / 2*/) / Kp)		// Start integrating when p_term is at 50% (error value)
-#define INTEGRATOR_SOFT_MAX		(30 * 10000)					// Intergator maximum when error = 0		
+#define INTEGRATOR_SOFT_MAX		(30 * 10000L)					// Intergator maximum when error = 0		
 #define INTEGRATOR_SOFT_K	(INTEGRATOR_SOFT_MAX / INTEGRATOR_SOFT_RANGE)
 
 // Differential
