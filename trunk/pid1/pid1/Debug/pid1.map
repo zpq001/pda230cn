@@ -376,7 +376,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x1c8c
+.text           0x00000000     0x1cca
  *(.vectors)
  .vectors       0x00000000       0x26 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4/crtm8.o
                 0x00000000                __vector_default
@@ -637,107 +637,107 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  .text.initPID  0x000013b6       0x3a src/pid_controller.o
                 0x000013b6                initPID
  .text.processPID
-                0x000013f0      0x14a src/pid_controller.o
+                0x000013f0      0x188 src/pid_controller.o
                 0x000013f0                processPID
  .text.setHeaterPower
-                0x0000153a       0x1a src/power_control.o
-                0x0000153a                setHeaterPower
+                0x00001578       0x1a src/power_control.o
+                0x00001578                setHeaterPower
  .text.setMotorDirection
-                0x00001554       0x42 src/power_control.o
-                0x00001554                setMotorDirection
+                0x00001592       0x42 src/power_control.o
+                0x00001592                setMotorDirection
  .text.stopCycleRolling
-                0x00001596       0x38 src/power_control.o
-                0x00001596                stopCycleRolling
+                0x000015d4       0x38 src/power_control.o
+                0x000015d4                stopCycleRolling
  .text.isTopPointValid
-                0x000015ce       0x20 src/power_control.o
-                0x000015ce                isTopPointValid
+                0x0000160c       0x20 src/power_control.o
+                0x0000160c                isTopPointValid
  .text.isBottomPointValid
-                0x000015ee       0x20 src/power_control.o
-                0x000015ee                isBottomPointValid
+                0x0000162c       0x20 src/power_control.o
+                0x0000162c                isBottomPointValid
  .text.startCycleRolling
-                0x0000160e       0x30 src/power_control.o
-                0x0000160e                startCycleRolling
+                0x0000164c       0x30 src/power_control.o
+                0x0000164c                startCycleRolling
  .text.__vector_16
-                0x0000163e       0x7c src/power_control.o
-                0x0000163e                __vector_16
+                0x0000167c       0x7c src/power_control.o
+                0x0000167c                __vector_16
  .text.__vector_9
-                0x000016ba      0x192 src/power_control.o
-                0x000016ba                __vector_9
+                0x000016f8      0x192 src/power_control.o
+                0x000016f8                __vector_9
  .text.processSoftTimer8b
-                0x0000184c       0x58 src/soft_timer.o
-                0x0000184c                processSoftTimer8b
+                0x0000188a       0x58 src/soft_timer.o
+                0x0000188a                processSoftTimer8b
  .text.processSystemTimers
-                0x000018a4       0xce src/systimer.o
-                0x000018a4                processSystemTimers
+                0x000018e2       0xce src/systimer.o
+                0x000018e2                processSystemTimers
  .text.resetAutoPowerOffCounter
-                0x00001972        0x6 src/systimer.o
-                0x00001972                resetAutoPowerOffCounter
+                0x000019b0        0x6 src/systimer.o
+                0x000019b0                resetAutoPowerOffCounter
  .text.__vector_3
-                0x00001978      0x110 src/systimer.o
-                0x00001978                __vector_3
+                0x000019b6      0x110 src/systimer.o
+                0x000019b6                __vector_3
  .text.Sound_Play
-                0x00001a88       0x24 src/systimer.o
-                0x00001a88                Sound_Play
+                0x00001ac6       0x24 src/systimer.o
+                0x00001ac6                Sound_Play
  .text.Sound_OverrideDisable
-                0x00001aac        0x8 src/systimer.o
-                0x00001aac                Sound_OverrideDisable
+                0x00001aea        0x8 src/systimer.o
+                0x00001aea                Sound_OverrideDisable
  .text.USART_send
-                0x00001ab4        0xa src/usart.o
-                0x00001ab4                USART_send
+                0x00001af2        0xa src/usart.o
+                0x00001af2                USART_send
  .text.USART_sendstr
-                0x00001abe       0x24 src/usart.o
-                0x00001abe                USART_sendstr
+                0x00001afc       0x24 src/usart.o
+                0x00001afc                USART_sendstr
  .text.libgcc.div
-                0x00001ae2       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodqi4.o)
-                0x00001ae2                __udivmodqi4
+                0x00001b20       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodqi4.o)
+                0x00001b20                __udivmodqi4
  .text.libgcc.div
-                0x00001afa       0x26 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodhi4.o)
-                0x00001afa                _div
-                0x00001afa                __divmodhi4
+                0x00001b38       0x26 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodhi4.o)
+                0x00001b38                _div
+                0x00001b38                __divmodhi4
  .text.libgcc.div
-                0x00001b20       0x36 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodsi4.o)
-                0x00001b20                __divmodsi4
+                0x00001b5e       0x36 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_divmodsi4.o)
+                0x00001b5e                __divmodsi4
  .text.libgcc.mul
-                0x00001b56        0xc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_mulhisi3.o)
-                0x00001b56                __mulhisi3
+                0x00001b94        0xc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_mulhisi3.o)
+                0x00001b94                __mulhisi3
  .text.libgcc.mul
-                0x00001b62       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_umulhisi3.o)
-                0x00001b62                __umulhisi3
+                0x00001ba0       0x18 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_umulhisi3.o)
+                0x00001ba0                __umulhisi3
  .text.libgcc.mul
-                0x00001b7a        0xc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_usmulhisi3.o)
-                0x00001b7a                __usmulhisi3
-                0x00001b7c                __usmulhisi3_tail
+                0x00001bb8        0xc c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_usmulhisi3.o)
+                0x00001bb8                __usmulhisi3
+                0x00001bba                __usmulhisi3_tail
  .text.libgcc.mul
-                0x00001b86       0x14 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_muluhisi3.o)
-                0x00001b86                __muluhisi3
+                0x00001bc4       0x14 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_muluhisi3.o)
+                0x00001bc4                __muluhisi3
  .text.libgcc.div
-                0x00001b9a       0x28 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodhi4.o)
-                0x00001b9a                __udivmodhi4
+                0x00001bd8       0x28 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodhi4.o)
+                0x00001bd8                __udivmodhi4
  .text.libgcc.div
-                0x00001bc2       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodsi4.o)
-                0x00001bc2                __udivmodsi4
+                0x00001c00       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_udivmodsi4.o)
+                0x00001c00                __udivmodsi4
  .text.avr-libc
-                0x00001c06       0x12 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(memcpy_P.o)
-                0x00001c06                memcpy_P
+                0x00001c44       0x12 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(memcpy_P.o)
+                0x00001c44                memcpy_P
  .text.avr-libc
-                0x00001c18       0x20 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_block_atmega8.o)
-                0x00001c18                __eerd_block_m8
-                0x00001c1c                __eerd_blraw_m8
+                0x00001c56       0x20 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_block_atmega8.o)
+                0x00001c56                __eerd_block_m8
+                0x00001c5a                __eerd_blraw_m8
  .text.avr-libc
-                0x00001c38       0x10 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_byte_atmega8.o)
-                0x00001c38                __eerd_byte_m8
+                0x00001c76       0x10 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eerd_byte_atmega8.o)
+                0x00001c76                __eerd_byte_m8
  .text.avr-libc
-                0x00001c48       0x1e c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eeupd_block_atmega8.o)
-                0x00001c48                __eeupd_block_m8
+                0x00001c86       0x1e c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eeupd_block_atmega8.o)
+                0x00001c86                __eeupd_block_m8
  .text.avr-libc
-                0x00001c66       0x22 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eeupd_byte_atmega8.o)
-                0x00001c66                __eeupd_byte_m8
-                0x00001c68                __eeupd_r18_m8
-                0x00001c88                . = ALIGN (0x2)
+                0x00001ca4       0x22 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(eeupd_byte_atmega8.o)
+                0x00001ca4                __eeupd_byte_m8
+                0x00001ca6                __eeupd_r18_m8
+                0x00001cc6                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00001c88        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
-                0x00001c88                _exit
-                0x00001c88                exit
+ .fini9         0x00001cc6        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
+                0x00001cc6                _exit
+                0x00001cc6                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -756,11 +756,11 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00001c88        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
+ .fini0         0x00001cc6        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr4\libgcc.a(_exit.o)
  *(.fini0)
-                0x00001c8c                _etext = .
+                0x00001cca                _etext = .
 
-.data           0x00800060       0x6e load address 0x00001c8c
+.data           0x00800060       0x6e load address 0x00001cca
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4/crtm8.o
@@ -866,8 +866,8 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
                 0x008001d1                dbg_PID_i_term
                 0x008001d3                dbg_PID_d_term
                 0x008001d5                PROVIDE (__bss_end, .)
-                0x00001c8c                __data_load_start = LOADADDR (.data)
-                0x00001cfa                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00001cca                __data_load_start = LOADADDR (.data)
+                0x00001d38                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x008001d5        0x0
                 0x008001d5                PROVIDE (__noinit_start, .)
@@ -1006,7 +1006,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x4721
+.debug_info     0x00000000     0x4724
  *(.debug_info)
  .debug_info    0x00000000      0x371 src/adc.o
  .debug_info    0x00000371      0x17f src/buttons.o
@@ -1017,14 +1017,14 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  .debug_info    0x00001d62     0x1180 src/menu.o
  .debug_info    0x00002ee2      0x149 src/my_string.o
  .debug_info    0x0000302b      0x94e src/pid1.o
- .debug_info    0x00003979      0x255 src/pid_controller.o
- .debug_info    0x00003bce      0x341 src/power_control.o
- .debug_info    0x00003f0f      0x161 src/soft_timer.o
- .debug_info    0x00004070      0x5cf src/systimer.o
- .debug_info    0x0000463f       0xe2 src/usart.o
+ .debug_info    0x00003979      0x258 src/pid_controller.o
+ .debug_info    0x00003bd1      0x341 src/power_control.o
+ .debug_info    0x00003f12      0x161 src/soft_timer.o
+ .debug_info    0x00004073      0x5cf src/systimer.o
+ .debug_info    0x00004642       0xe2 src/usart.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000     0x1686
+.debug_abbrev   0x00000000     0x1677
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x18a src/adc.o
  .debug_abbrev  0x0000018a       0x98 src/buttons.o
@@ -1035,13 +1035,13 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  .debug_abbrev  0x00000a03      0x33b src/menu.o
  .debug_abbrev  0x00000d3e       0xbb src/my_string.o
  .debug_abbrev  0x00000df9      0x263 src/pid1.o
- .debug_abbrev  0x0000105c      0x12b src/pid_controller.o
- .debug_abbrev  0x00001187      0x195 src/power_control.o
- .debug_abbrev  0x0000131c       0xba src/soft_timer.o
- .debug_abbrev  0x000013d6      0x202 src/systimer.o
- .debug_abbrev  0x000015d8       0xae src/usart.o
+ .debug_abbrev  0x0000105c      0x11c src/pid_controller.o
+ .debug_abbrev  0x00001178      0x195 src/power_control.o
+ .debug_abbrev  0x0000130d       0xba src/soft_timer.o
+ .debug_abbrev  0x000013c7      0x202 src/systimer.o
+ .debug_abbrev  0x000015c9       0xae src/usart.o
 
-.debug_line     0x00000000     0x1dda
+.debug_line     0x00000000     0x1dde
  *(.debug_line)
  .debug_line    0x00000000      0x16e src/adc.o
  .debug_line    0x0000016e      0x112 src/buttons.o
@@ -1052,11 +1052,11 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  .debug_line    0x00000d29      0x52e src/menu.o
  .debug_line    0x00001257      0x120 src/my_string.o
  .debug_line    0x00001377      0x2a3 src/pid1.o
- .debug_line    0x0000161a      0x12c src/pid_controller.o
- .debug_line    0x00001746      0x1d2 src/power_control.o
- .debug_line    0x00001918       0xfe src/soft_timer.o
- .debug_line    0x00001a16      0x2d2 src/systimer.o
- .debug_line    0x00001ce8       0xf2 src/usart.o
+ .debug_line    0x0000161a      0x130 src/pid_controller.o
+ .debug_line    0x0000174a      0x1d2 src/power_control.o
+ .debug_line    0x0000191c       0xfe src/soft_timer.o
+ .debug_line    0x00001a1a      0x2d2 src/systimer.o
+ .debug_line    0x00001cec       0xf2 src/usart.o
 
 .debug_frame    0x00000000      0x970
  *(.debug_frame)
@@ -1106,7 +1106,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  .debug_str     0x0000129b       0x1a src/usart.o
                                  0xdc (size before relaxing)
 
-.debug_loc      0x00000000     0x1af6
+.debug_loc      0x00000000     0x1b00
  *(.debug_loc)
  .debug_loc     0x00000000      0x268 src/adc.o
  .debug_loc     0x00000268       0x69 src/buttons.o
@@ -1117,11 +1117,11 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.876/avr8
  .debug_loc     0x00000e7f      0x30f src/menu.o
  .debug_loc     0x0000118e      0x219 src/my_string.o
  .debug_loc     0x000013a7      0x12a src/pid1.o
- .debug_loc     0x000014d1      0x1e6 src/pid_controller.o
- .debug_loc     0x000016b7      0x1f5 src/power_control.o
- .debug_loc     0x000018ac       0x47 src/soft_timer.o
- .debug_loc     0x000018f3      0x172 src/systimer.o
- .debug_loc     0x00001a65       0x91 src/usart.o
+ .debug_loc     0x000014d1      0x1f0 src/pid_controller.o
+ .debug_loc     0x000016c1      0x1f5 src/power_control.o
+ .debug_loc     0x000018b6       0x47 src/soft_timer.o
+ .debug_loc     0x000018fd      0x172 src/systimer.o
+ .debug_loc     0x00001a6f       0x91 src/usart.o
 
 .debug_macinfo
  *(.debug_macinfo)
