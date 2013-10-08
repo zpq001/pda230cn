@@ -44,93 +44,7 @@ typedef struct
 #define MIN_CALIB_TEMP		10
 #define CALIB_TEMP_STEP		1
 
-
-// PID regulator
-
-// PID call interval is defined at module systimer.h
-
-//#define Kp	15
-//#define Ki	5 
-//#define Kd	80 
-//#define SCALING_FACTOR	5
-
-
 //--------------------------------------------//
- 
-/* 11_6			T = 5s				<- best
-#define Kp		75
-#define Ki		1
-#define Kd		40
-#define INC_SCALING_FACTOR	100
-*/
-/* 11_7			T = 5s
-#define Kp		75
-#define Ki		2
-#define Kd		30
-#define INC_SCALING_FACTOR	100
-*/
-/* 11_8			T = 5s
-#define Kp		75
-#define Ki		1
-#define Kd		25
-#define INC_SCALING_FACTOR	100
-*/
-/* 11_9			Ts = 5s
-#define Kp		75
-#define Ki		1
-#define Kd		50
-#define INC_SCALING_FACTOR	100
-*/
-/* 11_10		Ts = 5s
-#define Kp		100
-#define Ki		1
-#define Kd		50
-#define INC_SCALING_FACTOR	100
-*/
-/* 11_11		Ts = 5s
-#define Kp		50
-#define Ki		1
-#define Kd		40
-#define INC_SCALING_FACTOR	100
-*/
-/* 11_12		Ts = 5s				<- not bad
-#define Kp		50
-#define Ki		1
-#define Kd		40
-#define INC_SCALING_FACTOR	100
-*/
-/* 12_1			Ts = 2s
-#define Kp		10
-#define Ki		5
-#define Kd		80
-#define SCALING_FACTOR	5
-*/
-/*	12_2 12_3 12_4
-#define Kp		10
-#define Ki		5
-#define Kd		80
-#define SCALING_FACTOR	5
-*/
-/*	// 12_5		Ts = 2s
-#define Kp		10
-#define Ki		5
-#define Kd		80
-#define SCALING_FACTOR	5
-*/
-/*		// 12_6
-#define Kp		10
-#define Ki		5
-#define Kd		20
-#define SCALING_FACTOR	5
-*/
-/*
-// LAST
-#define Kp		10
-#define Ki		5
-#define Kd		50
-#define SCALING_FACTOR	5
-*/
- //--------------------------------------------//
 
 #define POFF_MOTOR_TRESHOLD	50				// Below this temperature point motor will stop
 											// if auto power off mode is active
@@ -144,10 +58,13 @@ typedef struct
 #define SAFE_TEMP_INTERVAL	20				// Safe interval for growing temperature with heater disabled alert
 											// in units of Celsius degree
 
+// rollState bits are found in power_control.h
 
 // heaterState	bits
-#define HEATER_ENABLED				0x01
-#define CALIBRATION_ACTIVE			0x02
+#define HEATER_ENABLED				0x01	// must be equal to PID_ENABLED
+#define CALIBRATION_ACTIVE			0x02	
+#define RESET_PID					0x04	// must be equal to PID_RESET_INTEGRATOR
+#define SETPOINT_CHANGED			0x08
 
 // autoPowerOffState bits
 #define AUTO_POFF_ACTIVE	0x01
@@ -176,8 +93,8 @@ extern int16_t dbg_PID_output;
 
 
 void processRollControl(void);
-void heaterInit(void);
 void processHeaterControl(void);
+void processHeaterEvents(void);
 void processHeaterAlerts(void);
 uint8_t restoreGlobalParams(void);		// Returns zero if EEPROM data CRC is correct
 //void restoreGlobalParams(void);

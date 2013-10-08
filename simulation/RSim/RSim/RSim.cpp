@@ -48,7 +48,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	float tempSetting;							// Temperature setting
 	bool reg_enabled;								// Heater ON/OFF
-
+	uint8_t pid_mode;
 	
 	char *input_fname;
 	char *output_dir;
@@ -158,15 +158,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	initPlant((float)myVectorReader.StartConditions.Ambient, (float)myVectorReader.StartConditions.SystemState); 
 	processPlant(0);
 
-	// Initialize PID controller
-	// Calculate process value
-	plantState = (float)getPlantState();					
-	processF = (plantState + offset_norm) / k_norm;	
-	processF *= 4;
-	//processF /= 2;
-	processValue = (uint16_t)processF;
-	initPID(processValue);	
-
+	// Initialize PID controller 
+	setPIDIntegratorLimit(0);
 	
 	// Initial simulator state
 	reg_enabled = false;		// heater OFF
@@ -209,8 +202,13 @@ int _tmain(int argc, _TCHAR* argv[])
 				break;
 			}
 			
-			tempSetting = (float)currentVector.ForceValue;		
 			reg_enabled = currentVector.ProcessEnabled;
+			if (reg_enabled)
+			{
+				tempSetting = (float)currentVector.ForceValue;		
+				setPIDIntegratorLimit((int)tempSetting);
+			}
+			
 			if (reg_enabled)
 				printf("%10lu sec. New setting = %.2f\n", currentVector.TimeStamp, tempSetting);
 			else
@@ -235,13 +233,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		else
 		{
-				if (!reg_enabled)
-				{
-					#ifdef PID_INCREMENTAL
-					initPID(0);
-					#endif
-				}
-				else if (update_PID_control)
+				if (update_PID_control)
 				{	
 					// Calculate process value
 					plantState = (float)getPlantState();					
@@ -257,14 +249,10 @@ int _tmain(int argc, _TCHAR* argv[])
 					setPoint = (uint16_t)setPointF;	
 			
 					// PID
-					#ifdef PID_INCREMENTAL
-					if (setPoint != setPoint_old)
-					{
-						initPID(0);
-						setPoint_old = setPoint;
-					}
-					#endif
-					effect = processPID(setPoint, processValue);
+					pid_mode = 0;
+					if (reg_enabled)
+						pid_mode |= PID_ENABLED;
+					effect = processPID(setPoint, processValue,pid_mode);
 				}
 		}
 		

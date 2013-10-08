@@ -80,6 +80,11 @@ void process_buttons()
 		composed_state |= BR_UP;	
 	if (button_action_rep & BD_DOWN)
 		composed_state |= BR_DOWN;
+		
+	if (button_action_up_short & BD_HEATCTRL)
+		composed_state |= BS_HEATCTRL;
+	if (button_action_long & BD_HEATCTRL)
+		composed_state |= BL_HEATCTRL;
 
 	button_state = composed_state;
 }
