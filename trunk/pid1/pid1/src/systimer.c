@@ -252,11 +252,6 @@ const EEMEM tone_t m_beep_1000Hz_1000ms[] = {
 	{0,	0}	
 };
 
-const EEMEM tone_t m_beep_1000Hz_200ms[] = {
-	{ FREQ(1000),	LAST(200) },
-	{0,	0}
-};
-
 const EEMEM tone_t m_beep_1000Hz_100ms[] = {
 	{ FREQ(1000),	LAST(100) },
 	{0,	0}
@@ -327,6 +322,15 @@ const EEMEM tone_t m_siren3[] = {
 	{ FREQ(1200),	LAST(50) },
 	{0,	0}
 };
+
+
+const EEMEM tone_t m_siren4[] = {
+	{ FREQ(1100),	LAST(50) },
+	{ FREQ(900),	LAST(50) },
+	{ FREQ(1200),	LAST(50) },
+	{0,	0}
+};
+
 
 
 

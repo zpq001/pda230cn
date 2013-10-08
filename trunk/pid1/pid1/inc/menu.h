@@ -54,7 +54,7 @@ typedef struct {
 #define 	TIMEOUT_MASK	0x0F	// timeouts = 0 to 15 (in units of 4x processMenu() call period)
 
 // Jump condition flags:
-#define		TMR_EXP			0x8000
+#define		TMR_EXP			0x8000	// make sure these bits are not used by buttons
 #define 	GOTO_POFF		0x4000
 
 

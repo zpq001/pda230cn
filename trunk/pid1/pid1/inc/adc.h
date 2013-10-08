@@ -18,6 +18,7 @@
 #define SENSOR_ERROR_NO_PRESENT	(1<<0)
 #define SENSOR_ERROR_SHORTED	(1<<1)
 
+#define ADC_OVERSAMPLE_RATE		4
 
 extern uint16_t adc_normalized;
 extern int16_t adc_celsius;

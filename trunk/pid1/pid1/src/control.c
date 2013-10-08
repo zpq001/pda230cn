@@ -73,6 +73,8 @@ cParams_t cp;		// Calibration params are saved only after calibration of any of 
 uint8_t heaterState = 0;				// Global heater flags
 uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode is active.
 										// Flag is set and cleared in menu module.
+static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Used for monitoring temperature setup changes
+													// Init with value that can never be set
 
 //------- Debug --------//
 uint8_t 	dbg_SetPointCelsius;	// Temperature setting, Celsius degree
@@ -180,7 +182,7 @@ void processRollControl(void)
 			
 		if (beepState & 0x80)		// Roll cycle done
 		{
-			Sound_Play(m_beep_1000Hz_200ms);	
+			Sound_Play(m_siren4);	
 		}		
 		else if (beepState & 0x40)	// Roll cycle start fail
 		{
@@ -207,12 +209,6 @@ void processRollControl(void)
 
 
 
-void heaterInit(void)
-{
-	// FIXME
-	//initPID(adc_filtered >> 1);
-}
-
 
 void processHeaterControl(void)
 {
@@ -222,18 +218,39 @@ void processHeaterControl(void)
 	uint16_t pid_output = 0;
 	
 	// Process heater ON/OFF control by button
-	if (button_state & BD_HEATCTRL)
+	if (button_state & BS_HEATCTRL)
 	{
 		heaterState ^= HEATER_ENABLED;
 		// Force update heater power
-		sys_timers.flags |= UPDATE_PID;		// Not very good approach if UPDATE_PID flag is used somewhere else
+		sys_timers.flags |= UPDATE_PID;		// Not very good approach if UPDATE_PID flag is used outside this function
+	}
+	
+	// Process PID controller reset
+	if (button_state & BL_HEATCTRL)
+	{
+		heaterState |= RESET_PID;
+		// Force update heater power
+		sys_timers.flags |= UPDATE_PID;
+	}
+	else
+	{
+		heaterState &= ~RESET_PID;
 	}
 	
 	// Process auto power off control and sensor errors
 	if ((autoPowerOffState & AUTO_POFF_ACTIVE) || (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED)))
 	{
 		heaterState &= ~HEATER_ENABLED;
-	}		
+	}	
+
+	// Update integrator limits if setpoint is changed
+	if (heaterState & SETPOINT_CHANGED)
+	{
+		setPIDIntegratorLimit(p.setup_temp_value);
+		// Force update heater power
+		sys_timers.flags |= UPDATE_PID;
+	}
+
 	
 	// Check if heater control should be updated
 	// PID call interval is a multiple of Celsius update interval. 
@@ -242,25 +259,18 @@ void processHeaterControl(void)
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
 
-		setPoint = set_value_adc * 4;		
-		//setPoint >>= 1;
-		//processValue = adc_filtered >> 1;	// normal PID control
+		// PID input: 1 count ~ 0.125 Celsius degree (see adc.c)
+		setPoint = set_value_adc * ADC_OVERSAMPLE_RATE;		
 		processValue = adc_filtered;
 		
 		// Process PID
-		// Possibly hold PID in reset while disabled ?
-		// Reset when setting is changed ?
-		if (heaterState & HEATER_ENABLED)
-			pid_output = processPID(setPoint, processValue);		
-		else
-			initPID(processValue);
-					
-		// If heater is disabled, override output
-		if (!(heaterState & HEATER_ENABLED))
-			pid_output = 0;
-		// If unregulated mode is selected, set full power
-		else if (p.setup_temp_value >= MAX_SET_TEMP)
-			pid_output = HEATER_MAX_POWER;		// This mode must be used with care for calibration only
+		// If heater is disabled, output will be 0
+		pid_output = processPID(setPoint, processValue, heaterState);		
+		
+		// If unregulated mode is selected, override PID output 
+		// This mode must be used with care for calibration only
+		if ((heaterState & HEATER_ENABLED) && (p.setup_temp_value >= MAX_SET_TEMP))
+			pid_output = HEATER_MAX_POWER;		
 			
 		// Set new heater power value	
 		setHeaterPower(pid_output);	
@@ -287,11 +297,25 @@ void processHeaterControl(void)
 }
 
 
+// Function to monitor heater events
+void processHeaterEvents(void)
+{
+	// Generate temperature changed event
+	if (setPoint_prev != p.setup_temp_value)
+	{
+		heaterState |= SETPOINT_CHANGED;
+		setPoint_prev = p.setup_temp_value;
+	}
+	else
+	{
+		heaterState &= ~SETPOINT_CHANGED;
+	}
+}
 
 
 // Function to process all heater alerts:
 //	- sensor errors
-//	- getting near to desired temperature
+//	- getting close to desired temperature
 //	- continuous heating when disabled
 void processHeaterAlerts(void)
 {

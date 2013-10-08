@@ -33,6 +33,9 @@
 #define BR_UP		0x0400
 #define BR_DOWN		0x0800
 
+#define BS_HEATCTRL	0x1000
+#define BL_HEATCTRL	0x2000
+
 /*
 // Button signals
 #define LONG_PRESS_EVENT	0x01	// set and cleared

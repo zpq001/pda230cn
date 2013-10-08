@@ -95,6 +95,10 @@ void calculateCoeffs(void)
 	To get result with n extra bits the summ of 4^n samples must be divided by 2^n.
 	If we want 12-bit result from 10-bit raw ADC, we should get 4^2 = 16 samples, summ them and
 	divide by 2^2 = 4 (equal to right-shift by 2)
+	
+	adc_oversampled (adc_filtered) is about 8x celsius_degree - 
+		~2x - hardware ADC scale
+		4x - oversampling
 */
 
 

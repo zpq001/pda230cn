@@ -1,4 +1,4 @@
-﻿Build started 04.10.2013 17:42:40.
+﻿Build started 08.10.2013 16:55:29.
      1>Project "E:\gdocs\pda230cn\simulation\RSim\RSim\RSim.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\RSim.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -32,4 +32,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.35
+Time Elapsed 00:00:02.32

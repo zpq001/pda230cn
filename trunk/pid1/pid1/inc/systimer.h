@@ -75,7 +75,6 @@ void Sound_Play(const tone_t* p_melody);
 void Sound_Stop(void);
 void Sound_OverrideDisable(void);
 
-extern const tone_t m_beep_1000Hz_200ms[];
 extern const tone_t m_beep_1000Hz_100ms[];
 extern const tone_t m_beep_1000Hz_40ms[];
 extern const tone_t m_beep_800Hz_40ms[];
@@ -84,6 +83,7 @@ extern const tone_t m_beep_err1[];
 extern const tone_t m_siren1[];
 extern const tone_t m_siren2[];
 extern const tone_t m_siren3[];
+extern const tone_t m_siren4[];
 extern const tone_t m_beep_warn_poff[];
 
 // Every melody table must be terminated with tone pair where duration = 0

@@ -1,0 +1,1 @@
+RSim -input "Test vector OFF.txt" -outdir .\output\\ -mode NORMAL

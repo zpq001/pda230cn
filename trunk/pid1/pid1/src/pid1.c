@@ -144,9 +144,6 @@ int main(void)
 	// Get oversampled and filtered ADC for PID controller
 	update_normalized_adc();
 	
-	// Call PID controller function in order to initialize it's internal structures
-	heaterInit();	// Possibly useless?
-	
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
 	// Clear timer
@@ -167,7 +164,7 @@ int main(void)
 			process_buttons();
 			
 			// Give sound feedback
-			if (button_state & BL_MENU)
+			if (button_state & (BL_MENU | BL_HEATCTRL)
 			{
 				Sound_Play(m_beep_800Hz_40ms);
 			}
@@ -212,10 +209,14 @@ int main(void)
 			// Process cyclic rolling, direction control
 			processRollControl();	
 			
+			// Process heater events monitoring
+			// Must be called before processHeaterControl()
+			processHeaterEvents();
+			
 			// Process heater regulation
 			processHeaterControl();
 		
-			// Process heater events and warnings
+			// Process heater warnings
 			processHeaterAlerts();
 			
 			
@@ -225,12 +226,12 @@ int main(void)
 			{
 				
 				logU16p(adc_celsius);					// Actual temp Celsius
-				logU16p(adc_oversampled);				// Actual temp (ADC), oversampled
+				logU16p(adc_normalized);				// Actual temp (ADC), normalized
 				logU16p(adc_filtered);					// Actual temp (ADC), oversampled, filtered
 				USART_sendstr("    ");
 				
-				logU16p(dbg_SetPointPID);				// Temp setting, as input to PID
-				logU16p(dbg_RealTempPID);				// Real temp, sampled for PID input
+				logU16p(dbg_SetPointPID);				// PID setpoint
+				logU16p(dbg_RealTempPID);				// PID process value
 				
 				logI32p(dbg_PID_p_term);				// p term
 				logI32p(dbg_PID_d_term);				// d term
