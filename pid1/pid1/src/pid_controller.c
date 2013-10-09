@@ -23,10 +23,10 @@ int16_t dbg_PID_output;
 //TODO: check code size with integAcc declared as static local or global
 
 
-int32_t integ_soft_k;
+static int32_t integ_soft_k;
 
 // Sets maximum integrator value for particular temperature setting point in order to reduce wind-up
-// Argument is Cesius degree
+// Argument is Celsius degree
 // Call this function every time when the set point is changed and once during initialization
 void setPIDIntegratorLimit(uint8_t set_temp)
 {
@@ -77,10 +77,10 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	if (!(mode & PID_RESET_INTEGRATOR))
 		integAcc += error * Ki;
 	else
-		integAcc = 0;		// May be usefull for debug
+		integAcc = 0;		// May be useful for debug
 
 	#ifdef INTEGRATOR_SOFT_LIMIT
-	// Soft limit is a monotone line function f(error), f(error) = 0 when error = INTEGRATOR_SOFT_RANGE
+	// Soft limit is a monotone linear function f(error), f(error) = 0 when error = INTEGRATOR_SOFT_RANGE
 	// growing up to f(error) = INTEGRATOR_SOFT_MAX when error = 0
 	if (error > INTEGRATOR_SOFT_RANGE)
 		integ_max = 0;

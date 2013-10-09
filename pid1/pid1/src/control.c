@@ -79,7 +79,6 @@ static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Used for monitoring temperat
 //------- Debug --------//
 uint8_t 	dbg_SetPointCelsius;	// Temperature setting, Celsius degree
 uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
-uint8_t 	dbg_RealTempCelsius;	// Real temperature, Celsius degree
 uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
 
 
@@ -243,7 +242,7 @@ void processHeaterControl(void)
 		heaterState &= ~HEATER_ENABLED;
 	}	
 
-	// Update integrator limits if setpoint is changed
+	// Update integrator limits if set point is changed
 	if (heaterState & SETPOINT_CHANGED)
 	{
 		setPIDIntegratorLimit(p.setup_temp_value);
@@ -280,7 +279,6 @@ void processHeaterControl(void)
 		// PID input:
 		dbg_SetPointCelsius = (heaterState & HEATER_ENABLED) ? p.setup_temp_value : 0;
 		dbg_SetPointPID = (heaterState & HEATER_ENABLED) ? setPoint : 0;
-		dbg_RealTempCelsius = adc_filtered;
 		dbg_RealTempPID = processValue;
 		// PID output:
 		// updated in PID controller function
