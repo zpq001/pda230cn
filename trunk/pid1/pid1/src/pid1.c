@@ -164,7 +164,7 @@ int main(void)
 			process_buttons();
 			
 			// Give sound feedback
-			if (button_state & (BL_MENU | BL_HEATCTRL)
+			if (button_state & (BL_MENU | BL_HEATCTRL))
 			{
 				Sound_Play(m_beep_800Hz_40ms);
 			}
