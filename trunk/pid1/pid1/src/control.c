@@ -278,7 +278,7 @@ void processHeaterControl(void)
 		//------- Debug --------//		
 		// PID input:
 		dbg_SetPointCelsius = (heaterState & HEATER_ENABLED) ? p.setup_temp_value : 0;
-		dbg_SetPointPID = (heaterState & HEATER_ENABLED) ? setPoint : 0;
+		dbg_SetPointPID = (heaterState & HEATER_ENABLED) ? setPoint : 0;					//TODO: fix
 		dbg_RealTempPID = processValue;
 		// PID output:
 		// updated in PID controller function
