@@ -53,7 +53,7 @@ static void init_system_io()
 	TCCR0 = (1<<CS02 | 0<<CS01 | 1<<CS00);
 	TCNT0 = 0;
 	// Clear interrupt flag
-	TIFR |= (1<<TOV0);
+	TIFR = (1<<TOV0);
 	// Enable interrupts from timer 0
 	TIMSK |= (1<<TOIE0);
 	
@@ -140,9 +140,10 @@ int main(void)
 	InitMenu();
 	// Beep
 	Sound_Play(m_beep_1000Hz_100ms);
+	
 	// When we get here, full ADC buffer have been sampled
 	// Get oversampled and filtered ADC for PID controller
-	update_normalized_adc();
+	// update_normalized_adc();	// not required here
 	
 	// Start rotating
 	setMotorDirection(ROLL_FWD);

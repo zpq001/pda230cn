@@ -9,16 +9,16 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-
-#define ADC_BUFFER_LENGTH 32
-#define COEFF_SCALE	1000L
+#define ADC_OVERSAMPLE_RATE		4
+#define ADC_BUFFER_LENGTH 		32
+#define COEFF_SCALE				1000L
 
 
 // adc_status bits:
 #define SENSOR_ERROR_NO_PRESENT	(1<<0)
 #define SENSOR_ERROR_SHORTED	(1<<1)
 
-#define ADC_OVERSAMPLE_RATE		4
+
 
 extern uint16_t adc_normalized;
 extern int16_t adc_celsius;

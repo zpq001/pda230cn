@@ -468,6 +468,9 @@ void saveGlobalParamsToEEPROM(void)
 
 void exitPowerOff(void)
 {
+	// Disable all interrupts
+	cli();
+	
 	// Put all ports into HI-Z
 	DDRB = 0x00;
 	PORTB = 0x00;
@@ -475,9 +478,6 @@ void exitPowerOff(void)
 	PORTC = 0x00;
 	DDRD = 0x00;
 	PORTD = 0x00;
-	
-	// Disable all interrupts
-	cli();
 	
 	saveGlobalParamsToEEPROM();
 	

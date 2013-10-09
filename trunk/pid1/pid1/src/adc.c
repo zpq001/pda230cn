@@ -107,12 +107,12 @@ void update_normalized_adc()
 	uint8_t i;
 	uint16_t adc_raw_summ = 0;
 	// Disable interrupts from ADC - to save data integrity
-	ADCSRA &= ~(1<<ADIE);	
+	ADCSRA &= ~(1<<ADIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
 	// Get normalized mean window summ
 	for (i=0;i<ADC_BUFFER_LENGTH;i++)
 		adc_raw_summ += raw_adc_buffer[i];
 	// Enable interrupts from ADC
-	ADCSRA |= (1<<ADIE);
+	ADCSRA |= (1<<ADIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
 	
 	adc_normalized = adc_raw_summ >> 5;		// ADC_BUFFER_LENGTH = 32 !
 	adc_oversampled = adc_raw_summ >> 3;	// adc_oversampled is 4 times greater than adc_normalized
