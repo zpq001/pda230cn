@@ -26,25 +26,28 @@ int16_t dbg_PID_output;
 
 //TODO: increase resolution of PID output
 //TODO: check code size with integAcc declared as static local or global
+//TODO: pack debug info into structure
+//TODO: optimize log - use pointers, etc
 
 
-
-int32_t integ_soft_k;
+static uint16_t integ_soft_k;
 
 // Sets maximum integrator value for particular temperature setting point in order to reduce wind-up
-// Argument is Cesius degree
+// Argument is Celsius degree
 // Call this function every time when the set point is changed and once during initialization
 void setPIDIntegratorLimit(uint8_t set_temp)
 {
-	uint8_t lim_percent;
-	if (set_temp < 60)
-		lim_percent = 20;
-	else
-		lim_percent = set_temp / 3;	// 20% for 60C, 30% for 90C, about 53% for 160C
-
-	integ_soft_k = ((int32_t)lim_percent * 10000) / INTEGRATOR_SOFT_RANGE;
+	// Integrator maximum is computed as integ_soft_k * (INTEGRATOR_SOFT_RANGE - error), see the processPID()
+	// When error = 0, maximum is simply integ_soft_k * INTEGRATOR_SOFT_RANGE
+	// integ_soft_k is chosen for desired maximum
+	// For example, we want integrator maximum of about 30% at 90C. Then integ_soft_k = 300_000 / INTEGRATOR_SOFT_RANGE = 862
+	// The "magic" coefficient in the integ_soft_k expression should be 862 / (90 - 15) = 11.49 => 12
+	
+	if (set_temp < 50)
+		set_temp = 50;
+	set_temp -= 15;
+	integ_soft_k = (uint16_t)set_temp * 12;
 }
-
 
 
 
@@ -83,10 +86,10 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	if (!(mode & PID_RESET_INTEGRATOR))
 		integAcc += error * Ki;
 	else
-		integAcc = 0;		// May be usefull for debug
+		integAcc = 0;		// May be useful for debug
 
 	#ifdef INTEGRATOR_SOFT_LIMIT
-	// Soft limit is a monotone line function f(error), f(error) = 0 when error = INTEGRATOR_SOFT_RANGE
+	// Soft limit is a monotone linear function f(error), f(error) = 0 when error = INTEGRATOR_SOFT_RANGE
 	// growing up to f(error) = INTEGRATOR_SOFT_MAX when error = 0
 	if (error > INTEGRATOR_SOFT_RANGE)
 		integ_max = 0;
@@ -95,7 +98,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	else
 	{
 		//integ_max = (INTEGRATOR_SOFT_RANGE - (int32_t)error) * INTEGRATOR_SOFT_K;
-		integ_max = (INTEGRATOR_SOFT_RANGE - (int32_t)error) * integ_soft_k;
+		//integ_max = (INTEGRATOR_SOFT_RANGE - (int32_t)error) * integ_soft_k;
+		integ_max = (int32_t)(INTEGRATOR_SOFT_RANGE - error) * integ_soft_k;	// <- optimized
 	}
 
 	if (integAcc > integ_max )
@@ -160,6 +164,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	
 	return (uint8_t)temp;	
 }
+
 
 
 

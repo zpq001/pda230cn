@@ -1,10 +1,9 @@
-﻿Build started 08.10.2013 16:55:29.
+﻿Build started 09.10.2013 16:02:57.
      1>Project "E:\gdocs\pda230cn\simulation\RSim\RSim\RSim.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\RSim.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\inc /I.\src /ZI /nologo /W3 /WX- /Od /Oy- /D nPID_DIRECT /D nPID_INCREMENTAL /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHs /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt RSim.cpp
-         RSim.cpp
+         All outputs are up-to-date.
          C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I.\inc /I.\src /ZI /nologo /W3 /WX- /Od /Oy- /D nPID_DIRECT /D nPID_INCREMENTAL /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHs /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt src\pid_controller.c
          pid_controller.c
        ManifestResourceCompile:
@@ -32,4 +31,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.32
+Time Elapsed 00:00:01.06

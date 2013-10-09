@@ -37,7 +37,7 @@ uint8_t p_state = 0x0F;			// default state - if AC line sync is present,
 void setHeaterPower(uint16_t value)
 {
 	// Disable interrupts from analog comparator
-	ACSR &= ~(1<<ACIE);
+	ACSR &= ~(1<<ACIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
 	// Update value
 	heaterPower = (value > HEATER_MAX_POWER) ? HEATER_MAX_POWER : value;
 	// Reenable interrupts
@@ -50,7 +50,7 @@ void setHeaterPower(uint16_t value)
 void setMotorDirection(uint8_t dir)
 {
 	// Disable interrupts from timer0 
-	TIMSK &= ~(1<<TOIE0);
+	TIMSK &= ~(1<<TOIE0);	// safe - TIMSK contains only interrupt enable bits and is accessed only from normal mode, not ISRs
 		
 	newDirReq = dir;	// save new direction request
 	dirChangedMask = ~ROLL_DIR_CHANGED;
@@ -103,28 +103,39 @@ void stopCycleRolling(uint8_t doResetPoints)
 
 uint8_t isTopPointValid(void)
 {
-	return (	(int16_t)(topPoint - rollPoint) >= 0 );
+	// Disable interrupt that can change rollPoint
+	TIMSK &= ~(1<<TOIE0);	// safe - TIMSK contains only interrupt enable bits and is accessed only from normal mode, not ISRs
+	uint8_t temp = ( (int16_t)(topPoint - rollPoint) >= 0 );
+	TIMSK |= (1<<TOIE0);
+	return temp;
 }
 
 uint8_t isBottomPointValid(void)
 {
-	return (	(int16_t)(rollPoint - bottomPoint) >= 0	);
+	// Disable interrupt that can change rollPoint
+	TIMSK &= ~(1<<TOIE0);	// safe - TIMSK contains only interrupt enable bits and is accessed only from normal mode, not ISRs
+	uint8_t temp = ( (int16_t)(rollPoint - bottomPoint) >= 0 );
+	TIMSK |= (1<<TOIE0);
+	return temp;
 }
 
 //---------------------------------------------//
 //---------------------------------------------//
 //---------------------------------------------//
 
+// Function is called from Timer0 ISR only
 static inline uint8_t reachedTopPoint(void)
 {
 	return (	(int16_t)(topPoint - rollPoint) <= 0 );
 }
 
+// Function is called from Timer0 ISR only
 static inline uint8_t reachedBottomPoint(void)
 {
 	return (	(int16_t)(rollPoint - bottomPoint) <= 0 );
 }
 
+// Function is called from Timer0 ISR only
 static inline void updateRollPoint(void)
 {	
 	if (rollState & ROLL_FWD)
@@ -137,6 +148,7 @@ static inline void updateRollPoint(void)
 
 // Function to process rolling - sets rotation direction for next period
 // Call once per each AC line period
+// Function is called from Timer0 ISR only
 static inline void controlRolling()
 {
 	// Process cycle rolling
@@ -206,7 +218,7 @@ ISR(ANA_COMP_vect)
 	uint16_t delta;
 	
 	// Once triggered, disable further comparator interrupt
-	ACSR &= ~(1<<ACIE);
+	ACSR &= ~(1<<ACIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
 	
 	// Process heater delta-sigma modulator
 	if (sigma >= HEATER_MAX_POWER)
@@ -223,7 +235,7 @@ ISR(ANA_COMP_vect)
 	
 	// Reprogram timer0
 	TCNT0 = 256 - TRIAC_IMPULSE_TIME;		// Triac gate impulse time
-	TIFR |= (1<<TOV0);						// Clear interrupt flag
+	TIFR = (1<<TOV0);						// Clear interrupt flag - safe, only TOV0 bit is cleared
 	// Modify state	
 	p_state &= ~STATE_MASK;					// Start new state machine cycle
 	p_state ^= HALF_PERIOD_FLAG;			// Toggle flag
@@ -252,7 +264,7 @@ ISR(TIMER0_OVF_vect)
 		case 0x02:
 			TCNT0 = 256 - SYNC_LOST_TIMEOUT;
 			// Clear flag and enable interrupt from analog comparator
-			ACSR |= (1<<ACI);
+			ACSR |= (1<<ACI);		// safe - atomic cbi/sbi instructions are used by avr-gcc
 			ACSR |= (1<<ACIE);
 			break;
 		// SYNC_LOST_TIMEOUT finished
