@@ -10,6 +10,9 @@
 #include "fir_filter.h"
   
   
+  
+//dbg_PID_t dbg_PID_struct;
+
 
 int16_t dbg_PID_p_term;
 int16_t dbg_PID_d_term;
@@ -23,6 +26,7 @@ int16_t dbg_PID_output;
 //TODO: check code size with integAcc declared as static local or global
 //TODO: pack debug info into structure
 //TODO: optimize log - use pointers, etc
+//TODO: try using of free IO locations
 
 
 static uint16_t integ_soft_k;
@@ -60,6 +64,8 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	int16_t error, p_term, i_term, d_term, temp;
 	int32_t integ_max;
 
+	dbg_PID_t* dbg_p = &dbg_PID_struct;
+	
 	// Get the error
 	error = setPoint - processValue;
 	
@@ -151,6 +157,15 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	}
 	
 	//------- Debug --------//
+/*	dbg_p->PID_SetPoint = setPoint;
+	dbg_p->PID_ProcessValue = processValue;
+	//dbg_p->PID_error = error;
+	dbg_p->PID_p_term = p_term;
+	dbg_p->PID_i_term = i_term;
+	//dbg_p->PID_i_max = (int16_t)(integ_max / INTEGRATOR_SCALE);
+	dbg_p->PID_d_term = d_term;
+	dbg_p->PID_output = temp;
+	*/
 	dbg_PID_p_term = p_term;
 	dbg_PID_d_term = d_term;
 	dbg_PID_i_term = i_term;

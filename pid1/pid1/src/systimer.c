@@ -12,7 +12,7 @@
 #include "adc.h"
 #include "control.h"
 
-static inline void Sound_Process(void);
+
 
 // Main timer, updated in Timer2 ISR and used for main super loop run
 SoftTimer8b_t menuUpdateTimer = {
@@ -38,6 +38,7 @@ sys_timers_t sys_timers = {
 
 static uint16_t beep_cnt = 0;
 static uint8_t enableOverride = 0;
+static inline void Sound_Process(void);
 
 
 void processSystemTimers(void)
@@ -112,6 +113,7 @@ ISR(TIMER2_COMP_vect)
 	processSoftTimer8b(&menuUpdateTimer);	
 	
 	// Start ADC conversion 
+	// Safe to use read-modify-write - this ISR is the only source of ADC conversion start
 	ADCSRA |= (1<<ADSC);
 }
 

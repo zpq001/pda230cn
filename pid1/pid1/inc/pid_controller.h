@@ -8,6 +8,20 @@
   #define PID_CONTROLLER_H_
   
 
+  typedef struct
+  {
+		uint16_t PID_SetPoint;
+		uint16_t PID_ProcessValue;
+		//int16_t PID_error;
+		int16_t PID_p_term;
+		int16_t PID_i_term;
+		//int16_t PID_i_max;
+		int16_t PID_d_term;
+		int16_t PID_output;
+  } dbg_PID_t;
+  
+ 
+  
 //------------------------------------------//
 // PID controller settings
 //------------------------------------------//
@@ -56,11 +70,13 @@
 
 
 
-
+/*
 extern int16_t dbg_PID_p_term;
 extern int16_t dbg_PID_d_term;
 extern int16_t dbg_PID_i_term;
 extern int16_t dbg_PID_output;
+*/
+extern dbg_PID_t dbg_PID_struct;
 
 void setPIDIntegratorLimit(uint8_t set_temp);
 uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode);

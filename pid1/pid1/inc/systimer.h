@@ -28,6 +28,8 @@
 #define EXPIRED_LOG			0x20
 #define UPDATE_PID			0x40
 
+
+
 typedef struct {
 	uint8_t celsius_upd_counter;			// about 200ms
 	uint8_t counter_10sec;		
@@ -38,8 +40,7 @@ typedef struct {
 	uint8_t flags;
 } sys_timers_t;
 
-
-extern uint8_t minute_counter;
+//extern SoftTimer8b_t menuUpdateTimer;		// Declared as volatile in main
 extern sys_timers_t sys_timers;
 
 void resetAutoPowerOffCounter(void);

@@ -17,7 +17,7 @@
 static uint16_t heaterPower = 0;		// Heater power control, [0 : HEATER_MAX_POWER]
 
 // Motor controls
-uint8_t rollState = 0;					// Roll controller state. Use as read-only
+uint8_t rollState = 0;					// Roll controller state. Use as read-only outside of this module
 uint8_t activeRollCycle = 0;			// Indicates currently active roll cycle
 static uint8_t newDirReq = 0;
 static uint16_t rollPoint = 0;
@@ -31,26 +31,33 @@ static uint8_t dirChangedMask = 0xFF;
 uint8_t p_state = 0x0F;			// default state - if AC line sync is present, 
 								// it will be cleared at first comparator ISR call
 
-
+//-------------------------------//				
+//-------------------------------//
+								
+// CBI/SBI instructions operate on all bits of the IO register - executing
+// 		sbi ACSR,ACIE; 
+// 	with ACI bit set will set ACIE, but interrupt will be missed
+// Simple write with interrupt enable bit set or cleared is used.
+// The same approach is used with TIMSK register - this also gives small code economy (TIMSK > 0x1F)
 
 // User function to control heater intensity
 void setHeaterPower(uint16_t value)
 {
 	// Disable interrupts from analog comparator
-	ACSR &= ~(1<<ACIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
+	ACSR = (0<<ACIS1 | 0<<ACIS0);
+	uint16_t temp = (value > HEATER_MAX_POWER) ? HEATER_MAX_POWER : value;
 	// Update value
-	heaterPower = (value > HEATER_MAX_POWER) ? HEATER_MAX_POWER : value;
+	heaterPower = temp;		
 	// Reenable interrupts
-	ACSR |= (1<<ACIE);
+	ACSR = (1<<ACIE | 0<<ACIS1 | 0<<ACIS0);
 }
-
 
 
 // User function to control motor rotation
 void setMotorDirection(uint8_t dir)
 {
 	// Disable interrupts from timer0 
-	TIMSK &= ~(1<<TOIE0);	// safe - TIMSK contains only interrupt enable bits and is accessed only from normal mode, not ISRs
+	TIMSK = (1<<OCIE2);
 		
 	newDirReq = dir;	// save new direction request
 	dirChangedMask = ~ROLL_DIR_CHANGED;
@@ -61,7 +68,7 @@ void setMotorDirection(uint8_t dir)
 		topPoint = rollPoint;
 
 	// Enable interrupts from timer 0
-	TIMSK |= (1<<TOIE0);	
+	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 }	
 
 
@@ -69,7 +76,7 @@ void setMotorDirection(uint8_t dir)
 uint8_t startCycleRolling(void)
 {
 	// Disable interrupts from timer0 
-	TIMSK &= ~(1<<TOIE0);
+	TIMSK = (1<<OCIE2);
 	
 	if ( isTopPointValid() && isBottomPointValid() )
 	{
@@ -78,7 +85,7 @@ uint8_t startCycleRolling(void)
 	}
 	
 	// Enable interrupts from timer 0
-	TIMSK |= (1<<TOIE0);
+	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 	
 	return (rollState & ROLL_CYCLE);
 }
@@ -86,7 +93,7 @@ uint8_t startCycleRolling(void)
 void stopCycleRolling(uint8_t doResetPoints)
 {
 	// Disable interrupts from timer0 
-	TIMSK &= ~(1<<TOIE0);
+	TIMSK = (1<<OCIE2);
 	
 	rollState &= ~ROLL_CYCLE;
 	if (doResetPoints)
@@ -96,26 +103,40 @@ void stopCycleRolling(uint8_t doResetPoints)
 	}		
 	
 	// Enable interrupts from timer 0
-	TIMSK |= (1<<TOIE0);
+	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 }
 
 
+// Safe way to reset some bits in rollState variable
+void clearRollFlags(uint8_t flags)
+{
+	// Disable interrupts from timer0 
+	TIMSK = (1<<OCIE2);
+
+	// Clear specified bits
+	rollState &= ~flags;
+	
+	// Enable interrupts from timer 0
+	TIMSK = (1<<TOIE0 | 1<<OCIE2);
+}
 
 uint8_t isTopPointValid(void)
 {
-	// Disable interrupt that can change rollPoint
-	TIMSK &= ~(1<<TOIE0);	// safe - TIMSK contains only interrupt enable bits and is accessed only from normal mode, not ISRs
+	// Disable interrupts from timer0 
+	TIMSK = (1<<OCIE2);
 	uint8_t temp = ( (int16_t)(topPoint - rollPoint) >= 0 );
-	TIMSK |= (1<<TOIE0);
+	// Enable interrupts from timer 0
+	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 	return temp;
 }
 
 uint8_t isBottomPointValid(void)
 {
-	// Disable interrupt that can change rollPoint
-	TIMSK &= ~(1<<TOIE0);	// safe - TIMSK contains only interrupt enable bits and is accessed only from normal mode, not ISRs
+	// Disable interrupts from timer0 
+	TIMSK = (1<<OCIE2);
 	uint8_t temp = ( (int16_t)(rollPoint - bottomPoint) >= 0 );
-	TIMSK |= (1<<TOIE0);
+	// Enable interrupts from timer 0
+	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 	return temp;
 }
 
@@ -218,7 +239,7 @@ ISR(ANA_COMP_vect)
 	uint16_t delta;
 	
 	// Once triggered, disable further comparator interrupt
-	ACSR &= ~(1<<ACIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
+	ACSR &= ~(1<<ACIE);		// safe - ACI flag will be cleared anyway before reenabling comparator interrupt
 	
 	// Process heater delta-sigma modulator
 	if (sigma >= HEATER_MAX_POWER)
@@ -235,7 +256,7 @@ ISR(ANA_COMP_vect)
 	
 	// Reprogram timer0
 	TCNT0 = 256 - TRIAC_IMPULSE_TIME;		// Triac gate impulse time
-	TIFR = (1<<TOV0);						// Clear interrupt flag - safe, only TOV0 bit is cleared
+	TIFR = (1<<TOV0);						// Clear interrupt flag - safe, write operation is used (not r-m-w)
 	// Modify state	
 	p_state &= ~STATE_MASK;					// Start new state machine cycle
 	p_state ^= HALF_PERIOD_FLAG;			// Toggle flag
@@ -264,8 +285,7 @@ ISR(TIMER0_OVF_vect)
 		case 0x02:
 			TCNT0 = 256 - SYNC_LOST_TIMEOUT;
 			// Clear flag and enable interrupt from analog comparator
-			ACSR |= (1<<ACI);		// safe - atomic cbi/sbi instructions are used by avr-gcc
-			ACSR |= (1<<ACIE);
+			ACSR = (1<<ACI | 1<<ACIE | 0<<ACIS1 | 0<<ACIS0);
 			break;
 		// SYNC_LOST_TIMEOUT finished
 		case 0x03:
