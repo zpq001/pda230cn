@@ -12,8 +12,6 @@
 #include "adc.h"
 #include "control.h"
 
-
-
 // Main timer, updated in Timer2 ISR and used for main super loop run
 SoftTimer8b_t menuUpdateTimer = {
 	.Enabled = 1,
@@ -35,27 +33,26 @@ sys_timers_t sys_timers = {
 	.pid_update_counter = PID_UPDATE_INTERVAL	//							- timer is decremental
 };
 
+//uint8_t sys_timers_flags = 0;
 
-static uint16_t beep_cnt = 0;
-static uint8_t enableOverride = 0;
 static inline void Sound_Process(void);
 
 
 void processSystemTimers(void)
 {
-	sys_timers.flags = 0x00;
+	sys_timers_flags = 0x00;
 	
 	// Process Celsius counter
 	if (--sys_timers.celsius_upd_counter == 0)
 	{
 		sys_timers.celsius_upd_counter = CELSIUS_UDPATE_INTERVAL;
-		sys_timers.flags |= EXPIRED_CELSIUS;
+		sys_timers_flags |= EXPIRED_CELSIUS;
 		
 		// Process PID update counter
 		if (--sys_timers.pid_update_counter == 0)
 		{
 			sys_timers.pid_update_counter = PID_UPDATE_INTERVAL;
-			sys_timers.flags |= UPDATE_PID;
+			sys_timers_flags |= UPDATE_PID;
 		}
 	}
 	
@@ -63,28 +60,28 @@ void processSystemTimers(void)
 	if (--sys_timers.log_counter == 0)
 	{
 		sys_timers.log_counter = LOG_INTERVAL;
-		sys_timers.flags |= EXPIRED_LOG;
+		sys_timers_flags |= EXPIRED_LOG;
 	}
 	
 	// Process 10 seconds counter
 	if (--sys_timers.counter_10sec == 0)
 	{
 		sys_timers.counter_10sec = COUNTER_10SEC_INTERVAL;
-		sys_timers.flags |= EXPIRED_10SEC;
+		sys_timers_flags |= EXPIRED_10SEC;
 		
 		// Process 1 minute counter
 		if (--sys_timers.counter_1min == 0)
 		{
 			sys_timers.counter_1min = COUNTER_1MIN_INTERVAL;
-			sys_timers.flags |= EXPIRED_1MIN;
+			sys_timers_flags |= EXPIRED_1MIN;
 			
 			// Process auto power off counter
 			if (sys_timers.poff_counter != MAX_POWEROFF_TIMEOUT - 1)
 				sys_timers.poff_counter++;
 			if (sys_timers.poff_counter == p.power_off_timeout - 1)
-				sys_timers.flags |= AUTOPOFF_SOON;
+				sys_timers_flags |= AUTOPOFF_SOON;
 			if (sys_timers.poff_counter == p.power_off_timeout)
-				sys_timers.flags |= AUTOPOFF_EXPIRED;			
+				sys_timers_flags |= AUTOPOFF_EXPIRED;			
 		}
 	}	
 }

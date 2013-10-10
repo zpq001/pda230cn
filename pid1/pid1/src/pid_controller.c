@@ -10,23 +10,14 @@
 #include "fir_filter.h"
   
   
-  
-//dbg_PID_t dbg_PID_struct;
-
-
-int16_t dbg_PID_p_term;
-int16_t dbg_PID_d_term;
-int16_t dbg_PID_i_term;
-int16_t dbg_PID_output;
-
 
 // Nice new model
 
 //TODO: increase resolution of PID output
-//TODO: check code size with integAcc declared as static local or global
-//TODO: pack debug info into structure
-//TODO: optimize log - use pointers, etc
-//TODO: try using of free IO locations
+//+TODO: check code size with integAcc declared as static local or global
+//+TODO: pack debug info into structure
+//+TODO: optimize log - use pointers, etc
+//+TODO: try using of free IO locations
 
 
 static uint16_t integ_soft_k;
@@ -59,11 +50,10 @@ void setPIDIntegratorLimit(uint8_t set_temp)
 //	  terms are calculated anyway, but output is set to 0 when disabled
 uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 {
-	static uint16_t lastProcessValue;
-	static int32_t integAcc;
+	static uint16_t lastProcessValue;	// static locals are initialized with 0
+	static int32_t integAcc;			
 	int16_t error, p_term, i_term, d_term, temp;
 	int32_t integ_max;
-
 	dbg_PID_t* dbg_p = &dbg_PID_struct;
 	
 	// Get the error
@@ -98,8 +88,6 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 		integ_max = INTEGRATOR_MAX;
 	else
 	{
-		//integ_max = (INTEGRATOR_SOFT_RANGE - (int32_t)error) * INTEGRATOR_SOFT_K;
-		//integ_max = (INTEGRATOR_SOFT_RANGE - (int32_t)error) * integ_soft_k;
 		integ_max = (int32_t)(INTEGRATOR_SOFT_RANGE - error) * integ_soft_k;	// <- optimized
 	}
 
@@ -157,7 +145,9 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	}
 	
 	//------- Debug --------//
-/*	dbg_p->PID_SetPoint = setPoint;
+	PRELOAD("z",dbg_p);			// A trick used to make GCC use indirect addressing with displacement
+	
+	dbg_p->PID_SetPoint = setPoint;
 	dbg_p->PID_ProcessValue = processValue;
 	//dbg_p->PID_error = error;
 	dbg_p->PID_p_term = p_term;
@@ -165,12 +155,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	//dbg_p->PID_i_max = (int16_t)(integ_max / INTEGRATOR_SCALE);
 	dbg_p->PID_d_term = d_term;
 	dbg_p->PID_output = temp;
-	*/
-	dbg_PID_p_term = p_term;
-	dbg_PID_d_term = d_term;
-	dbg_PID_i_term = i_term;
-	dbg_PID_output = temp;
-	
+
 	
 	return (uint8_t)temp;	
 }

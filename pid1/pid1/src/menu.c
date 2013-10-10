@@ -192,7 +192,7 @@ void processMenu(void)
 	jumpCondition = button_state;		
 	if (menuTimer.FTop)
 		jumpCondition |= TMR_EXP;
-	if (sys_timers.flags & AUTOPOFF_EXPIRED)
+	if (sys_timers_flags & AUTOPOFF_EXPIRED)
 		jumpCondition |= GOTO_POFF;
 	
 	// Get next menu item according to current state and jump conditions

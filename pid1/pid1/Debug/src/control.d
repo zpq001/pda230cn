@@ -22,7 +22,7 @@ src/control.d src/control.o: ../src/control.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/../../../../avr/include/avr/wdt.h \
  ../inc/control.h ../inc/buttons.h ../inc/power_control.h \
  ../inc/led_indic.h ../inc/leds.h ../inc/led_indic.h ../inc/systimer.h \
- ../inc/adc.h ../inc/pid_controller.h
+ ../inc/adc.h ../inc/pid_controller.h ../inc/usart.h ../inc/port_defs.h
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/../../../../avr/include/util/crc16.h:
 
@@ -83,3 +83,7 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-
 ../inc/adc.h:
 
 ../inc/pid_controller.h:
+
+../inc/usart.h:
+
+../inc/port_defs.h:

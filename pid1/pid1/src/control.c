@@ -18,7 +18,10 @@
 #include "adc.h"
 #include "pid_controller.h"
 
+#include "usart.h"
+#include "port_defs.h"
 
+dbg_PID_t dbg_PID_struct;
 
 
 // Global variables - main system control
@@ -70,7 +73,7 @@ cParams_t cp;		// Calibration params are saved only after calibration of any of 
 
 
 
-uint8_t heaterState = 0;				// Global heater flags
+//uint8_t heaterState = 0;				// Global heater flags
 uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode is active.
 										// Flag is set and cleared in menu module.
 										
@@ -79,8 +82,8 @@ static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Used for monitoring temperat
 													// Init with value that can never be set
 
 //------- Debug --------//
-//uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
-//uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
+uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
+uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
 
 
 
@@ -150,6 +153,10 @@ void processRollControl(void)
 			
 		if (button_action_up_short & BD_CYCLE)
 		{
+			// Disable interrupts from timer0
+			//	to prevent rollState from changes - not very beautiful approach
+			// Interrupts from Timer0 will be reenabled in either stopCycleRolling() or startCycleRolling()
+			TIMSK = (1<<OCIE2);
 			if (rollState & ROLL_CYCLE)
 			{
 				stopCycleRolling(DO_NOT_RESET_POINTS);
@@ -167,6 +174,7 @@ void processRollControl(void)
 		
 		// ROLL_DIR_CHANGED is set only when direction is changed automatically,
 		// not when changed by calling setMotorDirection() function
+		// ROLL_DIR_CHANGED and CYCLE_ROLL_DONE flags are sticky
 		if (rollState & ROLL_DIR_CHANGED)
 		{
 			clearRollFlags(ROLL_DIR_CHANGED);
@@ -222,7 +230,7 @@ void processHeaterControl(void)
 	{
 		heaterState ^= HEATER_ENABLED;
 		// Force update heater power
-		sys_timers.flags |= UPDATE_PID;		// Not very good approach if UPDATE_PID flag is used outside this function
+		sys_timers_flags |= UPDATE_PID;		// Not very good approach if UPDATE_PID flag is used outside this function
 	}
 	
 	// Process PID controller reset
@@ -230,7 +238,7 @@ void processHeaterControl(void)
 	{
 		heaterState |= RESET_PID;
 		// Force update heater power
-		sys_timers.flags |= UPDATE_PID;
+		sys_timers_flags |= UPDATE_PID;
 	}
 	else
 	{
@@ -248,13 +256,13 @@ void processHeaterControl(void)
 	{
 		setPIDIntegratorLimit(p.setup_temp_value);
 		// Force update heater power
-		sys_timers.flags |= UPDATE_PID;
+		sys_timers_flags |= UPDATE_PID;
 	}
 
 	
 	// Check if heater control should be updated
 	// PID call interval is a multiple of Celsius update interval. 
-	if (sys_timers.flags & UPDATE_PID)
+	if (sys_timers_flags & UPDATE_PID)
 	{
 		// Convert temperature setup to equal ADC value
 		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
@@ -273,16 +281,7 @@ void processHeaterControl(void)
 			pid_output = HEATER_MAX_POWER;		
 			
 		// Set new heater power value	
-		setHeaterPower(pid_output);	
-		
-		
-		//------- Debug --------//		
-		// PID input:
-	//	dbg_SetPointPID = setPoint;
-	//	dbg_RealTempPID = processValue;
-		// PID output:
-		// updated in PID controller function
-		
+		setHeaterPower(pid_output);			
 	}	
 		
 	
@@ -324,7 +323,7 @@ void processHeaterAlerts(void)
 	// ADC sensor errors alert
 	if (adc_status & (SENSOR_ERROR_NO_PRESENT | SENSOR_ERROR_SHORTED))
 	{
-		if (sys_timers.flags & EXPIRED_10SEC)
+		if (sys_timers_flags & EXPIRED_10SEC)
 		{
 			// Enable beeper output regardless of menu setting
 			Sound_OverrideDisable();
@@ -363,7 +362,7 @@ void processHeaterAlerts(void)
 		// Same if calibration in progress, even if heater is disabled
 		refCapturedTemp = currentTemperature;
 	}
-	else if (sys_timers.flags & EXPIRED_10SEC)
+	else if (sys_timers_flags & EXPIRED_10SEC)
 	{
 		// Heater disabled. If temperature is falling,
 		if (currentTemperature < refCapturedTemp)
@@ -476,10 +475,15 @@ void exitPowerOff(void)
 	PORTB = 0x00;
 	DDRC = 0x00;
 	PORTC = 0x00;
-	DDRD = 0x00;
-	PORTD = 0x00;
+	
+	//DDRD = 0x00;
+	DDRD = (1<<PD_TXD);
+	USART_sendstr("\n\rAC sync lost");
 	
 	saveGlobalParamsToEEPROM();
+	
+	USART_sendstr("\n\rTurn OFF");
+	PORTD = 0x00;
 	
 	// DIE!
 	while(1);
