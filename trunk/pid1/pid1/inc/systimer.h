@@ -37,11 +37,13 @@ typedef struct {
 	uint8_t poff_counter;	
 	uint8_t log_counter;	
 	uint8_t pid_update_counter;
-	uint8_t flags;
+	//uint8_t flags;
 } sys_timers_t;
 
 //extern SoftTimer8b_t menuUpdateTimer;		// Declared as volatile in main
 extern sys_timers_t sys_timers;
+//extern uint8_t sys_timers_flags;
+#define sys_timers_flags TWAR
 
 void resetAutoPowerOffCounter(void);
 void processSystemTimers(void);

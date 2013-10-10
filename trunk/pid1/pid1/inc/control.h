@@ -76,7 +76,9 @@ typedef struct
 extern gParams_t p;				// Global params which are saved to and restored from EEPROM
 extern cParams_t cp;			// Calibration params
 
-extern uint8_t heaterState;			
+//extern uint8_t heaterState;			
+#define heaterState TWBR
+
 extern uint8_t autoPowerOffState;	
 
 //------- Debug --------//

@@ -19,7 +19,7 @@
 		int16_t PID_d_term;
 		int16_t PID_output;
   } dbg_PID_t;
-  
+ 
  
   
 //------------------------------------------//
@@ -49,7 +49,7 @@
 #define INTEGRATOR_MAX (50 * 10000L)
 #define INTEGRATOR_MIN 0
 #define INTEGRATOR_SCALE 100 	
-// Intergrator limit function parameters
+// Integrator limit function parameters
 #define INTEGRATOR_SOFT_LIMIT
 #define INTEGRATOR_SOFT_RANGE	(PROP_MAX / Kp)		// Start integrating when error becomes such that p_term is less than PROP_MAX
 //#define INTEGRATOR_SOFT_MAX		(30 * 10000L)		// Intergator maximum when error = 0		
@@ -70,12 +70,7 @@
 
 
 
-/*
-extern int16_t dbg_PID_p_term;
-extern int16_t dbg_PID_d_term;
-extern int16_t dbg_PID_i_term;
-extern int16_t dbg_PID_output;
-*/
+
 extern dbg_PID_t dbg_PID_struct;
 
 void setPIDIntegratorLimit(uint8_t set_temp);

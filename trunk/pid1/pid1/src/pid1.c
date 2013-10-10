@@ -34,6 +34,8 @@ extern volatile SoftTimer8b_t menuUpdateTimer;	// Must be declared volatile here
 static void logU16p(uint16_t val);
 static void logI32p(int32_t val);
 
+static char str[20];
+
 
 static void init_system_io()
 {
@@ -90,16 +92,17 @@ static void init_system_io()
 	UBRRH=0x00;
 	UBRRL=0x22;
 	
+	
+	// Init IO locations which are used as globals
+	TWBR = 0x00;	// heaterState
+	TWAR = 0x00;	// sys_timers_flags
 }
 
 
-char str[20];
-
 int main(void)
 {
-	volatile uint8_t temp8u = 0x00;
-	volatile uint16_t temp16u;
-	//dbg_PID_t* dbg_p = &dbg_PID_struct;
+	uint8_t temp8u = 0x00;
+	dbg_PID_t* dbg_p = &dbg_PID_struct;
 	
 	// Initialize MCU IO
 	init_system_io();
@@ -124,6 +127,7 @@ int main(void)
 	} 
 	#endif
 	// Dump calibration data over UART - might be useful for debug
+	USART_sendstr("\n\r");
 	logU16p(cp.cpoint1);
 	logU16p(cp.cpoint1_adc);
 	logU16p(cp.cpoint2);
@@ -132,7 +136,7 @@ int main(void)
 	// Safety delay for power part and ADC buffer
 	_delay_ms(100);
 	// Check AC line
-	if(p_state == 0x0F) 	
+	if(isACSyncPresent()) 	
 	{
 		// Power control state machine has not changed - sync has not been detected
 		printLedBuffer(0,"ERR AC");
@@ -188,7 +192,7 @@ int main(void)
 			processSystemTimers();
 
 			// Warn user about soon auto powering off
-			if (sys_timers.flags & AUTOPOFF_SOON)
+			if (sys_timers_flags & AUTOPOFF_SOON)
 			{
 				Sound_Play(m_beep_warn_poff);
 			}		
@@ -199,7 +203,7 @@ int main(void)
 			update_normalized_adc();			
 		
 			// Update indicated Celsius degree
-			if (sys_timers.flags & EXPIRED_CELSIUS)
+			if (sys_timers_flags & EXPIRED_CELSIUS)
 				update_Celsius();		
 			
 			//----------- MENU -----------//		
@@ -218,6 +222,7 @@ int main(void)
 			
 			// Process heater regulation
 			processHeaterControl();
+			//setHeaterPower(0);		// bug test
 		
 			// Process heater warnings
 			processHeaterAlerts();
@@ -225,51 +230,37 @@ int main(void)
 			
 			
 			//------- LOG to UART --------//	
-			if (sys_timers.flags & EXPIRED_LOG)
+			if (sys_timers_flags & EXPIRED_LOG)
 			{
+				PRELOAD("z",dbg_p);
 				
 				logU16p(adc_celsius);					// Actual temp Celsius
 				logU16p(adc_normalized);				// Actual temp (ADC), normalized
 				logU16p(adc_filtered);					// Actual temp (ADC), oversampled, filtered
 				USART_sendstr("    ");
-				
-				logU16p(dbg_SetPointPID);				// PID setpoint
-				logU16p(dbg_RealTempPID);				// PID process value
-				// var1
-				//logU16p(dbg_PID_struct.PID_SetPoint);
-				//logU16p(dbg_PID_struct.PID_ProcessValue);
-				// var2
-				//logU16p(dbg_p->PID_SetPoint);
-				//logU16p(dbg_p->PID_ProcessValue);
-				
-				logI32p(dbg_PID_p_term);				// p term
-				logI32p(dbg_PID_d_term);				// d term
-				logI32p(dbg_PID_i_term);				// i term
-				// var1
-				//logI32p(dbg_PID_struct.PID_p_term);
-				//logI32p(dbg_PID_struct.PID_d_term);
-				//logI32p(dbg_PID_struct.PID_i_term);
-				// var2
-				//logI32p(dbg_p->PID_p_term);
-				//logI32p(dbg_p->PID_d_term);
-				//logI32p(dbg_p->PID_i_term);
+
+				logU16p(dbg_p->PID_SetPoint);
+				logU16p(dbg_p->PID_ProcessValue);
+
+				logI32p(dbg_p->PID_p_term);
+				logI32p(dbg_p->PID_d_term);
+				logI32p(dbg_p->PID_i_term);
 				
 				USART_sendstr("    ");
 				
-				logU16p(dbg_PID_output);				// PID output
-				// var1
-				//logU16p(dbg_PID_struct.PID_output);
-				// var2
-				//logU16p(dbg_p->PID_output);
+				logU16p(dbg_p->PID_output);
+				
+				USART_sendstr("    ");
+				logU16p(menuUpdateTimer.Timer);			// Main loop time (ms)
 			
 				USART_sendstr("\n\r");
 
 				//---------------------------------//
-				
 			}
 			
-			
+			cli();
 			menuUpdateTimer.FOvfl = 0;	
+			sei();
 		}
 		
     }

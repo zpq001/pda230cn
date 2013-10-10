@@ -46,6 +46,11 @@
 #define __delay_cycles(var) _delay_us((unsigned int)(var)/(F_CPU/1000000))
 #define __flash PROGMEM const
 #define read_byte_flash(x) pgm_read_byte(&(x)) 
+
+// http://radiokot.ru/forum/viewtopic.php?p=1381879
+  #define PRELOAD(reg,var) \
+  __asm__ __volatile (";PRELOAD " reg " with " #var : "=" reg (var) : "0" (var))
+  
 #endif
 
 //________________________________________

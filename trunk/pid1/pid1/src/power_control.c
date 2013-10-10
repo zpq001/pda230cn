@@ -28,8 +28,8 @@ static uint8_t dirChangedMask = 0xFF;
 // p_state bits:
 //	[7] <- half-period toggling flag
 // [3:0] <- state
-uint8_t p_state = 0x0F;			// default state - if AC line sync is present, 
-								// it will be cleared at first comparator ISR call
+static uint8_t p_state = 0x0F;			// default state - if AC line sync is present, 
+										// it will be cleared at first comparator ISR call
 
 //-------------------------------//				
 //-------------------------------//
@@ -41,15 +41,18 @@ uint8_t p_state = 0x0F;			// default state - if AC line sync is present,
 // The same approach is used with TIMSK register - this also gives small code economy (TIMSK > 0x1F)
 
 // User function to control heater intensity
+// For some reason accessing ACSR makes something wrong with the interrupt - a weird bug
 void setHeaterPower(uint16_t value)
 {
 	// Disable interrupts from analog comparator
-	ACSR = (0<<ACIS1 | 0<<ACIS0);
+	//ACSR = (0<<ACIS1 | 0<<ACIS0);
 	uint16_t temp = (value > HEATER_MAX_POWER) ? HEATER_MAX_POWER : value;
+	cli();
 	// Update value
 	heaterPower = temp;		
 	// Reenable interrupts
-	ACSR = (1<<ACIE | 0<<ACIS1 | 0<<ACIS0);
+	//ACSR = (1<<ACIE | 0<<ACIS1 | 0<<ACIS0);
+	sei();
 }
 
 
@@ -138,6 +141,12 @@ uint8_t isBottomPointValid(void)
 	// Enable interrupts from timer 0
 	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 	return temp;
+}
+
+
+uint8_t isACSyncPresent(void)
+{
+	return 	p_state == 0x0F;
 }
 
 //---------------------------------------------//

@@ -58,8 +58,8 @@ MOTOR	________________________________________________|*************************
 #define DO_NOT_RESET_POINTS			0x00
 
 
-extern uint8_t p_state;				// For read-only access
 extern uint8_t rollState;			// For read-only access
+//#define rollState TWAR
 extern uint8_t activeRollCycle;		// For read-only access
 
 
@@ -73,6 +73,6 @@ void stopCycleRolling(uint8_t doResetPoints);
 void clearRollFlags(uint8_t flags);
 uint8_t isTopPointValid(void);
 uint8_t isBottomPointValid(void);
-
+uint8_t isACSyncPresent(void);
 
 #endif /* POWER_CONTROL_H_ */
