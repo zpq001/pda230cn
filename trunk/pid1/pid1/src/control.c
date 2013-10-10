@@ -73,13 +73,14 @@ cParams_t cp;		// Calibration params are saved only after calibration of any of 
 uint8_t heaterState = 0;				// Global heater flags
 uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode is active.
 										// Flag is set and cleared in menu module.
+										
+										
 static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Used for monitoring temperature setup changes
 													// Init with value that can never be set
 
 //------- Debug --------//
-uint8_t 	dbg_SetPointCelsius;	// Temperature setting, Celsius degree
-uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
-uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
+//uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
+//uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
 
 
 
@@ -168,12 +169,12 @@ void processRollControl(void)
 		// not when changed by calling setMotorDirection() function
 		if (rollState & ROLL_DIR_CHANGED)
 		{
-			rollState &= ~ROLL_DIR_CHANGED;
+			clearRollFlags(ROLL_DIR_CHANGED);
 			beepState |= 0x04;	
 		}
 		if (rollState & CYCLE_ROLL_DONE)
 		{
-			rollState &= ~CYCLE_ROLL_DONE;
+			clearRollFlags(CYCLE_ROLL_DONE);
 			beepState |= 0x80;	
 		}		
 			
@@ -277,9 +278,8 @@ void processHeaterControl(void)
 		
 		//------- Debug --------//		
 		// PID input:
-		dbg_SetPointCelsius = (heaterState & HEATER_ENABLED) ? p.setup_temp_value : 0;
-		dbg_SetPointPID = (heaterState & HEATER_ENABLED) ? setPoint : 0;					//TODO: fix
-		dbg_RealTempPID = processValue;
+	//	dbg_SetPointPID = setPoint;
+	//	dbg_RealTempPID = processValue;
 		// PID output:
 		// updated in PID controller function
 		

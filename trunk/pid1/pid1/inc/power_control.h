@@ -58,9 +58,9 @@ MOTOR	________________________________________________|*************************
 #define DO_NOT_RESET_POINTS			0x00
 
 
-extern uint8_t p_state;				// For read-only
-extern uint8_t rollState;			
-extern uint8_t activeRollCycle;
+extern uint8_t p_state;				// For read-only access
+extern uint8_t rollState;			// For read-only access
+extern uint8_t activeRollCycle;		// For read-only access
 
 
 // User functions to control heater intensity
@@ -70,6 +70,7 @@ void setHeaterPower(uint16_t value);
 void setMotorDirection(uint8_t dir);
 uint8_t startCycleRolling(void);
 void stopCycleRolling(uint8_t doResetPoints);
+void clearRollFlags(uint8_t flags);
 uint8_t isTopPointValid(void);
 uint8_t isBottomPointValid(void);
 

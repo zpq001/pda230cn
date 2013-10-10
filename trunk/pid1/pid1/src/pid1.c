@@ -54,14 +54,14 @@ static void init_system_io()
 	TCNT0 = 0;
 	// Clear interrupt flag
 	TIFR = (1<<TOV0);
-	// Enable interrupts from timer 0
-	TIMSK |= (1<<TOIE0);
 	
 	// Setup timer2 as 1ms system frequency generator
 	// 1/64 prescaler, CTC mode, OC2 disconnected
 	TCCR2 = (1<<CS22 | 1<<WGM21);
 	OCR2 = 249;						// 1ms @ 16MHz
-	TIMSK |= (1<<OCIE2);
+	
+	// Enable interrupts from timers 0 and 2
+	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 	
 	// Setup timer1 as beeper frequency generator
 	// CTC mode, 1/64 prescaler
@@ -78,7 +78,7 @@ static void init_system_io()
 	// Internal Vref + cap, input ADC5, 
 	ADMUX = (1<<REFS1 | 1<<REFS0 | 0<<MUX3 | 1<<MUX2 | 0<<MUX1 | 1<<MUX0 );
 	// Prescaler = 128
-	ADCSRA = (1<<ADEN |/* 1<<ADFR |*/  1<<ADIE | 1<<ADPS2 | 1<<ADPS1 | 1<<ADPS0);
+	ADCSRA = (1<<ADEN | 1<<ADIE | 1<<ADPS2 | 1<<ADPS1 | 1<<ADPS0);
 	
 	// Setup USART
 	// Double speed
@@ -99,6 +99,8 @@ int main(void)
 {
 	volatile uint8_t temp8u = 0x00;
 	volatile uint16_t temp16u;
+	//dbg_PID_t* dbg_p = &dbg_PID_struct;
+	
 	// Initialize MCU IO
 	init_system_io();
 	// Restore params from EEPROM
@@ -233,13 +235,32 @@ int main(void)
 				
 				logU16p(dbg_SetPointPID);				// PID setpoint
 				logU16p(dbg_RealTempPID);				// PID process value
+				// var1
+				//logU16p(dbg_PID_struct.PID_SetPoint);
+				//logU16p(dbg_PID_struct.PID_ProcessValue);
+				// var2
+				//logU16p(dbg_p->PID_SetPoint);
+				//logU16p(dbg_p->PID_ProcessValue);
 				
 				logI32p(dbg_PID_p_term);				// p term
 				logI32p(dbg_PID_d_term);				// d term
 				logI32p(dbg_PID_i_term);				// i term
+				// var1
+				//logI32p(dbg_PID_struct.PID_p_term);
+				//logI32p(dbg_PID_struct.PID_d_term);
+				//logI32p(dbg_PID_struct.PID_i_term);
+				// var2
+				//logI32p(dbg_p->PID_p_term);
+				//logI32p(dbg_p->PID_d_term);
+				//logI32p(dbg_p->PID_i_term);
+				
 				USART_sendstr("    ");
 				
 				logU16p(dbg_PID_output);				// PID output
+				// var1
+				//logU16p(dbg_PID_struct.PID_output);
+				// var2
+				//logU16p(dbg_p->PID_output);
 			
 				USART_sendstr("\n\r");
 

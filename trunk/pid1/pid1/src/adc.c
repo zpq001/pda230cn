@@ -32,12 +32,12 @@ uint16_t adc_oversampled;			// Oversampled and filtered ADC versions are used fo
 uint16_t adc_filtered;				//		control only
 uint8_t adc_status;					// Sensor and ADC status
 
-uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Raw ADC buffer
 
+// Internal variables
+static uint16_t raw_adc_buffer[ADC_BUFFER_LENGTH];	// Buffer for raw ADC samples
+static int16_t filter_buffer[20];					// FIR filter buffer
 
-int16_t filter_buffer[20];
-
-filter8bit_core_t fir_filter_rect = {
+static filter8bit_core_t fir_filter_rect = {
 	.coeffs = {
 		   11,
            21,
@@ -65,7 +65,6 @@ filter8bit_core_t fir_filter_rect = {
 };
 
 
-// Internal variables
 static int32_t k_norm;				// integer, scaled by COEFF_SCALE
 static int32_t offset_norm;			// integer, scaled by COEFF_SCALE
 
@@ -102,17 +101,25 @@ void calculateCoeffs(void)
 */
 
 
+// It is unsafe to enable/disable ADC interrupts using sbi/cbi instructions - 
+// 		the interrupt request can be missed. 
+// Since ADC setup (channels, etc) are constant,
+// 	simple ADCSRA write with ADIE bit set or cleared is used instead.
+
 void update_normalized_adc()
 {
 	uint8_t i;
 	uint16_t adc_raw_summ = 0;
+	
 	// Disable interrupts from ADC - to save data integrity
-	ADCSRA &= ~(1<<ADIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
+	ADCSRA = (1<<ADEN | 1<<ADPS2 | 1<<ADPS1 | 1<<ADPS0);
+	
 	// Get normalized mean window summ
 	for (i=0;i<ADC_BUFFER_LENGTH;i++)
 		adc_raw_summ += raw_adc_buffer[i];
+	
 	// Enable interrupts from ADC
-	ADCSRA |= (1<<ADIE);		// safe - atomic cbi/sbi instructions are used by avr-gcc
+	ADCSRA = (1<<ADEN | 1<<ADIE | 1<<ADPS2 | 1<<ADPS1 | 1<<ADPS0);
 	
 	adc_normalized = adc_raw_summ >> 5;		// ADC_BUFFER_LENGTH = 32 !
 	adc_oversampled = adc_raw_summ >> 3;	// adc_oversampled is 4 times greater than adc_normalized
