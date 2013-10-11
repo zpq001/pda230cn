@@ -28,7 +28,7 @@ MOTOR	________________________________________________|*************************
 
 
 // Regulation params
-#define HEATER_MAX_POWER			100		// Heater power control, [0 : HEATER_MAX_POWER]
+#define HEATER_MAX_POWER			500		// Heater power control, [0 : HEATER_MAX_POWER]
 
 
 //---------------------------------//

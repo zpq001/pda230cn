@@ -28,7 +28,7 @@
 
 uint16_t adc_normalized;			// normalized (used for calibration) ADC value
 int16_t adc_celsius;				// Celsius degree value (used for indication / calibration)
-uint16_t adc_oversampled;			// Oversampled and filtered ADC versions are used for PID
+static uint16_t adc_oversampled;	// Oversampled and filtered ADC versions are used for PID
 uint16_t adc_filtered;				//		control only
 uint8_t adc_status;					// Sensor and ADC status
 
