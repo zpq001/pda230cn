@@ -22,7 +22,7 @@
 
 extern uint16_t adc_normalized;
 extern int16_t adc_celsius;
-extern uint16_t adc_oversampled;
+//extern uint16_t adc_oversampled;
 extern uint16_t adc_filtered;
 extern uint8_t adc_status;
 

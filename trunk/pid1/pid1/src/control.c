@@ -21,8 +21,6 @@
 #include "usart.h"
 #include "port_defs.h"
 
-dbg_PID_t dbg_PID_struct;
-
 
 // Global variables - main system control
 // #ifdef USE_EEPROM_CRC
@@ -81,9 +79,6 @@ uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode
 static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Used for monitoring temperature setup changes
 													// Init with value that can never be set
 
-//------- Debug --------//
-uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
-uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
 
 
 

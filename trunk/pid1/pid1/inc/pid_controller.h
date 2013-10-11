@@ -61,11 +61,11 @@
 #define DIFF_MIN	-3000
 
 // Common scaling for summ of all terms
-#define SCALING_FACTOR	100
+#define SCALING_FACTOR	20 //100
 
 // Output limits
 #define PID_OUTPUT_MIN 0
-#define PID_OUTPUT_MAX 100
+#define PID_OUTPUT_MAX 500 //100
 //------------------------------------------//
 
 
@@ -74,7 +74,7 @@
 extern dbg_PID_t dbg_PID_struct;
 
 void setPIDIntegratorLimit(uint8_t set_temp);
-uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode);
+uint16_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode);
 
 
 

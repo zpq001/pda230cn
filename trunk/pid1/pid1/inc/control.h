@@ -81,17 +81,6 @@ extern cParams_t cp;			// Calibration params
 
 extern uint8_t autoPowerOffState;	
 
-//------- Debug --------//
-extern uint8_t 		dbg_SetPointCelsius;	// Temperature setting, Celsius degree
-extern uint16_t 	dbg_SetPointPID;		// Temperature setting, PID input
-extern uint8_t 		dbg_RealTempCelsius;	// Real temperature, Celsius degree
-extern uint16_t 	dbg_RealTempPID;		// Real temperature, PID input
-
-extern int16_t dbg_PID_p_term;
-extern int16_t dbg_PID_d_term;
-extern int16_t dbg_PID_i_term;
-extern int16_t dbg_PID_output;
-
 
 
 void processRollControl(void);

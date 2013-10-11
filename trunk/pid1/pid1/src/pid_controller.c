@@ -9,7 +9,7 @@
 #include "pid_controller.h"
 #include "fir_filter.h"
   
-  
+dbg_PID_t dbg_PID_struct;		// Moved here from contol.c - recheck
 
 // Nice new model
 
@@ -48,7 +48,7 @@ void setPIDIntegratorLimit(uint8_t set_temp)
 //	processValue - actual process value
 //	mode - enable/disable controller - 
 //	  terms are calculated anyway, but output is set to 0 when disabled
-uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
+uint16_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 {
 	static uint16_t lastProcessValue;	// static locals are initialized with 0
 	static int32_t integAcc;			
@@ -157,7 +157,7 @@ uint8_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	dbg_p->PID_output = temp;
 
 	
-	return (uint8_t)temp;	
+	return (uint16_t)temp;	
 }
 
 
