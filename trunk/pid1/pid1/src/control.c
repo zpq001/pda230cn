@@ -218,7 +218,7 @@ void processHeaterControl(void)
 	uint16_t set_value_adc;	
 	uint16_t setPoint;
 	uint16_t processValue;
-	uint16_t pid_output = 0;
+	uint16_t pid_output;
 	
 	// Process heater ON/OFF control by button
 	if (button_state & BS_HEATCTRL)
