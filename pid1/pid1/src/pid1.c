@@ -232,7 +232,7 @@ int main(void)
 			//------- LOG to UART --------//	
 			if (sys_timers_flags & EXPIRED_LOG)
 			{
-				PRELOAD("z",dbg_p);
+				PRELOAD("y",dbg_p);
 				
 				logU16p(adc_celsius);					// Actual temp Celsius
 				logU16p(adc_normalized);				// Actual temp (ADC), normalized
@@ -250,8 +250,8 @@ int main(void)
 				
 				logU16p(dbg_p->PID_output);
 				
-				USART_sendstr("    ");
-				logU16p(menuUpdateTimer.Timer);			// Main loop time (ms)
+				//USART_sendstr("    ");
+				//logU16p(menuUpdateTimer.Timer);			// Main loop time (ms)
 			
 				USART_sendstr("\n\r");
 

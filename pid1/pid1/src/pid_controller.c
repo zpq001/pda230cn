@@ -154,7 +154,7 @@ uint16_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	dbg_p->PID_i_term = i_term;
 	//dbg_p->PID_i_max = (int16_t)(integ_max / INTEGRATOR_SCALE);
 	dbg_p->PID_d_term = d_term;
-	dbg_p->PID_output = temp;
+	dbg_p->PID_output = (uint16_t)temp;
 
 	
 	return (uint16_t)temp;	

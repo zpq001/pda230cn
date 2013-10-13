@@ -17,7 +17,7 @@
 		int16_t PID_i_term;
 		//int16_t PID_i_max;
 		int16_t PID_d_term;
-		int16_t PID_output;
+		uint16_t PID_output;
   } dbg_PID_t;
  
  
