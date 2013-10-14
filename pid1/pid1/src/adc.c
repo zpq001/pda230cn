@@ -7,10 +7,10 @@
 
 
 #include "compilers.h"
-#include "port_defs.h"
 #include "adc.h"
-#include "control.h"
 #include "fir_filter.h"
+#include "control.h"
+
 
 /*
 	ADC & PID data types:

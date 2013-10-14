@@ -7,18 +7,10 @@
  
 #include "compilers.h"
 #include "pid_controller.h"
-#include "fir_filter.h"
   
 dbg_PID_t dbg_PID_struct;		// Moved here from contol.c - recheck
 
 // Nice new model
-
-//TODO: increase resolution of PID output
-//+TODO: check code size with integAcc declared as static local or global
-//+TODO: pack debug info into structure
-//+TODO: optimize log - use pointers, etc
-//+TODO: try using of free IO locations
-
 
 static uint16_t integ_soft_k;
 
