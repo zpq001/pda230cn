@@ -26,6 +26,7 @@ uint8_t button_action_long = 0;
 
 // TODO - add some filtering
 
+#if 1
 void process_buttons()
 {
 	static uint8_t raw_current = 0;
@@ -88,4 +89,70 @@ void process_buttons()
 
 	button_state = composed_state;
 }
+#else
+void process_buttons()
+{
+	static uint8_t raw_current = 0;
+	uint8_t raw_current_inv;
+	uint8_t raw_delayed;
+	uint8_t raw_delayed_inv;
+	static uint8_t press_timer = 0;
+	uint8_t long_press_mask;
+	uint8_t long_press_event_mask;
+	
+	uint16_t composed_state;
+	
+	raw_delayed = raw_current;
+	raw_delayed_inv = ~raw_current;
+	raw_current = raw_button_state;
+	raw_current_inv = ~raw_current;
+	
+	// Must be before press_timer update
+	long_press_mask = (press_timer >= LONG_PRESS_DELAY) ? 0xFF : 0x00;
+	
+	if (raw_delayed != raw_current)
+	{
+		press_timer = 0;
+	}
+	else if (press_timer <= LONG_PRESS_DELAY)
+	{
+		press_timer++;
+	}
+	
+	// Must after press_timer update
+	long_press_event_mask = (press_timer == LONG_PRESS_DELAY) ? 0xFF : 0x00;
+	
+	button_action_down = raw_current & raw_delayed_inv;
+	
+	if (press_timer > REPEAT_DELAY)
+	raw_delayed_inv |= 0xFF;
+	
+	button_action_rep = raw_current & raw_delayed_inv;
+	
+	button_action_up_short = raw_current_inv & raw_delayed & ~long_press_mask;
+	//button_action_up_long  = raw_current_inv & raw_delayed & long_press_mask;
+	button_action_long  = raw_current & long_press_event_mask;
+	
+	// Compose button state
+	composed_state = (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL | BD_CYCLE));
+	if (button_action_up_short & BD_MENU)
+	composed_state |= BS_MENU;
+	//if (button_action_up_long & BD_MENU)
+	if (button_action_long & BD_MENU)
+	composed_state |= BL_MENU;
+	if (button_action_rep & BD_UP)
+	composed_state |= BR_UP;
+	if (button_action_rep & BD_DOWN)
+	composed_state |= BR_DOWN;
+	
+	if (button_action_up_short & BD_HEATCTRL)
+	composed_state |= BS_HEATCTRL;
+	if (button_action_long & BD_HEATCTRL)
+	composed_state |= BL_HEATCTRL;
 
+	button_state = composed_state;
+}
+
+
+
+#endif

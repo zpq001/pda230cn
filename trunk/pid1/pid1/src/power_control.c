@@ -11,7 +11,7 @@
 #include "port_defs.h"
 #include "power_control.h"
 #include "control.h"
-#include "adc.h"
+
 
 // Heater controls
 static uint16_t heaterPower = 0;		// Heater power control, [0 : HEATER_MAX_POWER]

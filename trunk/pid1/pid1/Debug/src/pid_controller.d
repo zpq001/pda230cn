@@ -19,7 +19,7 @@ src/pid_controller.d src/pid_controller.o: ../src/pid_controller.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/include/stddef.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/../../../../avr/include/avr/eeprom.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/../../../../avr/include/avr/wdt.h \
- ../inc/pid_controller.h ../inc/fir_filter.h
+ ../inc/pid_controller.h
 
 ../inc/compilers.h:
 
@@ -62,5 +62,3 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.876\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/../../../../avr/include/avr/wdt.h:
 
 ../inc/pid_controller.h:
-
-../inc/fir_filter.h:

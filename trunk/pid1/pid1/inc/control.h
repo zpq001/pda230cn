@@ -64,7 +64,7 @@ typedef struct
 #define HEATER_ENABLED				0x01	// must be equal to PID_ENABLED
 #define CALIBRATION_ACTIVE			0x02	
 #define RESET_PID					0x04	// must be equal to PID_RESET_INTEGRATOR
-//#define SETPOINT_CHANGED			0x08
+#define SETPOINT_CHANGED			0x08
 
 // autoPowerOffState bits
 #define AUTO_POFF_ACTIVE	0x01

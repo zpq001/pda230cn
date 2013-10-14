@@ -39,11 +39,10 @@ static char str[20];
 
 static void init_system_io()
 {
-	// Setup Port D
+	// Setup Ports
 	PORTD = 0;//(1<<PD_SYNCA | 1<<PD_SYNCB);
 	DDRD = (1<<PD_TXD | 1<<PD_M1 | 1<<PD_M2 | 1<<PD_HEATER | 1<<PD_HEAT_INDIC );
 	
-	// Setup Port B
 	PORTB = 0;
 	DDRB = (1<<PB_BEEPER | 1<<PB_LED_DOUT | 1<<PB_LED_CLK | 1<<PB_SEGF | 1<<PB_SEGG | 1<<PB_SEGH);
 	
@@ -149,7 +148,7 @@ int main(void)
 	
 	// When we get here, full ADC buffer have been sampled
 	// Initialize ADC filter
-	temp8u = 20;
+	temp8u = 20;				// depth of ADC filter sample buffer
 	while(--temp8u)
 		update_normalized_adc();	
 	
@@ -220,7 +219,7 @@ int main(void)
 			
 			// Process heater events monitoring
 			// Must be called before processHeaterControl()
-			//processHeaterEvents();
+			processHeaterEvents();
 			
 			// Process heater regulation
 			processHeaterControl();
@@ -238,7 +237,7 @@ int main(void)
 				
 				logU16p(adc_celsius);					// Actual temp Celsius
 				logU16p(adc_normalized);				// Actual temp (ADC), normalized
-				logU16p(adc_filtered);					// Actual temp (ADC), oversampled, filtered
+				logU16p(adc_filtered);					// Actual temp (ADC), oversampled and filtered
 				USART_sendstr("    ");
 
 				logU16p(dbg_p->PID_SetPoint);
