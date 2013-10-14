@@ -148,8 +148,10 @@ int main(void)
 	Sound_Play(m_beep_1000Hz_100ms);
 	
 	// When we get here, full ADC buffer have been sampled
-	// Get oversampled and filtered ADC for PID controller
-	// update_normalized_adc();	// not required here
+	// Initialize ADC filter
+	temp8u = 20;
+	while(--temp8u)
+		update_normalized_adc();	
 	
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
@@ -218,7 +220,7 @@ int main(void)
 			
 			// Process heater events monitoring
 			// Must be called before processHeaterControl()
-			processHeaterEvents();
+			//processHeaterEvents();
 			
 			// Process heater regulation
 			processHeaterControl();

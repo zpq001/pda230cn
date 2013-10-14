@@ -39,9 +39,9 @@ EEMEM gParams_t eeGlobalParams =
 EEMEM cParams_t eeCalibrationParams = 
 {
 	.cpoint1 			= 22,		
-	.cpoint1_adc 		= 195,	
+	.cpoint1_adc 		= (4*195),	
 	.cpoint2 			= 120,
-	.cpoint2_adc 		= 401
+	.cpoint2_adc 		= (4*401)
 };
 
 EEMEM uint8_t ee_gParamsCRC = 0xFF;		// Used only when USE_EEPROM_CRC is defined
@@ -58,10 +58,10 @@ const PROGMEM gParams_t pmGlobalDefaults =
 
 const PROGMEM cParams_t pmCalibrationDefaults = 
 {
-	.cpoint1 			= 22,	// Default Celsius for first point
-	.cpoint1_adc 		= 195,	// Normalized ADC for first point
+	.cpoint1 			= 22,		// Default Celsius for first point
+	.cpoint1_adc 		= (4*195),	// Normalized ADC for first point
 	.cpoint2 			= 120,
-	.cpoint2_adc 		= 401
+	.cpoint2_adc 		= (4*401)
 };
 #endif
 
@@ -76,7 +76,7 @@ uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode
 										// Flag is set and cleared in menu module.
 										
 										
-static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Used for monitoring temperature setup changes
+//static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Used for monitoring temperature setup changes
 													// Init with value that can never be set
 
 
@@ -215,7 +215,6 @@ void processRollControl(void)
 
 void processHeaterControl(void)
 {
-	uint16_t set_value_adc;	
 	uint16_t setPoint;
 	uint16_t processValue;
 	uint16_t pid_output;
@@ -245,7 +244,7 @@ void processHeaterControl(void)
 	{
 		heaterState &= ~HEATER_ENABLED;
 	}	
-
+/*
 	// Update integrator limits if set point is changed
 	if (heaterState & SETPOINT_CHANGED)
 	{
@@ -253,18 +252,18 @@ void processHeaterControl(void)
 		// Force update heater power
 		sys_timers_flags |= UPDATE_PID;
 	}
-
+*/
 	
 	// Check if heater control should be updated
 	// PID call interval is a multiple of Celsius update interval. 
 	if (sys_timers_flags & UPDATE_PID)
 	{
-		// Convert temperature setup to equal ADC value
-		set_value_adc = conv_Celsius_to_ADC(p.setup_temp_value);					
-
 		// PID input: 1 count ~ 0.125 Celsius degree (see adc.c)
-		setPoint = set_value_adc * ADC_OVERSAMPLE_RATE;		
+		setPoint = conv_Celsius_to_ADC(p.setup_temp_value);
 		processValue = adc_filtered;
+		
+		// Set the PID integrator maximum (argument is Celsius)
+		setPIDIntegratorLimit(p.setup_temp_value);
 		
 		// Process PID
 		// If heater is disabled, output will be 0
@@ -275,7 +274,7 @@ void processHeaterControl(void)
 		if ((heaterState & HEATER_ENABLED) && (p.setup_temp_value >= MAX_SET_TEMP))
 			pid_output = HEATER_MAX_POWER;		
 			
-		// Set new heater power value	
+		// Apply new heater power value	
 		setHeaterPower(pid_output);			
 	}	
 		
@@ -288,7 +287,7 @@ void processHeaterControl(void)
 	
 }
 
-
+/*
 // Function to monitor heater events
 void processHeaterEvents(void)
 {
@@ -303,7 +302,7 @@ void processHeaterEvents(void)
 		heaterState &= ~SETPOINT_CHANGED;
 	}
 }
-
+*/
 
 // Function to process all heater alerts:
 //	- sensor errors

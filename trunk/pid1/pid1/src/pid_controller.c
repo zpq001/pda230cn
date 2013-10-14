@@ -146,7 +146,7 @@ uint16_t processPID(uint16_t setPoint, uint16_t processValue, uint8_t mode)
 	
 	//------- Debug --------//
 	PRELOAD("z",dbg_p);			// A trick used to make GCC use indirect addressing with displacement
-	
+								// This macro puts dbg_p into specified registers (Z for this case)
 	dbg_p->PID_SetPoint = setPoint;
 	dbg_p->PID_ProcessValue = processValue;
 	//dbg_p->PID_error = error;

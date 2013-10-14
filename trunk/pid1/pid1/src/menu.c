@@ -692,16 +692,7 @@ void mf_cdoneSelect(void)
 
 void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal)
 {
-	if (cpointNum == 1)
-	{
-		cp.cpoint1_adc = adc_normalized;
-		cp.cpoint1 = cpointVal;
-	}
-	else
-	{
-		cp.cpoint2_adc = adc_normalized;
-		cp.cpoint2 = cpointVal;
-	}
+	update_CalibrationPoint(cpointNum,cpointVal);
 	calculateCoeffs();
 	saveCalibrationToEEPROM();
 }
