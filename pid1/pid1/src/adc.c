@@ -26,11 +26,10 @@
 
 
 
-uint16_t adc_normalized;			// normalized (used for calibration) ADC value
-int16_t adc_celsius;				// Celsius degree value (used for indication / calibration)
-static uint16_t adc_oversampled;	// Oversampled and filtered ADC versions are used for PID
-uint16_t adc_filtered;				//		control only
-uint8_t adc_status;					// Sensor and ADC status
+uint16_t adc_normalized;	// normalized ADC value (used for debug only)
+int16_t adc_celsius;		// Celsius degree value (used for indication / calibration)
+uint16_t adc_filtered;		// Oversampled and filtered ADC value, used for conversion to Celsius, calibration and PID
+uint8_t adc_status;			// Sensor and ADC status
 
 
 // Internal variables
@@ -74,18 +73,22 @@ static int32_t offset_norm;			// integer, scaled by COEFF_SCALE
 
 int16_t conv_ADC_to_Celsius(uint16_t adc_value)
 {	
-	return (int16_t)(((int32_t)adc_value * k_norm + offset_norm) / (COEFF_SCALE));
+	//return (int16_t)(((int32_t)adc_value * k_norm + offset_norm) / (COEFF_SCALE));					// Truncate
+	return (int16_t)(((int32_t)adc_value * k_norm + offset_norm + (COEFF_SCALE>>1)) / (COEFF_SCALE));	// Round
 }
 
 uint16_t conv_Celsius_to_ADC(int16_t degree_value)
 {
-	degree_value += 1;
-	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm) / k_norm);
+	//degree_value += 1;
+	//return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm) / k_norm);				// Truncate
+	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm + (k_norm>>1)) / k_norm);	// Round
 }
 
 void calculateCoeffs(void)
 {
-	k_norm = ((int32_t)(cp.cpoint2 - cp.cpoint1) * COEFF_SCALE) / ((int32_t)(cp.cpoint2_adc - cp.cpoint1_adc));
+	//k_norm = ((int32_t)(cp.cpoint2 - cp.cpoint1) * COEFF_SCALE) / ((int32_t)(cp.cpoint2_adc - cp.cpoint1_adc));	// Truncate
+	int16_t temp = cp.cpoint2_adc - cp.cpoint1_adc;
+	k_norm = ((int32_t)(cp.cpoint2 - cp.cpoint1) * COEFF_SCALE + (int32_t)(temp>>1)) / ((int32_t)temp);				// Round
 	offset_norm = (int32_t)cp.cpoint1 * COEFF_SCALE - (int32_t)cp.cpoint1_adc * k_norm;
 }
 
@@ -110,6 +113,7 @@ void update_normalized_adc()
 {
 	uint8_t i;
 	uint16_t adc_raw_summ = 0;
+	uint16_t adc_oversampled;
 	
 	// Disable interrupts from ADC - to save data integrity
 	ADCSRA = (1<<ADEN | 1<<ADPS2 | 1<<ADPS1 | 1<<ADPS0);
@@ -127,19 +131,31 @@ void update_normalized_adc()
 	adc_filtered = fir_i16_i8(adc_oversampled, filter_buffer, &fir_filter_rect);	
 	// Check sensor
 	adc_status = 0;
-	if (adc_normalized < 50)
+	if (adc_normalized < ADC_LOW_CORRECT)
 		adc_status |= SENSOR_ERROR_NO_PRESENT;
-	else if (adc_normalized > 1000)
+	else if (adc_normalized > ADC_HIGH_CORRECT)
 		adc_status |= SENSOR_ERROR_SHORTED;
 }
 
 void update_Celsius(void)
 {
 	// Convert to Celsius degree
-	adc_celsius = conv_ADC_to_Celsius(adc_normalized);
+	adc_celsius = conv_ADC_to_Celsius(adc_filtered);
 }
 
-
+void update_CalibrationPoint(uint8_t point_number, uint8_t new_val_celsius)
+{
+	if (point_number == 1)
+	{
+		cp.cpoint1 = new_val_celsius;
+		cp.cpoint1_adc = adc_filtered;
+	}
+	else if (point_number == 2)
+	{
+		cp.cpoint2 = new_val_celsius;
+		cp.cpoint2_adc = adc_filtered;
+	}
+}
 
 
 // ADC conversion is started by system timer (Timer2 ISR) every 1 ms
