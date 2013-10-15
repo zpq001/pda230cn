@@ -122,7 +122,7 @@ const PROGMEM MenuJumpRecord menuJumpSet[] =
 	// Auto power off jumps - only from states without timeout, excluding calibration
 	{ mi_REALTEMP, 	GOTO_POFF,						mi_POFFACT,						0	},	
 	{ mi_ROLL, 		GOTO_POFF,						mi_POFFACT,						0	},	
-	{ mi_POFFACT, 	BD_UP | BD_DOWN | BS_MENU | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL, mi_REALTEMP,	0	}
+	{ mi_POFFACT, 	BD_UP | BD_DOWN | BS_MENU | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL, mi_REALTEMP,	0	}		// BD_MENU ? FIXME
  };
  
 
@@ -189,6 +189,23 @@ void processMenu(void)
 	processSoftTimer8b(&menuTimer);	
 	
 	// Compose jump condition
+	/*
+	//---------------------//
+	// TODO: move extra button definitions to menu.h
+	// TODO: use preload macro with pointer
+	jumpCondition = (uint16_t)buttons.action_down;
+	if (buttons.action_up_short & BD_MENU)	
+		jumpCondition |= BS_MENU;
+	if (buttons.action_long & BD_MENU)	
+		jumpCondition |= BL_MENU;
+	if (menuTimer.FTop)	
+		jumpCondition |= TMR_EXP;
+	if (sys_timers_flags & AUTOPOFF_EXPIRED)
+		jumpCondition |= GOTO_POFF;
+	*/
+	
+	//---------------------//
+	
 	jumpCondition = button_state;		
 	if (menuTimer.FTop)
 		jumpCondition |= TMR_EXP;

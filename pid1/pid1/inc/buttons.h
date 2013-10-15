@@ -13,6 +13,15 @@
 #define REPEAT_DELAY		6	// After this delay button press will be repeated continuously
 #define LONG_PRESS_DELAY	12	// After this delay button release will be considered as a long press
 
+/*
+typedef struct {
+	uint8_t raw_state;			// Non-processed button state
+	uint8_t action_down;		// Bit is set once when button is pressed
+	uint8_t action_rep;			// Bit is set once when button is pressed. Bit is set continuously after REPEAT_DELAY until button is released
+	uint8_t action_up_short;	// Bit is set once when button is released before LONG_PRESS_DELAY
+	uint8_t action_long;		// Bit is set once when button is pressed for LONG_PRESS_DELAY (or longer)
+} buttons_t;
+*/
 
 // BD = Button Down, the bit is set when button is pressed down
 // BR = Button Repeat, bit is set when button is pressed continuously
@@ -51,6 +60,7 @@ extern uint8_t button_action_up_short;
 extern uint8_t button_action_long;
 
 //extern uint8_t button_signal;
+
 
 void process_buttons();
 
