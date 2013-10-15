@@ -122,7 +122,9 @@ const PROGMEM MenuJumpRecord menuJumpSet[] =
 	// Auto power off jumps - only from states without timeout, excluding calibration
 	{ mi_REALTEMP, 	GOTO_POFF,						mi_POFFACT,						0	},	
 	{ mi_ROLL, 		GOTO_POFF,						mi_POFFACT,						0	},	
-	{ mi_POFFACT, 	BD_UP | BD_DOWN | BS_MENU | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL, mi_REALTEMP,	0	}		// BD_MENU ? FIXME
+	// Auto power off mode cannot be exited by Cycle_roll button - there is no indication of valid roll points during power off mode
+	// Using BS_MENU and BL_MENU instead of BD_MENU to prevent false reaction
+	{ mi_POFFACT, 	BD_UP | BD_DOWN | BS_MENU | BL_MENU | BD_ROTFWD | BD_ROTREV | BD_HEATCTRL, mi_REALTEMP,	0	}
  };
  
 
@@ -189,25 +191,12 @@ void processMenu(void)
 	processSoftTimer8b(&menuTimer);	
 	
 	// Compose jump condition
-	/*
-	//---------------------//
-	// TODO: move extra button definitions to menu.h
-	// TODO: use preload macro with pointer
 	jumpCondition = (uint16_t)buttons.action_down;
 	if (buttons.action_up_short & BD_MENU)	
 		jumpCondition |= BS_MENU;
 	if (buttons.action_long & BD_MENU)	
 		jumpCondition |= BL_MENU;
 	if (menuTimer.FTop)	
-		jumpCondition |= TMR_EXP;
-	if (sys_timers_flags & AUTOPOFF_EXPIRED)
-		jumpCondition |= GOTO_POFF;
-	*/
-	
-	//---------------------//
-	
-	jumpCondition = button_state;		
-	if (menuTimer.FTop)
 		jumpCondition |= TMR_EXP;
 	if (sys_timers_flags & AUTOPOFF_EXPIRED)
 		jumpCondition |= GOTO_POFF;
@@ -396,13 +385,13 @@ void mf_setTempDo(void)
 	char *str = (char *)&temp_str;
 	memcpy_P(str,&ms_realTempDo,7);
 	
-	if (button_state & (BD_UP | BR_UP))
+	if (buttons.action_rep & BD_UP)
 	{
 		if (setupValue_u8 < MAX_SET_TEMP)
 			setupValue_u8 += TEMP_SET_STEP;
 		restartMenuTimer();
 	}
-	else if (button_state & (BD_DOWN | BR_DOWN))
+	else if (buttons.action_rep & BD_DOWN)
 	{
 		if (setupValue_u8 > MIN_SET_TEMP)
 			setupValue_u8 -= TEMP_SET_STEP;
@@ -451,12 +440,12 @@ void mf_rollDo(void)
 	char *str = (char *)&temp_str;
 	memcpy_P(str,&ms_rollDo,7);
 		
-	if (button_state & (BD_UP | BR_UP))
+	if (buttons.action_rep & BD_UP)
 	{
 		if (p.rollCycleSet < MAX_ROLL_CYCLES)
 			p.rollCycleSet += ROLL_CYCLES_STEP;
 	}
-	else if (button_state & (BD_DOWN | BR_DOWN))
+	else if (buttons.action_rep & BD_DOWN)
 	{
 		if (p.rollCycleSet > MIN_ROLL_CYCLES)
 			p.rollCycleSet -= ROLL_CYCLES_STEP;
@@ -529,7 +518,7 @@ void mf_sndenDo(void)
 	char *str = (char *)&temp_str;
 	memcpy_P(str,&ms_soundEnDo,7);	
 		
-	if (button_state & (BD_UP | BD_DOWN))
+	if (buttons.action_rep & (BD_DOWN | BD_UP))
 	{
 		setupValue_u8 = !setupValue_u8;
 		restartMenuTimer();
@@ -578,13 +567,13 @@ void mf_autopoffDo(void)
 	char *str = (char *)&temp_str;
 	memcpy_P(str,&ms_autoPoffDo,7);	
 		
-	if (button_state & (BD_UP | BR_UP))
+	if (buttons.action_rep & BD_UP)
 	{
 		if (setupValue_u8 < MAX_POWEROFF_TIMEOUT)
 			setupValue_u8 += POWEROFF_SET_STEP;
 		restartMenuTimer();
 	}
-	else if (button_state & (BD_DOWN | BR_DOWN))
+	else if (buttons.action_rep & BD_DOWN)
 	{
 		if (setupValue_u8 > MIN_POWEROFF_TIMEOUT)
 			setupValue_u8 -= POWEROFF_SET_STEP;
@@ -667,12 +656,12 @@ void mf_calibDo(void)
 	char *str = (char *)&temp_str;
 	memcpy_P(str,&ms_calibDo,4);
 	
-	if (button_state & (BD_UP | BR_UP))
+	if (buttons.action_rep & BD_UP)
 	{
 		if (setupValue_u8 < MAX_CALIB_TEMP)
 		setupValue_u8 += CALIB_TEMP_STEP;
 	}
-	else if (button_state & (BD_DOWN | BR_DOWN))
+	else if (buttons.action_rep & BD_DOWN)
 	{
 		if (setupValue_u8 > MIN_CALIB_TEMP)
 		setupValue_u8 -= CALIB_TEMP_STEP;
