@@ -172,18 +172,18 @@ int main(void)
 			process_buttons();
 			
 			// Give sound feedback
-			if (button_state & (BL_MENU | BL_HEATCTRL))
+			if (buttons.action_long & (BD_MENU | BD_HEATCTRL))
 			{
 				Sound_Play(m_beep_800Hz_40ms);
 			}
-			else if (button_action_down & (BD_MENU | BD_UP | BD_DOWN | BD_HEATCTRL))
+			else if (buttons.action_down & (BD_MENU | BD_UP | BD_DOWN | BD_HEATCTRL))
 			{
 				Sound_Play(m_beep_1000Hz_40ms);
 			}	
 			// Direction control buttons sounds get special processing at processRollControl()
 			
 			// If any button is pressed, restart power off interval
-			if (button_action_down)
+			if (buttons.action_down)
 				resetAutoPowerOffCounter();
 			
 			//---------- TIMERS ----------//
@@ -236,8 +236,8 @@ int main(void)
 				PRELOAD("y",dbg_p);
 				
 				logU16p(adc_celsius);					// Actual temp Celsius
-				logU16p(adc_normalized);				// Actual temp (ADC), normalized
-				logU16p(adc_filtered);					// Actual temp (ADC), oversampled and filtered
+				logU16p(adc_normalized);				// ADC, normalized (adc_normalized = 1024 - adc_raw)
+				logU16p(adc_filtered);					// ADC, oversampled and filtered
 				USART_sendstr("    ");
 
 				logU16p(dbg_p->PID_SetPoint);

@@ -56,7 +56,8 @@ typedef struct {
 // Jump condition flags:
 #define		TMR_EXP			0x8000	// make sure these bits are not used by buttons
 #define 	GOTO_POFF		0x4000
-
+#define		BS_MENU			0x0100	// short menu button press
+#define		BL_MENU			0x0200	// long menu button press
 
 // Time intervals
 #define MENU_TIMEOUT_MULT	8		// multiplier of menu item timeouts (1 to 16)

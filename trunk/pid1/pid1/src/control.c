@@ -82,7 +82,7 @@ uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode
 void processRollControl(void)
 {	
 	uint8_t beepState = 0;
-	static uint8_t force_rotate = 0;
+	static uint8_t force_rotate = 0; //CHECKME
 	
 	// Process auto power off control
 	if (autoPowerOffState & AUTO_POFF_ACTIVE)
@@ -113,23 +113,23 @@ void processRollControl(void)
 	else
 	{
 		// Control direction by buttons
-		if ((raw_button_state & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
+		if ((buttons.raw_state & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
 		{
 			// Both Forward and Reverse buttons are pressed - stop
 			// Attention - stopping motor when rollers are hot can possibly damage them
 			setMotorDirection(0);
 		}
-		else if (button_action_down & BD_ROTFWD)
+		else if (buttons.action_down & BD_ROTFWD)
 		{
 			setMotorDirection(ROLL_FWD);	
 			beepState |= 0x01;			// pressed FWD button
 		}		
-		else if (button_action_down & BD_ROTREV)
+		else if (buttons.action_down & BD_ROTREV)
 		{
 			setMotorDirection(ROLL_REV);
 			beepState |= 0x02;			// pressed REV button
 		}		
-		else if (button_action_long & BD_CYCLE)
+		else if (buttons.action_long & BD_CYCLE)
 		{
 			stopCycleRolling(RESET_POINTS);		// Reset points and disable CYCLE mode (if was enabled)
 			beepState |= 0x08;					// reset of points by long pressing of ROLL button
@@ -142,7 +142,7 @@ void processRollControl(void)
 		}
 		force_rotate = 0;		// First normal pass will clear 
 			
-		if (button_action_up_short & BD_CYCLE)
+		if (buttons.action_up_short & BD_CYCLE)
 		{
 			// Disable interrupts from timer0
 			//	to prevent rollState from changes - not very beautiful approach
@@ -216,7 +216,7 @@ void processHeaterControl(void)
 	uint16_t pid_output;
 	
 	// Process heater ON/OFF control by button
-	if (button_state & BS_HEATCTRL)
+	if (buttons.action_up_short & BD_HEATCTRL)
 	{
 		heaterState ^= HEATER_ENABLED;
 		// Force update heater power
@@ -224,7 +224,7 @@ void processHeaterControl(void)
 	}
 	
 	// Process PID controller reset
-	if (button_state & BL_HEATCTRL)
+	if (buttons.action_long & BD_HEATCTRL)
 	{
 		heaterState |= RESET_PID;
 		// Force update heater power
