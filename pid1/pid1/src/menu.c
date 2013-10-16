@@ -67,8 +67,8 @@ static SoftTimer8b_t menuTimer = {		// used for menu state jumps
 
 static SoftTimer8b_t userTimer = {		// used for display blinking
 	.Enabled = 0,
-	.Top = BLINK_PERIOD - 1;
-	.CompA = BLINK_PERIOD / 2;
+	.Top = BLINK_PERIOD - 1,
+	.CompA = BLINK_PERIOD / 2,
 	.RunOnce = 0	
 };		
 
@@ -432,7 +432,7 @@ void mf_setTempLeave(void)
 
 void mf_rollSelect(void)
 {
-	//mf_leafSelectAct();		// setup and start timer
+	mf_leafSelectAct();		// setup and start timer
 	setExtraLeds(LED_ROLL);
 }
 
@@ -472,7 +472,7 @@ void mf_rollDo(void)
 
 void mf_rollLeave(void)
 {
-	//mf_leafExit();
+	mf_leafExit();
 	clearExtraLeds(LED_ROLL);
 }
 
@@ -492,8 +492,6 @@ void mf_leafSelect(void)
 void mf_leafSelectAct(void)
 {
 	userTimer.Timer = 0;
-	//userTimer.Top = BLINK_PERIOD - 1;
-	//userTimer.CompA = BLINK_PERIOD / 2;
 	userTimer.Enabled = 1;
 }
 
