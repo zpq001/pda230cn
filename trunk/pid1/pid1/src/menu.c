@@ -25,41 +25,38 @@ static inline void processItemFunction(FuncPtr funcAddr);
 static void restartMenuTimer(void);
 
 
-static void mf_realTempSelect(void);
+static void mf_realTempSelect(void);	// Real temperature indication
 static void mf_realTempDo(void);
 static void mf_realTempLeave(void);
-static void mf_setTempSelect(void);
+static void mf_setTempSelect(void);		// Setting temperature indication
 static void mf_setTempDo(void);
 static void mf_setTempLeave(void);
-static void mf_rollSelect(void);
+static void mf_rollSelect(void);		// Roll control indication
 static void mf_rollDo(void);
 static void mf_rollLeave(void);
-static void mf_leafSelect(void);
+static void mf_leafSelect(void);		// Special common menu functions
 static void mf_leafSelectAct(void);
 static void mf_leafExit(void);
-static void mf_sndenSelect(void);
+static void mf_sndenSelect(void);		// Sound setup 
 static void mf_sndenDo(void);
 static void mf_sndenLeave(void);
-static void mf_autopoffSelect(void);
+static void mf_autopoffSelect(void);	// Auto power off setup
 static void mf_autopoffDo(void);
 static void mf_autopoffLeave(void);
-static void mf_actpoffSelect(void);
+static void mf_actpoffSelect(void);		// Special functions - active power off mode
 static void mf_actpoffDo(void);
 static void mf_actpoffLeave(void);
-static void mf_calibP1Select(void);
+static void mf_calibP1Select(void);		// Calibration
 static void mf_calibP2Select(void);
 static void mf_calibDo(void);
 static void mf_calibDoExit(void);
-static void mf_cdoneSelect(void);
+static void mf_cdoneSelect(void);		// Calibration done
 static void mf_cdoneDo(void);
-
-static void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal);
 
 static uint8_t selectedMenuItemID;
 static MenuFunctionRecord selectedMenuFunctionRecord;
 static uint8_t jumpFlags;
 static uint8_t setupValue_u8;
-
 static uint8_t cpointNum;
 
 static SoftTimer8b_t menuTimer = {		// used for menu state jumps
@@ -70,6 +67,8 @@ static SoftTimer8b_t menuTimer = {		// used for menu state jumps
 
 static SoftTimer8b_t userTimer = {		// used for display blinking
 	.Enabled = 0,
+	.Top = BLINK_PERIOD - 1;
+	.CompA = BLINK_PERIOD / 2;
 	.RunOnce = 0	
 };		
 
@@ -102,7 +101,7 @@ const PROGMEM MenuJumpRecord menuJumpSet[] =
 	{ mi_AUTOPOFF, 	BD_DOWN,						mi_CALIB1,		SHIFT_RIGHT	|	10	},
 	{ mi_AUTOPOFF, 	BD_UP,							mi_SNDEN,		SHIFT_LEFT	|	10	},
 	{ mi_AUTOPOFF,		BS_MENU,					mi_ACTAUTOPOFF,					10	},
-	{ mi_ACTAUTOPOFF,	BS_MENU | TMR_EXP,			mi_AUTOPOFF,				10	},
+	{ mi_ACTAUTOPOFF,	BS_MENU | TMR_EXP,			mi_AUTOPOFF,					10	},
 	{ mi_ACTAUTOPOFF,	BL_MENU,					mi_AUTOPOFF,	DISCARD_CHANGES	|	10	},
 	// Calibration
 	{ mi_CALIB1, 	BL_MENU | TMR_EXP,				mi_REALTEMP,					0	},
@@ -200,6 +199,8 @@ void processMenu(void)
 		jumpCondition |= TMR_EXP;
 	if (sys_timers_flags & AUTOPOFF_EXPIRED)
 		jumpCondition |= GOTO_POFF;
+	
+	autoPowerOffState = 0;	// ACTIVE or LEAVE flags are set in the Run or Leave functions
 	
 	// Get next menu item according to current state and jump conditions
 	nextItem = getNextMenuItem(selectedMenuItemID, jumpCondition);
@@ -431,7 +432,7 @@ void mf_setTempLeave(void)
 
 void mf_rollSelect(void)
 {
-	mf_leafSelectAct();		// setup and start timer
+	//mf_leafSelectAct();		// setup and start timer
 	setExtraLeds(LED_ROLL);
 }
 
@@ -471,7 +472,7 @@ void mf_rollDo(void)
 
 void mf_rollLeave(void)
 {
-	mf_leafExit();
+	//mf_leafExit();
 	clearExtraLeds(LED_ROLL);
 }
 
@@ -491,8 +492,8 @@ void mf_leafSelect(void)
 void mf_leafSelectAct(void)
 {
 	userTimer.Timer = 0;
-	userTimer.Top = BLINK_PERIOD - 1;
-	userTimer.CompA = BLINK_PERIOD / 2;
+	//userTimer.Top = BLINK_PERIOD - 1;
+	//userTimer.CompA = BLINK_PERIOD / 2;
 	userTimer.Enabled = 1;
 }
 
@@ -501,7 +502,7 @@ void mf_leafExit(void)
 	userTimer.Enabled = 0;	
 }
 
-//---------------------------------------------//
+
 
 
 //------------------------------------------------//
@@ -613,18 +614,18 @@ void mf_autopoffLeave(void)
 void mf_actpoffSelect(void)
 {
 	clearExtraLeds(LED_TEMP | LED_ROLL);
-	autoPowerOffState = AUTO_POFF_ACTIVE;	// Set global flag
 }
 
 // Indication of power off mode
 void mf_actpoffDo(void)
 {
+	autoPowerOffState = AUTO_POFF_ACTIVE;		// Set global flag
 	printLedBuffer(0,"   OFF");
 }
 
 void mf_actpoffLeave(void)
 {
-	autoPowerOffState = 0;	
+	autoPowerOffState = AUTO_POFF_LEAVE;		// Set global flag
 }
 
 
@@ -668,10 +669,15 @@ void mf_calibDo(void)
 	}
 	
 	if (userTimer.FA_GE)
+	{	
+		// Blinking setup value
+		u16toa_align_right(setupValue_u8,str,3);	
+	}
+	else
 	{
-		u16toa_align_right(setupValue_u8,str,3);
+		// This is executed only when calibration is active and setup value is blinking
 		resetAutoPowerOffCounter();
-		heaterState |= CALIBRATION_ACTIVE;
+		heaterState |= CALIBRATION_ACTIVE; 
 	}
 	
 	printLedBuffer(3,str);
@@ -693,15 +699,11 @@ void mf_calibDoExit(void)
 //------------------------------------------------//
 void mf_cdoneSelect(void)
 {
-	applyCalibrationPoint(cpointNum,setupValue_u8);
-}
-
-void applyCalibrationPoint(uint8_t cpointNum, uint8_t cpointVal)
-{
-	update_CalibrationPoint(cpointNum,cpointVal);
+	update_CalibrationPoint(cpointNum,setupValue_u8);
 	calculateCoeffs();
 	saveCalibrationToEEPROM();
 }
+
 
 void mf_cdoneDo(void)
 {

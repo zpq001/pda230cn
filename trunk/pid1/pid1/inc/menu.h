@@ -5,6 +5,8 @@
  *  Author: Avega
  */ 
 
+//--------------------------------------------//
+// Typedefs
 
 typedef void (*FuncPtr)(void);
 
@@ -31,6 +33,10 @@ typedef struct {
 } NextItem_t;
 
 
+
+//--------------------------------------------//
+// Menu state and control defines
+
 // Menu items
 #define		mi_REALTEMP		0x01
 #define		mi_ROLL			0x02
@@ -54,16 +60,18 @@ typedef struct {
 #define 	TIMEOUT_MASK	0x0F	// timeouts = 0 to 15 (in units of 4x processMenu() call period)
 
 // Jump condition flags:
-#define		TMR_EXP			0x8000	// make sure these bits are not used by buttons
-#define 	GOTO_POFF		0x4000
-#define		BS_MENU			0x0100	// short menu button press
-#define		BL_MENU			0x0200	// long menu button press
+#define		TMR_EXP			0x8000	// Menu item timeout expired flag
+#define 	GOTO_POFF		0x4000	// Auto power off counter expired flag
+#define		BS_MENU			0x0100	// Short menu button press
+#define		BL_MENU			0x0200	// Long menu button press
 
 // Time intervals
 #define MENU_TIMEOUT_MULT	8		// multiplier of menu item timeouts (1 to 16)
 #define BLINK_PERIOD		8		// in units of processMenu() call period
 
 
+//--------------------------------------------//
+// Externs
 
 void InitMenu(void);
 void processMenu(void);

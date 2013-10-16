@@ -155,7 +155,9 @@ int main(void)
 	// Start rotating
 	setMotorDirection(ROLL_FWD);
 	// Clear timer
+	cli();
 	menuUpdateTimer.FOvfl = 0;
+	sei();
 	// Enable watchdog
 	wdt_enable(WDTO_1S);
 
@@ -184,7 +186,9 @@ int main(void)
 			
 			// If any button is pressed, restart power off interval
 			if (buttons.action_down)
+			{
 				resetAutoPowerOffCounter();
+			}
 			
 			//---------- TIMERS ----------//
 			
@@ -205,7 +209,9 @@ int main(void)
 		
 			// Update indicated Celsius degree
 			if (sys_timers_flags & EXPIRED_CELSIUS)
+			{
 				update_Celsius();		
+			}
 			
 			//----------- MENU -----------//		
 				
