@@ -71,18 +71,15 @@ cParams_t cp;		// Calibration params are saved only after calibration of any of 
 
 //uint8_t heaterState = 0;				// Global heater flags
 uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode is active.
-										// Flag is set and cleared in menu module.
+										// Flags are set and cleared in menu module.
 										
-									
 
-
-
-
+//-------------------------------------------------------//
 // Function to control motor rotation
+//-------------------------------------------------------//
 void processRollControl(void)
 {	
 	uint8_t beepState = 0;
-	static uint8_t force_rotate = 0; //CHECKME
 	
 	// Process auto power off control
 	if (autoPowerOffState & AUTO_POFF_ACTIVE)
@@ -97,21 +94,16 @@ void processRollControl(void)
 			{
 				// If motor is stopped
 				setMotorDirection(ROLL_FWD);		// Start rotating in order to prevent rollers damage
-				force_rotate = 0;					// Do not start motor on power off exit
 			}
 		}
 		else if (adc_celsius <= POFF_MOTOR_TRESHOLD)
 		{
-			if (rollState & (ROLL_FWD | ROLL_REV))
-			{	
-				// If temperature is below threshold and motor is rotating
-				setMotorDirection(0);			// Stop the motor
-				force_rotate = ROLL_FWD;		// Start motor on power-off mode exit
-			}
+			setMotorDirection(0);			// Stop the motor
 		}
 	}
 	else
 	{
+		//-------------------------------------//
 		// Control direction by buttons
 		if ((buttons.raw_state & (BD_ROTFWD | BD_ROTREV)) == (BD_ROTFWD | BD_ROTREV))
 		{
@@ -129,20 +121,24 @@ void processRollControl(void)
 			setMotorDirection(ROLL_REV);
 			beepState |= 0x02;			// pressed REV button
 		}		
-		else if (buttons.action_long & BD_CYCLE)
+		else if (autoPowerOffState & AUTO_POFF_LEAVE)
+		{
+			// Exiting auto power off mode
+			if (!(rollState & (ROLL_FWD | ROLL_REV)))
+			{
+				// Start rotating if motor is stopped
+				setMotorDirection(ROLL_FWD);		
+			}
+		}
+			
+		//-------------------------------------//
+		// Control cycle rolling
+		if (buttons.action_long & BD_CYCLE)
 		{
 			stopCycleRolling(RESET_POINTS);		// Reset points and disable CYCLE mode (if was enabled)
 			beepState |= 0x08;					// reset of points by long pressing of ROLL button
 		}
-		else if (force_rotate)
-		{
-			// Auto power off mode was exited by pressing some other button, not direction buttons
-			// Start roll, but do not beep in this case
-			setMotorDirection(force_rotate);
-		}
-		force_rotate = 0;		// First normal pass will clear 
-			
-		if (buttons.action_up_short & BD_CYCLE)
+		else if (buttons.action_up_short & BD_CYCLE)
 		{
 			// Disable interrupts from timer0
 			//	to prevent rollState from changes - not very beautiful approach
@@ -177,8 +173,8 @@ void processRollControl(void)
 			beepState |= 0x80;	
 		}		
 			
-		//-----------//
-			
+		//-------------------------------------//
+		// Process sound events
 		if (beepState & 0x80)		// Roll cycle done
 		{
 			Sound_Play(m_siren4);	
@@ -208,7 +204,9 @@ void processRollControl(void)
 
 
 
-
+//-------------------------------------------------------//
+// Function to control heater
+//-------------------------------------------------------//
 void processHeaterControl(void)
 {
 	uint16_t setPoint;
@@ -281,7 +279,9 @@ void processHeaterControl(void)
 }
 
 
+//-------------------------------------------------------//
 // Function to monitor heater events
+//-------------------------------------------------------//
 void processHeaterEvents(void)
 {
 	static uint8_t setPoint_prev = MIN_SET_TEMP + 1;	// Init with value that can never be set
@@ -299,10 +299,13 @@ void processHeaterEvents(void)
 }
 
 
+
+//-------------------------------------------------------//
 // Function to process all heater alerts:
 //	- sensor errors
 //	- getting close to desired temperature
 //	- continuous heating when disabled
+//-------------------------------------------------------//
 void processHeaterAlerts(void)
 {
 	static uint8_t tempAlertRange = TEMP_ALERT_RANGE;
@@ -372,11 +375,17 @@ void processHeaterAlerts(void)
 			}
 		}
 	}
-	
-
 }
 
 
+//-------------------------------------------------------//
+// Function to calculate 8-bit data CRC
+//	inputs:
+//		void *p 			<- pointer to data
+//		uint8_t byte_count	<- number of bytes to use
+//	returns:
+//		8-bit CRC computed using _crc_ibutton_update() AVR_GCC function
+//-------------------------------------------------------//
 static uint8_t getDataCRC(void *p,uint8_t byte_count)
 {
 	uint8_t crc_byte = 0;
@@ -389,6 +398,16 @@ static uint8_t getDataCRC(void *p,uint8_t byte_count)
 }
 
 
+//-------------------------------------------------------//
+// Restores global parameters - control and calibration
+//	output:
+//	- if USE_EEPROM_CRC is not defined, always return 0
+//	- if USE_EEPROM_CRC defined:
+//		0 if EEPROM parameters are correct
+//		1 if control parameters were corrupted and restored from defaults stored in FLASH
+//		2 if calibration parameters were corrupted and restored
+//		3 if both were corrupted and restored.
+//-------------------------------------------------------//
 uint8_t restoreGlobalParams(void)
 {	
 	uint8_t defaults_used = 0;
@@ -433,6 +452,10 @@ uint8_t restoreGlobalParams(void)
 }
 
 
+//-------------------------------------------------------//
+// Saves calibration to EEPROM
+//  if USE_EEPROM_CRC is defined, CRC is calculated and stored as well
+//-------------------------------------------------------//
 void saveCalibrationToEEPROM(void)
 {
 	// Calibration parameters normally are only saved after calibrating 
@@ -443,6 +466,10 @@ void saveCalibrationToEEPROM(void)
 	#endif
 }
 
+//-------------------------------------------------------//
+// Saves global control parameters to EEPROM
+//  if USE_EEPROM_CRC is defined, CRC is calculated and stored as well
+//-------------------------------------------------------//
 void saveGlobalParamsToEEPROM(void)
 {
 	// Save global parameters to EEPROM
@@ -454,6 +481,12 @@ void saveGlobalParamsToEEPROM(void)
 	#endif
 }
 
+
+//-------------------------------------------------------//
+// This function is program exit when device has been disconnected from AC line
+//  When this function is called, all power-consuming devices like LED display
+//	are switched off, and global control parameters are saved to EEPROM
+//-------------------------------------------------------//
 void exitPowerOff(void)
 {
 	// Disable all interrupts
