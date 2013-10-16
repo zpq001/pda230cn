@@ -14,7 +14,7 @@
 
 #define CELSIUS_UDPATE_INTERVAL			4		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 200ms
 #define COUNTER_10SEC_INTERVAL			200		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 10s
-//#define COUNTER_10SEC_INTERVAL		10		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 0.2s (for debug)
+//#define COUNTER_10SEC_INTERVAL		5		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 0.25s (for debug)
 #define COUNTER_1MIN_INTERVAL			6		// in units of COUNTER_10SEC_INTERVAL (10s)			-> 1m
 #define LOG_INTERVAL					2		// in units of MENU_UPDATE_INTERVAL (50ms)			-> 100ms
 #define PID_UPDATE_INTERVAL			(5 * 4)		// in units of CELSIUS_UDPATE_INTERVAL (200ms)		-> 0.2 to 50 seconds
