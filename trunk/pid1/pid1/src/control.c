@@ -69,10 +69,13 @@ cParams_t cp;		// Calibration params are saved only after calibration of any of 
 
 
 
-//uint8_t heaterState = 0;				// Global heater flags
+//uint8_t heaterState = 0;				// Global heater flags - declared as IO register
 uint8_t autoPowerOffState = 0;			// Global flag, active when auto power off mode is active.
 										// Flags are set and cleared in menu module.
-										
+				
+#ifdef MAIN_LOOP_TIME_PROFILING				
+uint8_t max_work_time = 0;				// Debug only: maximum time of main loop (ms)						
+#endif
 
 //-------------------------------------------------------//
 // Function to control motor rotation
@@ -503,6 +506,12 @@ void exitPowerOff(void)
 	USART_sendstr("\n\rAC sync lost");
 	
 	saveGlobalParamsToEEPROM();
+	
+	#ifdef MAIN_LOOP_TIME_PROFILING				
+	USART_sendstr("Max. main loop time:");
+	logU16p(max_work_time);
+	USART_sendstr(" ms");
+	#endif
 	
 	USART_sendstr("\n\rTurn OFF");
 	PORTD = 0x00;

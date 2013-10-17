@@ -18,7 +18,7 @@ static uint16_t heaterPower = 0;		// Heater power control, [0 : HEATER_MAX_POWER
 
 // Motor controls
 uint8_t rollState = 0;					// Roll controller state. Use as read-only outside of this module
-uint8_t activeRollCycle = 0;			// Indicates currently active roll cycle
+uint8_t activeRollCycle = 0;			// Indicates currently active roll cycle. Use as read-only outside of this module
 static uint8_t newDirReq = 0;
 static uint16_t rollPoint = 0;
 static uint16_t topPoint = 0;
@@ -40,8 +40,13 @@ static uint8_t p_state = 0x0F;			// default state - if AC line sync is present,
 // Simple write with interrupt enable bit set or cleared is used.
 // The same approach is used with TIMSK register - this also gives small code economy (TIMSK > 0x1F)
 
+
+
+//-------------------------------------------------------//
 // User function to control heater intensity
+//	input: [0 : HEATER_MAX_POWER]
 // For some reason accessing ACSR makes something wrong with the interrupt - a weird bug
+//-------------------------------------------------------//
 void setHeaterPower(uint16_t value)
 {
 	// Disable interrupts from analog comparator
@@ -55,8 +60,13 @@ void setHeaterPower(uint16_t value)
 	sei();
 }
 
-
+//-------------------------------------------------------//
 // User function to control motor rotation
+//	input: 
+//		ROLL_FWD - start rotating forward and update the bottom point for cycle rolling
+//		ROLL_REV - start rotating reverse and update the top point for cycle rolling
+//		0 - stop
+//-------------------------------------------------------//
 void setMotorDirection(uint8_t dir)
 {
 	// Disable interrupts from timer0 
@@ -75,7 +85,12 @@ void setMotorDirection(uint8_t dir)
 }	
 
 
-
+//-------------------------------------------------------//
+// Starts cycle rolling
+//	output:
+//		ROLL_CYCLE if both top and bottom points are valid and cycle started
+//		0 otherwise
+//-------------------------------------------------------//
 uint8_t startCycleRolling(void)
 {
 	// Disable interrupts from timer0 
@@ -93,6 +108,12 @@ uint8_t startCycleRolling(void)
 	return (rollState & ROLL_CYCLE);
 }
 
+//-------------------------------------------------------//
+// Stops cycle rolling
+//	input:
+//		RESET_POINTS - stop cycle rolling and clear both cycle roll points
+//		DO_NOT_RESET_POINTS - stop cycle rolling but do not touch roll points
+//-------------------------------------------------------//
 void stopCycleRolling(uint8_t doResetPoints)
 {
 	// Disable interrupts from timer0 
@@ -109,8 +130,9 @@ void stopCycleRolling(uint8_t doResetPoints)
 	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 }
 
-
-// Safe way to reset some bits in rollState variable
+//-------------------------------------------------------//
+// Function for clearing rollState sticky flags
+//-------------------------------------------------------//
 void clearRollFlags(uint8_t flags)
 {
 	// Disable interrupts from timer0 
@@ -123,6 +145,10 @@ void clearRollFlags(uint8_t flags)
 	TIMSK = (1<<TOIE0 | 1<<OCIE2);
 }
 
+//-------------------------------------------------------//
+// Test if top point for cycle rolling is valid
+// Returns non-zero if valid
+//-------------------------------------------------------//
 uint8_t isTopPointValid(void)
 {
 	// Disable interrupts from timer0 
@@ -133,6 +159,10 @@ uint8_t isTopPointValid(void)
 	return temp;
 }
 
+//-------------------------------------------------------//
+// Test if bottom point for cycle rolling is valid
+// Returns non-zero if valid
+//-------------------------------------------------------//
 uint8_t isBottomPointValid(void)
 {
 	// Disable interrupts from timer0 
@@ -143,29 +173,45 @@ uint8_t isBottomPointValid(void)
 	return temp;
 }
 
-
+//-------------------------------------------------------//
+// Test if AC sync has been detected
+// Returns non-zero if valid
+//-------------------------------------------------------//
 uint8_t isACSyncPresent(void)
 {
 	return 	p_state == 0x0F;
 }
 
-//---------------------------------------------//
-//---------------------------------------------//
-//---------------------------------------------//
 
+//=============================================//
+//=============================================//
+//=============================================//
+
+
+
+
+//-------------------------------------------------------//
+// Test reaching of top point during cycle rolling
 // Function is called from Timer0 ISR only
+//-------------------------------------------------------//
 static inline uint8_t reachedTopPoint(void)
 {
 	return (	(int16_t)(topPoint - rollPoint) <= 0 );
 }
 
+//-------------------------------------------------------//
+// Test reaching of bottom point during cycle rolling
 // Function is called from Timer0 ISR only
+//-------------------------------------------------------//
 static inline uint8_t reachedBottomPoint(void)
 {
 	return (	(int16_t)(rollPoint - bottomPoint) <= 0 );
 }
 
+//-------------------------------------------------------//
+// Updates actual roll point depending upon direction
 // Function is called from Timer0 ISR only
+//-------------------------------------------------------//
 static inline void updateRollPoint(void)
 {	
 	if (rollState & ROLL_FWD)
@@ -175,10 +221,11 @@ static inline void updateRollPoint(void)
 }
 		
 
-
+//-------------------------------------------------------//
 // Function to process rolling - sets rotation direction for next period
 // Call once per each AC line period
 // Function is called from Timer0 ISR only
+//-------------------------------------------------------//
 static inline void controlRolling()
 {
 	// Process cycle rolling
@@ -241,7 +288,10 @@ static inline void controlRolling()
 
 
 
-
+//-------------------------------------------------------//
+// Analog comparator ISR
+// Used for detecting AC line zeroes and heater control
+//-------------------------------------------------------//
 ISR(ANA_COMP_vect)
 {
 	static uint16_t sigma = 0;
@@ -273,7 +323,11 @@ ISR(ANA_COMP_vect)
 }
 
 
-
+//-------------------------------------------------------//
+// Timer 0 ISR
+// Used for heater and motor control
+// Also used for detecting AC line sync missing
+//-------------------------------------------------------//
 ISR(TIMER0_OVF_vect)
 {
 	uint8_t temp;

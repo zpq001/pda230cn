@@ -75,7 +75,7 @@ typedef struct
 											// in units of Celsius degree
 
 #define USE_EEPROM_CRC						// CRC will be used for EEPROM parameter protection
-
+#define MAIN_LOOP_TIME_PROFILING			// If defined, maximum time of main loop will be sent over UART when device is switched off
 
 //--------------------------------------------//
 // Global control and status variables bits
@@ -104,7 +104,9 @@ extern cParams_t cp;					// Calibration params
 #define heaterState TWBR				// Initialized in init_system_io()
 
 extern uint8_t autoPowerOffState;	
-
+#ifdef MAIN_LOOP_TIME_PROFILING
+extern uint8_t max_work_time;
+#endif
 
 void processRollControl(void);
 void processHeaterControl(void);

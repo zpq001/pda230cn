@@ -11,14 +11,26 @@
 
 
 
-
+//-------------------------------------------------------//
+// Converts uint16_t to a string
+// See the i32toa_align_right() function
+//-------------------------------------------------------//
 void u16toa_align_right(uint16_t val, char *buffer, uint8_t len)
 {
 	i32toa_align_right((int32_t)val, buffer, len);
 }
 
 
-
+//-------------------------------------------------------//
+//	Converts 32-bit integer to a right - aligned string
+//	input:
+//		val - 32-bit value to convert, signed
+//		*buffer - pointer to store result data
+//		len[6:0] - output string length, including \0 symbol
+//				If result length < len[6:0], result will be cut to fit buffer
+//				If result length > len[6:0], buffer will be filled with spaces
+//		len[7] - if set, result string will be null-terminated
+//-------------------------------------------------------//
 void i32toa_align_right(int32_t val, char *buffer, uint8_t len)
 {
 	uint8_t is_negative = 0;

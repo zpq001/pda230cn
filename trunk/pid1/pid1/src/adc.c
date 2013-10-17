@@ -67,16 +67,21 @@ static filter8bit_core_t fir_filter_rect = {
 static int32_t k_norm;				// integer, scaled by COEFF_SCALE
 static int32_t offset_norm;			// integer, scaled by COEFF_SCALE
 
-//---------------------------------------------//
-//---------------------------------------------//
 
-
+//-------------------------------------------------------//
+// Converts ADC counts to Celsius degree
+//  using previously calculated k_norm and offset_norm
+//-------------------------------------------------------//
 int16_t conv_ADC_to_Celsius(uint16_t adc_value)
 {	
 	//return (int16_t)(((int32_t)adc_value * k_norm + offset_norm) / (COEFF_SCALE));					// Truncate
 	return (int16_t)(((int32_t)adc_value * k_norm + offset_norm + (COEFF_SCALE>>1)) / (COEFF_SCALE));	// Round
 }
 
+//-------------------------------------------------------//
+// Converts Celsius degree to ADC counts
+//  using previously calculated k_norm and offset_norm
+//-------------------------------------------------------//
 uint16_t conv_Celsius_to_ADC(int16_t degree_value)
 {
 	//degree_value += 1;
@@ -84,6 +89,12 @@ uint16_t conv_Celsius_to_ADC(int16_t degree_value)
 	return (uint16_t)(((int32_t)degree_value * COEFF_SCALE - offset_norm + (k_norm>>1)) / k_norm);	// Round
 }
 
+//-------------------------------------------------------//
+// Calculates k_norm and offset_norm for ADC to Celsius conversion
+//  ADC(sensor) function is considered linear, so two points are required.
+//	Every point holds Celsius value and corresponding ADC value
+// 	k_norm and offset_norm are scaled by COEFF_SCALE to reduce error
+//-------------------------------------------------------//
 void calculateCoeffs(void)
 {
 	//k_norm = ((int32_t)(cp.cpoint2 - cp.cpoint1) * COEFF_SCALE) / ((int32_t)(cp.cpoint2_adc - cp.cpoint1_adc));	// Truncate
@@ -109,6 +120,13 @@ void calculateCoeffs(void)
 // Since ADC setup (channels, etc) are constant,
 // 	simple ADCSRA write with ADIE bit set or cleared is used instead.
 
+
+//-------------------------------------------------------//
+// Gets average of raw ADC buffer, performs filtering
+// and updates global ADC variables:
+//	adc_normalized - average, but non-filtered (1024-ADCW) value
+//	adc_filtered - oversampled and filtered version, 4x adc_normalized
+//-------------------------------------------------------//
 void update_normalized_adc()
 {
 	uint8_t i;
@@ -137,12 +155,19 @@ void update_normalized_adc()
 		adc_status |= SENSOR_ERROR_SHORTED;
 }
 
+//-------------------------------------------------------//
+// Updates global Celsius degree variable
+//-------------------------------------------------------//
 void update_Celsius(void)
 {
 	// Convert to Celsius degree
 	adc_celsius = conv_ADC_to_Celsius(adc_filtered);
 }
 
+//-------------------------------------------------------//
+// Updates specified point Celsius value in global calibration parameters
+// Used for sensor calibration.
+//-------------------------------------------------------//
 void update_CalibrationPoint(uint8_t point_number, uint8_t new_val_celsius)
 {
 	if (point_number == 1)
@@ -157,8 +182,10 @@ void update_CalibrationPoint(uint8_t point_number, uint8_t new_val_celsius)
 	}
 }
 
-
+//-------------------------------------------------------//
+// Analog to digital converter ISR
 // ADC conversion is started by system timer (Timer2 ISR) every 1 ms
+//-------------------------------------------------------//
 ISR(ADC_vect)
 {
 	static uint8_t adc_buffer_pointer = ADC_BUFFER_LENGTH;
