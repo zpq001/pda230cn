@@ -15,8 +15,7 @@ void logI32p(int32_t val);
 
 void USART_send( uint8_t data );
 void USART_sendstr(char* str);
-
-
+void USART_sendstr_E(const char *estr);
 
 
 

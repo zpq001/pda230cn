@@ -15,15 +15,17 @@
 
 static char str[20];
 
+
 //-------------------------------------------------------//
 // Sends a char over UART
 // Blocks until transmit is complete
 //-------------------------------------------------------//
 void USART_send( uint8_t data )
 {
-	UCSRA |= (1<<TXC);                 // Clear flag
+	//  Wait for empty transmit buffer 
+	while ( !( UCSRA & (1<<UDRE)) );
+	//  Put data into buffer, sends the data
 	UDR = data;
-	while ( !(UCSRA & (1<<TXC)) );  // Wait
 }
 
 //-------------------------------------------------------//
@@ -33,10 +35,9 @@ void USART_send( uint8_t data )
 //-------------------------------------------------------//
 void USART_sendstr(char* str)
 {
-	uint8_t i = 0;
-	while (str[i])
+	while (*str)
 	{
-		USART_send(str[i++]);
+		USART_send(*str++);
 	}
 }
 

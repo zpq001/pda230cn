@@ -114,6 +114,9 @@ int main(void)
 	// Clear comparator interrupt flag to prevent false triggering
 	ACSR |= (1<<ACI);
 	sei();
+	// Send greeting
+	USART_sendstr("\r\n\r\nLaminator controller v0.501 by Avega\r\n");
+	
 	// If default values were loaded from EEPROM, inform user
 	#ifdef USE_EEPROM_CRC
 	if (temp8u)
@@ -154,13 +157,12 @@ int main(void)
 	wdt_enable(WDTO_1S);
 	
 	// Dump calibration data over UART - might be useful for debug
-	USART_sendstr("\n\rLaminator controller v0.501 by Avega\n");
 	USART_sendstr("Calibration data: ");
 	logU16p(cp.cpoint1);
 	logU16p(cp.cpoint1_adc);
 	logU16p(cp.cpoint2);
 	logU16p(cp.cpoint2_adc);
-	USART_sendstr("\n\r");
+	USART_sendstr("\r\n");
 
     while(1)
     {
@@ -261,7 +263,7 @@ int main(void)
 				//USART_sendstr("    ");
 				//logU16p(menuUpdateTimer.Timer);			// Main loop time (ms)
 				
-				USART_sendstr("\n\r");
+				USART_sendstr("\r\n");
 
 				//---------------------------------//
 			}
