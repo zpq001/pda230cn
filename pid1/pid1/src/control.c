@@ -501,20 +501,21 @@ void exitPowerOff(void)
 	DDRC = 0x00;
 	PORTC = 0x00;
 	
-	//DDRD = 0x00;
+
+	PORTD = 0x00;			// Prevent pull-ups
 	DDRD = (1<<PD_TXD);
-	USART_sendstr("\n\rAC sync lost");
+	USART_sendstr("\r\nAC sync lost\r\n");
 	
 	saveGlobalParamsToEEPROM();
 	
 	#ifdef MAIN_LOOP_TIME_PROFILING				
 	USART_sendstr("Max. main loop time:");
 	logU16p(max_work_time);
-	USART_sendstr(" ms");
+	USART_sendstr(" ms\r\n");
 	#endif
 	
-	USART_sendstr("\n\rTurn OFF");
-	PORTD = 0x00;
+	USART_sendstr("Turn OFF");
+	
 	
 	// DIE!
 	while(1);
