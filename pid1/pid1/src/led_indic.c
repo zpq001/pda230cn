@@ -28,6 +28,8 @@ static uint8_t wActivePos;					// number of active LED display digit
 uint8_t shifterState;	
 static SoftTimer8b_t shiftTimer;			// used for LED window shift
 
+
+// 7-seg encoding table
 const PROGMEM encode_7seg_pair led_encode_table[] = {
 	{ '0',	(SEGA | SEGB | SEGC | SEGD | SEGE | SEGF) },
 	{ 'O',	(SEGA | SEGB | SEGC | SEGD | SEGE | SEGF) },

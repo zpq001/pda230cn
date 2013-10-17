@@ -33,11 +33,19 @@ sys_timers_t sys_timers = {
 	.pid_update_counter = PID_UPDATE_INTERVAL	//							- timer is decremental
 };
 
-//uint8_t sys_timers_flags = 0;
+//uint8_t sys_timers_flags = 0;		// declared as IO register
+
+//-------------------------------------------------------//
+// Internal definitions
 
 static inline void Sound_Process(void);
 
 
+
+//-------------------------------------------------------//
+// Main function for system time processing
+// Updates global system timers flags
+//-------------------------------------------------------//
 void processSystemTimers(void)
 {
 	sys_timers_flags = 0x00;
@@ -86,18 +94,20 @@ void processSystemTimers(void)
 	}	
 }
 
-
+//-------------------------------------------------------//
+// Resets auto power off timer
+//-------------------------------------------------------//
 void resetAutoPowerOffCounter(void)
 {
 	sys_timers.poff_counter = 0;
 }
 
 
-// ----------------------- //
-// ----------------------- //
 
-
+//-------------------------------------------------------//
+// Timer 2 ISR - systick
 // Period is 1ms @ 16MHz
+//-------------------------------------------------------//
 ISR(TIMER2_COMP_vect)
 {	
 	// Manage LED indicator
@@ -115,9 +125,9 @@ ISR(TIMER2_COMP_vect)
 }
 
 
-//==================================================//
-//				Sound driver						//
-//==================================================//
+//=======================================================//
+//				Sound driver						     //
+//=======================================================//
 
 
 static uint8_t sound_state = SOUND_OFF;
@@ -130,6 +140,9 @@ static uint8_t beep_tone_period;
 
 
 #ifdef USE_BEEP_FUNCTION
+//-------------------------------------------------------//
+// Starts beep with specified frequency and duration
+//-------------------------------------------------------//
 void Sound_Beep(uint16_t freq_hz, uint16_t time_ms)
 {
 	if ((p.sound_enable) || (SoundEnable_override))
@@ -142,6 +155,9 @@ void Sound_Beep(uint16_t freq_hz, uint16_t time_ms)
 }
 #endif
 
+//-------------------------------------------------------//
+// Starts playing a melody from EEPROM
+//-------------------------------------------------------//
 void Sound_Play(const tone_t* p_melody)
 {
 	if ((p.sound_enable) || (SoundEnable_override))
@@ -152,18 +168,27 @@ void Sound_Play(const tone_t* p_melody)
 	}
 }
 
+//-------------------------------------------------------//
+// Stops all sound
+//-------------------------------------------------------//
 void Sound_Stop(void)
 {
 	sound_state = SOUND_OFF;
 }
 
+//-------------------------------------------------------//
+// Provides a way to inform about critical errors even when 
+// sound is disabled in menu
+//-------------------------------------------------------//
 void Sound_OverrideDisable(void)
 {
 	SoundEnable_override = 1;
 }
 
+//-------------------------------------------------------//
 // Main sound driver function. Called with T = 1ms from system timer ISR.
 // For the reason of speed, this code is pipelined, possibly with some code size overhead.
+//-------------------------------------------------------//
 static inline void Sound_Process(void)
 {
 	static uint16_t note_time_counter;
@@ -243,8 +268,8 @@ static inline void Sound_Process(void)
 
 
 
-//---------------------------------------------//
-
+//-------------------------------------------------------//
+// Melodies
 
 const EEMEM tone_t m_beep_1000Hz_1000ms[] = {
 	{ FREQ(1000),	LAST(1000) },

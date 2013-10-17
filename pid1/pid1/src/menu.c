@@ -18,6 +18,8 @@
 #include "led_indic.h"
 #include "power_control.h"
 
+//-------------------------------------------------------//
+// Internal definitions
 
 static inline NextItem_t getNextMenuItem(uint8_t selectedItemId, uint16_t jmpCond);
 static void getMenuFunctionRecord(uint8_t menuItemID, MenuFunctionRecord* menuRecord );

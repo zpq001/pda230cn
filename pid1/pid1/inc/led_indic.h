@@ -14,17 +14,21 @@
 led_data_buffer:             |
       0     1    2    3    4    5    6    7    8    9
     ===================================================
-    |    |    |    |    |    |    |    |    |    |    |    <- this is data
+    |    |    |  e |  r |  r |    |  a |  c |    |    |    <- this is data
     ===================================================
-              |                        |
-			  |  0    1    2    3    4 |
-              ==========================
-Window:       |    |    |    |    |    |	<- this is actualy displayed
-              ==========================
+              |                             |
+			  |  0    1    2    3    4    5 |
+              ===============================
+Window:       |  e |  r |  r |    |  a |  c |  <- this is actualy displayed
+              ===============================
 Window start position (wStartPos) = 2
 Window length = NUM_DIGITS (of LED display)
 bufStartPos defines start position for writing strings
 */
+
+
+//--------------------------------------------//
+// Typedefs
 
 typedef struct {
 	uint8_t code;
@@ -32,9 +36,8 @@ typedef struct {
 } encode_7seg_pair;
 
 
-/************************************************
-*					Settings					*
-************************************************/
+//--------------------------------------------//
+// Settings					
 
 #define NUM_DIGITS			6	// Number of digits of LED display
 #define LED_BUFFER_LENGTH	(NUM_DIGITS * 2 + 2)	
@@ -50,7 +53,8 @@ typedef struct {
 #define LED_DIGIT_ACT_LVL	0	// Active level for a digit (common pin for all segments)
 #define LED_SEGMENT_ACT_LVL	1	// Active level for segments
 
-#define CLEAN_OPERATION
+#define CLEAN_OPERATION			// If defined, segments are enabled/disabled correctly while shifting
+								// For some reason, may work bad in Proteus simulator - try disabling this option
 
 #define LED_SHIFT_INTERVAL	10	// in units of processWindowShifter() call period, (Tsystimer * NUM_DIGITS)
 
@@ -89,9 +93,8 @@ typedef struct {
 #define LED_SHIFT_RIGHT	2
 
 
-/************************************************
-*			Prototypes and externs				*
-************************************************/
+//--------------------------------------------//
+// Externs		
 
 // Internal hardware-specific functions
 void led_clock_pulse(uint8_t bit);

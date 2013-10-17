@@ -9,6 +9,9 @@
 #ifndef USART_H_
 #define USART_H_
 
+// Functions for log optimization
+void logU16p(uint16_t val);
+void logI32p(int32_t val);
 
 void USART_send( uint8_t data );
 void USART_sendstr(char* str);

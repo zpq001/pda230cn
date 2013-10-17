@@ -10,8 +10,9 @@
 #include "led_indic.h"
 #include "port_defs.h"
 
-
+//-------------------------------------------------------//
 // Clocks in bit into the shift register
+//-------------------------------------------------------//
 void led_clock_pulse(uint8_t bit)
 {
 	if (bit)
@@ -24,7 +25,9 @@ void led_clock_pulse(uint8_t bit)
 	PORTB &= ~(1<<PB_LED_CLK);
 }
 
+//-------------------------------------------------------//
 // Outputs decoded segment data to port bits
+//-------------------------------------------------------//
 void set_led_segments(uint8_t seg_ch)
 {
 	uint8_t pdat;
@@ -38,27 +41,37 @@ void set_led_segments(uint8_t seg_ch)
 	PORTB = pdat;
 }		
 
-// Turns segment port bits to HI-Z and
-// enables pull-ups
+//-------------------------------------------------------//
+// Enables pull-ups on disabled led segments
+//-------------------------------------------------------//
 void enable_led_segments_pullups()
 {
 	PORTC |= ( (1<<PC_SEGA) | (1<<PC_SEGB) | (1<<PC_SEGC) | (1<<PC_SEGD) | (1<<PC_SEGE) );
 	PORTB |= ( (1<<PB_SEGF) | (1<<PB_SEGG) | (1<<PB_SEGH) );
 }	
 
+//-------------------------------------------------------//
+// Turns led segment ports to active state
+//-------------------------------------------------------//
 void enable_led_segments()
 {
 	DDRC |= ( (1<<PC_SEGA) | (1<<PC_SEGB) | (1<<PC_SEGC) | (1<<PC_SEGD) | (1<<PC_SEGE) );
 	DDRB |= ( (1<<PB_SEGF) | (1<<PB_SEGG) | (1<<PB_SEGH) );
 }
 
+//-------------------------------------------------------//
+// Turns led segment ports to HI-Z state
+//-------------------------------------------------------//
 void disable_led_segments()
 {
 	DDRC &= ~( (1<<PC_SEGA) | (1<<PC_SEGB) | (1<<PC_SEGC) | (1<<PC_SEGD) | (1<<PC_SEGE) );
 	DDRB &= ~( (1<<PB_SEGF) | (1<<PB_SEGG) | (1<<PB_SEGH) );
 }	
 
-
+//-------------------------------------------------------//
+// Gets the buttons state - reads PINx while 
+// ports are in HI-Z with pull-ups enabled
+//-------------------------------------------------------//
 void capture_button_state()
 {
 	uint8_t pdat;

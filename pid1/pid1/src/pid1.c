@@ -3,13 +3,6 @@
  *
  * Created: 24.03.2013 1:35:17
  *  Author: Avega
- 
- Asynchronous operations:
-	ISR:	Analog comparator (AC line sync)
-	ISR:	Timer0 (used for power control)
-	ISR:	Timer2 (system timer)
-	ISR:	ADC (ADC conversion is started by Timer2 ISR)
- 
  */ 
 
 
@@ -25,18 +18,15 @@
 #include "usart.h"
 #include "control.h"
 #include "menu.h"
-#include "my_string.h"
 #include "pid_controller.h"
 
 extern volatile SoftTimer8b_t menuUpdateTimer;	// Must be declared volatile here
 
-// Functions for log optimization
-static void logU16p(uint16_t val);
-static void logI32p(int32_t val);
-
-static char str[20];
 
 
+//-------------------------------------------------------//
+// Initializes system IO
+//-------------------------------------------------------//
 static void init_system_io()
 {
 	// Setup Ports
@@ -93,11 +83,20 @@ static void init_system_io()
 	
 	
 	// Init IO locations which are used as globals
-	TWBR = 0x00;	// heaterState
-	TWAR = 0x00;	// sys_timers_flags
+	TWBR = 0x00;	// heaterState 			(control)
+	TWAR = 0x00;	// sys_timers_flags		(systimer)
 }
 
 
+
+//-------------------------------------------------------//
+// 							Main  
+// Asynchronous operations:
+//	ISR:	Analog comparator (AC line sync)
+//	ISR:	Timer0 (used for power control)
+//	ISR:	Timer2 (system timer)
+//	ISR:	ADC (ADC conversion is started by Timer2 ISR)
+//-------------------------------------------------------//
 int main(void)
 {
 	uint8_t temp8u = 0x00;
@@ -125,13 +124,6 @@ int main(void)
 		_delay_ms(1000);
 	} 
 	#endif
-	// Dump calibration data over UART - might be useful for debug
-	USART_sendstr("\n\r");
-	logU16p(cp.cpoint1);
-	logU16p(cp.cpoint1_adc);
-	logU16p(cp.cpoint2);
-	logU16p(cp.cpoint2_adc);
-	USART_sendstr("\n\r");
 	// Safety delay for power part and ADC buffer
 	_delay_ms(100);
 	// Check AC line
@@ -160,6 +152,15 @@ int main(void)
 	sei();
 	// Enable watchdog
 	wdt_enable(WDTO_1S);
+	
+	// Dump calibration data over UART - might be useful for debug
+	USART_sendstr("\n\rLaminator controller v0.501 by Avega\n");
+	USART_sendstr("Calibration data: ");
+	logU16p(cp.cpoint1);
+	logU16p(cp.cpoint1_adc);
+	logU16p(cp.cpoint2);
+	logU16p(cp.cpoint2_adc);
+	USART_sendstr("\n\r");
 
     while(1)
     {
@@ -259,11 +260,17 @@ int main(void)
 				
 				//USART_sendstr("    ");
 				//logU16p(menuUpdateTimer.Timer);			// Main loop time (ms)
-			
+				
 				USART_sendstr("\n\r");
 
 				//---------------------------------//
 			}
+			
+			#ifdef MAIN_LOOP_TIME_PROFILING
+			temp8u = menuUpdateTimer.Timer;
+			if (temp8u > max_work_time)
+				max_work_time = temp8u;
+			#endif
 			
 			cli();
 			menuUpdateTimer.FOvfl = 0;	
@@ -274,17 +281,7 @@ int main(void)
 }
 
 
-static void logU16p(uint16_t val)
-{
-	u16toa_align_right(val,str,6);
-	USART_sendstr(str);
-}
 
-static void logI32p(int32_t val)
-{
-	i32toa_align_right(val,str,12);
-	USART_sendstr(str);
-}
 
 
 
